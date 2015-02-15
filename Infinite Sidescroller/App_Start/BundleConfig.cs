@@ -24,7 +24,7 @@ namespace Infinite_Sidescroller
                 "~/Scripts/respond.js"));
 
       bundles.Add(new StyleBundle("~/Content/css").Include(
-                "~/Content/global.css"));
+                "~/Content/global.css", "~/Content/site.css"));
     }
   }
 }

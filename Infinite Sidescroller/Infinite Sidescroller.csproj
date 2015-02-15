@@ -216,6 +216,7 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_GlobalHeader.cshtml" />
     <Content Include="Views\Shared\_GlobalFooter.cshtml" />
+    <Content Include="Views\Shared\_GlobalNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

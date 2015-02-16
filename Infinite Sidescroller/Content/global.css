@@ -219,3 +219,7 @@ footer p {
 footer p.no_right_border {
     border-right: 0px;
 }
+
+body {
+    margin: 0px;
+}

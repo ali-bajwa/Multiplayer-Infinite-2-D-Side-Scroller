@@ -11,7 +11,7 @@ namespace Infinite_Sidescroller.Models
   {
     public ApplicationDbContext()
       : base("DefaultConnection")
-    {
-    }
+      {
+      }
   }
 }

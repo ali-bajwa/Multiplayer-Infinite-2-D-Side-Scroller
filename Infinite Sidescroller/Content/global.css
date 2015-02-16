@@ -59,7 +59,7 @@
 .play_button {
     background-color: #d4af37;
     position: absolute;
-    top: 527px;
+    top: 478px;
     left: 30%;
     right: 30%;
     font-family: 'Fontdiner Swanky', serif;
@@ -96,6 +96,7 @@
 /*NAV BAR*/
 nav {
   background: rgb(34, 34, 34);
+  text-align: center;
 }
 
 nav ul {
@@ -103,7 +104,7 @@ nav ul {
   margin: 0;
   padding: 0;
   line-height: 1;
-  display: block;
+  display: inline-block;
   zoom: 1;
   text-align: center;
 }

@@ -8,14 +8,14 @@
     font-weight: 700;
     font-family: 'Cinzel', serif;
     color: #d4af37;
-    background: url("../img/game_backdrop.jpg") no-repeat center center;
+    background: url("../img/garden.jpg") no-repeat center top;
     background-size: cover;
     text-align: center;
 }
 
 .front_page_game h1 {
     margin: 0px;
-    text-shadow: 2px 2px #880000;
+    text-shadow: 4px 4px rgb(60, 0, 0);
 }
 
 .front_page_main {
@@ -32,8 +32,11 @@
 
 .front_page_main h1 {
     margin: 0px;
-    margin-bottom: 50px;
-    text-shadow: 2px 2px #000000;
+    text-shadow: 3px 3px #000000;
+}
+
+.front_page_main img {
+    margin-bottom: 50px;   
 }
 
 .front_page_news {
@@ -47,6 +50,15 @@
     border: 30px solid transparent;
     opacity: 0.9;
     border-image: url("../img/greek_borderC.png") 60 60 round;
+}
+
+.front_page_border {
+    height: 40px;
+    background: 
+        url("../img/border.gif") repeat,
+        #e7e2b6;
+    background-size: contain;
+    width: 100%;
 }
 
 .front_page_news p {

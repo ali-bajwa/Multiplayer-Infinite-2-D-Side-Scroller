@@ -1,9 +1,15 @@
 ﻿@{
     ViewBag.Title = "Game";
 }
+@section HeadContent{
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="https://code.createjs.com/createjs-2014.12.12.min.js" type="text/javascript" charset="utf-8"></script>
+    <script src="../Content/gamedemo/lib/Box2dWeb-2.1.a.3.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../Content/gamedemo/main.js" type="text/javascript" charset="utf-8"></script>
+    <script>window.onload = sidescroller_game.run</script>}
 
 <div class="game_canvas">
-    <canvas id="myCanvas" width="800" height="600" style="border:2px solid #d4af37;"></canvas>
+    <div id="canvas_container">
+        <canvas id="display_canvas" style="border:2px solid #d4af37;"></canvas>
+    </div>
 </div>
-
-<p class="button_style bug_button">@Html.ActionLink("Report a Bug", "Contact", "Home")</p>

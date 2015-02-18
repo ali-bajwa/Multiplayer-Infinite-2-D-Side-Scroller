@@ -184,6 +184,12 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\gamedemo\assets\art\bottom_terrain.png" />
+    <Content Include="Content\gamedemo\assets\art\grass.png" />
+    <Content Include="Content\gamedemo\assets\art\greek_warrior.png" />
+    <Content Include="Content\gamedemo\assets\art\middle_terrain.png" />
+    <Content Include="Content\gamedemo\lib\Box2dWeb-2.1.a.3.min.js" />
+    <Content Include="Content\gamedemo\main.js" />
     <Content Include="Content\global.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -193,6 +199,16 @@
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
+    <Content Include="img\border.gif" />
+    <Content Include="img\cracktexture.png" />
+    <Content Include="img\game_backdrop.jpg" />
+    <Content Include="img\garden.jpg" />
+    <Content Include="img\greek_borderC.png" />
+    <Content Include="img\logo1.png" />
+    <Content Include="img\logo2.png" />
+    <Content Include="img\logo3.png" />
+    <Content Include="img\pillar_background.png" />
+    <Content Include="img\play_background.jpg" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />

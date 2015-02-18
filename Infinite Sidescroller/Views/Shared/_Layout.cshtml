@@ -3,9 +3,10 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>@ViewBag.Title@Html.Raw(ViewBag.isHomepage == null ? " - Shaded Pixels" : "")</title>
+  <title>@ViewBag.Title@Html.Raw(ViewBag.isHomepage == null ? " - Horae's Hoplites" : "")</title>
   @Styles.Render("~/Content/css")
   @RenderSection("HeadContent", required: false)
+  
 </head>
 <body @Html.Raw(ViewBag.isHomepage != null ? "class='Homepage'" : "")>
   <div id="PageOuterWrapper">
@@ -23,5 +24,6 @@
       @Html.Partial("_GlobalFooter")
     </footer>
   </div> @*Closing PageOuterWrapper*@
+  @RenderSection("Scripts", false)
 </body>
 </html>

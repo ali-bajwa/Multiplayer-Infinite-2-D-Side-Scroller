@@ -8,14 +8,14 @@
     font-weight: 700;
     font-family: 'Cinzel', serif;
     color: #d4af37;
-    background: url("../img/game_backdrop.jpg") no-repeat center center;
+    background: url("../img/garden.jpg") no-repeat center top;
     background-size: cover;
     text-align: center;
 }
 
 .front_page_game h1 {
     margin: 0px;
-    text-shadow: 2px 2px #880000;
+    text-shadow: 4px 4px rgb(60, 0, 0);
 }
 
 .front_page_main {
@@ -32,8 +32,11 @@
 
 .front_page_main h1 {
     margin: 0px;
-    margin-bottom: 50px;
-    text-shadow: 2px 2px #000000;
+    text-shadow: 3px 3px #000000;
+}
+
+.front_page_main img {
+    margin-bottom: 50px;   
 }
 
 .front_page_news {
@@ -49,6 +52,15 @@
     border-image: url("../img/greek_borderC.png") 60 60 round;
 }
 
+.front_page_border {
+    height: 40px;
+    background: 
+        url("../img/border.gif") repeat,
+        #e7e2b6;
+    background-size: contain;
+    width: 100%;
+}
+
 .front_page_news p {
     color: rgba(191, 187, 151, 0.8);
     text-shadow: 1px 4px 6px #e7e2b6, 0 0 0 #000, 1px 4px 6px #e7e2b6;
@@ -59,7 +71,7 @@
 .play_button {
     background-color: #d4af37;
     position: absolute;
-    top: 527px;
+    top: 478px;
     left: 30%;
     right: 30%;
     font-family: 'Fontdiner Swanky', serif;
@@ -96,6 +108,7 @@
 /*NAV BAR*/
 nav {
   background: rgb(34, 34, 34);
+  text-align: center;
 }
 
 nav ul {
@@ -103,7 +116,7 @@ nav ul {
   margin: 0;
   padding: 0;
   line-height: 1;
-  display: block;
+  display: inline-block;
   zoom: 1;
   text-align: center;
 }
@@ -194,10 +207,16 @@ nav ul li.active a:before {
 }
 
 /*REMOVE THIS UPON IMPLEMENTATION OF GAME*/
+
 canvas {
-    background-color: white;
+    background-color: skyblue;
 }
 
+#canvas_container {
+    height: 600px;
+    width: 800px;
+    margin: 0 auto;
+}
 /*END GAME PAGE*/
 
 /*FOOTER*/

@@ -26,8 +26,9 @@
     font-family: 'Cinzel', serif;
     color: #d4af37;
     background: 
-        url("../img/cracktexture.png") no-repeat center center fixed,
+        url("../img/cracktexture.png") no-repeat center center,
         rgb(60, 0, 0);
+    background-size: cover;
 }
 
 .front_page_main h1 {
@@ -215,6 +216,8 @@ canvas {
 #canvas_container {
     height: 600px;
     width: 800px;
+    padding-top: 100px;
+    padding-bottom: 100px;
     margin: 0 auto;
 }
 /*END GAME PAGE*/

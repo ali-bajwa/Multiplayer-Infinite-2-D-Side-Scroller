@@ -226,7 +226,8 @@ canvas {
 
 /*LOGIN & REGISTER PAGE*/
 
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,700);
+/*@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,700);*/
+@import url(http://fonts.googleapis.com/css?family=Fontdiner+Swanky|Cinzel:700,400);
 
 *{margin:0;padding:0;}
 
@@ -241,9 +242,10 @@ canvas {
 }
 
 .login_elements {
-    padding-top: 100px;
-    padding-bottom: 375px;
+    padding-top: 50px;
+    padding-bottom: 0px;
     text-align: center;
+    font-family: 'Cinzel', serif;
 
 }
 
@@ -318,7 +320,7 @@ input[type="submit"]{
   background:#222222;
   border:0;
   padding:4%;
-  font-family:'Open Sans',sans-serif;
+  font-family: 'Cinzel', serif;
   font-size:100%;
   color: #d4af37;
   cursor:pointer;

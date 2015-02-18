@@ -207,10 +207,12 @@ nav ul li.active a:before {
 }
 
 /*REMOVE THIS UPON IMPLEMENTATION OF GAME*/
-canvas {
-    background-color: white;
-}
 
+#canvas_container {
+    height: 600px;
+    width: 800px;
+    margin: 0 auto;
+}
 /*END GAME PAGE*/
 
 /*FOOTER*/

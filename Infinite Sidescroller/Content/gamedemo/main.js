@@ -126,6 +126,8 @@ var sidescroller_game = (function namespace(){
 	
 	var GameController = (function(){
 
+		var MOVEMENT_EDGE = 500; // where terrain start scrolling
+
 		var update_all = function(event){
 			/*
 			 * main function pretty much
@@ -136,11 +138,25 @@ var sidescroller_game = (function namespace(){
 
 			var cmds = KeyboardController.movement_commands();
 
+			// Separate function >>>
 			if(cmds.indexOf("right") > -1){
 				// temporary
-				TerrainController.move_left(10);
+
+				if(GameModel.hero.x > MOVEMENT_EDGE){
+					TerrainController.move_left(10);
+				}else{
+					PlayerController.move_right(GameModel.hero);
+				}
 			}
 
+
+			if(cmds.indexOf("left") > -1){
+				if(GameModel.hero.x > 10){
+					PlayerController.move_left(GameModel.hero);
+				}
+			}
+
+			// <<<
 
 			TerrainController.generate_terrain();
 
@@ -149,7 +165,6 @@ var sidescroller_game = (function namespace(){
 
 		var init_all = function(){
 
-			AssetController.load_all();
 
 			// this may need to move to either load_game or some sort of resizing function
 			GameModel.stage = new createjs.Stage("display_canvas");
@@ -183,22 +198,28 @@ var sidescroller_game = (function namespace(){
 			
 			GameModel.hero = AssetController.request_bitmap("greek_warrior");
 			GameModel.hero.regX = 0;
-			GameModel.hero.regY = 75;
-			GameModel.hero.x = 60;
+			GameModel.hero.regY = GameModel.hero.image.height;
+			GameModel.hero.x = 100;
 			GameModel.hero.y = 510;
 
 			GameModel.stage.addChild(GameModel.hero);
+
+			lg("hero", GameModel.hero);
 
 
 		};
 
 		var move_right = function(){
-
-
+			GameModel.hero.x += 10;
 		};
+
+		var move_left = function(){
+			GameModel.hero.x -=10;
+		}
 
 		return {
 			move_right: move_right,
+			move_left: move_left,
 			init: init
 
 		};
@@ -321,7 +342,7 @@ var sidescroller_game = (function namespace(){
 
 			loader = new createjs.LoadQueue(false); // loading resourses using preload.js
 			loader.addEventListener("complete", handleComplete);
-			loader.loadManifest(manifest, true, "./assets/art/");
+			loader.loadManifest(manifest, true, "../Content/gamedemo/assets/art/");
 		}
 
 		var request_bitmap = function(id){
@@ -334,6 +355,7 @@ var sidescroller_game = (function namespace(){
 
 			// TODO VERY IMPORTANT!!! 
 			createjs.Ticker.addEventListener("tick", GameController.update_all);
+			GameController.init_all();
 		};
 
 		return {
@@ -446,16 +468,15 @@ var sidescroller_game = (function namespace(){
 			//$('#display_canvas').height(String(SCREEN_H) + "px");
 
 		// Initialize all game initial game data (assets, necessary variables, etc. 
-			GameController.init_all();
 
+			AssetController.load_all(); // TODO: FIX THIS!! MAKE SHIT LOAD FROM ONE FRICKING PLACE NOT CHAIN LOADED IN THE HORRIBLE FASHION
 		test();
 	};
 
 	var run = function()
 	{
 		// done this way to ensure that load_game's internals aren't accessible to the world:
-	    load_game();
-	    lg("here");
+		load_game();
 	}; 
 	
 	return {run: run}; // expose function run to the world

@@ -208,6 +208,10 @@ nav ul li.active a:before {
 
 /*REMOVE THIS UPON IMPLEMENTATION OF GAME*/
 
+canvas {
+    background-color: skyblue;
+}
+
 #canvas_container {
     height: 600px;
     width: 800px;

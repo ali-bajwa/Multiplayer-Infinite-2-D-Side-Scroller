@@ -1,5 +1,14 @@
 ﻿@import url(http://fonts.googleapis.com/css?family=Fontdiner+Swanky|Cinzel:700,400);
 
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+body {
+    margin: 0 0 80px;
+}
+
 /*FRONT PAGE*/
 .front_page_game {
     height: 500px;
@@ -208,8 +217,6 @@ nav ul li.active a:before {
     background-size: cover;
 }
 
-/*REMOVE THIS UPON IMPLEMENTATION OF GAME*/
-
 canvas {
     background-color: skyblue;
 }
@@ -225,20 +232,12 @@ canvas {
 
 
 /*LOGIN & REGISTER PAGE*/
-
-/*@import url(http://fonts.googleapis.com/css?family=Open+Sans:300,400,700);*/
-@import url(http://fonts.googleapis.com/css?family=Fontdiner+Swanky|Cinzel:700,400);
-
 *{margin:0;padding:0;}
 
 .login_body{
-  font-family:'Open Sans',sans-serif;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size:cover;
+  font-family:'Cinzel',sans-serif;
   background: url("../img/cracktexture.png") no-repeat center center,rgb(60, 0, 0);
- 
+  background-size: cover;
 }
 
 .login_elements {
@@ -300,19 +299,34 @@ canvas {
 }
 
 form{
-  background:#f0f0f0;
+  background:#e7e2b6;
   padding:6% 4%;
 }
 
 input[type="text"],input[type="password"]{
   width:92%;
-  background:#fff;
+  background:rgba(191, 187, 151, 0.8);
   margin-bottom:4%;
-  border:1px solid #ccc;
   padding:4%;
-  font-family:'Open Sans',sans-serif;
+  font-family:'Cinzel',sans-serif;
   font-size:95%;
-  color:#555;
+  color:#fff;
+}
+
+/*This changes the placeholder color text*/
+::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #fff;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #fff;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #fff;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+   color:    #fff;
 }
 
 input[type="submit"]{
@@ -382,11 +396,3 @@ footer p.no_right_border {
     border-right: 0px;
 }
 
-body {
-    margin: 0 0 80px;
-}
-
-html {
-    position: relative;
-    min-height: 100%;
-}

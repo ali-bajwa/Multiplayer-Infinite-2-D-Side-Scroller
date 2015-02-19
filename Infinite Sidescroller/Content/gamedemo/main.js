@@ -204,8 +204,6 @@ var sidescroller_game = (function namespace(){
 
 			GameModel.stage.addChild(GameModel.hero);
 
-			lg("hero", GameModel.hero);
-
 
 		};
 
@@ -342,7 +340,7 @@ var sidescroller_game = (function namespace(){
 
 			loader = new createjs.LoadQueue(false); // loading resourses using preload.js
 			loader.addEventListener("complete", handleComplete);
-			loader.loadManifest(manifest, true, "../Content/gamedemo/assets/art/");
+			loader.loadManifest(manifest, true, "assets/art/");
 		}
 
 		var request_bitmap = function(id){

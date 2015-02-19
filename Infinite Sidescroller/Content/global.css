@@ -1,5 +1,7 @@
 ﻿@import url(http://fonts.googleapis.com/css?family=Fontdiner+Swanky|Cinzel:700,400);
 
+*{margin:0;padding:0;}
+
 html {
     position: relative;
     min-height: 100%;
@@ -7,6 +9,7 @@ html {
 
 body {
     margin: 0 0 80px;
+    overflow-x: hidden;
 }
 
 /*FRONT PAGE*/
@@ -120,6 +123,7 @@ body {
 nav {
   background: rgb(34, 34, 34);
   text-align: center;
+  
 }
 
 nav ul {
@@ -130,6 +134,7 @@ nav ul {
   display: inline-block;
   zoom: 1;
   text-align: center;
+  
 }
 
 nav ul li {
@@ -232,7 +237,6 @@ canvas {
 
 
 /*LOGIN & REGISTER PAGE*/
-*{margin:0;padding:0;}
 
 .login_body{
   font-family:'Cinzel',sans-serif;

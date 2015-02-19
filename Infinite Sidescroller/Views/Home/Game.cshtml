@@ -6,7 +6,15 @@
 	<script src="https://code.createjs.com/createjs-2014.12.12.min.js" type="text/javascript" charset="utf-8"></script>
     <script src="../Content/gamedemo/lib/Box2dWeb-2.1.a.3.min.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../Content/gamedemo/main.js" type="text/javascript" charset="utf-8"></script>
-    <script>window.onload = sidescroller_game.run</script>}
+    <script src="../Content/gamedemo/no_scroll_canvas.js" type="text/javascript" charset="utf-8"></script>
+    <script>
+        function start() {
+            sidescroller_game.run();
+            arrow_key_scrolling(false);
+        }
+        window.onload = start;
+    </script>
+}
 
 <div class="game_canvas">
     <div id="canvas_container">

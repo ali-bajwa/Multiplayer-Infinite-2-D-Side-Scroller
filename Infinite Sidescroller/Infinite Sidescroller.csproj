@@ -190,6 +190,7 @@
     <Content Include="Content\gamedemo\assets\art\middle_terrain.png" />
     <Content Include="Content\gamedemo\lib\Box2dWeb-2.1.a.3.min.js" />
     <Content Include="Content\gamedemo\main.js" />
+    <Content Include="Content\gamedemo\no_scroll_canvas.js" />
     <Content Include="Content\global.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />

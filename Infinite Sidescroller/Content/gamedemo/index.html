@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Example Easel.js page by AK</title>
+	<meta charset="utf-8" />
+
+	<link rel="stylesheet" href="./page.css" type="text/css" media="all" />
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+
+	<script src="https://code.createjs.com/createjs-2014.12.12.min.js" type="text/javascript" charset="utf-8"></script>
+
+	<script src="./lib/Box2dWeb-2.1.a.3.min.js" type="text/javascript" charset="utf-8"></script>
+
+	<script src="./main.js" type="text/javascript" charset="utf-8"></script>
+
+	<script src="./no_scroll_canvas.js"></script>
+
+</head>
+<body onload="arrow_key_scrolling(false); sidescroller_game.test_mode(true); sidescroller_game.run();">
+
+	<div id="canvas_container">
+		
+		<canvas id="display_canvas"  height="600px">
+			If you see this, you browser doesn't support HTML5 canvas element.
+		</canvas>
+
+		<!--<canvas id="debug_canvas" height="600px">-->
+			<!--If you see this, you browser doesn't support HTML5 canvas element.-->
+		<!--</canvas>-->
+
+	</div>
+</body>
+</html>

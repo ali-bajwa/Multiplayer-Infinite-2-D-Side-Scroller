@@ -6,6 +6,8 @@ var sidescroller_game = (function namespace(){
 	var SCREEN_W; // set up when the page is loaded (to 95% of width of containing element) 
 	var SCREEN_H = 600;
 
+	var TEST_ENVIRONMENT = false;
+
 	var B2D_SCALE = 30;
 	
 	// END Constants section <<<
@@ -204,7 +206,6 @@ var sidescroller_game = (function namespace(){
 
 			GameModel.stage.addChild(GameModel.hero);
 
-			lg("hero", GameModel.hero);
 
 
 		};
@@ -337,12 +338,13 @@ var sidescroller_game = (function namespace(){
 			   added to the loader automatically
 			*/
 
+			var asset_path = TEST_ENVIRONMENT ? "./assets/art/" : "../Content/gamedemo/assets/art/";
 			var manifest = AssetModel.manifest;	
 
 
 			loader = new createjs.LoadQueue(false); // loading resourses using preload.js
 			loader.addEventListener("complete", handleComplete);
-			loader.loadManifest(manifest, true, "../Content/gamedemo/assets/art/");
+			loader.loadManifest(manifest, true, asset_path);
 		}
 
 		var request_bitmap = function(id){
@@ -473,12 +475,17 @@ var sidescroller_game = (function namespace(){
 		test();
 	};
 
+	var test_mode = function(is_on){TEST_ENVIRONMENT = is_on;};
+
 	var run = function()
 	{
 		// done this way to ensure that load_game's internals aren't accessible to the world:
 		load_game();
 	}; 
 	
-	return {run: run}; // expose function run to the world
+	return {
+		run: run,
+		test_mode: test_mode	
+	}; // expose function run to the world
 
 })(); 

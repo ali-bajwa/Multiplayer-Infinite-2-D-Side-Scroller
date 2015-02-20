@@ -7,6 +7,11 @@ var sidescroller_game = (function namespace(){
 	var SCREEN_H = 600;
 
 
+	// Frames Per Second. Essentially, frequency of createjs.Ticker 
+	// Warning! Frequency of the Box2D physics updates may be different
+	// (Currently not implemented)
+		var FPS = 30; 
+
 	var B2D_SCALE = 30;
 	
 	// END Constants section <<<
@@ -166,22 +171,12 @@ var sidescroller_game = (function namespace(){
 			GameModel.stage.update();
 		};
 
-		var init_all = function(){
 
 
-			// this may need to move to either load_game or some sort of resizing function
-			GameModel.stage = new createjs.Stage("display_canvas");
-			GameModel.stage.canvas.width = SCREEN_W;
-			GameModel.stage.canvas.height = SCREEN_H;
-
-
-			PlayerController.init();
-
-		};
+		
 
 		return {
 			update_all: update_all,
-			init_all: init_all
 		};
 
 	})();
@@ -197,19 +192,10 @@ var sidescroller_game = (function namespace(){
 
 	var PlayerController = (function(){
 
-		var init = function(){
 			
-			GameModel.hero = AssetController.request_bitmap("greek_warrior");
-			GameModel.hero.regX = 0;
-			GameModel.hero.regY = GameModel.hero.image.height;
-			GameModel.hero.x = 100;
-			GameModel.hero.y = 510;
-
-			GameModel.stage.addChild(GameModel.hero);
+			
 
 
-
-		};
 
 		var move_right = function(){
 			GameModel.hero.x += 10;
@@ -222,7 +208,6 @@ var sidescroller_game = (function namespace(){
 		return {
 			move_right: move_right,
 			move_left: move_left,
-			init: init
 
 		};
 	})();
@@ -422,23 +407,28 @@ var sidescroller_game = (function namespace(){
 
 	var InitController = (function(){
 
-		var TEST_ENVIRONMENT = false;
+		var init = function(mode){
 
-		var init = function(){
-
-			setup_ticker();
 
 			setup_screen();
 			setup_events();
 
 
-			// Notice that ticker doesn't start until all assets are loaded >>>
-			// Look into the handleComplete function
+			// Notice that asset dependent stuff doesn't (and mustn't) start until
+			// all assets are completely loaded. That includes ticker, i.e. no ticks are processed
+			// until everything is loaded. If you want something different, e.g. display some sort of loading
+			// animation - let me know.
+			// Look into the setup_asset_dependent function
 				AssetModel.loader = new createjs.LoadQueue(false); // loading resourses using preload.js
-				AssetModel.loader.addEventListener("complete", handleComplete);
+				AssetModel.loader.addEventListener("complete", setup_asset_dependant);
 
-				var asset_path = TEST_ENVIRONMENT ? "./assets/art/" : "../Content/gamedemo/assets/art/";
+				// if more stuff needs to be done for the test mode, 
+				// or more types of it needs to be added
+				// you can safely make the following a separate function
+				var asset_path = (mode == "test") ? "./assets/art/" : "../Content/gamedemo/assets/art/";
+
 				AssetController.load_all(asset_path);
+
 			// <<<
 	
 		};
@@ -449,6 +439,7 @@ var sidescroller_game = (function namespace(){
 			// Setting up other stuff:
 			// e.g setup canvas size
 			
+			// TODO: allow resizes?
 
 			SCREEN_W = $('#canvas_container').width(); // is dynamically set to pixel width of the containing element
 
@@ -466,8 +457,11 @@ var sidescroller_game = (function namespace(){
 
 		var setup_ticker = function(){
 
+			createjs.Ticker.setFPS(FPS);
+
 			// ticker: on each tick call GameController.update_all();
-			createjs.Ticker.setFPS(30);
+			createjs.Ticker.addEventListener("tick", GameController.update_all);
+
 		
 		};
 
@@ -482,18 +476,50 @@ var sidescroller_game = (function namespace(){
 
 		};
 
-		var handleComplete = function(){
+		var setup_asset_dependant = function(){
+			// this may need to move to either load_game or some sort of resizing function
+			GameModel.stage = new createjs.Stage("display_canvas");
+			GameModel.stage.canvas.width = SCREEN_W;
+			GameModel.stage.canvas.height = SCREEN_H;
 
-			GameController.init_all();
-			createjs.Ticker.addEventListener("tick", GameController.update_all);
+
+			GameModel.hero = AssetController.request_bitmap("greek_warrior");
+			GameModel.hero.regX = 0;
+			GameModel.hero.regY = GameModel.hero.image.height;
+			GameModel.hero.x = 100;
+			GameModel.hero.y = 510;
+
+			GameModel.stage.addChild(GameModel.hero);
+
+			setup_ticker();
 
 		};
+
 
 		return {
 			init: init,
-			TEST_ENVIRONMENT: TEST_ENVIRONMENT
-
 		};
+	})();
+
+	var TestController = (function(){
+		// placeholder for implementing testing
+		// may be changed/removed/upgraded depending on how we will handle our tests
+		
+		var test = function(){
+			// if you need some sort of tests launched, this is one of the places to do it
+		};
+
+		var post_loading_test = function(){
+			// TODO: call when loading assets is completed if there are some tests that need
+			// to be done at that moment. (Refer to InitController.init and 
+			// InitController.setup_asset_dependent methods
+		};
+
+
+		return {
+			test: test,
+			post_loading_test: post_loading_test,
+		}
 	})();
 
 	// END Controllers section <<<
@@ -501,28 +527,26 @@ var sidescroller_game = (function namespace(){
 
 	// Game initiation section: >>>
 	
-	var test = function(){
-	};
-	
-	var load_game = function()
+		
+	var load_game = function(mode)
 	{
-		InitController.init(); // init all the stuff
 
-		test();
+		InitController.init(mode); // init all the stuff
+
+		if(mode == "test"){
+			TestController.test();
+		}
 	};
 
 
-	var run = function()
+	var run = function(mode)
 	{
 		// done this way to ensure that load_game's internals aren't accessible to the world:
-		load_game();
+		load_game(mode);
 	}; 
 	
-	var test_mode = function(is_on){InitController.TEST_ENVIRONMENT = is_on;};
-
 	return {
-		run: run,
-		test_mode: test_mode	
+		run: run
 	}; // expose function run to the world
 
 })(); 

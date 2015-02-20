@@ -6,7 +6,6 @@ var sidescroller_game = (function namespace(){
 	var SCREEN_W; // set up when the page is loaded (to 95% of width of containing element) 
 	var SCREEN_H = 600;
 
-	var TEST_ENVIRONMENT = false;
 
 	var B2D_SCALE = 30;
 	
@@ -103,6 +102,8 @@ var sidescroller_game = (function namespace(){
 	var EnemyModel;
 
 	var AssetModel = new function(){
+		this.loader;
+
 		this.manifest = [ // defining resources to be loaded in bulk with preload.js
 				{src: "greek_warrior.png", id: "greek_warrior"},
 				//{src:, id:},
@@ -327,47 +328,36 @@ var sidescroller_game = (function namespace(){
 		   for everyone else.
 	   */
 
-		// use AssetController.loader.getResult("id_of_the_asset");
-		var loader;
+		// use AssetModel.loader.getResult("id_of_the_asset");
 
 
-
-		var load_all = function(){
+		var load_all = function(asset_path){
 
 			/* TODO make model with the easily managed tables of resources which will be
 			   added to the loader automatically
 			*/
 
-			var asset_path = TEST_ENVIRONMENT ? "./assets/art/" : "../Content/gamedemo/assets/art/";
 			var manifest = AssetModel.manifest;	
 
 
-			loader = new createjs.LoadQueue(false); // loading resourses using preload.js
-			loader.addEventListener("complete", handleComplete);
-			loader.loadManifest(manifest, true, asset_path);
+			//loader = new createjs.LoadQueue(false); // loading resourses using preload.js
+			//loader.addEventListener("complete", handleComplete);
+			AssetModel.loader.loadManifest(manifest, true, asset_path);
 		}
 
 		var request_bitmap = function(id){
 			// if id is invalid, throw meaningful exception?
-			return new createjs.Bitmap(loader.getResult(id));
+			return new createjs.Bitmap(AssetModel.loader.getResult(id));
 			// TODO research DisplayObject's caching. and maybe incorporate
 		};
 
-		var handleComplete = function(){
-
-			// TODO VERY IMPORTANT!!! 
-			createjs.Ticker.addEventListener("tick", GameController.update_all);
-			GameController.init_all();
-		};
-
+		
 		return {
 			load_all: load_all,
-			loader: loader,
 			request_bitmap: request_bitmap
 		};
 
 	})();
-
 
 
 	var KeyboardController = (function()
@@ -430,30 +420,33 @@ var sidescroller_game = (function namespace(){
 
 	})();
 
-	// END Controllers section <<<
+	var InitController = (function(){
+
+		var TEST_ENVIRONMENT = false;
+
+		var init = function(){
+
+			setup_ticker();
+
+			setup_screen();
+			setup_events();
+
+
+			// Notice that ticker doesn't start until all assets are loaded >>>
+			// Look into the handleComplete function
+				AssetModel.loader = new createjs.LoadQueue(false); // loading resourses using preload.js
+				AssetModel.loader.addEventListener("complete", handleComplete);
+
+				var asset_path = TEST_ENVIRONMENT ? "./assets/art/" : "../Content/gamedemo/assets/art/";
+				AssetController.load_all(asset_path);
+			// <<<
 	
+		};
 
-	// Game initiation section: >>>
-	
-	var test = function(){
-	};
-	
-	var load_game = function()
-	{
-		// Setting up events:
+		
+		var setup_screen = function(){
 
-			// ticker: on each tick call GameController.update_all();
-			createjs.Ticker.setFPS(30);
-
-		//
-			// keyboard input event: on each keyboard event call appropriate KeyboardController function
-			document.onkeydown = KeyboardController.keydown;
-			document.onkeyup = KeyboardController.keyup;
-
-		//
-			// on interrupt event: stop/pause ticker 
-
-		// Setting up other stuff:
+			// Setting up other stuff:
 			// e.g setup canvas size
 			
 
@@ -468,14 +461,56 @@ var sidescroller_game = (function namespace(){
 
 			//$('#debug_canvas').height(String(SCREEN_H) + "px");
 			//$('#display_canvas').height(String(SCREEN_H) + "px");
+			
+		};
 
-		// Initialize all game initial game data (assets, necessary variables, etc. 
+		var setup_ticker = function(){
 
-			AssetController.load_all(); // TODO: FIX THIS!! MAKE SHIT LOAD FROM ONE FRICKING PLACE NOT CHAIN LOADED IN THE HORRIBLE FASHION
+			// ticker: on each tick call GameController.update_all();
+			createjs.Ticker.setFPS(30);
+		
+		};
+
+		var setup_events = function(){
+
+
+			// keyboard input event: on each keyboard event call appropriate KeyboardController function
+			document.onkeydown = KeyboardController.keydown;
+			document.onkeyup = KeyboardController.keyup;
+
+				// on interrupt event: stop/pause ticker ?
+
+		};
+
+		var handleComplete = function(){
+
+			GameController.init_all();
+			createjs.Ticker.addEventListener("tick", GameController.update_all);
+
+		};
+
+		return {
+			init: init,
+			TEST_ENVIRONMENT: TEST_ENVIRONMENT
+
+		};
+	})();
+
+	// END Controllers section <<<
+	
+
+	// Game initiation section: >>>
+	
+	var test = function(){
+	};
+	
+	var load_game = function()
+	{
+		InitController.init(); // init all the stuff
+
 		test();
 	};
 
-	var test_mode = function(is_on){TEST_ENVIRONMENT = is_on;};
 
 	var run = function()
 	{
@@ -483,6 +518,8 @@ var sidescroller_game = (function namespace(){
 		load_game();
 	}; 
 	
+	var test_mode = function(is_on){InitController.TEST_ENVIRONMENT = is_on;};
+
 	return {
 		run: run,
 		test_mode: test_mode	

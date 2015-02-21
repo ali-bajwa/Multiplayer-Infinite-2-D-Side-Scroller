@@ -1,5 +1,31 @@
 "use strict";
 
+/*
+ * Rules for working on this:
+ *
+ * 1. If you think that one of these rules is stupid or useless, tell me, along with some better suggestions.
+ *
+ * 2. Model [name]Model can only be accessed through [name]Controller. If you need to do something to 
+ * 		change [name]Model from [other_name]Controller, write function in the [name]Controller that does
+ * 		what you need, and call it from the [other_name]Controller
+ *
+ * 3. Controllers are allowed to have private methods/fields. Models aren't. 
+ *
+ * 4. Controllers aren't allowed to have public data fields. 
+ * 		Those data fields that are present must not reflect state of the game, they must be related to
+ * 		some internal functionality of the controller
+ *
+ * 5. If you write some function that doesn't logically belong to one of the controllers,
+ * 		put it in the Utility
+ *
+ * 6. Variables are named like that: variable_name
+ * 		Except (singleton)class names, that are written like that: ClassName
+ *
+ * 7. And all the obvious stuff that everyone knows:
+ * 		function must do one thing; don't make function public unless it needs to be that; 
+ * 		comment ambigious code, for larger functions indicate their purpose 
+ */
+
 var sidescroller_game = (function namespace(){
 	// Constants section >>>
 	
@@ -52,17 +78,19 @@ var sidescroller_game = (function namespace(){
 
 			*/
 
-		   var blah = []; // can't think of a name
+			// array with choices duplicated a proper amount of times based on
+			// their probability
+			var blah = []; 
 
-		   for(var i = 0; i < choices.length; i++){
-			   for(var j = 0; j < probabilities[i]; j++){
-				   blah.push(choices[i]);
-			   }
-		   }
+			for(var i = 0; i < choices.length; i++){
+				for(var j = 0; j < probabilities[i]; j++){
+					blah.push(choices[i]);
+				}
+			}
 
-		   var rand_index = Math.floor(Math.random() * blah.length);
+			var rand_index = Math.floor(Math.random() * blah.length);
 
-		   return blah[rand_index];
+			return blah[rand_index];
 		};
 
 		
@@ -71,6 +99,7 @@ var sidescroller_game = (function namespace(){
 			lg: lg,
 			random_choice: random_choice
 		};
+
 	})();
 	var lg = Utility.lg; // for quicker access
 
@@ -81,17 +110,20 @@ var sidescroller_game = (function namespace(){
 	
 	var GameModel = new function(){ // main model
 
-		this.stage;
+		// Notice that all these variables will be initialized from the InitController
 
-		this.other_players = {};
+		this.stage; // easeljs representation of the main canvas
 
-		this.hero;
+		this.other_players = {}; // players controlled by remote clients
+
+		this.hero; // player controlled by the current user
 	};
 
-	var PlayerModel;
+	var PlayerModel; // TODO: must be possible to instantiate [and/or] duplicate
 
 	var TerrainModel = new function(){
 
+		// TODO: dynamic initialization
 		this.terrain_queues = [
 			[],
 			[],
@@ -100,13 +132,15 @@ var sidescroller_game = (function namespace(){
 
 	};
 
-	var BackgroundModel;
+	var BackgroundModel; // Split in two later? (Tow background mooving at the different speed may give more depth)
 
-	var HUDModel;
+	var HUDModel; // Heads-Up Display 
 
 	var EnemyModel;
 
 	var AssetModel = new function(){
+		// As always, almost anything is initialized in the InitController
+		
 		this.loader;
 
 		this.manifest = [ // defining resources to be loaded in bulk with preload.js
@@ -119,7 +153,7 @@ var sidescroller_game = (function namespace(){
 			// TODO make adding resources easier? Automatic loading 
 			// of everything from assets, automatic names etc.?
 
-		this.shapes = {};
+		this.shapes = {}; // maybe this aren't needed
 
 		this.bitmaps = {};
 
@@ -180,6 +214,8 @@ var sidescroller_game = (function namespace(){
 		};
 
 	})();
+
+	var CameraController;
 
 	var WorldGenerationController = (function(){
 

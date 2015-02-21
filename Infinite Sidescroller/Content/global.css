@@ -9,7 +9,10 @@ html {
 
 body {
     margin: 0 0 80px;
-    overflow-x: hidden;
+    background: 
+        url("../img/cracktexture.png") no-repeat center center,
+        rgb(60, 0, 0);
+    background-size: cover;
 }
 
 /*FRONT PAGE*/
@@ -37,10 +40,6 @@ body {
     font-weight: 700;
     font-family: 'Cinzel', serif;
     color: #d4af37;
-    background: 
-        url("../img/cracktexture.png") no-repeat center center,
-        rgb(60, 0, 0);
-    background-size: cover;
 }
 
 .front_page_main h1 {
@@ -170,7 +169,6 @@ nav ul li a:hover:before {
 }
 
 nav ul li a:after {
-  content: "";
   display: block;
   position: absolute;
   right: -3px;
@@ -216,9 +214,7 @@ nav ul li.active a:before {
     padding-bottom:  100px;
     text-align: center;
     background: 
-        url("../img/pillar_background.png") no-repeat center top,
-        url("../img/cracktexture.png") no-repeat center center fixed,
-        rgb(60, 0, 0);
+        url("../img/pillar_background.png") no-repeat center top;
     background-size: cover;
 }
 
@@ -240,8 +236,6 @@ canvas {
 
 .login_body{
   font-family:'Cinzel',sans-serif;
-  background: url("../img/cracktexture.png") no-repeat center center,rgb(60, 0, 0);
-  background-size: cover;
 }
 
 .login_elements {

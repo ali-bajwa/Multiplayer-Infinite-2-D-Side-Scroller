@@ -161,6 +161,15 @@ var sidescroller_game = (function namespace(){
 
 	};
 
+	var CameraModel = new function(){
+		this.center_x; // not implemented
+		this.center_y; // not implemented
+
+		this.following;
+
+
+	};
+
 
 	// END Models section <<<
 
@@ -185,8 +194,12 @@ var sidescroller_game = (function namespace(){
 				// temporary
 
 				if(GameModel.hero.x > MOVEMENT_EDGE){
-					TerrainController.move_left(10);
+					PlayerController.move_right(GameModel.hero);
+					CameraController.move(10, 0);
+					//TerrainController.move_left(10);
+					//CameraController.follow(GameModel.hero);
 				}else{
+					//CameraController.unfollow();
 					PlayerController.move_right(GameModel.hero);
 				}
 			}
@@ -200,7 +213,10 @@ var sidescroller_game = (function namespace(){
 
 			// <<<
 
-			TerrainController.generate_terrain();
+			//TerrainController.generate_terrain(); 
+			
+			// Should be called after all movement of objects is done:
+			CameraController.update(); 
 
 			GameModel.stage.update();
 		};
@@ -215,7 +231,85 @@ var sidescroller_game = (function namespace(){
 
 	})();
 
-	var CameraController;
+	var CameraController = (function(){
+
+		var update = function(){
+			var following = CameraModel.following;
+			if(following){
+				center_at(following.x,  following.y);
+			}
+
+		};
+
+		var center_at = function(x, y){
+			/* NOT IMPLEMENTED
+			 * instantly center camera at the given coordinates
+			 * Alg: calculate x offset, calculate y ofsset, call >move<
+			 */
+			var scr_center = get_screen_center(); // current camera position
+
+			var offset_x = x - scr_center.x;
+			var offset_y = y - scr_center.y;
+
+			lg("x, y", offset_x, offset_y);
+
+			move(offset_x, offset_y);
+		};
+
+		var get_screen_center = function(){
+			// is a function to handle screen resize functionality, when implemented
+			return {
+				x: SCREEN_W / 2,
+				y: SCREEN_H / 2
+			};
+
+		};
+
+		var follow = function(easeljs_obj){
+			/*
+			 * follow specific easeljs object everywhere
+			 */
+
+			CameraModel.following = easeljs_obj;
+		};
+
+		var unfollow = function(){
+			CameraModel.following = null;
+		};
+
+		var move = function(offset_x, offset_y){
+			/*
+			 * moving camera in some direction essentially means
+			 * moving world (terrain, background, players, enemies, etc.)
+			 * in opposite direction, and screen elements (HUD, minimap) in the smae
+			 * direction
+			 * Later it may need significantly more functionality 
+			 */
+
+			var n_x = (-1) * offset_x;
+			var n_y = (-1) * offset_y;
+
+			TerrainController.move(n_x, n_y);
+			PlayerController.move(n_x, n_y);
+
+			// other related things.move(..., ...)
+		};
+
+		var slide = function(x, y, speed){
+			/* NOT IMPLEMENTED
+			 * assign the camera a coordinates to slide to with >speed< pixels/tick
+			 * if we do scripted scenes, that could be useful
+			 */
+		};
+
+		return {
+			move: move,
+			follow: follow,
+			unfollow: unfollow,
+			update: update
+
+		};
+	})();
 
 	var WorldGenerationController = (function(){
 
@@ -228,23 +322,24 @@ var sidescroller_game = (function namespace(){
 
 	var PlayerController = (function(){
 
-			
-			
-
-
-
-		var move_right = function(){
+			var move_right = function(){
 			GameModel.hero.x += 10;
 		};
 
 		var move_left = function(){
-			GameModel.hero.x -=10;
-		}
+			//GameModel.hero.x -=10;
+			move(-10, 0);
+		};
+
+		var move = function(offset_x, offset_y){
+			GameModel.hero.x += offset_x;
+			GameModel.hero.y += offset_y;
+		};
 
 		return {
 			move_right: move_right,
 			move_left: move_left,
-
+			move: move
 		};
 	})();
 
@@ -270,6 +365,7 @@ var sidescroller_game = (function namespace(){
 
 			var terrain_choices = ["grass", "middle_terrain", "bottom_terrain"];
 
+			// TODO: make more efficient by detecting whether terrain moved since the last time
 			for(var i = 0; i < TerrainModel.terrain_queues.length; i++){
 				//// for each level of terrain
 				var slice_index = 0; //
@@ -278,6 +374,7 @@ var sidescroller_game = (function namespace(){
 				for(var j = 0; j < terrain_queue.length; j++){
 					// for each tile, if tile is ofscreen, delete it
 					var tile = terrain_queue[j];
+					// TODO break after encountering first tile with bigger index (I do not implement it now to simplify debugging)
 					if(tile.x < -100){
 						GameModel.stage.removeChild(tile);
 						slice_index += 1;
@@ -321,25 +418,56 @@ var sidescroller_game = (function namespace(){
 		   } // end for 
 
 
+
 		}; //end generate_terrain
 
+		var for_each_tile = function(f){
+			// takes function >f< that takes three parameters: tile (eseljs object),
+			// terrain_lvl (int), and tile_index (int)
+			// calls this function for every tile of the terrain
+			
+			var queues = TerrainModel.terrain_queues;
+
+			$.each(queues, function(terrain_lvl){
+				$.each(queues[terrain_lvl], function(tile_index){
+					f(queues[terrain_lvl][tile_index], terrain_lvl, tile_index);
+				});
+			});
+
+		};
+
 		var move_left = function(pixels){
-			// TODO make better 
-			for(var i = 0; i < TerrainModel.terrain_queues.length; i++){
-					var queue = TerrainModel.terrain_queues[i];
-					$.each(queue, function(index){
-						var tile = queue[index];
-						var old_x = tile.x;
-						tile.x -= pixels;
-					});
-			}
+			// Should I scrap this function and just use >move<, or is this a helpful shortcut?
+			
+			move((-1)*pixels, 0);
 
 		}; // end move_left
+		
+		var move = function(offset_x, offset_y){
+			if(offset_x != 0){
+				for_each_tile(function(tile, terrain_lvl, tile_index){
+					tile.x += offset_x;
+				});
+
+			}// fi
+
+			if(offset_y != 0){
+				for_each_tile(function(tile, terrain_lvl, tile_index){
+					tile.y += offset_y;
+				});
+
+			}
+
+			// TODO: rework this suboptimal solution, so that terrain is regenerated only once per tick
+			// instead of at each movement command; solution should be better than just placing the call
+			// into the GameController.update_all function
+			generate_terrain();
+		};
 
 		return {
 			generate_terrain: generate_terrain,
-			move_left: move_left
-
+			move_left: move_left,
+			move: move
 		}
 	})();
 
@@ -529,6 +657,7 @@ var sidescroller_game = (function namespace(){
 
 			setup_ticker();
 
+			TerrainController.generate_terrain(); // Initial terrain generation
 		};
 
 

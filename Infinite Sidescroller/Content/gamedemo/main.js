@@ -169,12 +169,22 @@ var sidescroller_game = (function namespace(){
 
 
 	};
+	
+	var WorldModel = new function(){
 
+
+	};
 
 	// END Models section <<<
 
 	// Controllers section: >>>
-	
+
+	var WorldController = (function(){
+
+		return {
+		}
+	})();
+
 	var GameController = (function(){
 
 		var MOVEMENT_EDGE = 500; // where terrain start scrolling
@@ -311,12 +321,8 @@ var sidescroller_game = (function namespace(){
 		};
 	})();
 
-	var WorldGenerationController = (function(){
-
-		// move stuff from terrain controller here
-		return {
-		}
-	})();
+	
+	var WorldGenerationController;
 
 	var PhysicsController;
 

@@ -35,4 +35,4 @@ var AssetController = (function(){
 
 })();
 
-modules.exports = AssetController;
+module.exports = AssetController;

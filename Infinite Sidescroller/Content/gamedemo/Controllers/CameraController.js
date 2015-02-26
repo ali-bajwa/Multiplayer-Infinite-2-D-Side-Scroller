@@ -78,4 +78,4 @@ var CameraController = (function(){
 	};
 })();
 
-modules.exports = CameraController;
+module.exports = CameraController;

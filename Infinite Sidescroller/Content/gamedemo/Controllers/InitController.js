@@ -2,7 +2,6 @@ var InitController = (function(){
 
 	var init = function(mode){
 
-
 		setup_screen();
 		setup_events();
 

@@ -23,7 +23,7 @@
                 <input type="submit" value="ENTER" />
             </form>
         </div>
-        <a href="~/Account/Register.cshtml" class="RD_button">NO ACCOUNT?</a>
+        @Html.ActionLink("NO ACCOUNT?", "Register", "Account", new { @class = "RD_button" })
     </div>
 </div>
 

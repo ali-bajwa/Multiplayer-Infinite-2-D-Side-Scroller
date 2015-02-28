@@ -25,7 +25,7 @@
                     <input type="submit" value="CREATE ACCOUNT" />
                 </form>
             </div>
-            <a href="~/Account/Login.cshtml" class="RD_button">HAVE ACCOUNT?</a>
+            @Html.ActionLink("HAVE ACCOUNT?", "Login", "Account", new { @class = "RD_button" })
         </div>
     </div>
 

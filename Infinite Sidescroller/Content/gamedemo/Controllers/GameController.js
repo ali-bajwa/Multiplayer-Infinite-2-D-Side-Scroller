@@ -1,3 +1,12 @@
+var CameraController, PlayerController, KeyboardController;
+var GameModel;
+
+CameraController = require("./CameraController.js");
+PlayerController = require("./PlayerController.js");
+KeyboardController = require("./KeyboardController.js");
+
+GameModel = require("../Models/GameModel.js");
+
 var GameController = (function(){
 
 	var MOVEMENT_EDGE = 500; // where terrain start scrolling

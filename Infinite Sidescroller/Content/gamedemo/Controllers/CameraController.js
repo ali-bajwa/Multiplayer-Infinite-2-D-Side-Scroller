@@ -1,3 +1,10 @@
+var CameraModel = require("../Models/CameraModel.js");
+
+var PlayerController, TerrainController;
+
+PlayerController = require("./PlayerController.js");
+TerrainController = require("./TerrainController.js");
+
 var CameraController = (function(){
 
 	var update = function(){

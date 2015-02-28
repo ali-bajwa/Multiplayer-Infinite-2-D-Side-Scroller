@@ -1,3 +1,6 @@
+var GameModel;
+GameModel = require("../Models/GameModel.js");
+
 var PlayerController = (function(){
 
 		var move_right = function(){

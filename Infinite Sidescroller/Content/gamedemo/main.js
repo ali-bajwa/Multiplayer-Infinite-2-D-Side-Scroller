@@ -42,6 +42,7 @@ window.sidescroller_game = (function namespace(){
 	var AssetModel = require("./Models/AssetModel.js"); 
 	var CameraModel = require("./Models/CameraModel.js"); 
 	var WorldModel = require("./Models/WorldModel.js"); 
+
 	var WorldController = require("./Controllers/WorldController.js"); 
 	var GameController = require("./Controllers/GameController.js"); 
 	var CameraController = require("./Controllers/CameraController.js"); 

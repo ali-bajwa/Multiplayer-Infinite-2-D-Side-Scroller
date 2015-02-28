@@ -1,3 +1,18 @@
+var KeyboardController, GameController, AssetController, TerrainController;
+var GameModel, AssetModel;
+var Config, Utility;
+
+KeyboardController = require("./KeyboardController.js");
+GameController = require("./GameController.js");
+AssetController = require("./AssetController.js");
+TerrainController = require("./TerrainController.js");
+
+GameModel = require("../Models/GameModel.js");
+AssetModel = require("../Models/AssetModel.js");
+
+Config = require("../Config.js");
+Utility = require("../Utility.js");
+
 var InitController = (function(){
 
 	var init = function(mode){
@@ -33,7 +48,7 @@ var InitController = (function(){
 		
 		// TODO: allow resizes?
 
-		SCREEN_W = $('#canvas_container').width(); // is dynamically set to pixel width of the containing element
+		Config.SCREEN_W = $('#canvas_container').width(); // is dynamically set to pixel width of the containing element
 
 		// possible resizing technique: 
 		// http://www.fabiobiondi.com/blog/2012/08/createjs-and-html5-canvas-resize-fullscreen-and-liquid-layouts/
@@ -49,7 +64,7 @@ var InitController = (function(){
 
 	var setup_ticker = function(){
 
-		createjs.Ticker.setFPS(FPS);
+		createjs.Ticker.setFPS(Config.FPS);
 
 		// ticker: on each tick call GameController.update_all();
 		createjs.Ticker.addEventListener("tick", GameController.update_all);
@@ -71,8 +86,8 @@ var InitController = (function(){
 	var setup_asset_dependant = function(){
 		// this may need to move to either load_game or some sort of resizing function
 		GameModel.stage = new createjs.Stage("display_canvas");
-		GameModel.stage.canvas.width = SCREEN_W;
-		GameModel.stage.canvas.height = SCREEN_H;
+		GameModel.stage.canvas.width = Config.SCREEN_W;
+		GameModel.stage.canvas.height = Config.SCREEN_H;
 
 
 		GameModel.hero = AssetController.request_bitmap("greek_warrior");

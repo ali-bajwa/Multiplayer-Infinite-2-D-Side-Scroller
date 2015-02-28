@@ -1,3 +1,5 @@
+var AssetModel = require("../Models/AssetModel.js");
+
 var AssetController = (function(){
 	/*
 	   AssetController is in charge of setting up all bitmaps/animations/other resources

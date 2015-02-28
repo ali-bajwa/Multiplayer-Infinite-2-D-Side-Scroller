@@ -1,3 +1,16 @@
+var GameModel, TerrainModel;
+var AssetController;
+var Utility, Config;
+
+AssetController = require("./AssetController.js");
+
+GameModel = require("../Models/GameModel.js");
+TerrainModel = require("../Models/TerrainModel.js");
+
+Utility = require("../Utility.js");
+Config = require("../Config.js");
+
+
 var TerrainController = (function(){
 	var LVL_PROB = [
 		[7, 2, 1],

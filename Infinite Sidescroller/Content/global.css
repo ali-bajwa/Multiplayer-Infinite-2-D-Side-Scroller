@@ -1,5 +1,7 @@
 ﻿@import url(http://fonts.googleapis.com/css?family=Fontdiner+Swanky|Cinzel:700,400);
 
+*{margin:0;padding:0;}
+
 html {
     position: relative;
     min-height: 100%;
@@ -7,6 +9,16 @@ html {
 
 body {
     margin: 0 0 80px;
+    background: 
+        url("../img/cracktexture.png") no-repeat center center,
+        rgb(60, 0, 0);
+    background-size: cover;
+    font-family: 'Cinzel', serif;
+    color: #d4af37;
+}
+
+.text_center {
+    text-align: center;
 }
 
 /*FRONT PAGE*/
@@ -15,8 +27,6 @@ body {
     line-height: 500px;
     font-size: 30pt;
     font-weight: 700;
-    font-family: 'Cinzel', serif;
-    color: #d4af37;
     background: url("../img/garden.jpg") no-repeat center top;
     background-size: cover;
     text-align: center;
@@ -32,12 +42,6 @@ body {
     padding: 50px;
     font-size: 20pt;
     font-weight: 700;
-    font-family: 'Cinzel', serif;
-    color: #d4af37;
-    background: 
-        url("../img/cracktexture.png") no-repeat center center,
-        rgb(60, 0, 0);
-    background-size: cover;
 }
 
 .front_page_main h1 {
@@ -54,7 +58,6 @@ body {
     width: 960px;
     margin: 0 auto;
     padding: 10px;
-    font-family: 'Cinzel', serif;
     color: black;
     background-color: #e7e2b6;
     border: 30px solid transparent;
@@ -71,7 +74,7 @@ body {
     width: 100%;
 }
 
-.front_page_news p {
+.front_page_news p, .front_page_news h1, .front_page_news h2 {
     color: rgba(191, 187, 151, 0.8);
     text-shadow: 1px 4px 6px #e7e2b6, 0 0 0 #000, 1px 4px 6px #e7e2b6;
 }
@@ -81,7 +84,7 @@ body {
 .play_button {
     background-color: #d4af37;
     position: absolute;
-    top: 478px;
+    top: 494px;
     left: 30%;
     right: 30%;
     font-family: 'Fontdiner Swanky', serif;
@@ -120,6 +123,7 @@ body {
 nav {
   background: rgb(34, 34, 34);
   text-align: center;
+  
 }
 
 nav ul {
@@ -130,6 +134,7 @@ nav ul {
   display: inline-block;
   zoom: 1;
   text-align: center;
+  
 }
 
 nav ul li {
@@ -144,7 +149,6 @@ nav ul li a {
   text-decoration: none;
   display: block;
   padding: 15px 25px;
-  font-family: 'Cinzel', serif;
   font-weight: 400;
   font-size: 19px;
   -webkit-transition: color .25s;
@@ -165,7 +169,6 @@ nav ul li a:hover:before {
 }
 
 nav ul li a:after {
-  content: "";
   display: block;
   position: absolute;
   right: -3px;
@@ -211,9 +214,7 @@ nav ul li.active a:before {
     padding-bottom:  100px;
     text-align: center;
     background: 
-        url("../img/pillar_background.png") no-repeat center top,
-        url("../img/cracktexture.png") no-repeat center center fixed,
-        rgb(60, 0, 0);
+        url("../img/pillar_background.png") no-repeat center top;
     background-size: cover;
 }
 
@@ -232,20 +233,14 @@ canvas {
 
 
 /*LOGIN & REGISTER PAGE*/
-*{margin:0;padding:0;}
 
 .login_body{
-  font-family:'Cinzel',sans-serif;
-  background: url("../img/cracktexture.png") no-repeat center center,rgb(60, 0, 0);
-  background-size: cover;
 }
 
 .login_elements {
     padding-top: 50px;
-    padding-bottom: 0px;
+    padding-bottom: 50px;
     text-align: center;
-    font-family: 'Cinzel', serif;
-
 }
 
 .login_button{
@@ -260,7 +255,6 @@ canvas {
   font-size:26px;
   text-align:center;
   text-decoration:none;
-  color:#d4af37;
   cursor:pointer;
   transition:background .3s;
   -webkit-transition:background .3s;
@@ -295,7 +289,6 @@ canvas {
   font-size:140%;
   font-weight:300;
   text-align:center;
-  color:#d4af37;
 }
 
 form{
@@ -308,7 +301,6 @@ input[type="text"],input[type="password"]{
   background:rgba(191, 187, 151, 0.8);
   margin-bottom:4%;
   padding:4%;
-  font-family:'Cinzel',sans-serif;
   font-size:95%;
   color:#fff;
 }
@@ -334,12 +326,11 @@ input[type="submit"]{
   background:#222222;
   border:0;
   padding:4%;
-  font-family: 'Cinzel', serif;
   font-size:100%;
-  color: #d4af37;
   cursor:pointer;
   transition:background .3s;
   -webkit-transition:background .3s;
+  color: #d4af37;
 }
 
 input[type="submit"]:hover{
@@ -359,10 +350,10 @@ input[type="submit"]:hover{
   font-size:26px;
   text-align:center;
   text-decoration:none;
-  color:#d4af37;
   cursor:pointer;
   transition:background .3s;
   -webkit-transition:background .3s;
+  color: #d4af37;
 }
 
 .RD_button:hover{
@@ -390,6 +381,7 @@ footer p {
     border-right: 1px solid lightgray;
     top: 30px;
     padding: 10px;
+    font-size: 10pt;
 }
 
 footer p.no_right_border {

@@ -10,7 +10,7 @@
     });
 </script>
 
-<body class="login_body">
+<div class="login_body">
     <div class="login_elements">
         <span class="login_button" id="toggle-login">LOGIN</span>
 
@@ -23,9 +23,9 @@
                 <input type="submit" value="ENTER" />
             </form>
         </div>
-        <a href="~/Account/Register.cshtml" class="RD_button">NO ACCOUNT?</a>
+        @Html.ActionLink("NO ACCOUNT?", "Register", "Account", new { @class = "RD_button" })
     </div>
-</body>
+</div>
 
 @{
   ViewBag.Title = "Log in";

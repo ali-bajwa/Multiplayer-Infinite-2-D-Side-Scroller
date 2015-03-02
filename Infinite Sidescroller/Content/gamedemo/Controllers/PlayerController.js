@@ -4,7 +4,7 @@ GameModel = require("../Models/GameModel.js");
 var PlayerController = (function(){
 
 		var move_right = function(){
-		GameModel.hero.x += 10;
+		move(10, 0);
 	};
 
 	var move_left = function(){

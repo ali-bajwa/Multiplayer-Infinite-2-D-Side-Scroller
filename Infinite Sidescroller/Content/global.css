@@ -2,237 +2,230 @@
 
 /*FRONT PAGE*/
 .front_page_game {
-    height: 500px;
-    line-height: 500px;
-    font-size: 30pt;
-    font-weight: 700;
-    font-family: 'Cinzel', serif;
-    color: #d4af37;
-    background: url("../img/garden.jpg") no-repeat center top;
-    background-size: cover;
-    text-align: center;
+	height: 500px;
+	line-height: 500px;
+	font-size: 30pt;
+	font-weight: 700;
+	font-family: 'Cinzel', serif;
+	color: #d4af37;
+	background: url("../img/garden.jpg") no-repeat center top;
+	background-size: cover;
+	text-align: center;
 }
 
-.front_page_game h1 {
-    margin: 0px;
-    text-shadow: 4px 4px rgb(60, 0, 0);
-}
+	.front_page_game h1 {
+		margin: 0px;
+		text-shadow: 4px 4px rgb(60, 0, 0);
+	}
 
 .front_page_main {
-    text-align: center;
-    padding: 50px;
-    font-size: 20pt;
-    font-weight: 700;
-    font-family: 'Cinzel', serif;
-    color: #d4af37;
-    background: 
-        url("../img/cracktexture.png") no-repeat center center fixed,
-        rgb(60, 0, 0);
+	text-align: center;
+	padding: 50px;
+	font-size: 20pt;
+	font-weight: 700;
+	font-family: 'Cinzel', serif;
+	color: #d4af37;
+	background: url("../img/cracktexture.png") no-repeat center center fixed, rgb(60, 0, 0);
 }
 
-.front_page_main h1 {
-    margin: 0px;
-    text-shadow: 3px 3px #000000;
-}
+	.front_page_main h1 {
+		margin: 0px;
+		text-shadow: 3px 3px #000000;
+	}
 
-.front_page_main img {
-    margin-bottom: 50px;   
-}
+	.front_page_main img {
+		margin-bottom: 50px;
+	}
 
 .front_page_news {
-    overflow: hidden;
-    width: 960px;
-    margin: 0 auto;
-    padding: 10px;
-    font-family: 'Cinzel', serif;
-    color: black;
-    background-color: #e7e2b6;
-    border: 30px solid transparent;
-    opacity: 0.9;
-    border-image: url("../img/greek_borderC.png") 60 60 round;
+	overflow: hidden;
+	width: 960px;
+	margin: 0 auto;
+	padding: 10px;
+	font-family: 'Cinzel', serif;
+	color: black;
+	background-color: #e7e2b6;
+	border: 30px solid transparent;
+	opacity: 0.9;
+	border-image: url("../img/greek_borderC.png") 60 60 round;
 }
 
 .front_page_border {
-    height: 40px;
-    background: 
-        url("../img/border.gif") repeat,
-        #e7e2b6;
-    background-size: contain;
-    width: 100%;
+	height: 40px;
+	background: url("../img/border.gif") repeat, #e7e2b6;
+	background-size: contain;
+	width: 100%;
 }
 
 .front_page_news p {
-    color: rgba(191, 187, 151, 0.8);
-    text-shadow: 1px 4px 6px #e7e2b6, 0 0 0 #000, 1px 4px 6px #e7e2b6;
+	color: rgba(191, 187, 151, 0.8);
+	text-shadow: 1px 4px 6px #e7e2b6, 0 0 0 #000, 1px 4px 6px #e7e2b6;
 }
 /*END FRONT PAGE*/
 
 /* PLAY BUTTON */
 .play_button {
-    background-color: #d4af37;
-    position: absolute;
-    top: 478px;
-    left: 30%;
-    right: 30%;
-    font-family: 'Fontdiner Swanky', serif;
-    border: 1px solid transparent;
-    transition: .5s;
+	background-color: #d4af37;
+	position: absolute;
+	top: 478px;
+	left: 30%;
+	right: 30%;
+	font-family: 'Fontdiner Swanky', serif;
+	border: 1px solid transparent;
+	transition: .5s;
 }
 
-.play_button a {
-    font-size: 26px;
-    color: #880000;
-    text-decoration: none;
-}
+	.play_button a {
+		font-size: 26px;
+		color: #880000;
+		text-decoration: none;
+	}
 
-.play_button a:hover {
-    color: white;
-}
+		.play_button a:hover {
+			color: white;
+		}
 
-.play_button:hover {
-    text-decoration-color: white;
-    transition: .5s;
-    -webkit-box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.9);
-    -moz-box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.9);
-    box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.9);
-}
+	.play_button:hover {
+		text-decoration-color: white;
+		transition: .5s;
+		-webkit-box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.9);
+		-moz-box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.9);
+		box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.9);
+	}
 
 .button_style {
-  cursor: pointer;
-  display: inline-block;
-  padding: 6px 12px;
-  text-align: center;
+	cursor: pointer;
+	display: inline-block;
+	padding: 6px 12px;
+	text-align: center;
 }
 
 
 /*NAV BAR*/
 nav {
-  background: rgb(34, 34, 34);
-  text-align: center;
+	background: rgb(34, 34, 34);
+	text-align: center;
 }
 
-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  line-height: 1;
-  display: inline-block;
-  zoom: 1;
-  text-align: center;
-}
+	nav ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+		line-height: 1;
+		display: inline-block;
+		zoom: 1;
+		text-align: center;
+	}
 
-nav ul li {
-  display: inline-block;
-  padding: 0;
-  margin: 0;
-  transition: .25s;
-}
+		nav ul li {
+			display: inline-block;
+			padding: 0;
+			margin: 0;
+			transition: .25s;
+		}
 
-nav ul li a {
-  color: #d4af37;
-  text-decoration: none;
-  display: block;
-  padding: 15px 25px;
-  font-family: 'Cinzel', serif;
-  font-weight: 400;
-  font-size: 19px;
-  -webkit-transition: color .25s;
-  -moz-transition: color .25s;
-  -ms-transition: color .25s;
-  -o-transition: color .25s;
-  transition: color .25s;
-}
+			nav ul li a {
+				color: #d4af37;
+				text-decoration: none;
+				display: block;
+				padding: 15px 25px;
+				font-family: 'Cinzel', serif;
+				font-weight: 400;
+				font-size: 19px;
+				-webkit-transition: color .25s;
+				-moz-transition: color .25s;
+				-ms-transition: color .25s;
+				-o-transition: color .25s;
+				transition: color .25s;
+			}
 
-nav ul li a:hover {
-  background-color: #d4af37;
-  color: #880000;
-  transition: .25s;
-}
+				nav ul li a:hover {
+					background-color: #d4af37;
+					color: #880000;
+					transition: .25s;
+				}
 
-nav ul li a:hover:before {
-  width: 100%;
-}
+					nav ul li a:hover:before {
+						width: 100%;
+					}
 
-nav ul li a:after {
-  content: "";
-  display: block;
-  position: absolute;
-  right: -3px;
-  top: 19px;
-  height: 6px;
-  width: 6px;
-  background: #ffffff;
-  opacity: .5;
-}
+				nav ul li a:after {
+					content: "";
+					display: block;
+					position: absolute;
+					right: -3px;
+					top: 19px;
+					height: 6px;
+					width: 6px;
+					background: #ffffff;
+					opacity: .5;
+				}
 
-nav ul li a:before {
-  content: "";
-  display: block;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 3px;
-  width: 0;
-  -webkit-transition: width .25s;
-  -moz-transition: width .25s;
-  -ms-transition: width .25s;
-  -o-transition: width .25s;
-  transition: width .25s;
-}
+				nav ul li a:before {
+					content: "";
+					display: block;
+					position: absolute;
+					left: 0;
+					bottom: 0;
+					height: 3px;
+					width: 0;
+					-webkit-transition: width .25s;
+					-moz-transition: width .25s;
+					-ms-transition: width .25s;
+					-o-transition: width .25s;
+					transition: width .25s;
+				}
 
-nav ul li.last > a:after,
-nav ul li:last-child > a:after {
-  display: none;
-}
+			nav ul li.last > a:after,
+			nav ul li:last-child > a:after {
+				display: none;
+			}
 
-nav ul li.active a {
-  background-color: #5082B3;
-}
+			nav ul li.active a {
+				background-color: #5082B3;
+			}
 
-nav ul li.active a:before {
-  width: 100%;
-}
+				nav ul li.active a:before {
+					width: 100%;
+				}
 /*END NAV BAR*/
 
 /*GAME PAGE*/
 .game_canvas {
-    padding-top: 100px;
-    padding-bottom:  100px;
-    text-align: center;
-    background: 
-        url("../img/pillar_background.png") no-repeat center top,
-        url("../img/cracktexture.png") no-repeat center center fixed,
-        rgb(60, 0, 0);
-    background-size: cover;
+	padding-top: 100px;
+	padding-bottom: 100px;
+	text-align: center;
+	background: url("../img/pillar_background.png") no-repeat center top, url("../img/cracktexture.png") no-repeat center center fixed, rgb(60, 0, 0);
+	background-size: cover;
 }
 
 /*REMOVE THIS UPON IMPLEMENTATION OF GAME*/
 canvas {
-    background-color: white;
+	background-color: white;
 }
 
 /*END GAME PAGE*/
 
 /*FOOTER*/
 footer {
-    background-color: rgb( 34, 34, 34);
-    color: lightgray;
-    height: 80px;
-    text-align: center;
+	background-color: rgb( 34, 34, 34);
+	color: lightgray;
+	height: 80px;
+	text-align: center;
 }
 
-footer p {
-    position: relative;
-    display: inline;
-    border-right: 1px solid lightgray;
-    top: 30px;
-    padding: 10px;
-}
+	footer p {
+		position: relative;
+		display: inline;
+		border-right: 1px solid lightgray;
+		top: 30px;
+		padding: 10px;
+	}
 
-footer p.no_right_border {
-    border-right: 0px;
-}
+		footer p.no_right_border {
+			border-right: 0px;
+		}
 
 body {
-    margin: 0px;
+	margin: 0px;
 }

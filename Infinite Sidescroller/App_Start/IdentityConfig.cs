@@ -37,7 +37,7 @@ namespace Infinite_Sidescroller.Models
 			manager.UserValidator = new UserValidator<ApplicationUser>(manager)
 			{
 				AllowOnlyAlphanumericUserNames = false,
-				RequireUniqueEmail = true
+				RequireUniqueEmail = false
 			};
 
 			// Set validation logic for passwords

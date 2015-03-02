@@ -29,17 +29,23 @@ var InitController = (function(){
 			AssetModel.loader = new createjs.LoadQueue(false); // loading resourses using preload.js
 			AssetModel.loader.addEventListener("complete", setup_asset_dependant);
 
-			// if more stuff needs to be done for the test mode, 
-			// or more types of it needs to be added
-			// you can safely make the following a separate function
+		// if more stuff needs to be done for the test mode, 
+		// or more types of it needs to be added
+		// you can safely make the following a separate function
 			var asset_path = (mode == "test") ? "./assets/art/" : "../Content/gamedemo/assets/art/";
+			setup_debug_canvas();
 
-			AssetController.load_all(asset_path);
+
+
+		AssetController.load_all(asset_path);
 
 		// <<<
 
 	};
 
+	var setup_debug_canvas = function(){
+		// more stuff may be done later
+	};
 	
 	var setup_screen = function(){
 
@@ -85,7 +91,7 @@ var InitController = (function(){
 
 	var setup_asset_dependant = function(){
 		// this may need to move to either load_game or some sort of resizing function
-		GameModel.stage = new createjs.Stage("display_canvas");
+		GameModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
 		GameModel.stage.canvas.width = Config.SCREEN_W;
 		GameModel.stage.canvas.height = Config.SCREEN_H;
 

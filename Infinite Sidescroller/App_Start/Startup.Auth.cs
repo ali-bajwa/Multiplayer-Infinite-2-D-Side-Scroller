@@ -12,29 +12,27 @@ using Infinite_Sidescroller.Models;
 
 namespace Infinite_Sidescroller
 {
-  public partial class Startup
-  {
-    // For more information on configuring authentication, please visit http://go.microsoft.com/fwlink/?LinkId=301864
-    public void ConfigureAuth(IAppBuilder app)
-    {
-      app.CreatePerOwinContext(ApplicationDbContext.Create);
-      app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
-      app.CreatePerOwinContext<ApplicationRoleManager>(ApplicationRoleManager.Create);
+	public partial class Startup
+	{
+		public void ConfigureAuth(IAppBuilder app)
+		{
+			app.CreatePerOwinContext(ApplicationDbContext.Create);
+			app.CreatePerOwinContext<ApplicationUserManager>(ApplicationUserManager.Create);
 
-      // Enable the application to use a cookie to store information for the signed in user
-      app.UseCookieAuthentication(new CookieAuthenticationOptions
-      {
-        AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
-        LoginPath = new PathString("/Account/Login"),
-        Provider = new CookieAuthenticationProvider
-        {
-          // Enables the application to validate the security stamp when the user logs in.
-          // This is a security feature which is used when you change a password or add an external login to your account.  
-          OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
-              validateInterval: TimeSpan.FromMinutes(30),
-              regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
-        }
-      });
-    }
-  }
+			// Enable cookies to store information for the user
+			app.UseCookieAuthentication(new CookieAuthenticationOptions
+			{
+				AuthenticationType = DefaultAuthenticationTypes.ApplicationCookie,
+				LoginPath = new PathString("/Account/Login"),
+				Provider = new CookieAuthenticationProvider
+				{
+					// Validate security stamp on login
+					// On password change security stamp is changed to invalidate all current cookies (current timespan for invalidating cookie is 30 mins)
+					OnValidateIdentity = SecurityStampValidator.OnValidateIdentity<ApplicationUserManager, ApplicationUser>(
+						validateInterval: TimeSpan.FromMinutes(30),
+						regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
+				}
+			});
+		}
+	}
 }

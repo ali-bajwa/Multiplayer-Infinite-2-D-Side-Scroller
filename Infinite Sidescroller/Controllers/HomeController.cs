@@ -18,16 +18,6 @@ namespace Infinite_Sidescroller.Controllers
             return View();
         }
 
-        public ActionResult Contact()
-        {
-            return View();
-        }
-
-        public ActionResult Game()
-        {
-            return View();
-        }
-
         public ActionResult Leaderboard()
         {
             return View();

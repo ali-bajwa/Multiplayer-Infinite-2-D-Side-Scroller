@@ -15,6 +15,8 @@ var GameController = (function(){
 	var vertical_velocity = 0;
 	var delta_s = 0;
 	var movement_modifier = 1;
+	var loop = 0;
+	var marker = true;
 
 	var update_all = function(event){
 		/*
@@ -71,7 +73,15 @@ var GameController = (function(){
 		    movement_modifier = 1;
 		}
 
+		if (loop == 6) {
+		    marker = !(marker);
+		    loop = 0;
+		}
+		else {
+		    loop += 1;
+		}
 		EnemyController.move(-1, 0);
+		GameModel.chomper.gotoAndStop(marker ? 1 : 0);
 
 		// <<<
 

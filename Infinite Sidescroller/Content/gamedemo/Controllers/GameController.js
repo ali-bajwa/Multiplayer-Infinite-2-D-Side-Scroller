@@ -1,9 +1,10 @@
-var CameraController, PlayerController, KeyboardController;
+var CameraController, PlayerController, KeyboardController, WorldController;
 var GameModel;
 
 CameraController = require("./CameraController.js");
 PlayerController = require("./PlayerController.js");
 KeyboardController = require("./KeyboardController.js");
+WorldController = require("./WorldController.js");
 
 GameModel = require("../Models/GameModel.js");
 

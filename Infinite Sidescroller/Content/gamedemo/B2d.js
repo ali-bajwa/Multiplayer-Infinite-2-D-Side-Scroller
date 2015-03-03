@@ -7,6 +7,7 @@ Box2D = require("./lib/Box2dWeb-2.1.a.3.min.js");
 
 var B2d = new function(){
 
+	console.log(Box2D);
 	this.b2Vec2 = Box2D.Common.Math.b2Vec2;
 	this.b2BodyDef = Box2D.Dynamics.b2BodyDef;
 	this.b2Body = Box2D.Dynamics.b2Body;

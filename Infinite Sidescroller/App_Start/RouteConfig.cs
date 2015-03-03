@@ -15,6 +15,12 @@ namespace Infinite_Sidescroller
 			routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
 			routes.MapRoute(
+				name: "GameController",
+				url: "game/{action}",
+				defaults: new { controller = "Game", action = "Index" }
+			);
+
+			routes.MapRoute(
 				name: "HomeController",
 				url: "{action}",
 				defaults: new { controller = "Home" }

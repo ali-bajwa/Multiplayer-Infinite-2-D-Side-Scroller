@@ -3,7 +3,7 @@
 
 var Box2D;
 
-Box2D = require("./lib/Box2dWeb-2.1.a.3.min.js");
+Box2D = require("box2dweb");
 
 var B2d = new function(){
 

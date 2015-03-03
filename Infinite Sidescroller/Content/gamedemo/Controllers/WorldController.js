@@ -6,12 +6,15 @@ Utility = require("../Utility.js");
 
 PhysicsController = require("./PhysicsController.js");
 
-
 var WorldController = (function(){
 
-	var my_preciousss_body = new PhysicsController.get_body({});
+	var body_test = PhysicsController.get_body({type: "dynamic"});
+	var update = function(){
+	};
+
 
 	return {
+		update: update
 	};
 })();
 

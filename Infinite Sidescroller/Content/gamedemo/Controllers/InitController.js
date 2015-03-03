@@ -1,17 +1,20 @@
-var KeyboardController, GameController, AssetController, TerrainController;
-var GameModel, AssetModel;
-var Config, Utility;
+var KeyboardController, GameController, AssetController, TerrainController, PhysicsController;
+var GameModel, AssetModel, PhysicsModel;
+var Config, Utility, B2d;
 
 KeyboardController = require("./KeyboardController.js");
 GameController = require("./GameController.js");
 AssetController = require("./AssetController.js");
 TerrainController = require("./TerrainController.js");
+PhysicsController = require("./PhysicsController.js");
 
 GameModel = require("../Models/GameModel.js");
 AssetModel = require("../Models/AssetModel.js");
+PhysicsModel = require("../Models/PhysicsModel.js");
 
 Config = require("../Config.js");
 Utility = require("../Utility.js");
+B2d = require("../B2d.js");
 
 var InitController = (function(){
 	// why do you want to put initialization of everything into the InitController?
@@ -28,6 +31,7 @@ var InitController = (function(){
 
 		setup_screen();
 		setup_events();
+		setup_debug_canvas(mode);
 
 
 		// Notice that asset dependent stuff doesn't (and mustn't) start until
@@ -49,15 +53,35 @@ var InitController = (function(){
 		AssetController.load_all(asset_path);
 
 		// <<<
+		
 
 	};
 
 	var physics = function(){
-		PhysicsModel.context = $(Config.DEBUG_CANVAS_NAME).get(0).getContext("2d");
+		// a lot of 
+		// sutff from the PhysicsModel and PhysicsController should be moved here	
 	};
 
-	var setup_debug_canvas = function(){
+	var setup_debug_canvas = function(mode){
 		// more stuff may be done later
+		// should be refactored and prettyfied
+		
+		if(mode == "test"){
+			var context = $(Config.DEBUG_CANVAS_NAME).context // something weird goes here maybe .getContext("2d");?
+			PhysicsModel.context = context;
+			PhysicsModel.debugDraw = new B2d.b2DebugDraw();
+			PhysicsModel.debugDraw.SetSprite(PhysicsModel.context);
+			PhysicsModel.debugDraw.SetDrawScale(PhysicsModel.scale);
+			PhysicsModel.debugDraw.SetFillAlpha(0.3);
+			PhysicsModel.debugDraw.SetLineThickness(1.0);
+			PhysicsModel.debugDraw.SetFlags(B2d.b2DebugDraw.e_shapeBit | B2d.b2DebugDraw.e_jointBit);
+			PhysicsModel.world.SetDebugDraw(PhysicsModel.debugDraw);
+
+			Config.B2D.debug_draw = true;
+		}else{
+			// nothing
+		}
+	
 	};
 	
 	var setup_screen = function(){

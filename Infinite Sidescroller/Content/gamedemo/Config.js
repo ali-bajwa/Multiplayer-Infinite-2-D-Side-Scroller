@@ -16,7 +16,7 @@ var Config = function(){
 		SPS: 60, 			// Steps Per Second
 		VELOCITY_ITR: 8,	// velocity iterations
 		POSITION_ITR: 3,	// position iterations
-		debugDraw: false
+		debug_draw: false
 	}
 	
 	// <<<

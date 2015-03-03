@@ -30,25 +30,11 @@ var PhysicsController = (function(){
 			B2dConfig.VELOCITY_ITR // position iterations
 		);
 	}
-	if (B2dConfig.debugDraw) {
-		this.world.DrawDebugData();
-	}
+		if (B2dConfig.debug_draw) {
+			this.world.DrawDebugData();
+		}
 	} 
 
-	var debug = function() {
-		// this is probably for the InitController.init 
-		// specifically for the setup_debug_canvas
-		//
-		this.debugDraw = new B2d.b2DebugDraw();
-		this.debugDraw.SetSprite(this.context);
-		this.debugDraw.SetDrawScale(this.scale);
-		this.debugDraw.SetFillAlpha(0.3);
-		this.debugDraw.SetLineThickness(1.0);
-		this.debugDraw.SetFlags(B2d.b2DebugDraw.e_shapeBit | B2d.b2DebugDraw.e_jointBit);
-		this.world.SetDebugDraw(this.debugDraw);
-	}; 
-
-	
 
 	var get_body = function(details){
 
@@ -109,7 +95,7 @@ var PhysicsController = (function(){
 	 
 	 
 	return {
-		get_body: get_body
+		get_body: get_body,
 
 	};
 })();

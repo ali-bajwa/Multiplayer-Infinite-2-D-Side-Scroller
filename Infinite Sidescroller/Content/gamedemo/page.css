@@ -3,7 +3,7 @@ body {
 	background-color: #4b6695; /* can be removed, I set colors just to be able to easily tell where canvas begins and ends (for debugging purposes) */
 }
 
-canvas {
+#display_canvas {
 	background-color: #2bd777; /* same reason */
 	/*
 	 * Don't do this: 

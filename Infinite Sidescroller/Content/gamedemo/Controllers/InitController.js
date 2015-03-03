@@ -91,7 +91,7 @@ var InitController = (function(){
 
 		hero_sheet = new createjs.SpriteSheet({
 		    "framerate": 2,
-		    "images": ["assets/art/warrior.png"],
+		    "images": ["../Content/gamedemo/assets/art/warrior.png"],
 		    "frames": { "regX": 0, "regY": 60, "height": 60, "width": 36, "count": 3 },
 		    "animations": {
 		        "run": {
@@ -116,7 +116,7 @@ var InitController = (function(){
 
 		chomper_sheet = new createjs.SpriteSheet({
 		    "framerate": 2,
-		    "images": ["assets/art/Chompers.png"],
+		    "images": ["../Content/gamedemo/assets/art/Chompers.png"],
 		    "frames": { "regX": 0, "regY": 210, "height": 210, "width": 337, "count": 2 },
 		    "animations": {
 		        "run": [0, 1, "run"]

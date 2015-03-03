@@ -80,14 +80,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.Security.Cookies.3.0.0\lib\net45\Microsoft.Owin.Security.Cookies.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.Owin.Security.Facebook, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Facebook.3.0.0\lib\net45\Microsoft.Owin.Security.Facebook.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.Google, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Google.3.0.0\lib\net45\Microsoft.Owin.Security.Google.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.Owin.Security.MicrosoftAccount, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.Security.MicrosoftAccount.3.0.0\lib\net45\Microsoft.Owin.Security.MicrosoftAccount.dll</HintPath>
@@ -95,10 +87,6 @@
     <Reference Include="Microsoft.Owin.Security.OAuth, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\Microsoft.Owin.Security.OAuth.3.0.0\lib\net45\Microsoft.Owin.Security.OAuth.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.Owin.Security.Twitter, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\packages\Microsoft.Owin.Security.Twitter.3.0.0\lib\net45\Microsoft.Owin.Security.Twitter.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -171,9 +159,12 @@
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
+    <Compile Include="App_Start\IdentityConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
+    <Compile Include="App_Start\Utility.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\GameController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -184,13 +175,32 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Content\gamedemo\assets\art\bottom_terrain.png" />
-    <Content Include="Content\gamedemo\assets\art\grass.png" />
-    <Content Include="Content\gamedemo\assets\art\greek_warrior.png" />
-    <Content Include="Content\gamedemo\assets\art\middle_terrain.png" />
-    <Content Include="Content\gamedemo\lib\Box2dWeb-2.1.a.3.min.js" />
-    <Content Include="Content\gamedemo\main.js" />
-    <Content Include="Content\gamedemo\no_scroll_canvas.js" />
+    <Content Include="Content\box2d skeleton\.gitignore" />
+    <Content Include="Content\box2d skeleton\gulpfile.js" />
+    <Content Include="Content\box2d skeleton\gulp\index.js" />
+    <Content Include="Content\box2d skeleton\gulp\tasks\browserify.js" />
+    <Content Include="Content\box2d skeleton\gulp\tasks\browserSync.js" />
+    <Content Include="Content\box2d skeleton\gulp\tasks\build.js" />
+    <Content Include="Content\box2d skeleton\gulp\tasks\copy.js" />
+    <Content Include="Content\box2d skeleton\gulp\tasks\default.js" />
+    <Content Include="Content\box2d skeleton\gulp\tasks\images.js" />
+    <Content Include="Content\box2d skeleton\gulp\tasks\setWatch.js" />
+    <Content Include="Content\box2d skeleton\gulp\tasks\watch.js" />
+    <Content Include="Content\box2d skeleton\gulp\util\bundleLogger.js" />
+    <Content Include="Content\box2d skeleton\gulp\util\handleErrors.js" />
+    <Content Include="Content\box2d skeleton\gulp\util\scriptFilter.js" />
+    <Content Include="Content\box2d skeleton\source\images\hyena.png" />
+    <Content Include="Content\box2d skeleton\source\index.html" />
+    <Content Include="Content\box2d skeleton\source\javascripts\config.js" />
+    <Content Include="Content\box2d skeleton\source\javascripts\game.js" />
+    <Content Include="Content\box2d skeleton\source\javascripts\keys.js" />
+    <Content Include="Content\box2d skeleton\source\javascripts\platform.js" />
+    <Content Include="Content\box2d skeleton\source\javascripts\reality.js" />
+    <Content Include="Content\box2d skeleton\source\javascripts\scene.js" />
+    <Content Include="Content\box2d skeleton\source\javascripts\stage.js" />
+    <Content Include="Content\box2d skeleton\source\javascripts\vendor\box2d.js" />
+    <Content Include="Content\box2d skeleton\source\javascripts\vendor\easel.js" />
+    <Content Include="Content\box2d skeleton\source\javascripts\vendor\stats.js" />
     <Content Include="Content\global.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
@@ -199,6 +209,9 @@
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
     <Content Include="fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
+    <Content Include="Content\box2d skeleton\package.json" />
+    <Content Include="Content\box2d skeleton\README.md" />
+    <Content Include="Content\box2d skeleton\source\javascripts\player.coffee" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="img\border.gif" />
     <Content Include="img\cracktexture.png" />
@@ -210,8 +223,6 @@
     <Content Include="img\logo3.png" />
     <Content Include="img\pillar_background.png" />
     <Content Include="img\play_background.jpg" />
-    <Content Include="Scripts\bootstrap.js" />
-    <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
     <Content Include="Scripts\jquery-2.1.3.min.map" />
@@ -220,12 +231,7 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
-    <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Scripts\npm.js" />
-    <Content Include="Scripts\respond.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.js" />
-    <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
-    <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Utility.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -238,14 +244,8 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
-    <Content Include="Views\Account\_RemoveAccountPartial.cshtml" />
-    <Content Include="Views\Account\_SetPasswordPartial.cshtml" />
-    <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
-    <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Account\Manage.cshtml" />
     <Content Include="Views\Account\Register.cshtml" />
@@ -253,9 +253,9 @@
     <Content Include="Views\Shared\_GlobalHeader.cshtml" />
     <Content Include="Views\Shared\_GlobalFooter.cshtml" />
     <Content Include="Views\Shared\_GlobalNav.cshtml" />
-    <Content Include="Views\Home\Game.cshtml" />
     <Content Include="Views\Home\Leaderboard.cshtml" />
     <Content Include="Views\Home\Tutorial.cshtml" />
+    <Content Include="Views\Game\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -278,7 +278,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>40980</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

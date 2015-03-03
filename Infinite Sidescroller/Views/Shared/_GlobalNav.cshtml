@@ -1,11 +1,11 @@
 ﻿@{
   Layout = null;
 }
+
 <ul>
-    <li>@Html.ActionLink("Horae's Hoplites", "Index", "Home", null, new { @class = "navbar_heading" })</li>
+    <li><a href="/">Horae's Hoplites</a></li>
     <li>@Html.ActionLink("Tutorial", "Tutorial", "Home")</li>
     <li>@Html.ActionLink("Leaderboard", "Leaderboard", "Home")</li>
-    <li>@Html.ActionLink("Game", "Game", "Home")</li>
+    <li>@Html.ActionLink("Game", "Index", "Game")</li>
 </ul>
-@*This page is prewrapped with <nav class="GlobalNav">*@
 @Html.Partial("_LoginPartial")

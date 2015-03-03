@@ -8,7 +8,7 @@ var GameModel = new function(){ // main model
 
 	this.hero; // player controlled by the current user
 
-	this.enemy; // ai enemy
+	this.chomper; 
 };
 
 module.exports = GameModel;

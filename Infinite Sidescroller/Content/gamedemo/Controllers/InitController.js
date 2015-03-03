@@ -89,19 +89,28 @@ var InitController = (function(){
 		GameModel.stage.canvas.width = Config.SCREEN_W;
 		GameModel.stage.canvas.height = Config.SCREEN_H;
 
-		GameModel.enemy = AssetController.request_bitmap("chomper");
-		GameModel.enemy.regX = 0;
-		GameModel.enemy.regY = GameModel.enemy.image.height;
-		GameModel.enemy.x = 700;
-		GameModel.enemy.y = 555;
-
 		GameModel.hero = AssetController.request_bitmap("greek_warrior");
 		GameModel.hero.regX = 0;
 		GameModel.hero.regY = GameModel.hero.image.height;
 		GameModel.hero.x = 100;
 		GameModel.hero.y = 513;
 
-		GameModel.stage.addChild(GameModel.enemy, GameModel.hero);
+		chomper_sheet = new createjs.SpriteSheet({
+		    "framerate": 2,
+		    "images": ["assets/art/Chompers.png"],
+		    "frames": { "regX": 0, "regY": 210, "height": 210, "width": 337, "count": 2 },
+		    "animations": {
+		        "run": [0, 1, "run"]
+		    }
+
+		});
+
+		GameModel.chomper = new createjs.Sprite(chomper_sheet, "run");
+
+		GameModel.chomper.x = 700; // set position
+		GameModel.chomper.y = 555;
+
+		GameModel.stage.addChild(GameModel.chomper, GameModel.hero);
 
 		setup_ticker();
 

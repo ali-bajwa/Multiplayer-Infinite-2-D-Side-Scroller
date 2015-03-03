@@ -46,7 +46,7 @@ var GameController = (function(){
 		var base_speed = event.delta / 1000 * 50 * movement_modifier;
 
 		if (cmds.indexOf("up") > -1) {
-		    if (GameModel.hero.y == 510) {
+		    if (GameModel.hero.y == 516) {
 		        vertical_velocity = 450;
 		        movement_modifier = 0.3;
 		    }
@@ -62,14 +62,14 @@ var GameController = (function(){
 
 		delta_s = vertical_velocity * event.delta / 1000;
 
-		if ((GameModel.hero.y - delta_s) <= 510) {
+		if ((GameModel.hero.y - delta_s) <= 516) {
 		    GameModel.hero.y -= delta_s;
 		}
 		else {
-		    GameModel.hero.y = 510;
+		    GameModel.hero.y = 516;
 		}
 
-		if (GameModel.hero.y == 510) {
+		if (GameModel.hero.y == 516) {
 		    movement_modifier = 1;
 		}
 

@@ -89,11 +89,30 @@ var InitController = (function(){
 		GameModel.stage.canvas.width = Config.SCREEN_W;
 		GameModel.stage.canvas.height = Config.SCREEN_H;
 
-		GameModel.hero = AssetController.request_bitmap("greek_warrior");
+		hero_sheet = new createjs.SpriteSheet({
+		    "framerate": 2,
+		    "images": ["assets/art/warrior.png"],
+		    "frames": { "regX": 0, "regY": 60, "height": 60, "width": 36, "count": 3 },
+		    "animations": {
+		        "run": {
+		            "frames": [0, 1, 2],
+		            "next": "run",
+		            "speed": 0.5
+		        }
+		    }
+
+		});
+
+		GameModel.hero = new createjs.Sprite(hero_sheet, "run");
+
+		GameModel.hero.x = 100; // set position
+		GameModel.hero.y = 516;
+
+		/*GameModel.hero = AssetController.request_bitmap("greek_warrior");
 		GameModel.hero.regX = 0;
 		GameModel.hero.regY = GameModel.hero.image.height;
 		GameModel.hero.x = 100;
-		GameModel.hero.y = 513;
+		GameModel.hero.y = 513;*/
 
 		chomper_sheet = new createjs.SpriteSheet({
 		    "framerate": 2,

@@ -89,7 +89,7 @@ var InitController = (function(){
 		GameModel.stage.canvas.width = Config.SCREEN_W;
 		GameModel.stage.canvas.height = Config.SCREEN_H;
 
-		GameModel.enemy = AssetController.request_bitmap("ant");
+		GameModel.enemy = AssetController.request_bitmap("chomper");
 		GameModel.enemy.regX = 0;
 		GameModel.enemy.regY = GameModel.enemy.image.height;
 		GameModel.enemy.x = 700;
@@ -101,8 +101,7 @@ var InitController = (function(){
 		GameModel.hero.x = 100;
 		GameModel.hero.y = 513;
 
-		GameModel.stage.addChild(GameModel.enemy);
-		GameModel.stage.addChild(GameModel.hero);
+		GameModel.stage.addChild(GameModel.enemy, GameModel.hero);
 
 		setup_ticker();
 

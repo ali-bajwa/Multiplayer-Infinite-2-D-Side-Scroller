@@ -7,6 +7,8 @@ var GameModel = new function(){ // main model
 	this.other_players = {}; // players controlled by remote clients
 
 	this.hero; // player controlled by the current user
+
+	this.enemy; // ai enemy
 };
 
 module.exports = GameModel;

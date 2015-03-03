@@ -3,6 +3,7 @@ var CameraModel = require("../Models/CameraModel.js");
 var PlayerController, TerrainController;
 
 PlayerController = require("./PlayerController.js");
+EnemyController = require("./EnemyController.js");
 TerrainController = require("./TerrainController.js");
 
 var CameraController = (function(){
@@ -64,6 +65,7 @@ var CameraController = (function(){
 		var n_y = (-1) * offset_y;
 
 		TerrainController.move(n_x, n_y);
+		EnemyController.move(n_x, n_y);
 		PlayerController.move(n_x, n_y);
 
 		// other related things.move(..., ...)

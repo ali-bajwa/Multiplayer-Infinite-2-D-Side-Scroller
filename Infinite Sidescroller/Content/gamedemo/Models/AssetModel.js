@@ -4,7 +4,8 @@ var AssetModel = new function(){
 	this.loader;
 
 	this.manifest = [ // defining resources to be loaded in bulk with preload.js
-			{src: "greek_warrior.png", id: "greek_warrior"},
+			{ src: "greek_warrior.png", id: "greek_warrior" },
+            { src: "ant.png", id: "ant"},
 			//{src:, id:},
 			{src: "middle_terrain.png", id:"middle_terrain"},
 			{src: "bottom_terrain.png", id: "bottom_terrain"},

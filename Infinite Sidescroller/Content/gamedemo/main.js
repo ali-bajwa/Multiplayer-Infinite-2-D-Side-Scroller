@@ -49,7 +49,7 @@ window.sidescroller_game = (function namespace(){
 	var WorldGenerationController;
 	var PhysicsController;
 	var PlayerController = require("./Controllers/PlayerController.js"); 
-	var EnemyController;
+	var EnemyController = require("./Controllers/EnemyController.js");
 	var TerrainController = require("./Controllers/TerrainController.js"); 
 	var AssetController = require("./Controllers/AssetController.js"); 
 	var KeyboardController = require("./Controllers/KeyboardController.js"); 

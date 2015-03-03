@@ -4,12 +4,17 @@ var GameModel;
 CameraController = require("./CameraController.js");
 PlayerController = require("./PlayerController.js");
 KeyboardController = require("./KeyboardController.js");
+EnemyController = require("./EnemyController.js");
 
 GameModel = require("../Models/GameModel.js");
 
 var GameController = (function(){
 
 	var MOVEMENT_EDGE = 500; // where terrain start scrolling
+
+	var vertical_velocity = 0;
+	var delta_s = 0;
+	var movement_modifier = 1;
 
 	var update_all = function(event){
 		/*
@@ -36,11 +41,37 @@ var GameController = (function(){
 			}
 		}
 
+		var base_speed = event.delta / 1000 * 50 * movement_modifier;
+
+		if (cmds.indexOf("up") > -1) {
+		    if (GameModel.hero.y == 510) {
+		        vertical_velocity = 450;
+		        movement_modifier = 0.3;
+		    }
+		}
+
 		if(cmds.indexOf("left") > -1){
 			if(GameModel.hero.x > 10){
 				PlayerController.move_left(GameModel.hero);
 			}
 		}
+
+		vertical_velocity -= event.delta / 1000 * 700;
+
+		delta_s = vertical_velocity * event.delta / 1000;
+
+		if ((GameModel.hero.y - delta_s) <= 510) {
+		    GameModel.hero.y -= delta_s;
+		}
+		else {
+		    GameModel.hero.y = 510;
+		}
+
+		if (GameModel.hero.y == 510) {
+		    movement_modifier = 1;
+		}
+
+		EnemyController.move(-1, 0);
 
 		// <<<
 

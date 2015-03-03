@@ -11,11 +11,11 @@ namespace Infinite_Sidescroller.Models
 {
 
     [Table("SessionScore")]
-    public class SessionScore
+    public class ScoreModels
     {
         [Key]
         public int id { get; set; }
-        public GameSession session_id { get; set; }
+        public SessionModels session_id { get; set; }
         public ApplicationUser player_id { get; set; }
         public int score { get; set; }
 

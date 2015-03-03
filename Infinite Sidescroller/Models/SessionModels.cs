@@ -9,8 +9,8 @@ using System.Data.Entity;
 
 namespace Infinite_Sidescroller.Models
 {
-    [Table("GameSession")]
-    public class GameSession
+    [Table("SessionModels")]
+    public class SessionModels
     {
         [Key]
         public int id { get; set; }

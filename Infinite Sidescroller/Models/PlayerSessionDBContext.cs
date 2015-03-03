@@ -17,8 +17,8 @@ namespace Infinite_Sidescroller.Models
         {
 
         }
-        public DbSet<GameSession> sessions { get; set; }
-        public DbSet<SessionScore> session_scores { get; set; }
+        public DbSet<SessionModels> sessions { get; set; }
+        public DbSet<ScoreModels> session_scores { get; set; }
 
 
     }

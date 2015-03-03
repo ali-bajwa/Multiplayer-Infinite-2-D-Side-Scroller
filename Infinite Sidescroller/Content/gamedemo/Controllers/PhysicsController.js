@@ -39,12 +39,12 @@ var PhysicsController = (function(){
 		// this is probably for the InitController.init 
 		// specifically for the setup_debug_canvas
 		//
-		this.debugDraw = new b2DebugDraw();
+		this.debugDraw = new B2d.b2DebugDraw();
 		this.debugDraw.SetSprite(this.context);
 		this.debugDraw.SetDrawScale(this.scale);
 		this.debugDraw.SetFillAlpha(0.3);
 		this.debugDraw.SetLineThickness(1.0);
-		this.debugDraw.SetFlags(b2DebugDraw.e_shapeBit | b2DebugDraw.e_jointBit);
+		this.debugDraw.SetFlags(B2d.b2DebugDraw.e_shapeBit | B2d.b2DebugDraw.e_jointBit);
 		this.world.SetDebugDraw(this.debugDraw);
 	}; 
 
@@ -60,7 +60,7 @@ var PhysicsController = (function(){
 		this.details = details || {};
 		 
 		// Create the definition
-		this.definition = new b2BodyDef();
+		this.definition = new B2d.b2BodyDef();
 		 
 		// Set up the definition
 		for (var k in PhysicsModel.definition_defaults) {
@@ -68,16 +68,16 @@ var PhysicsController = (function(){
 			this.definition[k] = details[k] || PhysicsModel.definition_defaults[k];
 		}
 
-		this.definition.position = new b2Vec2(details.x || 0, details.y || 0);
-		this.definition.linearVelocity = new b2Vec2(details.vx || 0, details.vy || 0);
+		this.definition.position = new B2d.b2Vec2(details.x || 0, details.y || 0);
+		this.definition.linearVelocity = new B2d.b2Vec2(details.vx || 0, details.vy || 0);
 		this.definition.userData = this;
-		this.definition.type = (details.type == "static") ? b2Body.b2_staticBody : b2Body.b2_dynamicBody;
+		this.definition.type = (details.type == "static") ? B2d.b2Body.b2_staticBody : B2d.b2Body.b2_dynamicBody;
 		 
 		// Create the Body
 		this.body = PhysicsModel.world.CreateBody(this.definition);
 		 
 		// Create the fixture
-		this.fixtureDef = new b2FixtureDef();
+		this.fixtureDef = new B2d.b2FixtureDef();
 		for (var l in PhysicsModel.fixture_defaults) {
 			this.fixtureDef[l] = details[l] || PhysicsModel.fixture_defaults[l];
 		}
@@ -87,10 +87,10 @@ var PhysicsController = (function(){
 		switch (details.shape) {
 			case "circle":
 				details.radius = details.radius || PhysicsModel.defaults.radius;
-				this.fixtureDef.shape = new b2CircleShape(details.radius);
+				this.fixtureDef.shape = new B2d.b2CircleShape(details.radius);
 				break;
 			case "polygon":
-				this.fixtureDef.shape = new b2PolygonShape();
+				this.fixtureDef.shape = new B2d.b2PolygonShape();
 				this.fixtureDef.shape.SetAsArray(details.points, details.points.length);
 				break;
 			case "block":
@@ -98,7 +98,7 @@ var PhysicsController = (function(){
 				details.width = details.width || PhysicsModel.defaults.width;
 				details.height = details.height || PhysicsModel.defaults.height;
 			 
-			this.fixtureDef.shape = new b2PolygonShape();
+			this.fixtureDef.shape = new B2d.b2PolygonShape();
 			this.fixtureDef.shape.SetAsBox(details.width / 2,
 				details.height / 2);
 			break;
@@ -109,9 +109,10 @@ var PhysicsController = (function(){
 	 
 	 
 	return {
+		get_body: get_body
 
 	};
 })();
 
 
-module.exports = new PhysicsController;
+module.exports = PhysicsController;

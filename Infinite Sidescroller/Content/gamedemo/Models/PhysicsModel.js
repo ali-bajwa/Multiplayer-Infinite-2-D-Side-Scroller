@@ -13,7 +13,7 @@ var PhysicsModel = function() {
 	this.world = new B2d.b2World(gravity, true);
  
 	// getting context of the debug canvas, for box2d to draw debuggin boxes
-	this.context = $('#' + Config.DEBUG_CANVAS_NAME).getContext("2d");
+	this.context = undefined;
 
 	this.scale = B2dConfig.SCALE;
 
@@ -56,4 +56,4 @@ PhysicsModel.prototype.definition_defaults = {
 
 
 
-module.exports = new Physics;
+module.exports = new PhysicsModel;

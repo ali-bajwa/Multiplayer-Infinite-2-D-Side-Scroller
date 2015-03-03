@@ -14,6 +14,15 @@ Config = require("../Config.js");
 Utility = require("../Utility.js");
 
 var InitController = (function(){
+	// why do you want to put initialization of everything into the InitController?
+	// Because if initialization of smth depends on initialization of smth else,
+	// it's easier to control here
+	//
+	// e.g. if you try to do var foo = $('#foo'); somewhere in other module,
+	// you can get foo = null; as code of that module can execute before the html document
+	// was fully loaded, but >InitController.init< is called after document was loaded, so
+	// -1 potential problem. Btw, at this moment in time the the stuff is set to work that way
+	// using html (<body onload=...); maybe using JS would be better? Idk;
 
 	var init = function(mode){
 
@@ -41,6 +50,10 @@ var InitController = (function(){
 
 		// <<<
 
+	};
+
+	var physics = function(){
+		PhysicsModel.context = $(Config.DEBUG_CANVAS_NAME).get(0).getContext("2d");
 	};
 
 	var setup_debug_canvas = function(){

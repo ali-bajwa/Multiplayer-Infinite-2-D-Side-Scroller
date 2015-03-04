@@ -13,16 +13,18 @@ body {
 		It breaks scaling with easeljs
 		set width and height with js or in the html, width canvas own properties
 	*/
+	z-index: 1;
 }
 
 #canvas_container { 
 	height: 600px; /* this is negotiable, notify me (AK) if you want smth different */
 	width: 97%; /* this can be whatever. */
+	position: relative;
 }
 
 #debug_canvas { /* this must be exactly what it is */
 	z-index: 2;
-	display: none;
 	position: absolute;
-	left: 0
+	left: 0;
+
 }

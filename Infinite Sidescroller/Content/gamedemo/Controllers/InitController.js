@@ -66,9 +66,14 @@ var InitController = (function(){
 		// more stuff may be done later
 		// should be refactored and prettyfied
 		
+
+		// does this way and not with jquery due to some strange bugs
+		var d_canvas = document.getElementById(Config.DEBUG_CANVAS_NAME);
+		var context = d_canvas.getContext("2d");
+
 		if(mode == "test"){
-			var context = $(Config.DEBUG_CANVAS_NAME).context // something weird goes here maybe .getContext("2d");?
 			PhysicsModel.context = context;
+
 			PhysicsModel.debugDraw = new B2d.b2DebugDraw();
 			PhysicsModel.debugDraw.SetSprite(PhysicsModel.context);
 			PhysicsModel.debugDraw.SetDrawScale(PhysicsModel.scale);
@@ -78,8 +83,14 @@ var InitController = (function(){
 			PhysicsModel.world.SetDebugDraw(PhysicsModel.debugDraw);
 
 			Config.B2D.debug_draw = true;
+
+			d_canvas.width = Config.SCREEN_W;
+			d_canvas.height = Config.SCREEN_H;
+
+			//$('#'+Config.DEBUG_CANVAS_NAME).show();
+
 		}else{
-			// nothing
+			//d_canvas.hide();
 		}
 	
 	};

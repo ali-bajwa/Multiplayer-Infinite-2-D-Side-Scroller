@@ -1,9 +1,11 @@
-var CameraController, PlayerController, KeyboardController;
+var CameraController, PlayerController, KeyboardController, WorldController, GraphicsController;
 var GameModel;
 
 CameraController = require("./CameraController.js");
 PlayerController = require("./PlayerController.js");
 KeyboardController = require("./KeyboardController.js");
+WorldController = require("./WorldController.js");
+GraphicsController = require("./GraphicsController.js");
 
 GameModel = require("../Models/GameModel.js");
 
@@ -18,6 +20,9 @@ var GameController = (function(){
 		 */
 		
 		var delta = event.delta;
+
+		// !!!! world simulation step goes somewhere right here
+		// as per current design, will take delta as an argument
 
 		var cmds = KeyboardController.movement_commands();
 
@@ -47,10 +52,14 @@ var GameController = (function(){
 
 		//TerrainController.generate_terrain(); 
 		
-		// Should be called after all movement of objects is done:
-		CameraController.update(); 
+		WorldController.update(delta);
 
-		GameModel.stage.update();
+		GraphicsController.update();
+		
+		// Should be called after all movement of objects is done:
+		CameraController.update(); // should be moved to Graphics Model/Controller
+
+		GameModel.stage.update(); // should be moved to Graphics Model/Controller
 	};
 
 

@@ -1,7 +1,8 @@
 "use strict";
 
+
 /*
- * Rules for working on this:
+ * Rules for working on the (client-side) game code:
  *
  * 1. If you think that one of these rules is stupid or useless, tell me, along with some better suggestions.
  *
@@ -23,39 +24,24 @@
  *
  * 7. And all the obvious stuff that everyone knows:
  * 		function must do one thing; don't make function public unless it needs to be that; 
- * 		comment ambigious code, for larger functions indicate their purpose 
+ * 		comment ambigious code, for larger functions indicate their purpose (through commenting);
  */
 
+var TestController, InitController, Config, Utility;
+
+Config = require("./Config.js");
+	
+Utility = require("./Utility.js");
+
+InitController = require("./Controllers/InitController.js"); 
+TestController = require("./Controllers/TestController.js"); 
+
+var lg = Utility.lg; // for quicker access
+
+// main namespace that is exposed to global scope (window object)
 window.sidescroller_game = (function namespace(){
 
-	var Config = require("./Config.js");
 		
-	var Utility = require("./Utility.js");
-
-	var lg = Utility.lg; // for quicker access
-	var GameModel = require("./Models/GameModel.js");
-	var PlayerModel; // TODO: must be possible to instantiate [and/or] duplicate
-	var TerrainModel = require("./Models/TerrainModel.js");
-	var BackgroundModel; // Split in two later? (Tow background mooving at the different speed may give more depth)
-	var HUDModel; // Heads-Up Display 
-	var EnemyModel;
-	var AssetModel = require("./Models/AssetModel.js"); 
-	var CameraModel = require("./Models/CameraModel.js"); 
-	var WorldModel = require("./Models/WorldModel.js"); 
-
-	var WorldController = require("./Controllers/WorldController.js"); 
-	var GameController = require("./Controllers/GameController.js"); 
-	var CameraController = require("./Controllers/CameraController.js"); 
-	var WorldGenerationController;
-	var PhysicsController;
-	var PlayerController = require("./Controllers/PlayerController.js"); 
-	var EnemyController;
-	var TerrainController = require("./Controllers/TerrainController.js"); 
-	var AssetController = require("./Controllers/AssetController.js"); 
-	var KeyboardController = require("./Controllers/KeyboardController.js"); 
-	var InitController = require("./Controllers/InitController.js"); 
-	var TestController = require("./Controllers/TestController.js"); 
-	
 
 	// Game initiation section: >>>
 	

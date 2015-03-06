@@ -8,7 +8,9 @@ var GameModel = new function(){ // main model
 
 	this.hero; // player controlled by the current user
 
-	this.chomper; 
+	this.chomper;
+
+	this.score;
 };
 
 module.exports = GameModel;

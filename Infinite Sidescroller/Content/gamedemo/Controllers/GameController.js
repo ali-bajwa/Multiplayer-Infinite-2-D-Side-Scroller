@@ -15,6 +15,7 @@ var GameController = (function(){
 	var vertical_velocity = 0;
 	var delta_s = 0;
 	var movement_modifier = 1;
+	var score = 0;
 	var loop = 0;
 	var marker = true;
 
@@ -30,7 +31,8 @@ var GameController = (function(){
 
 		// Separate function >>>
 		if(cmds.indexOf("right") > -1){
-			// temporary
+		    // temporary
+		    score += 1;
 
 			if(GameModel.hero.x > MOVEMENT_EDGE){
 				PlayerController.move_right(GameModel.hero);
@@ -47,13 +49,16 @@ var GameController = (function(){
 
 		if (cmds.indexOf("up") > -1) {
 		    if (GameModel.hero.y == 516) {
-		        vertical_velocity = 450;
+		        vertical_velocity = 300;
 		        movement_modifier = 0.3;
 		    }
 		}
 
 		if(cmds.indexOf("left") > -1){
-			if(GameModel.hero.x > 10){
+		    if (GameModel.hero.x > 10) {
+		        if (score != 0) {
+		            score -= 1;
+		        }
 				PlayerController.move_left(GameModel.hero);
 			}
 		}
@@ -73,7 +78,7 @@ var GameController = (function(){
 		    movement_modifier = 1;
 		}
 
-		if (loop == 6) {
+		if (loop == 4) {
 		    marker = !(marker);
 		    loop = 0;
 		}
@@ -82,6 +87,8 @@ var GameController = (function(){
 		}
 		EnemyController.move(-1, 0);
 		GameModel.chomper.gotoAndStop(marker ? 1 : 0);
+
+		GameModel.score.text = score.toString();
 
 		// <<<
 

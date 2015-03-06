@@ -129,7 +129,13 @@ var InitController = (function(){
 		GameModel.chomper.x = 700; // set position
 		GameModel.chomper.y = 555;
 
-		GameModel.stage.addChild(GameModel.chomper, GameModel.hero);
+		GameModel.score = new createjs.Text();
+		GameModel.score.x = 10;
+		GameModel.score.y = 10;
+		GameModel.score.text = "0";
+		GameModel.score.font = "bold 16pt Arial";
+
+		GameModel.stage.addChild(GameModel.chomper, GameModel.hero, GameModel.score);
 
 		setup_ticker();
 

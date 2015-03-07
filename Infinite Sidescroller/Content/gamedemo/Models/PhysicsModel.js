@@ -9,7 +9,7 @@ B2d = require("../B2d.js");
 
 var PhysicsModel = function() {
 	
-	var gravity = new B2d.b2Vec2(0,9.8); // earth gravity
+	var gravity = new B2d.b2Vec2(0,20); // earth gravity
 	this.world = new B2d.b2World(gravity, true);
  
 	// getting context of the debug canvas, for box2d to draw debuggin boxes

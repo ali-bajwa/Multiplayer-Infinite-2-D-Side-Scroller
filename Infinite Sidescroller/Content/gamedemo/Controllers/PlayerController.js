@@ -1,10 +1,41 @@
+var B2d;
 var GameModel;
+
 GameModel = require("../Models/GameModel.js");
+
+B2d = require("../B2d.js");
 
 var PlayerController = (function(){
 
-		var move_right = function(){
-		GameModel.hero.x += 10;
+	var move_right = function(){
+		var body = GameModel.hero.b2b;
+		var velocity = body.GetLinearVelocity();
+		velocity.x = 5;
+		body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		body.SetAwake(true);
+		//GameModel.hero.x += 10; // old
+		//GameModel.hero.x = (body.GetPosition().x + 1.5/2) * 30 ; 
+	};
+
+	var jump = function(){
+		var body = GameModel.hero.b2b;
+
+		body.ApplyImpulse(new B2d.b2Vec2(0, -30), body.GetWorldCenter());
+
+		//GameModel.hero.y = body.GetPosition().y * 30;
+	
+	};
+
+	var set_coordinates = function(position_vector){
+		// TODO: remove;
+		// temporary/testing
+		GameModel.hero.x = (position_vector.x - 1.5/2) * 30 ;
+		GameModel.hero.y = (position_vector.y + 2.5/2) * 30 ;
+
+	};
+
+	var b2b_get_coordinates = function(){
+		return GameModel.hero.b2b.GetWorldCenter();
 	};
 
 	var move_left = function(){
@@ -20,7 +51,10 @@ var PlayerController = (function(){
 	return {
 		move_right: move_right,
 		move_left: move_left,
-		move: move
+		move: move,
+		set_coordinates: set_coordinates,
+		b2b_get_coordinates: b2b_get_coordinates,
+		jump: jump
 	};
 })();
 

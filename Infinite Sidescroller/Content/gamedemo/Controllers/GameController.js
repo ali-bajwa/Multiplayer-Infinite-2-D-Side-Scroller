@@ -41,6 +41,10 @@ var GameController = (function(){
 			}
 		}
 
+		if(cmds.indexOf("up") > -1){
+			PlayerController.jump();
+		}
+
 
 		if(cmds.indexOf("left") > -1){
 			if(GameModel.hero.x > 10){

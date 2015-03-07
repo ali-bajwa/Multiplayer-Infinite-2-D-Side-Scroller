@@ -150,6 +150,9 @@ var InitController = (function(){
 		GameModel.hero.x = 100;
 		GameModel.hero.y = 510;
 
+		// temporary/testing, do not try to understand numbers involved. I repeat, do not try to understand numbers;
+		GameModel.hero.b2b = PhysicsController.get_rectangular_body(1.5, 2.5, 100/30 + (1.5/2), 510/30 - (2.5/2), true);
+
 		GameModel.stage.addChild(GameModel.hero);
 
 		setup_ticker();

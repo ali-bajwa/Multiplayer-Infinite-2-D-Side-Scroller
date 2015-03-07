@@ -42,6 +42,18 @@ var PhysicsController = (function(){
 			}
 	}; 
 
+	var get_rectangular_body = function(width, height, x, y, dynamic){
+
+		return get_body({
+			shape: "block", 
+			width: width,
+			type: dynamic ? "dynamic" : "static",
+			height: height,
+			x: x,
+			y: y,
+			fixedRotation: true // temporary/test
+		});
+	};
 
 	var get_body = function(details){
 
@@ -91,8 +103,8 @@ var PhysicsController = (function(){
 				details.width = details.width || PhysicsModel.defaults.width;
 				details.height = details.height || PhysicsModel.defaults.height;
 			 
-			fixtureDef.shape = new B2d.b2PolygonShape();
-			fixtureDef.shape.SetAsBox(details.width / 2,
+				fixtureDef.shape = new B2d.b2PolygonShape();
+				fixtureDef.shape.SetAsBox(details.width / 2,
 				details.height / 2);
 			break;
 		}
@@ -105,6 +117,7 @@ var PhysicsController = (function(){
 	 
 	return {
 		get_body: get_body,
+		get_rectangular_body: get_rectangular_body,
 		step: step
 
 	};

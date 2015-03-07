@@ -143,60 +143,17 @@ var InitController = (function(){
 		GameModel.stage.canvas.width = Config.SCREEN_W;
 		GameModel.stage.canvas.height = Config.SCREEN_H;
 
-		hero_sheet = new createjs.SpriteSheet({
-		    "framerate": 2,
-		    "images": ["../Content/gamedemo/assets/art/warrior.png"],
-		    "frames": { "regX": 0, "regY": 60, "height": 60, "width": 36, "count": 3 },
-		    "animations": {
-		        "run": {
-		            "frames": [0, 1, 2],
-		            "next": "run",
-		            "speed": 0.5
-		        }
-		    }
 
-		});
-
-		GameModel.hero = new createjs.Sprite(hero_sheet, "run");
-
-		GameModel.hero.x = 100; // set position
-		GameModel.hero.y = 516;
-
-		/*GameModel.hero = AssetController.request_bitmap("greek_warrior");
+		GameModel.hero = AssetController.request_bitmap("greek_warrior");
 		GameModel.hero.regX = 0;
 		GameModel.hero.regY = GameModel.hero.image.height;
 		GameModel.hero.x = 100;
-		GameModel.hero.y = 513;*/
+		GameModel.hero.y = 510;
 
-		chomper_sheet = new createjs.SpriteSheet({
-		    "framerate": 2,
-		    "images": ["../Content/gamedemo/assets/art/Chompers.png"],
-		    "frames": { "regX": 0, "regY": 210, "height": 210, "width": 337, "count": 2 },
-		    "animations": {
-		        "run": [0, 1, "run"]
-		    }
-
-		});
-
-		GameModel.chomper = new createjs.Sprite(chomper_sheet, "run");
-
-		GameModel.chomper.x = 700; // set position
-		GameModel.chomper.y = 555;
-
-		GameModel.score = new createjs.Text();
-		GameModel.score.x = 10;
-		GameModel.score.y = 10;
-		GameModel.score.text = "0";
-		GameModel.score.font = "bold 16pt Arial";
-
-<<<<<<< HEAD
-		GameModel.stage.addChild(GameModel.chomper, GameModel.hero, GameModel.score);
-=======
 		// temporary/testing, do not try to understand numbers involved. I repeat, do not try to understand numbers;
 		GameModel.hero.b2b = PhysicsController.get_rectangular_body(1.5, 2.5, 100/30 + (1.5/2), 510/30 - (2.5/2), true);
 
 		GameModel.stage.addChild(GameModel.hero);
->>>>>>> game_development
 
 		setup_ticker();
 

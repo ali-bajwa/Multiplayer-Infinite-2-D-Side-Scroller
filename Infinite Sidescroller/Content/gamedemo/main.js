@@ -36,28 +36,12 @@ Utility = require("./Utility.js");
 InitController = require("./Controllers/InitController.js"); 
 TestController = require("./Controllers/TestController.js"); 
 
-<<<<<<< HEAD
-	var WorldController = require("./Controllers/WorldController.js"); 
-	var GameController = require("./Controllers/GameController.js"); 
-	var CameraController = require("./Controllers/CameraController.js"); 
-	var WorldGenerationController;
-	var PhysicsController;
-	var PlayerController = require("./Controllers/PlayerController.js"); 
-	var EnemyController = require("./Controllers/EnemyController.js");
-	var TerrainController = require("./Controllers/TerrainController.js"); 
-	var AssetController = require("./Controllers/AssetController.js"); 
-	var KeyboardController = require("./Controllers/KeyboardController.js"); 
-	var InitController = require("./Controllers/InitController.js"); 
-	var TestController = require("./Controllers/TestController.js"); 
-	
-=======
 var lg = Utility.lg; // for quicker access
 
 // main namespace that is exposed to global scope (window object)
 window.sidescroller_game = (function namespace(){
 
 		
->>>>>>> game_development
 
 	// Game initiation section: >>>
 	

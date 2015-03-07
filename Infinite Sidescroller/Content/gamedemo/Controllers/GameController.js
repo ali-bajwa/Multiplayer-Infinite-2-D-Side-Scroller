@@ -24,8 +24,36 @@ var GameController = (function(){
 		// !!!! world simulation step goes somewhere right here
 		// as per current design, will take delta as an argument
 
+		var cmds = KeyboardController.movement_commands();
 
-		PlayerController.update();
+		// Separate function >>>
+		if(cmds("right")){
+			// temporary
+
+			if(GameModel.hero.x > MOVEMENT_EDGE){
+				PlayerController.move_right(GameModel.hero);
+				CameraController.move(10, 0);
+				//TerrainController.move_left(10);
+				//CameraController.follow(GameModel.hero);
+			}else{
+				//CameraController.unfollow();
+				PlayerController.move_right(GameModel.hero);
+			}
+		}
+
+		if(cmds("up")){
+			PlayerController.jump();
+		}
+
+
+		if(cmds("left")){
+			if(GameModel.hero.x > 10){
+				PlayerController.move_left(GameModel.hero);
+			}
+		}
+
+		// <<<
+
 		//TerrainController.generate_terrain(); 
 		
 		WorldController.update(delta);

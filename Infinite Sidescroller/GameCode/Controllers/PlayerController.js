@@ -19,8 +19,9 @@ var PlayerController = (function(){
 
 	var jump = function(){
 		var body = GameModel.hero.b2b;
-
-		body.ApplyImpulse(new B2d.b2Vec2(0, -30), body.GetWorldCenter());
+		if (body.GetLinearVelocity().y == 0){
+			body.ApplyImpulse(new B2d.b2Vec2(0, -100), body.GetWorldCenter());
+		}
 
 		//GameModel.hero.y = body.GetPosition().y * 30;
 	
@@ -40,7 +41,11 @@ var PlayerController = (function(){
 
 	var move_left = function(){
 		//GameModel.hero.x -=10;
-		move(-10, 0);
+		var body = GameModel.hero.b2b;
+		var velocity = body.GetLinearVelocity();
+		velocity.x = -5;
+		body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		body.SetAwake(true);
 	};
 
 	var move = function(offset_x, offset_y){

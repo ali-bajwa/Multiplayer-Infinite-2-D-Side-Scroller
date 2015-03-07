@@ -27,7 +27,7 @@ var GameController = (function(){
 		var cmds = KeyboardController.movement_commands();
 
 		// Separate function >>>
-		if(cmds.indexOf("right") > -1){
+		if(cmds("right")){
 			// temporary
 
 			if(GameModel.hero.x > MOVEMENT_EDGE){
@@ -41,12 +41,12 @@ var GameController = (function(){
 			}
 		}
 
-		if(cmds.indexOf("up") > -1){
+		if(cmds("up")){
 			PlayerController.jump();
 		}
 
 
-		if(cmds.indexOf("left") > -1){
+		if(cmds("left")){
 			if(GameModel.hero.x > 10){
 				PlayerController.move_left(GameModel.hero);
 			}

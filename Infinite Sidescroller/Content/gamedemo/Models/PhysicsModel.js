@@ -30,6 +30,11 @@ var PhysicsModel = function() {
 
 }; 
 
+var templates;
+PhysicsModel.prototype.templates = templates = {};
+
+
+
 PhysicsModel.prototype.defaults = {
 		shape: "block",
 		width: 5,

@@ -15,7 +15,7 @@ var KeyboardController = (function()
 
 	// <<< end TODO
 
-	var get_active_commands = function(table){
+	var get_active_commands_function = function(table){
 		// get all commands associated with keys that are defined in the >table<,
 		// and are currently pressed
 		//
@@ -29,7 +29,15 @@ var KeyboardController = (function()
 			}
 		});
 
-		return commands;
+		var get_key = function(key){
+			if(commands.indexOf(key) > -1){
+				return true;
+			}else{
+				return false
+			};
+		};
+
+		return get_key;
 	};
 
 	// public:
@@ -44,7 +52,7 @@ var KeyboardController = (function()
 
 
 	var movement_commands = function(){
-		return get_active_commands(TR_TABLES.code_to_name);
+		return get_active_commands_function(TR_TABLES.code_to_name);
 	};
 
 

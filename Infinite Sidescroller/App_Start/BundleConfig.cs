@@ -10,7 +10,11 @@ namespace Infinite_Sidescroller
 		{
 			bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
 									"~/Scripts/jquery-{version}.js",
-									"~/Scripts/Utility.js"));
+									"~/Scripts/utility.js"));
+
+      bundles.Add(new ScriptBundle("~/bundles/gamescripts").Include(
+        "~/GameCode/bundle.js"
+        ));
 
 			bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
 									"~/Scripts/jquery.validate*"));

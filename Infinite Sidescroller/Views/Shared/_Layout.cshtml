@@ -6,7 +6,6 @@
   <title>@ViewBag.Title@Html.Raw(ViewBag.isHomepage == null ? " - Horae's Hoplites" : "")</title>
   @Styles.Render("~/Content/css")
   @RenderSection("HeadContent", required: false)
-  
 </head>
 <body @Html.Raw(ViewBag.isHomepage != null ? "class='Homepage'" : "")>
   <div id="PageOuterWrapper">

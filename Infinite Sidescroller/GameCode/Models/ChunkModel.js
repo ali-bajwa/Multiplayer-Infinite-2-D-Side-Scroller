@@ -1,6 +1,6 @@
 ChunkConfig = require ("../Config.js").Chunk;
 
-var ChunkModel function(){
+var ChunkModel = function(){
 
 	var grid_columns = ChunkConfig.grid_columns;
 	var grid_rows = ChunkConfig.grid_rows;

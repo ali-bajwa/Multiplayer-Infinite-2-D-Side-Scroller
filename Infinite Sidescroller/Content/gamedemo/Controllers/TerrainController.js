@@ -1,8 +1,9 @@
 var GameModel, TerrainModel;
-var AssetController;
+var AssetController, PhysicsController;
 var Utility, Config;
 
 AssetController = require("./AssetController.js");
+PhysicsController = require("./PhysicsController.js");
 
 GameModel = require("../Models/GameModel.js");
 TerrainModel = require("../Models/TerrainModel.js");
@@ -69,6 +70,8 @@ var TerrainController = (function(){
 					rand_tile.regY = 30;
 					rand_tile.y = 510 + 30*(i+1);
 					rand_tile.x = next_x;
+
+					rand_tile.b2b = PhysicsController.get_rectangular_body(1, 1, rand_tile.x/30 - 1/2, rand_tile.y/30 -1/2, false); //temporary/test
 
 					// this must be done in its own function, to keep track of everything
 					// e.g. "z-index" of every element, etc.

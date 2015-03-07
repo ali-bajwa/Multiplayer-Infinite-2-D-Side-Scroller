@@ -1,6 +1,6 @@
 var KeyboardController, GameController, AssetController, TerrainController, PhysicsController;
 var GameModel, AssetModel, PhysicsModel;
-var Config, Utility, B2d;
+var Config, GameUtility, B2d;
 
 KeyboardController = require("./KeyboardController.js");
 GameController = require("./GameController.js");
@@ -13,7 +13,7 @@ AssetModel = require("../Models/AssetModel.js");
 PhysicsModel = require("../Models/PhysicsModel.js");
 
 Config = require("../Config.js");
-Utility = require("../Utility.js");
+GameUtility = require("../GameUtility.js");
 B2d = require("../B2d.js");
 
 var InitController = (function(){
@@ -29,6 +29,7 @@ var InitController = (function(){
 
 	var init = function(mode){
 
+		enable_arrowkey_scroll(false);
 		setup_screen();
 		setup_events();
 		setup_debug_canvas(mode);
@@ -55,6 +56,20 @@ var InitController = (function(){
 		// <<<
 		
 
+	};
+
+	var enable_arrowkey_scroll = function(enable_scroll){
+		if(enable_scroll == false){                                                          
+			document.addEventListener('keydown', function(e){ // .getElementById("display_canvas")
+				arrows = [37, 38, 39, 40];                                          
+				if(arrows.indexOf(e.keyCode) > -1){                                 
+					e.preventDefault();                                             
+					return false;                                                   
+				}else{                                                              
+					return true                                                     
+				}                                                                   
+			})                                                                      
+		}		
 	};
 
 	var physics = function(){

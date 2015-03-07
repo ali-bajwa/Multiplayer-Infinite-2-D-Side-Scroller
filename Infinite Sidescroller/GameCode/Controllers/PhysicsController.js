@@ -10,9 +10,9 @@
 // may be useful in some situations
 
 var B2d, PhysicsModel, Config, B2dConfig;
-var Utility;
+var GameUtility;
 
-Utility = require("../Utility.js");
+GameUtility = require("../GameUtility.js");
 
 B2d = require("../B2d.js");
 PhysicsModel = require("../Models/PhysicsModel.js");

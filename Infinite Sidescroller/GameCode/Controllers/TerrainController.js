@@ -1,6 +1,6 @@
 var GameModel, TerrainModel;
 var AssetController, PhysicsController;
-var Utility, Config;
+var GameUtility, Config;
 
 AssetController = require("./AssetController.js");
 PhysicsController = require("./PhysicsController.js");
@@ -8,7 +8,7 @@ PhysicsController = require("./PhysicsController.js");
 GameModel = require("../Models/GameModel.js");
 TerrainModel = require("../Models/TerrainModel.js");
 
-Utility = require("../Utility.js");
+GameUtility = require("../GameUtility.js");
 Config = require("../Config.js");
 
 
@@ -61,7 +61,7 @@ var TerrainController = (function(){
 					// while level queue isn't full
 					var next_x = last_tile ? last_tile.x + 30 : -100;
 
-					var random_id = Utility.random_choice(LVL_PROB[i], terrain_choices);
+					var random_id = GameUtility.random_choice(LVL_PROB[i], terrain_choices);
 
 					var rand_tile = AssetController.request_bitmap(random_id);
 

@@ -1,8 +1,8 @@
-var Config, Utility;
+var Config, GameUtility;
 var PhysicsController;
 
 Config = require("../Config.js");
-Utility = require("../Utility.js");
+GameUtility = require("../GameUtility.js");
 
 PhysicsController = require("./PhysicsController.js");
 

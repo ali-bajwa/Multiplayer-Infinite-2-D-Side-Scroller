@@ -1,4 +1,4 @@
-var Utility = (function()
+var GameUtility = (function()
 {
   function arrow_key_scrolling(flag) {
     // Configures arrow key scrolling for canvas
@@ -72,4 +72,4 @@ var Utility = (function()
 
 })();
 
-module.exports = Utility;
+module.exports = GameUtility;

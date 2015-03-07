@@ -27,16 +27,16 @@
  * 		comment ambigious code, for larger functions indicate their purpose (through commenting);
  */
 
-var TestController, InitController, Config, Utility;
+var TestController, InitController, Config, GameUtility;
 
 Config = require("./Config.js");
 	
-Utility = require("./Utility.js");
+GameUtility = require("./GameUtility.js");
 
 InitController = require("./Controllers/InitController.js"); 
 TestController = require("./Controllers/TestController.js"); 
 
-var lg = Utility.lg; // for quicker access
+var lg = GameUtility.lg; // for quicker access
 
 // main namespace that is exposed to global scope (window object)
 window.sidescroller_game = (function namespace(){

@@ -1,11 +1,46 @@
 var B2d;
 var GameModel;
+var KeyboardController;
 
 GameModel = require("../Models/GameModel.js");
 
+KeyboardController = require("../Controllers/KeyboardController.js");
 B2d = require("../B2d.js");
 
 var PlayerController = (function(){
+
+	var update = function(){
+		var cmds = KeyboardController.movement_commands();
+
+		// Separate function >>>
+		if(cmds("right")){
+			// temporary
+
+			if(GameModel.hero.x > MOVEMENT_EDGE){
+				PlayerController.move_right(GameModel.hero);
+				CameraController.move(10, 0);
+				//TerrainController.move_left(10);
+				//CameraController.follow(GameModel.hero);
+			}else{
+				//CameraController.unfollow();
+				PlayerController.move_right(GameModel.hero);
+			}
+		}
+
+		if(cmds("up")){
+			PlayerController.jump();
+		}
+
+
+		if(cmds("left")){
+			if(GameModel.hero.x > 10){
+				PlayerController.move_left(GameModel.hero);
+			}
+		}
+
+		// <<<
+
+	};
 
 	var move_right = function(){
 		var body = GameModel.hero.b2b;
@@ -58,6 +93,7 @@ var PlayerController = (function(){
 		move: move,
 		set_coordinates: set_coordinates,
 		b2b_get_coordinates: b2b_get_coordinates,
+		update: update,
 		jump: jump
 	};
 })();

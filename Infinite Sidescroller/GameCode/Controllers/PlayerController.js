@@ -17,10 +17,20 @@ var PlayerController = (function(){
 		//GameModel.hero.x = (body.GetPosition().x + 1.5/2) * 30 ; 
 	};
 
+	var jumps = 0;
+
 	var jump = function(){
-		var body = GameModel.hero.b2b;
-		if (body.GetLinearVelocity().y == 0){
-			body.ApplyImpulse(new B2d.b2Vec2(0, -100), body.GetWorldCenter());
+	    var body = GameModel.hero.b2b;
+	    if (body.GetLinearVelocity().y == 0) {
+	        jumps = 0;
+	    }
+		if (jumps == 0){
+		    body.ApplyImpulse(new B2d.b2Vec2(0, -100), body.GetWorldCenter());
+		    jumps += 1;
+		}
+		else if (jumps == 1 && body.GetLinearVelocity().y > -1) {
+		    body.ApplyImpulse(new B2d.b2Vec2(0, -100), body.GetWorldCenter());
+		    jumps += 1;
 		}
 
 		//GameModel.hero.y = body.GetPosition().y * 30;

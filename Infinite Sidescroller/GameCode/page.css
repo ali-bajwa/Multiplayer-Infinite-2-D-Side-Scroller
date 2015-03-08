@@ -13,6 +13,7 @@ body {
 		It breaks scaling with easeljs
 		set width and height with js or in the html, width canvas own properties
 	*/
+  float: left;
 	z-index: 1;
 }
 
@@ -24,6 +25,7 @@ body {
 
 #debug_canvas { /* this must be exactly what it is */
 	z-index: 2;
+  float:left;
 	position: absolute;
 	left: 0;
 

@@ -1,20 +1,7 @@
-var KeyboardController, GameController, AssetController, TerrainController, PhysicsController;
+var KeyboardController, GameController, AssetController, TerrainController, PhysicsController, CameraController, PlayerController;
 var GameModel, AssetModel, PhysicsModel;
 var Config, GameUtility, B2d;
 
-KeyboardController = require("./KeyboardController.js");
-GameController = require("./GameController.js");
-AssetController = require("./AssetController.js");
-TerrainController = require("./TerrainController.js");
-PhysicsController = require("./PhysicsController.js");
-
-GameModel = require("../Models/GameModel.js");
-AssetModel = require("../Models/AssetModel.js");
-PhysicsModel = require("../Models/PhysicsModel.js");
-
-Config = require("../Config.js");
-GameUtility = require("../GameUtility.js");
-B2d = require("../B2d.js");
 
 var InitController = (function(){
 	// why do you want to put initialization of everything into the InitController?
@@ -26,8 +13,37 @@ var InitController = (function(){
 	// was fully loaded, but >InitController.init< is called after document was loaded, so
 	// -1 potential problem. Btw, at this moment in time the the stuff is set to work that way
 	// using html (<body onload=...); maybe using JS would be better? Idk;
+		
+	var include = function(){
+		// require statements moved here to avoid weird incorrect module loading order bugs
+		// basically some modules would load earlier than their dependencies, which would
+		// result in aforementioned dependencies being undefined for the said modules
+
+		KeyboardController = require("./KeyboardController.js");
+		GameController = require("./GameController.js");
+		AssetController = require("./AssetController.js");
+		TerrainController = require("./TerrainController.js");
+		PhysicsController = require("./PhysicsController.js");
+		CameraController = require("./CameraController.js");
+		PlayerController = require("./PlayerController.js");
+
+		GameModel = require("../Models/GameModel.js");
+		AssetModel = require("../Models/AssetModel.js");
+		PhysicsModel = require("../Models/PhysicsModel.js");
+
+		Config = require("../Config.js");
+		GameUtility = require("../GameUtility.js");
+		B2d = require("../B2d.js");
+
+
+	};
 
 	var init = function(mode){
+		include();
+		init_all_modules(); // call .init function of everyone. e.g. PlayerController.init(); etc.
+
+		
+
 
 		enable_arrowkey_scroll(false);
 		setup_screen();
@@ -57,6 +73,12 @@ var InitController = (function(){
 		
 
 	};
+
+	var init_all_modules = function(){
+		CameraController.init();
+		PlayerController.init();
+	};
+
 
 	var enable_arrowkey_scroll = function(enable_scroll){
 		if(enable_scroll == false){                                                          

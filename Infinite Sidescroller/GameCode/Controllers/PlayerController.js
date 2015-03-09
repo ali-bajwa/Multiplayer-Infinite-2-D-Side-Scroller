@@ -1,11 +1,60 @@
 var B2d;
 var GameModel;
+var KeyboardController, CameraController;
 
-GameModel = require("../Models/GameModel.js");
 
-B2d = require("../B2d.js");
 
 var PlayerController = (function(){
+	var include = function(){
+		CameraController = require("./CameraController.js");
+
+		KeyboardController = require("./KeyboardController.js");
+
+		GameModel = require("../Models/GameModel.js");
+
+		B2d = require("../B2d.js");
+
+	};
+
+	var init = function(){
+		include();
+	};
+
+	var update = function (){
+
+		var cmds = KeyboardController.movement_commands();
+
+		var MOVEMENT_EDGE = 500; // where terrain start scrolling
+
+
+		// Separate function >>>
+		if(cmds("right")){
+			// temporary
+
+			if(GameModel.hero.x > MOVEMENT_EDGE){
+				move_right(GameModel.hero);
+				CameraController.move(10, 0);
+				//TerrainController.move_left(10);
+				//CameraController.follow(GameModel.hero);
+			}else{
+				//CameraController.unfollow();
+				move_right(GameModel.hero);
+			}
+		}
+
+		if(cmds("up")){
+			jump();
+		}
+
+
+		if(cmds("left")){
+			if(GameModel.hero.x > 10){
+				move_left(GameModel.hero);
+			}
+		}
+
+		// <<<
+	};
 
 	var move_right = function(){
 		var body = GameModel.hero.b2b;
@@ -64,12 +113,15 @@ var PlayerController = (function(){
 	};
 
 	return {
+		init: init,
 		move_right: move_right,
 		move_left: move_left,
 		move: move,
 		set_coordinates: set_coordinates,
 		b2b_get_coordinates: b2b_get_coordinates,
+		update: update,
 		jump: jump
+
 	};
 })();
 

@@ -25,7 +25,6 @@ var GameController = (function(){
 
 		// !!!! world simulation step goes somewhere right here
 		// as per current design, will take delta as an argument
-
 		
 		//TerrainController.generate_terrain(); 
 		PlayerController.update();

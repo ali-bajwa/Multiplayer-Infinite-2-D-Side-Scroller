@@ -17,7 +17,16 @@ var Config = function(){
 		VELOCITY_ITR: 8,	// velocity iterations
 		POSITION_ITR: 3,	// position iterations
 		debug_draw: false
-	}
+	};
+
+	this.TerrainSlice = {
+		grid_rows: 64,
+		grid_columns: 64,
+		cell_w: 1, // in meters
+
+		// is automatically incremented each time new TerrainSliceModel is instantiated:
+		next_slice_id: 0 
+	};
 	
 	// <<<
 };

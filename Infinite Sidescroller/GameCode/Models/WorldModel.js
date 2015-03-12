@@ -1,11 +1,6 @@
+var WorldModel = function(){
+	
+};
 
+module.exports = new WorldModel;
 
-var WorldModel = (function(){
-
-	return {
-
-	};
-})();
-
-
-module.exports = WorldModel;

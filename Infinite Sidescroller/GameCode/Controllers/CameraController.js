@@ -1,13 +1,30 @@
-var CameraModel = require("../Models/CameraModel.js");
 
+var CameraModel;
 var PlayerController, TerrainController;
 
-PlayerController = require("./PlayerController.js");
-TerrainController = require("./TerrainController.js");
 
 var CameraController = (function(){
 
+	var include = function(){
+		// require statements moved here to avoid weird incorrect module loading order bugs
+		// basically some modules would load earlier than their dependencies, which would
+		// result in aforementioned dependencies being undefined
+		
+		TerrainController = require("./TerrainController.js");
+
+		PlayerController = require("./PlayerController.js");
+
+		CameraModel = require("../Models/CameraModel.js");
+
+	};
+
+	var init = function(){
+		include();
+
+	};
+
 	var update = function(){
+
 		var following = CameraModel.following;
 		if(following){
 			center_at(following.x,  following.y);
@@ -77,6 +94,7 @@ var CameraController = (function(){
 	};
 
 	return {
+		init: init,
 		move: move,
 		follow: follow,
 		unfollow: unfollow,
@@ -84,5 +102,6 @@ var CameraController = (function(){
 
 	};
 })();
+
 
 module.exports = CameraController;

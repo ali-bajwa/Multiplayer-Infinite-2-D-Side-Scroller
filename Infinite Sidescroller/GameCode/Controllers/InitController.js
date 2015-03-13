@@ -1,20 +1,34 @@
-var KeyboardController, GameController, AssetController, TerrainController, PhysicsController;
+var KeyboardController, GameController, AssetController, TerrainController, PhysicsController, CameraController, PlayerController,
+	TerrainSliceController, GraphicsController;
 var GameModel, AssetModel, PhysicsModel;
 var Config, GameUtility, B2d;
 
-KeyboardController = require("./KeyboardController.js");
-GameController = require("./GameController.js");
-AssetController = require("./AssetController.js");
-TerrainController = require("./TerrainController.js");
-PhysicsController = require("./PhysicsController.js");
+var include = function(){
+	// require statements moved here to avoid weird incorrect module loading order bugs
+	// basically some modules would load earlier than their dependencies, which would
+	// result in aforementioned dependencies being undefined for the said modules
 
-GameModel = require("../Models/GameModel.js");
-AssetModel = require("../Models/AssetModel.js");
-PhysicsModel = require("../Models/PhysicsModel.js");
+	KeyboardController = require("./KeyboardController.js");
+	GameController = require("./GameController.js");
+	AssetController = require("./AssetController.js");
+	TerrainController = require("./TerrainController.js");
+	PhysicsController = require("./PhysicsController.js");
+	CameraController = require("./CameraController.js");
+	PlayerController = require("./PlayerController.js");
+	TerrainSliceController = require("./TerrainSliceController.js");
+	GraphicsController = require("./GraphicsController.js");
 
-Config = require("../Config.js");
-GameUtility = require("../GameUtility.js");
-B2d = require("../B2d.js");
+	GameModel = require("../Models/GameModel.js");
+	AssetModel = require("../Models/AssetModel.js");
+	PhysicsModel = require("../Models/PhysicsModel.js");
+
+	Config = require("../Config.js");
+	GameUtility = require("../GameUtility.js");
+	B2d = require("../B2d.js");
+
+
+};
+
 
 var InitController = (function(){
 	// why do you want to put initialization of everything into the InitController?
@@ -26,8 +40,14 @@ var InitController = (function(){
 	// was fully loaded, but >InitController.init< is called after document was loaded, so
 	// -1 potential problem. Btw, at this moment in time the the stuff is set to work that way
 	// using html (<body onload=...); maybe using JS would be better? Idk;
+		
 
 	var init = function(mode){
+		include();
+		init_all_modules(); // call .init function of everyone. e.g. PlayerController.init(); etc.
+
+		
+
 
 		enable_arrowkey_scroll(false);
 		setup_screen();
@@ -57,6 +77,23 @@ var InitController = (function(){
 		
 
 	};
+
+	var init_all_modules = function(){
+		// TODO: better way to do stuff like that (call certain function
+		// of every module in the order. 
+		// Also, init and update functions of each module should probably
+		// accept some argument. I think to make this argument an object,
+		// this way we can add more things to be passed w/o any problem and
+		// we won't need to change anything
+		CameraController.init();
+		PlayerController.init();
+		GraphicsController.init();
+		TerrainSliceController.init();
+		GameController.init();
+		TerrainController.init();
+
+	};
+
 
 	var enable_arrowkey_scroll = function(enable_scroll){
 		if(enable_scroll == false){                                                          

@@ -1,17 +1,26 @@
-var CameraController, PlayerController, KeyboardController, WorldController, GraphicsController;
+var CameraController, PlayerController, KeyboardController, WorldController, GraphicsController, TerrainController;
 var GameModel;
 
-CameraController = require("./CameraController.js");
-PlayerController = require("./PlayerController.js");
-KeyboardController = require("./KeyboardController.js");
-WorldController = require("./WorldController.js");
-GraphicsController = require("./GraphicsController.js");
+var include = function(){
+	PlayerController = require("./PlayerController.js");
 
-GameModel = require("../Models/GameModel.js");
+	KeyboardController = require("./KeyboardController.js");
+	WorldController = require("./WorldController.js");
+	GraphicsController = require("./GraphicsController.js");
+	TerrainController = require("./TerrainController.js");
+	
+
+	GameModel = require("../Models/GameModel.js");
+
+	
+};
 
 var GameController = (function(){
 
-	var MOVEMENT_EDGE = 500; // where terrain start scrolling
+	var init = function(){
+		include();
+	};
+		
 
 	var update_all = function(event){
 		/*
@@ -19,44 +28,19 @@ var GameController = (function(){
 		 * everyghing else is called from here every tick
 		 */
 		
+		CameraController = require("./CameraController.js");
+
 		var delta = event.delta;
 
 		// !!!! world simulation step goes somewhere right here
 		// as per current design, will take delta as an argument
-
-		var cmds = KeyboardController.movement_commands();
-
-		// Separate function >>>
-		if(cmds("right")){
-			// temporary
-
-			if(GameModel.hero.x > MOVEMENT_EDGE){
-				PlayerController.move_right(GameModel.hero);
-				CameraController.move(10, 0);
-				//TerrainController.move_left(10);
-				//CameraController.follow(GameModel.hero);
-			}else{
-				//CameraController.unfollow();
-				PlayerController.move_right(GameModel.hero);
-			}
-		}
-
-		if(cmds("up")){
-			PlayerController.jump();
-		}
-
-
-		if(cmds("left")){
-			if(GameModel.hero.x > 10){
-				PlayerController.move_left(GameModel.hero);
-			}
-		}
-
-		// <<<
-
+		
 		//TerrainController.generate_terrain(); 
+		PlayerController.update();
 		
 		WorldController.update(delta);
+
+		TerrainController.update();
 
 		GraphicsController.update();
 		
@@ -71,6 +55,7 @@ var GameController = (function(){
 	
 
 	return {
+		init: init,
 		update_all: update_all,
 	};
 

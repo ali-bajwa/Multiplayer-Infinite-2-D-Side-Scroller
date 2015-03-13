@@ -1,20 +1,17 @@
-var TerrainSliceModel;
+/*var TerrainSliceModel;
 
 var PhysicsController, AssetController;
 
 var GameUtility;
 
 var include = function(){
-	/* browserify require statements go here */
+	[> browserify require statements go here <]
 	TerrainSliceModel = require("../Models/TerrainSliceModel.js");
 	GameUtility = require("../GameUtility.js");
 	PhysicsController = require("./PhysicsController.js");
 	AssetController = require("./AssetController.js");
-	
-	
-	
+};*/
 
-};
 
 var TerrainSliceController = (function () {
 
@@ -109,10 +106,6 @@ var TerrainSliceController = (function () {
 		}//end for
 		// <<< graphics pass
 		
-
-		
-
-		
 	};
 
 
@@ -125,4 +118,22 @@ var TerrainSliceController = (function () {
 })();
 
 module.exports = TerrainSliceController;
+
+var Include = require("../Includes.js");
+var this_module_name = "TerrainSliceController";
+var model_name = this_module_name.replace("Controller", "Model");
+
+eval("var " + model_name + ";");
+for(var i = 0; i < Include.names.length; i++){
+	eval("var " + Include.names[i] + ";");
+};
+
+var include = function(){
+	for(var module in Include.modules){
+		if(module != this_module_name){
+			eval(module + " = " + "Include.modules[module]");
+		}
+	}
+	eval(model_name + " = Include.modules[model_name]");
+};
 

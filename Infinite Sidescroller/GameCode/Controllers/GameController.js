@@ -1,16 +1,4 @@
 
-var Include = require("../Includes.js");
-for(var i = 0; i < Include.names.length; i++){
-	eval("var " + Include.names[i] + ";");
-};
-
-var include = function(){
-	for(var module in Include.modules){
-		eval(module + " = " + "Include.modules[module]");
-	}
-	
-};
-
 
 var GameController = (function(){
 
@@ -56,3 +44,22 @@ var GameController = (function(){
 })();
 
 module.exports = GameController;
+
+var Include = require("../Includes.js");
+var this_module_name = "GameController";
+var model_name = this_module_name.replace("Controller", "Model");
+
+eval("var " + model_name + ";");
+for(var i = 0; i < Include.names.length; i++){
+	eval("var " + Include.names[i] + ";");
+};
+
+var include = function(){
+	for(var module in Include.modules){
+		if(module != this_module_name){
+			eval(module + " = " + "Include.modules[module]");
+		}
+	}
+	eval(model_name + " = Include.modules[model_name]");
+};
+

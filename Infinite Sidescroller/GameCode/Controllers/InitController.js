@@ -2,6 +2,7 @@ var KeyboardController, GameController, AssetController, TerrainController, Phys
 	TerrainSliceController, GraphicsController, WorldController;
 var GameModel, AssetModel, PhysicsModel;
 var Config, GameUtility, B2d;
+var Includes;
 
 var include = function(){
 	// require statements moved here to avoid weird incorrect module loading order bugs
@@ -28,6 +29,11 @@ var include = function(){
 	GameUtility = require("../GameUtility.js");
 	B2d = require("../B2d.js");
 
+	Includes = require("../Includes.js");
+	
+
+	
+
 
 };
 
@@ -46,6 +52,8 @@ var InitController = (function(){
 
 	var init = function(mode){
 		include();
+		Includes.init(); // !!!! important one
+
 		init_all_modules(); // call .init function of everyone. e.g. PlayerController.init(); etc.
 
 		

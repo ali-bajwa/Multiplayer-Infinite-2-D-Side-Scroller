@@ -1,19 +1,16 @@
-var CameraController, PlayerController, KeyboardController, WorldController, GraphicsController, TerrainController;
-var GameModel;
+
+var Include = require("../Includes.js");
+for(var i = 0; i < Include.names.length; i++){
+	eval("var " + Include.names[i] + ";");
+};
 
 var include = function(){
-	PlayerController = require("./PlayerController.js");
-
-	KeyboardController = require("./KeyboardController.js");
-	WorldController = require("./WorldController.js");
-	GraphicsController = require("./GraphicsController.js");
-	TerrainController = require("./TerrainController.js");
-	
-
-	GameModel = require("../Models/GameModel.js");
-
+	for(var module in Include.modules){
+		eval(module + " = " + "Include.modules[module]");
+	}
 	
 };
+
 
 var GameController = (function(){
 
@@ -50,9 +47,6 @@ var GameController = (function(){
 		GameModel.stage.update(); // should be moved to Graphics Model/Controller
 	};
 
-
-
-	
 
 	return {
 		init: init,

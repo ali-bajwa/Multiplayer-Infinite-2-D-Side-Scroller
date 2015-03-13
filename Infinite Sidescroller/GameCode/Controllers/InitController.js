@@ -79,10 +79,18 @@ var InitController = (function(){
 	};
 
 	var init_all_modules = function(){
+		// TODO: better way to do stuff like that (call certain function
+		// of every module in the order. 
+		// Also, init and update functions of each module should probably
+		// accept some argument. I think to make this argument an object,
+		// this way we can add more things to be passed w/o any problem and
+		// we won't need to change anything
 		CameraController.init();
 		PlayerController.init();
 		GraphicsController.init();
 		TerrainSliceController.init();
+		GameController.init();
+		TerrainController.init();
 
 	};
 

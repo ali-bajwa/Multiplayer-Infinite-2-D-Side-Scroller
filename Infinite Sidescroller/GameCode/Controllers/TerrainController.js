@@ -1,15 +1,24 @@
-var GameModel, TerrainModel;
-var AssetController, PhysicsController;
+var GameModel, TerrainModel, TerrainSliceModel;
+var AssetController, PhysicsController, TerrainSliceController;
 var GameUtility, Config;
 
-AssetController = require("./AssetController.js");
-PhysicsController = require("./PhysicsController.js");
+var include = function(){
+	AssetController = require("./AssetController.js");
+	PhysicsController = require("./PhysicsController.js");
+	TerrainSliceController = require("./TerrainSliceController.js");
+	
 
-GameModel = require("../Models/GameModel.js");
-TerrainModel = require("../Models/TerrainModel.js");
+	GameModel = require("../Models/GameModel.js");
+	TerrainModel = require("../Models/TerrainModel.js");
+	TerrainSliceModel = require("../Models/TerrainSliceModel.js");
 
-GameUtility = require("../GameUtility.js");
-Config = require("../Config.js");
+	
+
+	GameUtility = require("../GameUtility.js");
+	Config = require("../Config.js");
+
+		
+};
 
 
 var TerrainController = (function(){
@@ -18,6 +27,22 @@ var TerrainController = (function(){
 		[0, 7, 3],
 		[0, 1, 9]
 	]; // probabilities for each level; temporary!
+
+	var temp = 0;
+
+	var init = function(){
+		
+		include();
+	};
+	
+
+	var update = function(){
+		if(temp++ == 0){
+			var slice = new TerrainSliceModel();
+			TerrainSliceController.generate(slice);
+		}
+
+	};
 
 	
 	
@@ -29,6 +54,7 @@ var TerrainController = (function(){
 		   Only a demo!!! must be made more sophisticated!
 		*/
 
+		return // TODO: remove
 
 		var terrain_choices = ["grass", "middle_terrain", "bottom_terrain"];
 
@@ -136,7 +162,9 @@ var TerrainController = (function(){
 	return {
 		generate_terrain: generate_terrain,
 		move_left: move_left,
-		move: move
+		move: move,
+		update: update,
+		init: init,
 	}
 })();
 

@@ -1,11 +1,11 @@
 TerrainSliceConfig = require ("../Config.js").TerrainSlice;
 
 var TerrainSliceModel = function(){
-	var slice_id = TerrainSliceConfig.next_slice_id++; // automaticall assign id and increment 
+	this.slice_id = TerrainSliceConfig.next_slice_id++; // automaticall assign id and increment 
 
-	var grid_columns = TerrainSliceConfig.grid_columns;
-	var grid_rows = TerrainSliceConfig.grid_rows;
-	var cell_w = TerrainSliceConfig.cell_w;
+	this.grid_columns = TerrainSliceConfig.grid_columns;
+	this.grid_rows = TerrainSliceConfig.grid_rows;
+	this.cell_w = TerrainSliceConfig.cell_w;
 	
 	// grid[i][j] is the element in the i's column and j's row
 	// the grid is maid to match the screen coordinates and the current box2d coordinates
@@ -13,9 +13,19 @@ var TerrainSliceModel = function(){
 	// do we want to change it? would it be easier to generate terrain if we start at the bottom?
 	// if yes, then what makes more sense, changing coordinate systems or just switching generation
 	// loops around? discuss
-	var grid = []
+	this.grid = [];
+	
+	this.origin = {x: null, y: null};
+	
 
 	
-	};
+	
+};
 
-module.export = TerrainSliceModel;
+TerrainSliceModel.prototype.lvl_prob = [
+	[7, 2, 1],
+	[0, 7, 3],
+	[0, 1, 9]
+]
+
+module.exports = TerrainSliceModel;

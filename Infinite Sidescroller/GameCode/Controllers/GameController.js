@@ -1,17 +1,26 @@
-var CameraController, PlayerController, KeyboardController, WorldController, GraphicsController;
+var CameraController, PlayerController, KeyboardController, WorldController, GraphicsController, TerrainController;
 var GameModel;
 
+var include = function(){
+	PlayerController = require("./PlayerController.js");
 
-PlayerController = require("./PlayerController.js");
+	KeyboardController = require("./KeyboardController.js");
+	WorldController = require("./WorldController.js");
+	GraphicsController = require("./GraphicsController.js");
+	TerrainController = require("./TerrainController.js");
+	
 
-KeyboardController = require("./KeyboardController.js");
-WorldController = require("./WorldController.js");
-GraphicsController = require("./GraphicsController.js");
+	GameModel = require("../Models/GameModel.js");
 
-GameModel = require("../Models/GameModel.js");
+	
+};
 
 var GameController = (function(){
 
+	var init = function(){
+		include();
+	};
+		
 
 	var update_all = function(event){
 		/*
@@ -31,6 +40,8 @@ var GameController = (function(){
 		
 		WorldController.update(delta);
 
+		TerrainController.update();
+
 		GraphicsController.update();
 		
 		// Should be called after all movement of objects is done:
@@ -44,6 +55,7 @@ var GameController = (function(){
 	
 
 	return {
+		init: init,
 		update_all: update_all,
 	};
 

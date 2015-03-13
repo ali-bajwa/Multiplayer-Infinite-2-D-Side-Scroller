@@ -175,6 +175,7 @@ var TerrainController = (function(){
 		move: move,
 		update: update,
 		init: init,
+		NewTerrainSlice: NewTerrainSlice
 	}
 })();
 

@@ -13,6 +13,15 @@ var TerrainSliceModel = function(){
 	// do we want to change it? would it be easier to generate terrain if we start at the bottom?
 	// if yes, then what makes more sense, changing coordinate systems or just switching generation
 	// loops around? discuss
+	//
+	// notice that the grid is a terrain generation device only. once terrain slice is loaded,
+	// box2d physics simulation may (and will) go nuts on it, changing whatever it wants,
+	// and changes won't anyhow be reflected in the grid. to keep track of all the bodies
+	// in the terrain slice, if that will be needed, other mechanisms should be used.
+	// idea: have a collections of bodies by type, and setup sensor collision beams
+	// at the terrain slices' boundaries to keep track of bodies flying over from one
+	// terrain slice to another. Btw, Ali, I hate you for making me to type "terrain slice"
+	// instead of the "chunk" 
 	this.grid = [];
 	
 	this.origin = {x: null, y: null};

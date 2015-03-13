@@ -1,5 +1,5 @@
 var KeyboardController, GameController, AssetController, TerrainController, PhysicsController, CameraController, PlayerController,
-	TerrainSliceController, GraphicsController;
+	TerrainSliceController, GraphicsController, WorldController;
 var GameModel, AssetModel, PhysicsModel;
 var Config, GameUtility, B2d;
 
@@ -17,6 +17,8 @@ var include = function(){
 	PlayerController = require("./PlayerController.js");
 	TerrainSliceController = require("./TerrainSliceController.js");
 	GraphicsController = require("./GraphicsController.js");
+	WorldController = require("./WorldController.js");
+	
 
 	GameModel = require("../Models/GameModel.js");
 	AssetModel = require("../Models/AssetModel.js");
@@ -91,6 +93,8 @@ var InitController = (function(){
 		TerrainSliceController.init();
 		GameController.init();
 		TerrainController.init();
+		WorldController.init();
+	
 
 	};
 

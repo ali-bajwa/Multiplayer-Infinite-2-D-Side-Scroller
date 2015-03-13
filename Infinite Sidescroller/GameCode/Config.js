@@ -20,8 +20,8 @@ var Config = function(){
 	};
 
 	this.TerrainSlice = {
-		grid_rows: 64,
-		grid_columns: 64,
+		grid_rows: 20,
+		grid_columns: 20,
 		cell_w: 1, // in meters
 
 		// is automatically incremented each time new TerrainSliceModel is instantiated:

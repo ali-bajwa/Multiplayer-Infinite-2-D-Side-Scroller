@@ -22,6 +22,10 @@ var include = function(){
 
 
 var TerrainController = (function(){
+	/* this will be the physical representation of the terrain
+	 * currently it contains graphical bits, but that will change
+	 */
+
 	var LVL_PROB = [
 		[7, 2, 1],
 		[0, 7, 3],
@@ -37,10 +41,16 @@ var TerrainController = (function(){
 	
 
 	var update = function(){
-		if(temp++ == 0){
-			var slice = new TerrainSliceModel();
-			TerrainSliceController.generate(slice);
-		}
+	};
+
+	var NewTerrainSlice = function(){
+		/* this takes care of appending new terrain slice to the generated terrain
+		 * it calculates it's origin x and y positions and whatever other stuff,
+		 * generates slice; sets up everything
+		 */
+
+		var slice = new TerrainSliceModel();
+		TerrainSliceController.generate(slice);
 
 	};
 

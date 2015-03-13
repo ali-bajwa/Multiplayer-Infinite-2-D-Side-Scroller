@@ -33,7 +33,7 @@ var TerrainSliceController = (function () {
 			for(var j = 0; j < slice.grid_columns; j++){
 				if(prob){
 					var random_id = GameUtility.random_choice(prob, [0, 1, 2]); // chose random terrain id
-					slice.grid[i][j] = {id: random_id};
+					slice.grid[i][j] = {tile_id: random_id};
 				} // fi
 			} // for end
 		} // for end

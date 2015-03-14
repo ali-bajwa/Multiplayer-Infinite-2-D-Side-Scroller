@@ -169,13 +169,23 @@ var TerrainController = (function(){
 		generate_terrain();
 	};
 
+	var MarkAsNewTerrainSlice = function(slice){
+		TerrainModel.new_slices.push(slice);
+	};
+
+	var NewSlicesAvailable = function(){
+		return (TerrainModel.new_slices.length > 0);
+	};
+
 	return {
 		generate_terrain: generate_terrain,
 		move_left: move_left,
 		move: move,
 		update: update,
 		init: init,
-		NewTerrainSlice: NewTerrainSlice
+		NewTerrainSlice: NewTerrainSlice,
+		MarkAsNewTerrainSlice: MarkAsNewTerrainSlice,
+		NewSlicesAvailable: NewSlicesAvailable,
 	}
 })();
 

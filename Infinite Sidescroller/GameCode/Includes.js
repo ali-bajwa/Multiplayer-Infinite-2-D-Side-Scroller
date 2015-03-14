@@ -4,17 +4,19 @@ var Include = function(){
 
 	this.names = [
 		// Controllers
-		"PlayerController",
-		"KeyboardController",
-		"WorldController",
-		"GraphicsController",
-		"TerrainController",
-		"PhysicsController",
 		"AssetController",
+		"GraphicsController",
+		"KeyboardController",
+		"PhysicsController",
+		"PlayerController",
+		"TerrainController",
 		"TerrainSliceController",
+		"WorldController",
+		"InitController",
+		"TestController",
 		// Non-Controller Non-Models:
-		"GameUtility",
 		"Config",
+		"GameUtility",
 
 	];
 	
@@ -22,24 +24,28 @@ var Include = function(){
 	this.init = function(){
 
 		this.modules = {
-			PlayerController: require("./Controllers/PlayerController.js"),
-			KeyboardController: require("./Controllers/KeyboardController.js"),
-			WorldController: require("./Controllers/WorldController.js"),
-			GraphicsController: require("./Controllers/GraphicsController.js"),
-			TerrainController: require("./Controllers/TerrainController.js"),
-			PhysicsController: require("./Controllers/PhysicsController.js"),
 			AssetController: require("./Controllers/AssetController.js"),
+			GraphicsController: require("./Controllers/GraphicsController.js"),
+			KeyboardController: require("./Controllers/KeyboardController.js"),
+			PhysicsController: require("./Controllers/PhysicsController.js"),
+			PlayerController: require("./Controllers/PlayerController.js"),
+			TerrainController: require("./Controllers/TerrainController.js"),
 			TerrainSliceController: require("./Controllers/TerrainSliceController.js"),
+			WorldController: require("./Controllers/WorldController.js"),
+			InitController: require("./Controllers/InitController.js"),
+			TestController: require("./Controllers/TestController.js"),
+			
+			
 			
 			// Models
 
 			GameModel: require("./Models/GameModel.js"),
 			TerrainSliceModel: require("./Models/TerrainSliceModel.js"),
-			
-
+			CameraModel: require("./Models/CameraModel.js"),
+		
 			// Other stuff
-			GameUtility: require("./GameUtility.js"),
 			Config: require("./Config.js"),
+			GameUtility: require("./GameUtility.js"),
 			
 			
 		};

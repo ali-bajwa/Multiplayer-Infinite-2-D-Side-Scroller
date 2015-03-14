@@ -1,17 +1,7 @@
-var GraphicsModel;
-
-var PlayerController;
-
-var include = function(){
-	/* browserify require statements go here */
-
-	GraphicsModel = require("../Models/GraphicsModel.js");
-
-	PlayerController = require("./PlayerController.js");
-
-};
 
 var GraphicsController = (function(){
+	/* all the graphics stuff. and what did you expect?
+	*/
 
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -20,15 +10,12 @@ var GraphicsController = (function(){
 
 	};
 
-	var update = function(){
-		PlayerController.set_coordinates(PlayerController.b2b_get_coordinates());
-	};
-
-	var switch_season = function(season_id){
-		// this could be used to select sprites for the different season
+	var update = function(delta){
+		/* is ran each tick from the GameController.update_all */
 
 	};
 
+	
 
 	return {
 		// declare public
@@ -38,4 +25,22 @@ var GraphicsController = (function(){
 })();
 
 module.exports = GraphicsController;
+
+var Include = require("../Includes.js");
+var this_module_name = "GraphicsController";
+var model_name = this_module_name.replace("Controller", "Model");
+
+eval("var " + model_name + ";");
+for(var i = 0; i < Include.names.length; i++){
+	eval("var " + Include.names[i] + ";");
+};
+
+var include = function(){
+	for(var module in Include.modules){
+		if(module != this_module_name){
+			eval(module + " = " + "Include.modules[module]");
+		}
+	}
+	eval(model_name + " = Include.modules[model_name]");
+};
 

@@ -25,7 +25,16 @@ var AssetController = (function(){
 
 	var request_bitmap = function(id){
 		// if id is invalid, throw meaningful exception?
-		return new createjs.Bitmap(AssetModel.loader.getResult(id));
+		var bitmap = new createjs.Bitmap(AssetModel.loader.getResult(id));
+		// more complicated setting for registration position may be needed, depending on the body attached
+		if (!(bitmap.image)){
+			throw "Error: image wasn't correctly loaded for this bitmap";
+		}
+		
+		bitmap.regX = bitmap.image.width/2;
+		bitmap.regY = bitmap.image.height/2;
+
+		return bitmap;
 		// TODO research DisplayObject's caching. and maybe incorporate
 	};
 

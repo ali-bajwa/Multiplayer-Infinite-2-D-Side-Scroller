@@ -76,12 +76,16 @@ var TerrainSliceController = (function () {
 					var x = slice.cell_w * j + slice.cell_w/2;
 					var y = slice.cell_w * i + slice.cell_w/2;
 					var body = PhysicsController.get_rectangular_body(1, 1, x, y, false);
+					slice.grid[i][j].body = body;
 				}
 
 			} // end for
 
 		}//end for
 		// <<< creating physics representations
+		
+		TerrainController.MarkAsNewTerrainSlice(slice); // so that graphics and other stuff will notice
+		
 		
 		for(var i = 0; i < slice.grid_rows; i++){
 			/* graphics pass. should be probably moved to the graphics controller
@@ -94,10 +98,12 @@ var TerrainSliceController = (function () {
 				var id = slice.grid[i][j].id;
 				if(id != 0){
 					// TODO: should make proper terrain collection thing to pull from 
-					var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][id];
+					var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][id-1];
 					var tile = AssetController.request_bitmap(tile_texture);
-
-					// TODO: actually insert tile and display it
+					var body_position = slice.grid[i][j].body.GetWorldCenter();
+					tile.x = body_position.x * 30;
+					tile.y = body_position.y * 30;
+					GameModel.stage.addChild(tile);
 				} // fi
 
 
@@ -107,7 +113,6 @@ var TerrainSliceController = (function () {
 		// <<< graphics pass
 		
 	};
-
 
 	return {
 		// declare public

@@ -38,6 +38,7 @@ var Include = function(){
 		// Other stuff
 		
 		"B2d",
+		"Box2D",
 		"Config",
 		"GameUtility",
 
@@ -75,6 +76,7 @@ var Include = function(){
 		Other: [
 		
 			"B2d",
+			"Box2D",
 			"Config",
 			"GameUtility",
 		]
@@ -114,6 +116,7 @@ var Include = function(){
 			Config: require("./Config.js"),
 			GameUtility: require("./GameUtility.js"),
 			B2d: require("./B2d.js"),
+			Box2D: require("box2dweb"),
 		
 		};
 	}; // end init

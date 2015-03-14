@@ -1,24 +1,24 @@
-var GameModel, TerrainModel, TerrainSliceModel;
-var AssetController, PhysicsController, TerrainSliceController;
-var GameUtility, Config;
+//var GameModel, TerrainModel, TerrainSliceModel;
+//var AssetController, PhysicsController, TerrainSliceController;
+//var GameUtility, Config;
 
-var include = function(){
-	AssetController = require("./AssetController.js");
-	PhysicsController = require("./PhysicsController.js");
-	TerrainSliceController = require("./TerrainSliceController.js");
+//var include = function(){
+	//AssetController = require("./AssetController.js");
+	//PhysicsController = require("./PhysicsController.js");
+	//TerrainSliceController = require("./TerrainSliceController.js");
 	
 
-	GameModel = require("../Models/GameModel.js");
-	TerrainModel = require("../Models/TerrainModel.js");
-	TerrainSliceModel = require("../Models/TerrainSliceModel.js");
+	//GameModel = require("../Models/GameModel.js");
+	//TerrainModel = require("../Models/TerrainModel.js");
+	//TerrainSliceModel = require("../Models/TerrainSliceModel.js");
 
 	
 
-	GameUtility = require("../GameUtility.js");
-	Config = require("../Config.js");
+	//GameUtility = require("../GameUtility.js");
+	//Config = require("../Config.js");
 
 		
-};
+//};
 
 
 var TerrainController = (function(){
@@ -35,7 +35,6 @@ var TerrainController = (function(){
 	var temp = 0;
 
 	var init = function(){
-		
 		include();
 	};
 	
@@ -49,8 +48,7 @@ var TerrainController = (function(){
 		 * generates slice; sets up everything
 		 */
 
-		var slice = new TerrainSliceModel();
-		TerrainSliceController.generate(slice);
+		return TerrainSliceController.generate();
 
 	};
 
@@ -190,3 +188,9 @@ var TerrainController = (function(){
 })();
 
 module.exports = TerrainController;
+
+var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
+	current_module: "TerrainController", 
+	include_options: Includes.choices.DEFAULT
+}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
+

@@ -9,17 +9,25 @@
 // bodies are allowed to have userData on them that is just reference to some object.
 // may be useful in some situations
 
-var B2d, PhysicsModel, Config, B2dConfig;
-var GameUtility;
+//var B2d, PhysicsModel, Config, B2dConfig;
+//var GameUtility;
 
-GameUtility = require("../GameUtility.js");
+//GameUtility = require("../GameUtility.js");
 
-B2d = require("../B2d.js");
-PhysicsModel = require("../Models/PhysicsModel.js");
-Config = require("../Config.js");
-B2dConfig = Config.B2D;
+//B2d = require("../B2d.js");
+//PhysicsModel = require("../Models/PhysicsModel.js");
+//Config = require("../Config.js");
+var B2dConfig;
 
 var PhysicsController = (function(){
+	var init = function(){
+		include();
+		B2dConfig = Config.B2D;
+		PhysicsModel.gravity = new B2d.b2Vec2(0,20); // earth gravity
+		PhysicsModel.world = new B2d.b2World(PhysicsModel.gravity, true);
+
+	};
+	
 	var step = function (delta_ms) {
 		// !? should I set upper limit on delta to prevent world from
 		// fast forwarding if the ticker was paused? or that is not a problem in our case?
@@ -118,10 +126,17 @@ var PhysicsController = (function(){
 	return {
 		get_body: get_body,
 		get_rectangular_body: get_rectangular_body,
-		step: step
+		step: step,
+		init: init,
 
 	};
 })();
 
 
 module.exports = PhysicsController;
+
+var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
+	current_module: "PhysicsController", 
+	include_options: Includes.choices.DEFAULT
+}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
+

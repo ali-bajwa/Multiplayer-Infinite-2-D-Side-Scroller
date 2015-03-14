@@ -26,21 +26,8 @@ var GraphicsController = (function(){
 
 module.exports = GraphicsController;
 
-var Include = require("../Includes.js");
-var this_module_name = "GraphicsController";
-var model_name = this_module_name.replace("Controller", "Model");
-
-eval("var " + model_name + ";");
-for(var i = 0; i < Include.names.length; i++){
-	eval("var " + Include.names[i] + ";");
-};
-
-var include = function(){
-	for(var module in Include.modules){
-		if(module != this_module_name){
-			eval(module + " = " + "Include.modules[module]");
-		}
-	}
-	eval(model_name + " = Include.modules[model_name]");
-};
+var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
+	current_module: "GraphicsController", 
+	include_options: Includes.choices.DEFAULT
+}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
 

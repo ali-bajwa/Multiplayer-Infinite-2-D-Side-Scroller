@@ -40,18 +40,21 @@ window.sidescroller_game = (function namespace(){
 
 	//var lg = GameUtility.lg; // for quicker access
 	
-	var Includes = require("./Includes.js");
+	//var Includes = require("./Includes.js");
 
-	for(var i = 0; i < Includes.names.length; i++){
-		eval("var " + Includes.names[i] + ";");
-	};
+	//for(var i = 0; i < Includes.names.length; i++){
+		//eval("var " + Includes.names[i] + ";");
+	//};
 
-	var include = function(){
-		for(var module in Includes.modules){
-			eval(module + " = " + "Includes.modules[module]");
-		}
-	};
-
+	//var include = function(){
+		//for(var module in Includes.modules){
+			//eval(module + " = " + "Includes.modules[module]");
+		//}
+	//};
+	var Includes = require("./Includes.js"); var include_data = Includes.get_include_data({
+		current_module: "None", 
+		include_options: Includes.choices.ALL_CONTROLLERS
+	}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
 
 	// Game initiation section: >>>
 	
@@ -59,9 +62,8 @@ window.sidescroller_game = (function namespace(){
 	var load_game = function(mode)
 	{
 
-		Includes.init();
-
-		include();
+		Includes.init(); // first
+		include(); // second
 
 		InitController.init(mode); // init all the stuff
 

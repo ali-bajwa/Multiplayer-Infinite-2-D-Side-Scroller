@@ -1,11 +1,12 @@
 // This file contains shortcuts for the methods of the Box2D library that are used
 // too often to type their long names
 
-var Box2D;
+var B2d = function(){
 
-Box2D = require("box2dweb");
+};
 
-var B2d = new function(){
+B2d.prototype.init = function(){
+	include();
 
 	this.b2Vec2 = Box2D.Common.Math.b2Vec2;
 	this.b2BodyDef = Box2D.Dynamics.b2BodyDef;
@@ -17,6 +18,13 @@ var B2d = new function(){
 	this.b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
 	this.b2CircleShape = Box2D.Collision.Shapes.b2CircleShape;
 	this.b2DebugDraw = Box2D.Dynamics.b2DebugDraw; 
+
 };
 
-module.exports = B2d;
+module.exports = new B2d;
+
+var Includes = require("./Includes.js"); var include_data = Includes.get_include_data({
+	current_module: "B2d", 
+	include_options: Includes.choices.OTHER_STUFF
+}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
+

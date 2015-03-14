@@ -94,14 +94,22 @@ var InitController = (function(){
 		// accept some argument. I think to make this argument an object,
 		// this way we can add more things to be passed w/o any problem and
 		// we won't need to change anything
+		
+		B2d.init(); // goes first
+
+		AssetController.init();
 		CameraController.init();
-		PlayerController.init();
-		GraphicsController.init();
-		TerrainSliceController.init();
 		GameController.init();
+		GraphicsController.init();
+		KeyboardController.init();
+		PhysicsController.init();
+		PlayerController.init();
 		TerrainController.init();
+		TerrainSliceController.init();
+		TestController.init();
 		WorldController.init();
-	
+
+
 
 	};
 
@@ -231,12 +239,8 @@ var InitController = (function(){
 
 module.exports = InitController;
 
-var Includes = require("../Includes.js");
-var include_data = Includes.get_include_data({
+var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
 	current_module: "InitController", 
 	include_options: Includes.choices.ALL
-}); 
-eval(include_data.name_statements);
-var include = function(){
-	eval(include_data.module_statements);
-};
+}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
+

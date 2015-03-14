@@ -15,6 +15,11 @@ var KeyboardController = (function()
 
 	// <<< end TODO
 
+	var init = function(){
+		
+		include();
+	};
+	
 	var get_active_commands_function = function(table){
 		// get all commands associated with keys that are defined in the >table<,
 		// and are currently pressed
@@ -60,10 +65,18 @@ var KeyboardController = (function()
 		keydown: keydown,
 		keyup: keyup,
 
-		movement_commands: movement_commands
+		movement_commands: movement_commands,
+		init: init,
+
 
 	};
 
 })();
 
 module.exports = KeyboardController;
+
+var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
+	current_module: "KeyboardController", 
+	include_options: Includes.choices.DEFAULT
+}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
+

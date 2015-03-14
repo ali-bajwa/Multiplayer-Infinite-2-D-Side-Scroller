@@ -1,4 +1,3 @@
-var AssetModel = require("../Models/AssetModel.js");
 
 var AssetController = (function(){
 	/*
@@ -8,6 +7,11 @@ var AssetController = (function(){
 
 	// use AssetModel.loader.getResult("id_of_the_asset");
 
+	var init = function(){
+		include();	
+		
+	};
+	
 
 	var load_all = function(asset_path){
 
@@ -40,6 +44,7 @@ var AssetController = (function(){
 
 	
 	return {
+		init: init,
 		load_all: load_all,
 		request_bitmap: request_bitmap
 	};
@@ -47,3 +52,9 @@ var AssetController = (function(){
 })();
 
 module.exports = AssetController;
+
+var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
+	current_module: "AssetController", 
+	include_options: Includes.choices.DEFAULT
+}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
+

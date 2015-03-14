@@ -1,20 +1,20 @@
-var B2d;
-var GameModel;
-var KeyboardController, CameraController;
+//var B2d;
+//var GameModel;
+//var KeyboardController, CameraController;
 
 
 
 var PlayerController = (function(){
-	var include = function(){
-		CameraController = require("./CameraController.js");
+	//var include = function(){
+		//CameraController = require("./CameraController.js");
 
-		KeyboardController = require("./KeyboardController.js");
+		//KeyboardController = require("./KeyboardController.js");
 
-		GameModel = require("../Models/GameModel.js");
+		//GameModel = require("../Models/GameModel.js");
 
-		B2d = require("../B2d.js");
+		//B2d = require("../B2d.js");
 
-	};
+	//};
 
 	var init = function(){
 		include();
@@ -126,3 +126,9 @@ var PlayerController = (function(){
 })();
 
 module.exports = PlayerController;
+
+var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
+	current_module: "PlayerController", 
+	include_options: Includes.choices.DEFAULT
+}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
+

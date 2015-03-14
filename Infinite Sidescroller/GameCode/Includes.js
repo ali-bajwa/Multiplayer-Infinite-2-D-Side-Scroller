@@ -91,12 +91,12 @@ var Include = function(){
 		};
 	}; // end init
 
-	var option_set = function(option, options){
-		if(option == 0 && options == 0){
+	var option_is_set = function(what_mods_selected, options){
+		if(what_mods_selected == 0 && options == 0){
 			return true;
 		}
 		// be mindful of bitwise operator ahead
-		return (option & options);
+		return (what_mods_selected & options);
 	};
 
 	var get_module = function(name){
@@ -125,11 +125,11 @@ var Include = function(){
 	var get_names = function(current_module_name, options_code){
 		var result = {Models: [], Controllers: [], Other: []};
 
-		if(option_set(choices.NONE, options_code)){
+		if(option_is_set(choices.NONE, options_code)){
 			return result;
 		}
 
-		if (option_set(choices.ALL_CONTROLLERS, options_code)){
+		if (option_is_set(choices.ALL_CONTROLLERS, options_code)){
 
 			var controller_names = module_names.Controllers;
 
@@ -144,15 +144,15 @@ var Include = function(){
 			
 		}
 
-		if (option_set(choices.ALL_MODELS, options_code)){
+		if (option_is_set(choices.ALL_MODELS, options_code)){
 			result.Models = module_names.Models;
 		}
-		else if(option_set(choices.OWN_MODEL, options_code)){
+		else if(option_is_set(choices.OWN_MODEL, options_code)){
 			var own_model = current_module_name.replace("Controller", "Model");
 			result.Models.push(own_model);
 		}
 
-		if(option_set(choices.OTHER_STUFF, options_code)){
+		if(option_is_set(choices.OTHER_STUFF, options_code)){
 			result.Other = module_names.Other;
 		}
 

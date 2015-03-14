@@ -1,11 +1,12 @@
+var IncludeFile = require("./Includes.js");
 
 QUnit.test( "hello test", function( assert ) {
 assert.ok( 1 == "1", "Passed!" );
 });
 
-QUnit.test("option_is_set", function( assert) {
+QUnit.test("option", function( assert) {
 
-assert.ok(Includes.option_is_set(0, 0), true);
+assert.ok(IncludeFile.option_is_set(0, 0), true);
 
 
 });

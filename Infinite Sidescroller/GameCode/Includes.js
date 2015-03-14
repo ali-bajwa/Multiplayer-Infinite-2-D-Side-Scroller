@@ -1,50 +1,12 @@
 var Include = function(){
 
-	this.modules = null;
+	var modules;
 
 	// simple enumerator // option codes MUST be power of 2 or sum of other options (with 0 being the only exception), and unique
-	this.choices = Object.freeze({NONE: 0, ALL_CONTROLLERS: 1, ALL_MODELS: 2, OWN_MODEL: 4, OTHER_STUFF: 8,
+	var choices = Object.freeze({NONE: 0, ALL_CONTROLLERS: 1, ALL_MODELS: 2, OWN_MODEL: 4, OTHER_STUFF: 8,
 		DEFAULT: 1 + 4 + 8, ALL: 1 + 2 + 8}); 
 
-	this.names = [
-
-		// Controllers
-		
-		"AssetController",
-		"CameraController",
-		"EnemyController",
-		"GameController",
-		"GraphicsController",
-		"InitController",
-		"KeyboardController",
-		"PhysicsController",
-		"PlayerController",
-		"TerrainController",
-		"TerrainSliceController",
-		"TestController",
-		"WorldController",
-
-		// Models
-		
-		"AssetModel",
-		"CameraModel",
-		"GameModel",
-		"GraphicsModel",
-		"PhysicsModel",
-		"TerrainModel",
-		"TerrainSliceModel",
-		"WorldModel",
-
-		// Other stuff
-		
-		"B2d",
-		"Box2D",
-		"Config",
-		"GameUtility",
-
-	];
-
-	this.module_names = {
+	var module_names = {
 		Controllers: [
 			"AssetController",
 			"CameraController",
@@ -67,9 +29,12 @@ var Include = function(){
 			"CameraModel",
 			"GameModel",
 			"GraphicsModel",
+			"KeyboardModel",
 			"PhysicsModel",
+			"PlayerModel",
 			"TerrainModel",
 			"TerrainSliceModel",
+			"TestModel",
 			"WorldModel",
 		],
 
@@ -84,9 +49,9 @@ var Include = function(){
 	};
 
 
-	this.init = function(){
+	var init = function(){
 
-		this.modules = {
+		modules = {
 			AssetController: require("./Controllers/AssetController.js"),
 			CameraController: require("./Controllers/CameraController.js"),
 			GraphicsController: require("./Controllers/GraphicsController.js"),
@@ -100,6 +65,7 @@ var Include = function(){
 			TestController: require("./Controllers/TestController.js"),
 			CameraController: require("./Controllers/CameraController.js"),
 			GameController: require("./Controllers/GameController.js"),
+			EnemyController: require("./Controllers/EnemyController.js"),
 			
 			// Models
 
@@ -111,8 +77,12 @@ var Include = function(){
 			GraphicsModel: require("./Models/GraphicsModel.js"),
 			TerrainModel: require("./Models/TerrainModel.js"),
 			WorldModel: require("./Models/WorldModel.js"),
+			KeyboardModel: require("./Models/KeyboardModel.js"),
+			PlayerModel: require("./Models/PlayerModel.js"),
+			TestModel: require("./Models/TestModel.js"),
 				
 			// Other stuff
+			
 			Config: require("./Config.js"),
 			GameUtility: require("./GameUtility.js"),
 			B2d: require("./B2d.js"),
@@ -121,7 +91,7 @@ var Include = function(){
 		};
 	}; // end init
 
-	this.option_set = function(option, options){
+	var option_set = function(option, options){
 		if(option == 0 && options == 0){
 			return true;
 		}
@@ -129,19 +99,35 @@ var Include = function(){
 		return (option & options);
 	};
 
-	this.get_names = function(current_module_name, options_code){
+	var get_module = function(name){
+		// can be modified to throw object error instead of simple one
+		// in that case it may contain list of difined modules
+		// may also be modified to check whether module is missing from 
+		// module_names, modules, or both, and give more accurate description
+		var message = "Module " + name + 
+			" is undefined. Note that you must hardcode all new modules" + 
+			" into the Includes.module_names AND Includes.modules."
+		
+		if(modules){
+			if(modules[name]){
+				return modules[name];
+			}else if(console.warn){ // check if console.warn is available
+				console.warn(message);
+			}else{
+				throw message;
+			}
+		}else{
+			throw "Error: You must run the Includes.init() before you can use any modules";
+		}
+	};
+	
+
+	var get_names = function(current_module_name, options_code){
 		var result = {Models: [], Controllers: [], Other: []};
-		var option_set = this.option_set;
-		var choices = this.choices;
-		var module_names = this.module_names;
 
 		if(option_set(choices.NONE, options_code)){
 			return result;
 		}
-
-		//if(option_set(choices.DEFAULT, options_code)){
-			//var options_code = choices.ALL_CONTROLLERS + choices.OWN_MODEL + choices.OTHER_STUFF;
-		//}
 
 		if (option_set(choices.ALL_CONTROLLERS, options_code)){
 
@@ -173,7 +159,7 @@ var Include = function(){
 		return result;
 	};
 
-	this.get_name_statements = function(names){
+	var get_name_statements = function(names){
 		var result = "";
 		for(var section_index = 0; section_index < 3; section_index++){
 			var section = ["Models", "Controllers", "Other"][section_index];
@@ -186,24 +172,25 @@ var Include = function(){
 		
 	};
 
-	this.get_module_statements = function(names){
+	var get_module_statements = function(names){
 		var result = "";
 		for(var section_index = 0; section_index < 3; section_index++){
 			var section = ["Models", "Controllers", "Other"][section_index];
 			for(var i = 0; i < names[section].length; i++){
-				result += (names[section][i] + " = Includes.modules." + names[section][i] + "; ");
+				result += (names[section][i] + " = Includes.get_module(\"" + names[section][i] + "\"); ");
 			}
 		}
 
 		return result;
 	};
 
-	this.get_include_data = function(params){
+	var get_include_data = function(params){
 		var current_module = params.current_module;
 		var include_options = params.include_options;
-		var names = this.get_names(current_module, include_options);
-		var name_statements = this.get_name_statements(names);
-		var module_statements = this.get_module_statements(names);
+		var names = get_names(current_module, include_options);
+
+		var name_statements = get_name_statements(names);
+		var module_statements = get_module_statements(names);
 
 		return {
 			imported_modules: names,
@@ -213,6 +200,15 @@ var Include = function(){
 
 	};
 
+	return {
+		init: init,
+		module_names: module_names,
+		get_module: get_module,
+		get_include_data: get_include_data,
+		choices: choices
+	};
+
 };
 
 module.exports = new Include;
+

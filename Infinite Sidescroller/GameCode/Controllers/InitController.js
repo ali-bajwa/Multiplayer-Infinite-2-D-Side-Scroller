@@ -1,41 +1,41 @@
-var KeyboardController, GameController, AssetController, TerrainController, PhysicsController, CameraController, PlayerController,
-	TerrainSliceController, GraphicsController, WorldController;
+//var KeyboardController, GameController, AssetController, TerrainController, PhysicsController, CameraController, PlayerController,
+	//TerrainSliceController, GraphicsController, WorldController;
 var GameModel, AssetModel, PhysicsModel;
-var Config, GameUtility, B2d;
-var Includes;
+//var Config, GameUtility, B2d;
+//var Includes;
 
-var include = function(){
-	// require statements moved here to avoid weird incorrect module loading order bugs
-	// basically some modules would load earlier than their dependencies, which would
-	// result in aforementioned dependencies being undefined for the said modules
+//var include = function(){
+	//// require statements moved here to avoid weird incorrect module loading order bugs
+	//// basically some modules would load earlier than their dependencies, which would
+	//// result in aforementioned dependencies being undefined for the said modules
 
-	KeyboardController = require("./KeyboardController.js");
-	GameController = require("./GameController.js");
-	AssetController = require("./AssetController.js");
-	TerrainController = require("./TerrainController.js");
-	PhysicsController = require("./PhysicsController.js");
-	CameraController = require("./CameraController.js");
-	PlayerController = require("./PlayerController.js");
-	TerrainSliceController = require("./TerrainSliceController.js");
-	GraphicsController = require("./GraphicsController.js");
-	WorldController = require("./WorldController.js");
+	//KeyboardController = require("./KeyboardController.js");
+	//GameController = require("./GameController.js");
+	//AssetController = require("./AssetController.js");
+	//TerrainController = require("./TerrainController.js");
+	//PhysicsController = require("./PhysicsController.js");
+	//CameraController = require("./CameraController.js");
+	//PlayerController = require("./PlayerController.js");
+	//TerrainSliceController = require("./TerrainSliceController.js");
+	//GraphicsController = require("./GraphicsController.js");
+	//WorldController = require("./WorldController.js");
 	
 
-	GameModel = require("../Models/GameModel.js");
-	AssetModel = require("../Models/AssetModel.js");
-	PhysicsModel = require("../Models/PhysicsModel.js");
+	//GameModel = require("../Models/GameModel.js");
+	//AssetModel = require("../Models/AssetModel.js");
+	//PhysicsModel = require("../Models/PhysicsModel.js");
 
-	Config = require("../Config.js");
-	GameUtility = require("../GameUtility.js");
-	B2d = require("../B2d.js");
+	//Config = require("../Config.js");
+	//GameUtility = require("../GameUtility.js");
+	//B2d = require("../B2d.js");
 
-	Includes = require("../Includes.js");
+	//Includes = require("../Includes.js");
 	
 
 	
 
 
-};
+//};
 
 
 var InitController = (function(){
@@ -52,7 +52,6 @@ var InitController = (function(){
 
 	var init = function(mode){
 		include();
-		Includes.init(); // !!!! important one
 
 		init_all_modules(); // call .init function of everyone. e.g. PlayerController.init(); etc.
 
@@ -231,3 +230,13 @@ var InitController = (function(){
 })();
 
 module.exports = InitController;
+
+var Includes = require("../Includes.js");
+var include_data = Includes.get_include_data({
+	current_module: "InitController", 
+	include_options: Includes.choices.ALL
+}); 
+eval(include_data.name_statements);
+var include = function(){
+	eval(include_data.module_statements);
+};

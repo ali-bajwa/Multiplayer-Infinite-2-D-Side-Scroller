@@ -46,8 +46,6 @@ window.sidescroller_game = (function namespace(){
 		eval("var " + Includes.names[i] + ";");
 	};
 
-	var goo;
-
 	var include = function(){
 		for(var module in Includes.modules){
 			eval(module + " = " + "Includes.modules[module]");

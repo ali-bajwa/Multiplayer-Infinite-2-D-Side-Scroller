@@ -5,19 +5,6 @@
 
 var CameraController = (function(){
 
-	var include = function(){
-		// require statements moved here to avoid weird incorrect module loading order bugs
-		// basically some modules would load earlier than their dependencies, which would
-		// result in aforementioned dependencies being undefined
-		
-		//TerrainController = require("./TerrainController.js");
-
-		//PlayerController = require("./PlayerController.js");
-
-		//CameraModel = require("../Models/CameraModel.js");
-
-	};
-
 	var init = function(){
 		include();
 
@@ -108,9 +95,7 @@ module.exports = CameraController;
 
 var Include = require("../Includes.js");
 var this_module_name = "CameraController";
-var model_name = this_module_name.replace("Controller", "Model");
 
-eval("var " + model_name + ";");
 for(var i = 0; i < Include.names.length; i++){
 	eval("var " + Include.names[i] + ";");
 };
@@ -121,6 +106,5 @@ var include = function(){
 			eval(module + " = " + "Include.modules[module]");
 		}
 	}
-	eval(model_name + " = Include.modules[model_name]");
 };
 

@@ -205,7 +205,8 @@ var Include = function(){
 		module_names: module_names,
 		get_module: get_module,
 		get_include_data: get_include_data,
-		choices: choices
+		choices: choices,
+		option_is_set: option_is_set
 	};
 
 };

@@ -16,8 +16,6 @@ var TestController = (function(){
 		include();	
 		
 	};
-	
-
 
 	return {
 		init: init, 

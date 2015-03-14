@@ -1,25 +1,3 @@
-//var GameModel, TerrainModel, TerrainSliceModel;
-//var AssetController, PhysicsController, TerrainSliceController;
-//var GameUtility, Config;
-
-//var include = function(){
-	//AssetController = require("./AssetController.js");
-	//PhysicsController = require("./PhysicsController.js");
-	//TerrainSliceController = require("./TerrainSliceController.js");
-	
-
-	//GameModel = require("../Models/GameModel.js");
-	//TerrainModel = require("../Models/TerrainModel.js");
-	//TerrainSliceModel = require("../Models/TerrainSliceModel.js");
-
-	
-
-	//GameUtility = require("../GameUtility.js");
-	//Config = require("../Config.js");
-
-		
-//};
-
 
 var TerrainController = (function(){
 	/* this will be the physical representation of the terrain
@@ -52,8 +30,6 @@ var TerrainController = (function(){
 
 	};
 
-	
-	
 	var retrieve_world_parameters = function(){};
 
 	var generate_terrain = function(){
@@ -119,8 +95,6 @@ var TerrainController = (function(){
 
 		   
 	   } // end for 
-
-
 
 	}; //end generate_terrain
 

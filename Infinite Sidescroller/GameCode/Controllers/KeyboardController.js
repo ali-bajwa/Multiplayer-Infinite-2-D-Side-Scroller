@@ -67,8 +67,6 @@ var KeyboardController = (function()
 
 		movement_commands: movement_commands,
 		init: init,
-
-
 	};
 
 })();

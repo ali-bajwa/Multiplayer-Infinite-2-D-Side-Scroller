@@ -1,8 +1,4 @@
 
-//var CameraModel;
-//var PlayerController, TerrainController;
-
-
 var CameraController = (function(){
 
 	var init = function(){

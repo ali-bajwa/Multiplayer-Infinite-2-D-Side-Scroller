@@ -29,35 +29,12 @@
 // main namespace that is exposed to global scope (window object)
 window.sidescroller_game = (function namespace(){
 
-	//var TestController, InitController, Config, GameUtility;
-
-	//Config = require("./Config.js");
-		
-	//GameUtility = require("./GameUtility.js");
-
-	//InitController = require("./Controllers/InitController.js"); 
-	//TestController = require("./Controllers/TestController.js"); 
-
-	//var lg = GameUtility.lg; // for quicker access
-	
-	//var Includes = require("./Includes.js");
-
-	//for(var i = 0; i < Includes.names.length; i++){
-		//eval("var " + Includes.names[i] + ";");
-	//};
-
-	//var include = function(){
-		//for(var module in Includes.modules){
-			//eval(module + " = " + "Includes.modules[module]");
-		//}
-	//};
-	var Includes = require("./Includes.js"); var include_data = Includes.get_include_data({
+		var Includes = require("./Includes.js"); var include_data = Includes.get_include_data({
 		current_module: "None", 
 		include_options: Includes.choices.ALL_CONTROLLERS
 	}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
 
 	// Game initiation section: >>>
-	
 		
 	var load_game = function(mode)
 	{

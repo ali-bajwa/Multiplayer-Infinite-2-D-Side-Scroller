@@ -1,20 +1,5 @@
-//var B2d;
-//var GameModel;
-//var KeyboardController, CameraController;
-
-
 
 var PlayerController = (function(){
-	//var include = function(){
-		//CameraController = require("./CameraController.js");
-
-		//KeyboardController = require("./KeyboardController.js");
-
-		//GameModel = require("../Models/GameModel.js");
-
-		//B2d = require("../B2d.js");
-
-	//};
 
 	var init = function(){
 		include();
@@ -27,7 +12,6 @@ var PlayerController = (function(){
 		var MOVEMENT_EDGE = 500; // where terrain start scrolling
 
 
-		// Separate function >>>
 		if(cmds("right")){
 			// temporary
 
@@ -46,14 +30,12 @@ var PlayerController = (function(){
 			jump();
 		}
 
-
 		if(cmds("left")){
 			if(GameModel.hero.x > 10){
 				move_left(GameModel.hero);
 			}
 		}
 
-		// <<<
 	};
 
 	var move_right = function(){

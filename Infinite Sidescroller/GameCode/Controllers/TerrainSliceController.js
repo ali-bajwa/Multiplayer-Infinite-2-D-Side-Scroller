@@ -1,17 +1,3 @@
-/*var TerrainSliceModel;
-
-var PhysicsController, AssetController;
-
-var GameUtility;
-
-var include = function(){
-	[> browserify require statements go here <]
-	TerrainSliceModel = require("../Models/TerrainSliceModel.js");
-	GameUtility = require("../GameUtility.js");
-	PhysicsController = require("./PhysicsController.js");
-	AssetController = require("./AssetController.js");
-};*/
-
 
 var TerrainSliceController = (function () {
 

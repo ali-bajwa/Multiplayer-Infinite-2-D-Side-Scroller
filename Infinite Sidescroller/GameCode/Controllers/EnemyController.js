@@ -1,4 +1,3 @@
-var GameModel;
 
 var EnemyController = (function(){
 	var init = function(){
@@ -7,8 +6,9 @@ var EnemyController = (function(){
 	};
 	
 	var move = function(offset_x, offset_y){
-		GameModel.chomper.x += offset_x;
-		GameModel.chomper.y += offset_y;
+		// needs to change to not use gamemodel directly
+		//GameModel.chomper.x += offset_x;
+		//GameModel.chomper.y += offset_y;
 	};
 
 	return {

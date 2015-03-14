@@ -1,43 +1,3 @@
-//var KeyboardController, GameController, AssetController, TerrainController, PhysicsController, CameraController, PlayerController,
-	//TerrainSliceController, GraphicsController, WorldController;
-var GameModel, AssetModel, PhysicsModel;
-//var Config, GameUtility, B2d;
-//var Includes;
-
-//var include = function(){
-	//// require statements moved here to avoid weird incorrect module loading order bugs
-	//// basically some modules would load earlier than their dependencies, which would
-	//// result in aforementioned dependencies being undefined for the said modules
-
-	//KeyboardController = require("./KeyboardController.js");
-	//GameController = require("./GameController.js");
-	//AssetController = require("./AssetController.js");
-	//TerrainController = require("./TerrainController.js");
-	//PhysicsController = require("./PhysicsController.js");
-	//CameraController = require("./CameraController.js");
-	//PlayerController = require("./PlayerController.js");
-	//TerrainSliceController = require("./TerrainSliceController.js");
-	//GraphicsController = require("./GraphicsController.js");
-	//WorldController = require("./WorldController.js");
-	
-
-	//GameModel = require("../Models/GameModel.js");
-	//AssetModel = require("../Models/AssetModel.js");
-	//PhysicsModel = require("../Models/PhysicsModel.js");
-
-	//Config = require("../Config.js");
-	//GameUtility = require("../GameUtility.js");
-	//B2d = require("../B2d.js");
-
-	//Includes = require("../Includes.js");
-	
-
-	
-
-
-//};
-
-
 var InitController = (function(){
 	// why do you want to put initialization of everything into the InitController?
 	// Because if initialization of smth depends on initialization of smth else,
@@ -55,14 +15,10 @@ var InitController = (function(){
 
 		init_all_modules(); // call .init function of everyone. e.g. PlayerController.init(); etc.
 
-		
-
-
 		enable_arrowkey_scroll(false);
 		setup_screen();
 		setup_events();
 		setup_debug_canvas(mode);
-
 
 		// Notice that asset dependent stuff doesn't (and mustn't) start until
 		// all assets are completely loaded. That includes ticker, i.e. no ticks are processed
@@ -78,12 +34,7 @@ var InitController = (function(){
 			var asset_path = (mode == "test") ? "./assets/art/" : "../Content/gamedemo/assets/art/";
 			setup_debug_canvas();
 
-
-
 		AssetController.load_all(asset_path);
-
-		// <<<
-		
 
 	};
 
@@ -109,8 +60,6 @@ var InitController = (function(){
 		TestController.init();
 		WorldController.init();
 
-
-
 	};
 
 
@@ -126,11 +75,6 @@ var InitController = (function(){
 				}                                                                   
 			})                                                                      
 		}		
-	};
-
-	var physics = function(){
-		// a lot of 
-		// sutff from the PhysicsModel and PhysicsController should be moved here	
 	};
 
 	var setup_debug_canvas = function(mode){

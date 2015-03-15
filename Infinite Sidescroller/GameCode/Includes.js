@@ -197,6 +197,29 @@ var Include = function(){
 			name_statements: name_statements,
 			module_statements: module_statements,
 		};
+	this.automated_tests = function(){
+		QUnit.test("option matching function", function( assert) {
+
+			//If both are none
+			assert.equal(option_is_set(choices.NONE, choices.NONE), true);
+
+			//If both match, it returns the value of choices
+			//If they don't match, it returns 0
+			
+			//MATCH
+			assert.equal(option_is_set(IncludeFile.choices.ALL_CONTROLLERS, choices.ALL_CONTROLLERS), 1);
+			assert.equal(option_is_set(IncludeFile.choices.ALL_MODELS, choices.ALL_MODELS), 2);
+			assert.equal(option_is_set(IncludeFile.choices.OTHER_STUFF, choices.OTHER_STUFF), 8);
+
+			//Mismatch
+			assert.equal(option_is_set(IncludeFile.choices.NONE, choices.ALL_CONTROLLERS), 0);
+			assert.equal(IncludeFile.option_is_set(choices.OTHER_STUFF, choices.NONE), 0);
+			assert.equal(IncludeFile.option_is_set(choices.ALL_MODELS, choices.ALL_CONTROLLERS), 0);
+			assert.equal(IncludeFile.option_is_set(choices.OWN_MODEL, choices.ALL_MODELS), 0);
+
+
+		});
+	};
 
 	};
 
@@ -206,7 +229,7 @@ var Include = function(){
 		get_module: get_module,
 		get_include_data: get_include_data,
 		choices: choices,
-		option_is_set: option_is_set
+		//automated_tests: automated_tests
 	};
 
 };

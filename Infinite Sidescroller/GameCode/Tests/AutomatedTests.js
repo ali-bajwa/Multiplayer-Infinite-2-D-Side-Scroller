@@ -15,28 +15,7 @@ QUnit.test( "hello test", function( assert ) {
 
 //*************************************************************************************************
 //Testing Includes.js
-QUnit.test("option matching function", function( assert) {
-
-	//If both are none
-	assert.equal(IncludeFile.option_is_set(IncludeFile.choices.NONE, IncludeFile.choices.NONE), true);
-
-	//If both match, it returns the value of choices
-	//If they don't match, it returns 0
-	
-	//MATCH
-	assert.equal(IncludeFile.option_is_set(IncludeFile.choices.ALL_CONTROLLERS, IncludeFile.choices.ALL_CONTROLLERS), 1);
-	assert.equal(IncludeFile.option_is_set(IncludeFile.choices.ALL_MODELS, IncludeFile.choices.ALL_MODELS), 2);
-	assert.equal(IncludeFile.option_is_set(IncludeFile.choices.OTHER_STUFF, IncludeFile.choices.OTHER_STUFF), 8);
-
-	//Mismatch
-	assert.equal(IncludeFile.option_is_set(IncludeFile.choices.NONE, IncludeFile.choices.ALL_CONTROLLERS), 0);
-	assert.equal(IncludeFile.option_is_set(IncludeFile.choices.OTHER_STUFF, IncludeFile.choices.NONE), 0);
-	assert.equal(IncludeFile.option_is_set(IncludeFile.choices.ALL_MODELS, IncludeFile.choices.ALL_CONTROLLERS), 0);
-	assert.equal(IncludeFile.option_is_set(IncludeFile.choices.OWN_MODEL, IncludeFile.choices.ALL_MODELS), 0);
-
-
-});
-
+IncludeFile.automated_tests();
 
 
 

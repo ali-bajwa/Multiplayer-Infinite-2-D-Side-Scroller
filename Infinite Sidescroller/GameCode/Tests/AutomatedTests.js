@@ -1,6 +1,8 @@
 //AUTOMATED TESTING SUITE
-//Insert a test case here using QUnit(description of test, function(assert){})
+//Insert a test case in the file where the code resides where
+//you want to use QUnit(description of test, function(assert){})
 //use assert.equal to test output of function
+//Then, add a call to that test here in AutomatedTests.js
 //Compile testing suite by typing
 //browserify -d AutomatedTests.js -o TestSuite.js
 

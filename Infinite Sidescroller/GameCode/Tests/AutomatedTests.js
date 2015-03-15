@@ -8,12 +8,13 @@
 //Importing Game Code
 var IncludeFile = require("../Includes.js");
 
+//#TEST 1
 //Test will fail if QUnit isn't working
 QUnit.test( "hello test", function( assert ) {
 	assert.ok( 1 == "1", "Passed!" );
 });
 
-//*************************************************************************************************
+//#TEST 2
 //Testing Includes.js
 IncludeFile.automated_tests();
 

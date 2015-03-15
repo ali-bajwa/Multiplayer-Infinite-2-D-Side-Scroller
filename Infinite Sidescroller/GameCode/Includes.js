@@ -46,7 +46,7 @@ var Include = function(){
 			"GameUtility",
 		]
 
-	};
+	};//end module_names
 
 
 	var init = function(){
@@ -97,7 +97,7 @@ var Include = function(){
 		}
 		// be mindful of bitwise operator ahead
 		return (what_mods_selected & options);
-	};
+	};//end option_is_set
 
 	var get_module = function(name){
 		// can be modified to throw object error instead of simple one
@@ -119,7 +119,7 @@ var Include = function(){
 		}else{
 			throw "Error: You must run the Includes.init() before you can use any modules";
 		}
-	};
+	};//end get_module
 	
 
 	var get_names = function(current_module_name, options_code){
@@ -157,7 +157,7 @@ var Include = function(){
 		}
 
 		return result;
-	};
+	};//end get_names
 
 	var get_name_statements = function(names){
 		var result = "";
@@ -170,7 +170,7 @@ var Include = function(){
 
 		return result;
 		
-	};
+	};//end get_name_statements
 
 	var get_module_statements = function(names){
 		var result = "";
@@ -182,7 +182,7 @@ var Include = function(){
 		}
 
 		return result;
-	};
+	};//end get_module_statements
 
 	var get_include_data = function(params){
 		var current_module = params.current_module;
@@ -198,9 +198,10 @@ var Include = function(){
 			module_statements: module_statements,
 		};
 
-	};
+	};//end get_include_data
 
 	var automated_tests = function(){
+		
 		QUnit.test("option matching function", function( assert) {
 
 			//If both are none
@@ -219,8 +220,9 @@ var Include = function(){
 			assert.equal(option_is_set(choices.OTHER_STUFF, choices.NONE), 0);
 			assert.equal(option_is_set(choices.ALL_MODELS, choices.ALL_CONTROLLERS), 0);
 			assert.equal(option_is_set(choices.OWN_MODEL, choices.ALL_MODELS), 0);
-		});
-	};
+		});//end option matching test
+		
+	};//end automated_tests
 
 
 	return {

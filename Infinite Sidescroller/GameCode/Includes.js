@@ -210,15 +210,15 @@ var Include = function(){
 			//If they don't match, it returns 0
 			
 			//MATCH
-			assert.equal(option_is_set(IncludeFile.choices.ALL_CONTROLLERS, choices.ALL_CONTROLLERS), 1);
-			assert.equal(option_is_set(IncludeFile.choices.ALL_MODELS, choices.ALL_MODELS), 2);
-			assert.equal(option_is_set(IncludeFile.choices.OTHER_STUFF, choices.OTHER_STUFF), 8);
+			assert.equal(option_is_set(choices.ALL_CONTROLLERS, choices.ALL_CONTROLLERS), 1);
+			assert.equal(option_is_set(choices.ALL_MODELS, choices.ALL_MODELS), 2);
+			assert.equal(option_is_set(choices.OTHER_STUFF, choices.OTHER_STUFF), 8);
 
 			//Mismatch
-			assert.equal(option_is_set(IncludeFile.choices.NONE, choices.ALL_CONTROLLERS), 0);
-			assert.equal(IncludeFile.option_is_set(choices.OTHER_STUFF, choices.NONE), 0);
-			assert.equal(IncludeFile.option_is_set(choices.ALL_MODELS, choices.ALL_CONTROLLERS), 0);
-			assert.equal(IncludeFile.option_is_set(choices.OWN_MODEL, choices.ALL_MODELS), 0);
+			assert.equal(option_is_set(choices.NONE, choices.ALL_CONTROLLERS), 0);
+			assert.equal(option_is_set(choices.OTHER_STUFF, choices.NONE), 0);
+			assert.equal(option_is_set(choices.ALL_MODELS, choices.ALL_CONTROLLERS), 0);
+			assert.equal(option_is_set(choices.OWN_MODEL, choices.ALL_MODELS), 0);
 		});
 	};
 

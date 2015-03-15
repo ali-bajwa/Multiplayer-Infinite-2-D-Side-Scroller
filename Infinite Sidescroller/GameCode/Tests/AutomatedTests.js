@@ -17,6 +17,3 @@ QUnit.test( "hello test", function( assert ) {
 //Testing Includes.js
 IncludeFile.automated_tests();
 
-
-
-

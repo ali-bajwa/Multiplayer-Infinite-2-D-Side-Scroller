@@ -197,7 +197,10 @@ var Include = function(){
 			name_statements: name_statements,
 			module_statements: module_statements,
 		};
-	this.automated_tests = function(){
+
+	};
+
+	var automated_tests = function(){
 		QUnit.test("option matching function", function( assert) {
 
 			//If both are none
@@ -216,12 +219,9 @@ var Include = function(){
 			assert.equal(IncludeFile.option_is_set(choices.OTHER_STUFF, choices.NONE), 0);
 			assert.equal(IncludeFile.option_is_set(choices.ALL_MODELS, choices.ALL_CONTROLLERS), 0);
 			assert.equal(IncludeFile.option_is_set(choices.OWN_MODEL, choices.ALL_MODELS), 0);
-
-
 		});
 	};
 
-	};
 
 	return {
 		init: init,
@@ -229,7 +229,7 @@ var Include = function(){
 		get_module: get_module,
 		get_include_data: get_include_data,
 		choices: choices,
-		//automated_tests: automated_tests
+		automated_tests: automated_tests
 	};
 
 };

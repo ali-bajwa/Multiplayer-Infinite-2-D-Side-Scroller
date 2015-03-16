@@ -207,6 +207,8 @@ var Include = function(){
 			//If both are none
 			assert.equal(option_is_set(choices.NONE, choices.NONE), true);
 
+			assert.throws(option_is_set(choices.NONE, -1));
+
 			//If both match, it returns the value of choices
 			//If they don't match, it returns 0
 			

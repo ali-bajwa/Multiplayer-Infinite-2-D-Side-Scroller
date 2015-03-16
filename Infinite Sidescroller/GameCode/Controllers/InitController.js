@@ -51,7 +51,6 @@ var InitController = (function(){
 		AssetController.init();
 		CameraController.init();
 		GameController.init();
-		GraphicsController.init();
 		KeyboardController.init();
 		PhysicsController.init();
 		PlayerController.init();
@@ -59,6 +58,9 @@ var InitController = (function(){
 		TerrainSliceController.init();
 		TestController.init();
 		WorldController.init();
+
+		// WARNING!!! GraphicsController.init is called from the
+		// setup_asset_dependent function as it, well, depends on assets being loaded
 
 	};
 
@@ -81,6 +83,8 @@ var InitController = (function(){
 		// more stuff may be done later
 		// should be refactored and prettyfied
 		
+		// does in need to be moved to graphics controller?
+		// test controller? (although we have QUnit testing, hm)
 
 		// does this way and not with jquery due to some strange bugs
 		var d_canvas = document.getElementById(Config.DEBUG_CANVAS_NAME);
@@ -154,21 +158,8 @@ var InitController = (function(){
 
 	var setup_asset_dependant = function(){
 		// this may need to move to either load_game or some sort of resizing function
-		GameModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
-		GameModel.stage.canvas.width = Config.SCREEN_W;
-		GameModel.stage.canvas.height = Config.SCREEN_H;
-
-
-		GameModel.hero = AssetController.request_bitmap("greek_warrior");
-		GameModel.hero.regX = 0;
-		GameModel.hero.regY = GameModel.hero.image.height;
-		GameModel.hero.x = 100;
-		GameModel.hero.y = 510;
-
-		// temporary/testing, do not try to understand numbers involved. I repeat, do not try to understand numbers;
-		GameModel.hero.b2b = PhysicsController.get_rectangular_body(1.5, 2.5, 100/30 + (1.5/2), 510/30 - (2.5/2), true);
-
-		GameModel.stage.addChild(GameModel.hero);
+		
+		GraphicsController.init();
 
 		setup_ticker();
 

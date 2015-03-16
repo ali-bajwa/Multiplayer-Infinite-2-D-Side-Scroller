@@ -27,26 +27,17 @@ var GameController = (function(){
 
 		TerrainController.update();
 
-		GraphicsController.update();
 		
 		// Should be called after all movement of objects is done:
 		CameraController.update(); // should be moved to Graphics Model/Controller
 
-		GameModel.stage.update(); // should be moved to Graphics Model/Controller
+		GraphicsController.update();
 	};
-
-	var AddToStage = function(element){
-		// improve to allow specifying order (z-index) etc.?	
-		// move to graphics controller together with the stage 
-		GameModel.stage.addChild(element);		
-	};
-	
 
 
 	return {
 		init: init,
 		update_all: update_all,
-		AddToStage: AddToStage,
 	};
 
 })();

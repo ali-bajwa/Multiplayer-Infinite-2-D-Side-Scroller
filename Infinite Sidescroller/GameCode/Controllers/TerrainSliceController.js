@@ -75,33 +75,6 @@ var TerrainSliceController = (function () {
 			} // end for
 
 		}//end for
-		// <<< creating physics representations
-		
-		
-		for(var i = 0; i < slice.grid_rows; i++){
-			/* graphics pass. should be probably moved to the graphics controller
-			 * didn't decide on it yet
-			 */
-
-			var lvl = slice.grid_rows - i; // level from the bottom
-
-			for(var j = 0; j < slice.grid_columns; j++){
-				var id = slice.grid[i][j].id;
-				if(id != 0){
-					// TODO: should make proper terrain collection thing to pull from 
-					var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][id-1];
-					var tile = AssetController.request_bitmap(tile_texture);
-					var body_position = slice.grid[i][j].body.GetWorldCenter();
-					tile.x = body_position.x * 30;
-					tile.y = body_position.y * 30;
-					GameController.AddToStage(tile);
-				} // fi
-
-
-			} // end for
-
-		}//end for
-		// <<< graphics pass
 		
 		return slice;
 	};

@@ -82,6 +82,10 @@ var TerrainController = (function(){
 		return (TerrainModel.new_slices.length > 0);
 	};
 
+	var GetNewTerrainSlices = function(){
+		return TerrainModel.new_slices;
+	};
+
 	return {
 		move_left: move_left,
 		move: move,
@@ -90,6 +94,7 @@ var TerrainController = (function(){
 		NewTerrainSlice: NewTerrainSlice,
 		MarkAsNewTerrainSlice: MarkAsNewTerrainSlice,
 		NewSlicesAvailable: NewSlicesAvailable,
+		GetNewTerrainSlices: GetNewTerrainSlices,
 	}
 })();
 

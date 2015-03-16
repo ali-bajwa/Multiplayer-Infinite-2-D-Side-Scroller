@@ -3,8 +3,17 @@ var Include = function(){
 	var modules;
 
 	// simple enumerator // option codes MUST be power of 2 or sum of other options (with 0 being the only exception), and unique
-	var choices = Object.freeze({NONE: 0, ALL_CONTROLLERS: 1, ALL_MODELS: 2, OWN_MODEL: 4, OTHER_STUFF: 8,
-		DEFAULT: 1 + 4 + 8, ALL: 1 + 2 + 8}); 
+	var choices = (function(){
+		// simple options: numberic value must be 0 or some power of 2, name should be all caps and unique
+		var result = {NONE: 0, ALL_CONTROLLERS: 1, ALL_MODELS: 2, OWN_MODEL: 4, OTHER_STUFF: 8};
+
+		// complex options: should consist of simple options, bitwise(!) OR'ed or AND'ed together in any fashion
+		result.DEFAULT = (result.ALL_CONTROLLERS | result.OWN_MODEL | result.OTHER_STUFF);
+		result.ALL =  (result.ALL_CONTROLLERS | result.ALL_MODELS | result.OTHER_STUFF); 
+
+		// object is immutable
+		return Object.freeze(result);
+	})();
 
 	var module_names = {
 		Controllers: [

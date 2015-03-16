@@ -37,6 +37,7 @@ var GameController = (function(){
 
 	var AddToStage = function(element){
 		// improve to allow specifying order (z-index) etc.?	
+		// move to graphics controller together with the stage 
 		GameModel.stage.addChild(element);		
 	};
 	

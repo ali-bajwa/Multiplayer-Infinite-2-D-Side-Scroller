@@ -13,9 +13,14 @@ var TerrainSliceController = (function () {
 
 	};
 
+	var get_next_origin = function(){
+	};
+
 	var generate = function(){
 
 		var slice = new TerrainSliceModel();
+		slice.origin.x = slice.id * slice.grid_columns * slice.cell_w;
+		slice.origin.y = 0;
 
 		for(var i = 0; i < slice.grid_rows; i++){
 			/* 	assigning id's
@@ -61,8 +66,8 @@ var TerrainSliceController = (function () {
 			for(var j = 0; j < slice.grid_columns; j++){
 				var id = slice.grid[i][j].id;
 				if(id != 0){ // if not air
-					var x = slice.cell_w * j + slice.cell_w/2;
-					var y = slice.cell_w * i + slice.cell_w/2;
+					var x = slice.origin.x + j * slice.cell_w + slice.cell_w/2;
+					var y = slice.origin.y + i * slice.cell_w + slice.cell_w/2;
 					var body = PhysicsController.get_rectangular_body(1, 1, x, y, false);
 					slice.grid[i][j].body = body;
 				}
@@ -71,8 +76,6 @@ var TerrainSliceController = (function () {
 
 		}//end for
 		// <<< creating physics representations
-		
-		TerrainController.MarkAsNewTerrainSlice(slice); // so that graphics and other stuff will notice
 		
 		
 		for(var i = 0; i < slice.grid_rows; i++){

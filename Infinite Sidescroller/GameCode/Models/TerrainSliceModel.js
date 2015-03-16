@@ -1,7 +1,7 @@
 TerrainSliceConfig = require ("../Config.js").TerrainSlice;
 
 var TerrainSliceModel = function(){
-	this.slice_id = TerrainSliceConfig.next_slice_id++; // automaticall assign id and increment 
+	this.id = TerrainSliceConfig.next_slice_id++; // automaticall assign id and increment 
 
 	this.grid_columns = TerrainSliceConfig.grid_columns;
 	this.grid_rows = TerrainSliceConfig.grid_rows;

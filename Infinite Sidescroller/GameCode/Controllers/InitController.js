@@ -172,7 +172,7 @@ var InitController = (function(){
 
 		setup_ticker();
 
-		TerrainController.generate_terrain(); // Initial terrain generation
+		//TerrainController.generate_terrain(); // Initial terrain generation // deprecated, generation will be called from update each tick
 	};
 
 

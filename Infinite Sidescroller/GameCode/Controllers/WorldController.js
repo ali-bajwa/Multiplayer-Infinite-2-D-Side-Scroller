@@ -4,7 +4,7 @@ var WorldController = (function(){
 	*/
 
 	var body_test;
-	var temp = 0;
+	//var temp = 0;
 
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -18,9 +18,9 @@ var WorldController = (function(){
 		/* is ran each tick from the GameController.update_all */
 		PhysicsController.step(delta);
 
-		if(temp++ == 0){
-			TerrainController.NewTerrainSlice();
-		}
+		//if(temp++ == 0){
+			//TerrainController.NewTerrainSlice();
+		//}
 
 	};
 

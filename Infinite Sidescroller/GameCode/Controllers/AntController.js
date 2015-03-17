@@ -82,13 +82,14 @@ var AntController = (function()
 		{
 				
 			if(AntModel.AI_state == "walk")
-		{
-			var Antbody = GameModel.ant.B2d;
-			var velocity = Antbody.GetLinearVelocity();
-			velocity.x = -AntModel.speed;
-			Antbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-			Antbody.SetAwake(true);
-		}
+			{
+				var Antbody = GameModel.ant.B2d;
+				var velocity = Antbody.GetLinearVelocity();
+				velocity.x = -AntModel.speed;
+				Antbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+				Antbody.SetAwake(true);
+				Console.log("I AM HERE");
+			}
 
 			if (AntModel.can_attack && AntModel.me_hurt_hero && model.AI_state == "walk")
 			{
@@ -100,8 +101,8 @@ var AntController = (function()
 
 				AntModel.hero_hurt_me = false;
 			}
-			}
 		}
+	}
 	
 
 	return {

@@ -44,7 +44,7 @@ var AssetController = (function(){
 		 */
 
 		AssetModel.animations["ant"] = new createjs.SpriteSheet({
-			"framerate": 1,
+			"framerate": 0.2,
 			"images": [get_asset("Ant1"), get_asset("Ant2"), get_asset("Ant3")],
 			"frames": { "regX": 3, "regY": 6, "height": 25, "width": 50, "count": 6},
 			"animations": {

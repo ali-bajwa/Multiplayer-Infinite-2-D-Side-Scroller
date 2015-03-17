@@ -57,7 +57,6 @@ var InitController = (function(){
 		TerrainSliceController.init();
 		TestController.init();
 		WorldController.init();
-		AntController.init();
 
 		// WARNING!!! GraphicsController.init is called from the
 		// setup_asset_dependent function as it, well, depends on assets being loaded
@@ -159,7 +158,10 @@ var InitController = (function(){
 	var setup_asset_dependant = function(){
 		// this may need to move to either load_game or some sort of resizing function
 		
+		AssetController.post_init();
+		AntController.init();
 		GraphicsController.init();
+
 
 		setup_ticker();
 

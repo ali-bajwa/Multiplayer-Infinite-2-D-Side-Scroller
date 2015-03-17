@@ -11,6 +11,12 @@ var AntController = (function()
 		AntModel.ant = PhysicsController.get_rectangular_body(1, 0.5, 600/30 + (2.5/2), 510/30 - (1.5/2), true);
 	};
 
+	var change_state  = function(progress_state, state_num)
+	{
+		AntModel.state = progress_state;
+
+	}
+
 	// // //Set up Collision handler
 	/*
 	var b2Listener = Box2d.Dynamics.b2ContactListener;
@@ -55,46 +61,45 @@ var AntController = (function()
 		//Do your maintenance here
 			//example maintenance: check cooldown
 
-		
 		//if enemy is dead, die
 		if (AntModel.hp == 1)
-			{
-				AntModel.change_state("upside-down", 1);
-			}
+		{
+			change_state("upside_down", 1);
+		}
 		else if(AntModel.hp <=0 && model.death_tick == 30)
-			{
+		{
 
-			}
+		}
 
 		else if (AntModel.hp<=0)
-			{
-				AntModel.body.destroy();
-				AntModel.change_state("death", 2);
-				AntModel.death_tick++;
-			}
+		{
+			AntModel.body.destroy();
+			change_state("death", 2);
+			AntModel.death_tick++;
+		}
 		//else move & attack
 		else
-			{
+		{
 				
 			if(AntModel.AI_state == "walk")
-			{
+		{
 			var Antbody = GameModel.ant.B2d;
 			var velocity = Antbody.GetLinearVelocity();
 			velocity.x = -AntModel.speed;
 			Antbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 			Antbody.SetAwake(true);
-			}
+		}
 
 			if (AntModel.can_attack && AntModel.me_hurt_hero && model.AI_state == "walk")
-				{
+			{
 				
 				AntModel.me_hurt_hero = false;
-				}
+			}
 			if (AntModel.hero_hurt_me)
-				{
+			{
 
 				AntModel.hero_hurt_me = false;
-				}
+			}
 			}
 		}
 	

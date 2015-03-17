@@ -16,11 +16,13 @@ var GraphicsController = (function(){
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
 
 		GraphicsModel.hero = AssetController.request_bitmap("greek_warrior");
-		GraphicsModel.ant = AssetController.request_bitmap("AntWalk");
+		GraphicsModel.ant = AssetController.request_animated("ant", "walk");
 
 		hero = GraphicsModel.hero;
+
 		ant = GraphicsModel.ant;
-		
+		ant.gotoAndPlay("walk");
+
 		set_reg_position(hero, -20, +10);
 		
 		set_reg_position(ant, 0, 0);
@@ -37,9 +39,26 @@ var GraphicsController = (function(){
 
 		synchronize_to_physical_bodies();
 
+		ant_special_render_temp(); // TEMPORARY!!!!!!!!!!!
+			
 		GraphicsModel.stage.update();
 	};
 
+	var ant_special_render_temp = function(){
+		/* how to handle special render? TEMPORARY */
+
+		var hero_pos = hero.body.GetWorldCenter();
+		var ant_pos = ant.body.GetWorldCenter();
+
+		if(((Math.abs(hero_pos.x - ant_pos.x)) < 2) && (Math.abs(hero_pos.y - ant_pos.y) < 2)){
+			ant.gotoAndStop("death");
+		}
+
+		//ant.gotoAndPlay("upside_down");
+
+	};
+	
+	
 	var synchronize_to_physical_bodies = function(){
 
 		var tiles = GraphicsModel.all_physical;
@@ -119,8 +138,15 @@ var GraphicsController = (function(){
 		// to match what box2d does
 		// last two arguments are optional and set PIXEL offset from the normal registration
 		// position
-		var w = easeljs_obj.image.width;	
-		var h = easeljs_obj.image.height;	
+		
+		// this if statement should be temporary
+		if(easeljs_obj.image){
+			var w = easeljs_obj.image.width;	
+			var h = easeljs_obj.image.height;	
+		}else{
+			var w = easeljs_obj.spriteSheet._frameWidth;
+			var h = easeljs_obj.spriteSheet._frameHeight;
+		};
 
 		var offset_x = offset_x || 0;
 		var offset_y = offset_y || 0;

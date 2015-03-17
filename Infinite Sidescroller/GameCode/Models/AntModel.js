@@ -13,7 +13,7 @@ var AntModel = function(){
 
 	//set your game logic parameters here
 	this.object_id = 1; //hardcode a unique identifier for each new enemy class
-	this.hp = 2;
+	this.hp = 1;
 	this.speed = 2;
 	this.damage = 1;
 	//this.attack_cooldown = 4; //use this for enemies who need
@@ -21,6 +21,7 @@ var AntModel = function(){
 	//this.cooldown_timer=-1;
 	this.AI_state = "walk";//use this to keep track of the enemy's AI state
 	
+	/* THIS DOES NOT BELONG HERE. 
 	//define fixture (friction, density, etc.)
 	this.fixture_def = new box2d.b2FixtureDef
 	//density = (mass/volume)
@@ -36,47 +37,12 @@ var AntModel = function(){
 	this.body_def = new box2d.b2BodyDef();
 	this.body_def.type = box2d.b2Body.b2_dynamicBody;
 	this.body_def.is_sensor = true;
-	this.body.SetLinearVelocity(new box2d.b2Vec2(0, 0));
+	this.body.SetLinearVelocity(new box2d.b2Vec2(0, 0));*/
 	
 	//define sprite (the graphics)
 	//walking sprite
-
-	walk_sprite_sheet = new createjs.SpriteSheet({
-		"framerate": 2,
-		"images": ["../GameCode/assets/art/AntChompers.png"],
-		"frames": { "regX": 0, "regY": 15, "height": 15, "width": 50, "count": 2 },
-		"animations": {"walk": [0, 1, "walk"]}
-	})
-
-	upside_down_sprite_sheet = new createjs.SpriteSheet({
-		"framerate": 2,
-		"images": ["../GameCode/assets/art/AntChompers2.png"],
-		"frames": { "regX": 0, "regY": 15, "height": 15, "width": 50, "count": 2 },
-		"animations": {"upside-down":[0,1, "upside-down"]}
-	})
-
-	death_sprite_sheet = new createjs.SpriteSheet({
-		"framerate": 2,
-		"images": ["../GameCode/assets/art/AntChompersDeath.png"],
-		"frames": { "regX": 0, "regY": 15, "height": 15, "width": 50, "count": 2 },
-		"animations": {"death":[0,1, "death"]}
-
-	})
-
-
-	this.sprite_array.push(walk_sprite_sheet);
-	this.sprite_array.push(upside_down_sprite_sheet);
-	this.sprite_array.push(death_sprite_sheet);
-
-	this.sprite = new createjs.sprite(walk_sprite_sheet, AI_state);
-
+	
 	//Accessor to state and sprite
-	this.change_state  = function(progress_state, state_num)
-	{
-		this.state = progress_state;
-		this.sprite = this.sprite_array[state_num];
-
-	}
 	/*
 	NOTES ON GRAPHICS
 	each sprite sheet contains a number of frames in a single animation. 
@@ -100,5 +66,5 @@ var AntModel = function(){
 	
 };
 
-module.exports = AntModel;
+module.exports = new AntModel;
 

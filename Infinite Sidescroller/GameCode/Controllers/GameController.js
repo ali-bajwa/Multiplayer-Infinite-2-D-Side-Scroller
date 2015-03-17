@@ -28,7 +28,7 @@ var GameController = (function(){
 
 		
 		// Should be called after all movement of objects is done:
-
+		AntController.update();
 		GraphicsController.update();
 	};
 

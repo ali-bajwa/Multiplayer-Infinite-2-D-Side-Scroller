@@ -29,6 +29,7 @@ var Include = function(){
 			"TerrainSliceController",
 			"TestController",
 			"WorldController",
+			"AntController",
 		],
 
 		Models: [
@@ -43,6 +44,7 @@ var Include = function(){
 			"TerrainSliceModel",
 			"TestModel",
 			"WorldModel",
+			"AntModel",
 		],
 
 		Other: [
@@ -71,6 +73,7 @@ var Include = function(){
 			TestController: require("./Controllers/TestController.js"),
 			GameController: require("./Controllers/GameController.js"),
 			EnemyController: require("./Controllers/EnemyController.js"),
+			AntController: require("./Controllers/AntController.js"),
 			
 			// Models
 
@@ -84,6 +87,7 @@ var Include = function(){
 			KeyboardModel: require("./Models/KeyboardModel.js"),
 			PlayerModel: require("./Models/PlayerModel.js"),
 			TestModel: require("./Models/TestModel.js"),
+			AntModel: require("./Models/AntModel.js"),
 				
 			// Other stuff
 			

@@ -5,9 +5,9 @@ var GraphicsModel = function(){
 	this.hero;
 	this.other_players = []; // array of players other then hero for multiplayer
 
-	// all object registered for rendering (includes objects in special categories too,
-	// like hero, other players etc.
-	this.all = []; 
+	// all object registered for continious update to match their physical body
+	// position 
+	this.all_physical = []; 
 
 	this.camera = {
 		following: null,

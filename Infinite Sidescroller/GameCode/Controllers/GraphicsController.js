@@ -24,12 +24,41 @@ var GraphicsController = (function(){
 		GraphicsModel.hero.y = 510;
 
 		
-		reg_for_render(GraphicsModel.hero);
+		reg_for_render(GraphicsModel.hero, PlayerController.get_hero());
 
 	};
 
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
+
+		check_for_new_terrain();
+
+		synchronize_to_physical_bodies();
+
+		GraphicsModel.stage.update();
+	};
+
+	var synchronize_to_physical_bodies = function(){
+
+		var tiles = GraphicsModel.all_physical;
+
+		for(var i = 0; i < tiles.length; i++){
+			var tile = tiles[i];
+			var body = tile.body;
+
+			var tile_pos = trans_xy(body.GetWorldCenter());
+
+			tile.x = tile_pos.x;
+			tile.y = tile_pos.y;
+		}
+
+	};
+	
+
+	var check_for_new_terrain = function(){
+		/* If new terrain has been generated, render it
+		 */
+
 		var new_slices = TerrainController.GetNewTerrainSlices();
 		while(new_slices.length > 0){
 
@@ -49,11 +78,12 @@ var GraphicsController = (function(){
 						// TODO: should make proper terrain collection thing to pull from 
 						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][id-1];
 						var tile = AssetController.request_bitmap(tile_texture);
-						var body_position = slice.grid[i][j].body.GetWorldCenter();
+						var body = slice.grid[i][j].body;
+						var body_position = body.GetWorldCenter();
 						var trans_pos = trans_xy(body_position);
 						tile.x = trans_pos.x;
 						tile.y = trans_pos.y;
-						reg_for_render(tile);
+						reg_for_render(tile, body);
 					} // fi
 
 
@@ -63,16 +93,8 @@ var GraphicsController = (function(){
 
 		} // end while
 
-		// temporary, synchronization should be made automatic somehow:
-		var hero_position = trans_xy(PlayerController.get_hero_position());
-		var hero = GraphicsModel.hero;
-		hero.x = hero_position.x;
-		hero.y = hero_position.y;
-		
-
-
-		GraphicsModel.stage.update();
-	};
+	}; // end check_for_new_terrain
+	
 
 	var trans_xy = function(position_vector_unscaled){
 		// takes position vector with values in meters, translates
@@ -106,10 +128,18 @@ var GraphicsController = (function(){
 
 	};
 
-	var reg_for_render = function(easeljs_obj){
-		// registeres object for rendering within
-		// graphics controller
+	var reg_for_render = function(easeljs_obj, physical_body){
+		// registeres object for rendering within graphics controller
+		// if (OPTIONAL!) physical_body is given, graphics controller will automatically
+		// set the easeljs_obj's position to position of that body, each tick.
 			
+		if(physical_body){
+
+			easeljs_obj.body = physical_body;
+			GraphicsModel.all_physical.push(easeljs_obj);
+		}
+
+
 		AddToStage(easeljs_obj);
 	};
 

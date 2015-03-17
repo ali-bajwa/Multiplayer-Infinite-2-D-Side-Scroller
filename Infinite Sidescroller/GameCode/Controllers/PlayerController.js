@@ -34,8 +34,8 @@ var PlayerController = (function(){
 
 	};
 
-	var get_hero_position = function(){
-		return PlayerModel.hero.GetPosition();
+	var get_hero = function(){
+		return PlayerModel.hero;
 	};
 
 	var move_right = function(){
@@ -109,7 +109,7 @@ var PlayerController = (function(){
 		b2b_get_coordinates: b2b_get_coordinates,
 		update: update,
 		jump: jump,
-		get_hero_position: get_hero_position,
+		get_hero: get_hero,
 
 	};
 })();

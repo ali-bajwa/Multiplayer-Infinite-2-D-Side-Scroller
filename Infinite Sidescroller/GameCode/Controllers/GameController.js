@@ -13,7 +13,6 @@ var GameController = (function(){
 		 * everyghing else is called from here every tick
 		 */
 		
-		CameraController = require("./CameraController.js");
 
 		var delta = event.delta;
 
@@ -29,7 +28,6 @@ var GameController = (function(){
 
 		
 		// Should be called after all movement of objects is done:
-		CameraController.update(); // should be moved to Graphics Model/Controller
 
 		GraphicsController.update();
 	};

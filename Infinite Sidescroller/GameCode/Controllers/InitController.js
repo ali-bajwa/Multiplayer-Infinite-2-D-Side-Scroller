@@ -49,7 +49,6 @@ var InitController = (function(){
 		B2d.init(); // goes first
 
 		AssetController.init();
-		CameraController.init();
 		GameController.init();
 		KeyboardController.init();
 		PhysicsController.init();

@@ -18,7 +18,6 @@ var Include = function(){
 	var module_names = {
 		Controllers: [
 			"AssetController",
-			"CameraController",
 			"EnemyController",
 			"GameController",
 			"GraphicsController",
@@ -35,7 +34,6 @@ var Include = function(){
 		Models: [
 		
 			"AssetModel",
-			"CameraModel",
 			"GameModel",
 			"GraphicsModel",
 			"KeyboardModel",
@@ -62,7 +60,6 @@ var Include = function(){
 
 		modules = {
 			AssetController: require("./Controllers/AssetController.js"),
-			CameraController: require("./Controllers/CameraController.js"),
 			GraphicsController: require("./Controllers/GraphicsController.js"),
 			KeyboardController: require("./Controllers/KeyboardController.js"),
 			PhysicsController: require("./Controllers/PhysicsController.js"),
@@ -72,7 +69,6 @@ var Include = function(){
 			WorldController: require("./Controllers/WorldController.js"),
 			InitController: require("./Controllers/InitController.js"),
 			TestController: require("./Controllers/TestController.js"),
-			CameraController: require("./Controllers/CameraController.js"),
 			GameController: require("./Controllers/GameController.js"),
 			EnemyController: require("./Controllers/EnemyController.js"),
 			
@@ -80,7 +76,6 @@ var Include = function(){
 
 			GameModel: require("./Models/GameModel.js"),
 			TerrainSliceModel: require("./Models/TerrainSliceModel.js"),
-			CameraModel: require("./Models/CameraModel.js"),
 			AssetModel: require("./Models/AssetModel.js"),
 			PhysicsModel: require("./Models/PhysicsModel.js"),
 			GraphicsModel: require("./Models/GraphicsModel.js"),

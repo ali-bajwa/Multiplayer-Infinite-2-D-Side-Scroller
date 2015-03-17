@@ -1,8 +1,13 @@
 
 var PlayerController = (function(){
 
+	var hero; // for quick access
+
 	var init = function(){
 		include();
+		// temporary/testing, do not try to understand numbers involved. I repeat, do not try to understand numbers;
+		PlayerModel.hero = PhysicsController.get_rectangular_body(1.5, 2.5, 100/30 + (1.5/2), 510/30 - (2.5/2), true);
+		hero = PlayerModel.hero;
 	};
 
 	var update = function (){
@@ -15,27 +20,22 @@ var PlayerController = (function(){
 		if(cmds("right")){
 			// temporary
 
-			if(GameModel.hero.x > MOVEMENT_EDGE){
-				move_right(GameModel.hero);
-				CameraController.move(10, 0);
-				//TerrainController.move_left(10);
-				//CameraController.follow(GameModel.hero);
-			}else{
-				//CameraController.unfollow();
-				move_right(GameModel.hero);
-			}
+			move_right(hero);
+		}
+		if(cmds("left")){
+			// temporary
+
+			move_left(hero);
 		}
 
 		if(cmds("up")){
 			jump();
 		}
 
-		if(cmds("left")){
-			if(GameModel.hero.x > 10){
-				move_left(GameModel.hero);
-			}
-		}
+	};
 
+	var get_hero_position = function(){
+		return PlayerModel.hero.GetPosition();
 	};
 
 	var move_right = function(){
@@ -51,7 +51,7 @@ var PlayerController = (function(){
 	var jumps = 0;
 
 	var jump = function(){
-	    var body = GameModel.hero.b2b;
+	    var body = PlayerModel.hero;
 	    if (body.GetLinearVelocity().y == 0) {
 	        jumps = 0;
 	    }
@@ -81,28 +81,35 @@ var PlayerController = (function(){
 	};
 
 	var move_left = function(){
-		//GameModel.hero.x -=10;
-		var body = GameModel.hero.b2b;
-		var velocity = body.GetLinearVelocity();
+		var velocity = hero.GetLinearVelocity();
 		velocity.x = -5;
-		body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-		body.SetAwake(true);
+		hero.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		hero.SetAwake(true);
+	};
+
+	var move_right = function(){
+		var velocity = hero.GetLinearVelocity();
+		velocity.x = +5;
+		hero.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		hero.SetAwake(true);
 	};
 
 	var move = function(offset_x, offset_y){
-		GameModel.hero.x += offset_x;
-		GameModel.hero.y += offset_y;
+		// unimplemented
+		// should it hard-set position (not safe!)
+		// or just allow to set any velocity/impulse vector?
 	};
 
 	return {
 		init: init,
 		move_right: move_right,
 		move_left: move_left,
-		move: move,
+		//move: move, // uniplemented. what will it do?
 		set_coordinates: set_coordinates,
 		b2b_get_coordinates: b2b_get_coordinates,
 		update: update,
-		jump: jump
+		jump: jump,
+		get_hero_position: get_hero_position,
 
 	};
 })();

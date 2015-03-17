@@ -5,15 +5,16 @@
 	<meta charset="utf-8" />
 
 	<link rel="stylesheet" href="./page.css" type="text/css" media="all" />
-
+	<link rel="stylesheet" href="./qunit-1.17.1.css">
 	<script src="./lib/jquery-1.11.2.min.js"></script>
 	<script src="./lib/createjs-2014.12.12.min.js" type="text/javascript" charset="utf-8"></script>
-
+	<script src="./lib/qunit-1.17.1.js"></script>
 	<script src="./bundle.js" type="text/javascript" charset="utf-8"></script>
 
 </head>
-<body onload="sidescroller_game.run('test');">
 
+<body onload="sidescroller_game.run('test');">
+	
 	<div id="canvas_container">
 		
 		<canvas id="display_canvas"  height="600px">
@@ -25,5 +26,8 @@
 		</canvas>
 
 	</div>
+	<div id="qunit"></div>
+	<div id="qunit-fixture"></div>
 </body>
+
 </html>

@@ -2,11 +2,23 @@ var TestController = (function(){
 	// placeholder for implementing testing
 	// may be changed/removed/upgraded depending on how we will handle our tests
 	
+	
+	var preinit_tests = function(){
+	//For tests requiring run before init is called
+	
+	
+	};
+	
+	
 	var test = function(){
 		// if you need some sort of tests launched, this is one of the places to do it
+		QUnit.test( "hello test", function( assert ) {
+			assert.ok( 1 == "1", "Passed!" );
+		});
+		Includes.automated_tests();
 	};
 
-	var post_loading_test = function(){
+	var post_loading_tests = function(){
 		// TODO: call when loading assets is completed if there are some tests that need
 		// to be done at that moment. (Refer to InitController.init and 
 		// InitController.setup_asset_dependent methods
@@ -20,7 +32,8 @@ var TestController = (function(){
 	return {
 		init: init, 
 		test: test,
-		post_loading_test: post_loading_test,
+		post_loading_tests: post_loading_tests,
+		preinit_tests: preinit_tests
 	}
 })();
 

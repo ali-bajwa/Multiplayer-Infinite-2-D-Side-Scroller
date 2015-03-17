@@ -3,7 +3,7 @@ var GraphicsController = (function(){
 	/* all the graphics stuff. and what did you expect?
 	*/
 
-	var hero; // for quicker access
+	var hero, ant; // for quicker access
 
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -17,19 +17,13 @@ var GraphicsController = (function(){
 
 		GraphicsModel.hero = AssetController.request_bitmap("greek_warrior");
 		GraphicsModel.ant = AssetController.request_bitmap("AntWalk");
+
 		hero = GraphicsModel.hero;
 		ant = GraphicsModel.ant;
 		
 		set_reg_position(hero, -20, +10);
 		
 		set_reg_position(ant, 0, 0);
-
-		GraphicsModel.hero.x = 100;
-		GraphicsModel.hero.y = 510;
-		
-		GraphicsModel.ant.x = 600;
-		GraphicsModel.ant.y = 510;
-
 		
 		reg_for_render(GraphicsModel.hero, PlayerController.get_hero());
 		reg_for_render(GraphicsModel.ant, AntController.get_ant());

@@ -100,5 +100,5 @@ var AntModel = function(){
 	
 };
 
-module.export = AntModel;
+module.exports = AntModel;
 

@@ -34,7 +34,7 @@ var InitController = (function(){
 			var asset_path = (mode == "test") ? "./assets/art/" : "../Content/gamedemo/assets/art/";
 			setup_debug_canvas();
 
-		AssetController.load_all(asset_path);
+		AssetController.init(asset_path);
 
 	};
 
@@ -48,7 +48,7 @@ var InitController = (function(){
 		
 		B2d.init(); // goes first
 
-		AssetController.init();
+		//AssetController.init(); // called from the InitController.init// stuff has to change
 		GameController.init();
 		KeyboardController.init();
 		PhysicsController.init();
@@ -57,6 +57,7 @@ var InitController = (function(){
 		TerrainSliceController.init();
 		TestController.init();
 		WorldController.init();
+		AntController.init();
 
 		// WARNING!!! GraphicsController.init is called from the
 		// setup_asset_dependent function as it, well, depends on assets being loaded

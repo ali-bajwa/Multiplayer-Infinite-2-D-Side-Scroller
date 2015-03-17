@@ -7,13 +7,8 @@ var AssetController = (function(){
 
 	// use AssetModel.loader.getResult("id_of_the_asset");
 
-	var init = function(){
+	var init = function(asset_path){
 		include();	
-		
-	};
-	
-
-	var load_all = function(asset_path){
 
 		/* TODO make model with the easily managed tables of resources which will be
 		   added to the loader automatically
@@ -25,7 +20,9 @@ var AssetController = (function(){
 		//loader = new createjs.LoadQueue(false); // loading resourses using preload.js
 		//loader.addEventListener("complete", handleComplete);
 		AssetModel.loader.loadManifest(manifest, true, asset_path);
-	}
+
+	};
+	
 
 	var request_bitmap = function(id){
 		// if id is invalid, throw meaningful exception?
@@ -42,11 +39,20 @@ var AssetController = (function(){
 		// TODO research DisplayObject's caching. and maybe incorporate
 	};
 
+	var request_animated = function(spritesheet, frame_set){
+		// this implementation is temporary
+		// until I setup efficient facility for defining spritesheets
+		// within this module and/or GraphicsController
+		var sprite = new createjs.Sprite(spritesheet, frame_set);
+		return sprite;
+	};
+
 	
 	return {
 		init: init,
-		load_all: load_all,
-		request_bitmap: request_bitmap
+		//load_all: load_all,
+		request_bitmap: request_bitmap,
+		request_animated: request_animated,
 	};
 
 })();

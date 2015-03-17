@@ -35,7 +35,7 @@ var PlayerController = (function(){
 	};
 
 	var get_hero = function(){
-		return AntModel;
+		return PlayerModel.hero;
 	};
 
 	var move_right = function(){

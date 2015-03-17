@@ -8,6 +8,7 @@ var AntController = (function()
 
 	var init = function(){
 		include();
+		AntModel.ant = PhysicsController.get_rectangular_body(1, 0.5, 600/30 + (2.5/2), 510/30 - (1.5/2), true);
 	};
 
 	// // //Set up Collision handler
@@ -45,7 +46,7 @@ var AntController = (function()
 
 	//gameController calls update for each instance
 	var get_ant = function(){
-		return AntModel;
+		return AntModel.ant;
 	};
 
 	var update = function()
@@ -65,7 +66,7 @@ var AntController = (function()
 
 			}
 
-		else if (Antmodel.hp<=0)
+		else if (AntModel.hp<=0)
 			{
 				AntModel.body.destroy();
 				AntModel.change_state("death", 2);
@@ -104,9 +105,9 @@ var AntController = (function()
 		get_ant: get_ant
 	};
 
-	})();
+})();
 
-module.export = AntController;
+module.exports = AntController;
 
 var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
 	current_module: "AntController", 

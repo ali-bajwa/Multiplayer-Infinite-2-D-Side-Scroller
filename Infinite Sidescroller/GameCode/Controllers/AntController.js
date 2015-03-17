@@ -109,6 +109,6 @@ var AntController = (function()
 module.export = AntController;
 
 var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
-	current_module: "EnemyController", 
+	current_module: "AntController", 
 	include_options: Includes.choices.DEFAULT
 }); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}

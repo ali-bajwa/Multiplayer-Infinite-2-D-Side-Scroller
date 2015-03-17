@@ -102,7 +102,3 @@ var AntModel = function(){
 
 module.export = AntModel;
 
-var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
-	current_module: "EnemyController", 
-	include_options: Includes.choices.DEFAULT
-}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}

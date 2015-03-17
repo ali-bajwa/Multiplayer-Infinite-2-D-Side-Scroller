@@ -24,7 +24,7 @@ var GraphicsController = (function(){
 		GraphicsModel.hero.y = 510;
 
 		
-		GraphicsModel.stage.addChild(GraphicsModel.hero);
+		reg_for_render(GraphicsModel.hero);
 
 	};
 
@@ -50,9 +50,10 @@ var GraphicsController = (function(){
 						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][id-1];
 						var tile = AssetController.request_bitmap(tile_texture);
 						var body_position = slice.grid[i][j].body.GetWorldCenter();
-						tile.x = body_position.x * 30;
-						tile.y = body_position.y * 30;
-						AddToStage(tile);
+						var trans_pos = trans_xy(body_position);
+						tile.x = trans_pos.x;
+						tile.y = trans_pos.y;
+						reg_for_render(tile);
 					} // fi
 
 
@@ -63,7 +64,7 @@ var GraphicsController = (function(){
 		} // end while
 
 		// temporary, synchronization should be made automatic somehow:
-		var hero_position = scale_xy(PlayerController.get_hero_position());
+		var hero_position = trans_xy(PlayerController.get_hero_position());
 		var hero = GraphicsModel.hero;
 		hero.x = hero_position.x;
 		hero.y = hero_position.y;
@@ -73,12 +74,15 @@ var GraphicsController = (function(){
 		GraphicsModel.stage.update();
 	};
 
-	var scale_xy = function(position_vector_unscaled){
-		// takes position vector with values in meters, scales it to pixels	
-		return {
-			x: position_vector_unscaled.x * Config.B2D.SCALE,
-			y: position_vector_unscaled.y * Config.B2D.SCALE,
-		};	
+	var trans_xy = function(position_vector_unscaled){
+		// takes position vector with values in meters, translates
+		// it to pixel position taking the camera position into account
+		var camera = GraphicsModel.camera;
+
+		var x = (position_vector_unscaled.x * Config.B2D.SCALE) + camera.offset.x;
+		var y = (position_vector_unscaled.y * Config.B2D.SCALE) + camera.offset.y;
+
+		return {x: x, y: y};	
 	};
 
 	var set_reg_position = function(easeljs_obj, offset_x, offset_y){
@@ -101,8 +105,13 @@ var GraphicsController = (function(){
 		easeljs_obj.regY = h/2 + offset_y;
 
 	};
-	
-	
+
+	var reg_for_render = function(easeljs_obj){
+		// registeres object for rendering within
+		// graphics controller
+			
+		AddToStage(easeljs_obj);
+	};
 
 	var AddToStage = function(element){
 		// can be updated later to manage z-index or whatever

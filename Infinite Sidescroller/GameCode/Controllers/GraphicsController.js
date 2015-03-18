@@ -3,6 +3,7 @@ var GraphicsController = (function(){
 	/* all the graphics stuff. and what did you expect?
 	*/
 
+	var get_asset; 
 	var hero, ant; // for quicker access
 
 	var init = function(){
@@ -10,13 +11,17 @@ var GraphicsController = (function(){
 
 		include(); // satisfy requirements
 
+		get_asset = AssetController.get_asset; // for quicker access
+
+		init_animations();
+
 
 		GraphicsModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
 		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
 
-		GraphicsModel.hero = AssetController.request_bitmap("greek_warrior");
-		GraphicsModel.ant = AssetController.request_animated("ant", "walk");
+		GraphicsModel.hero = request_bitmap("greek_warrior");
+		GraphicsModel.ant = request_animated("ant", "walk");
 
 		hero = GraphicsModel.hero;
 
@@ -30,6 +35,7 @@ var GraphicsController = (function(){
 		reg_for_render(GraphicsModel.hero, PlayerController.get_hero());
 		reg_for_render(GraphicsModel.ant, AntController.get_ant());
 
+
 	};
 
 	var update = function(delta){
@@ -42,6 +48,55 @@ var GraphicsController = (function(){
 		ant_special_render_temp(); // TEMPORARY!!!!!!!!!!!
 			
 		GraphicsModel.stage.update();
+	};
+
+
+	var init_animations = function(){
+		
+		GraphicsModel.spritesheets["ant"] = new createjs.SpriteSheet({
+			"framerate": 1,
+			"images": [get_asset("Ant1"), get_asset("Ant2"), get_asset("Ant3")],
+			"frames": { "regX": 3, "regY": 6, "height": 25, "width": 50, "count": 6},
+			"animations": {
+				"walk": [0, 1, "walk"],
+				"upside_down": [2, 3, "upside_down"],
+				"death": [4, 5, "death"]
+			}
+		})
+
+	};
+	
+	var request_bitmap = function(id){
+		// if id is invalid, throw meaningful exception?
+		var bitmap = new createjs.Bitmap(get_asset(id));
+		// more complicated setting for registration position may be needed, depending on the body attached
+		if (!(bitmap.image)){
+			throw "Error: image wasn't correctly loaded for this bitmap";
+		}
+		
+		bitmap.regX = bitmap.image.width/2;
+		bitmap.regY = bitmap.image.height/2;
+
+		return bitmap;
+		// TODO research DisplayObject's caching. and maybe incorporate
+	};
+
+	var request_animated = function(id, start_frame){
+		// this implementation is temporary
+		// until I setup efficient facility for defining spritesheets
+		// within GraphicsController
+
+		if(!id || !start_frame){
+			if(!id){
+				throw "wrong id";
+			}else{
+				throw "wrong start_frame";
+			}
+		};
+
+		var sprite = new createjs.Sprite(GraphicsModel.spritesheets[id], start_frame);
+
+		return sprite;
 	};
 
 	var ant_special_render_temp = function(){
@@ -98,7 +153,7 @@ var GraphicsController = (function(){
 					if(id != 0){
 						// TODO: should make proper terrain collection thing to pull from 
 						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][id-1];
-						var tile = AssetController.request_bitmap(tile_texture);
+						var tile = request_bitmap(tile_texture);
 						var body = slice.grid[i][j].body;
 						var body_position = body.GetWorldCenter();
 						var trans_pos = trans_xy(body_position);

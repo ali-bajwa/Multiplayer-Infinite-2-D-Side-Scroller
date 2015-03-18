@@ -9,6 +9,10 @@ var GraphicsModel = function(){
 	// position 
 	this.all_physical = []; 
 
+	// all spritesheet definitions (added at the initialization stage
+	// because they need assets to be loaded
+	this.spritesheets = {}; 
+
 	this.camera = {
 		following: null,
 		offset: {x: 0, y: 0},

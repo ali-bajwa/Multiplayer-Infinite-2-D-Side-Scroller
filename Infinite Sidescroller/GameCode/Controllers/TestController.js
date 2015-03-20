@@ -27,12 +27,11 @@ var TestController = (function(){
 	var init = function(mode){
 		include();
 		// Sets up the debug canvas during testing
-		TestModel.d_canvas = document.getElementById(Config.DEBUG_CANVAS_NAME);
-		TestModel.context = TestModel.d_canvas.getContext("2d");
+		PhysicsModel.d_canvas = document.getElementById(Config.DEBUG_CANVAS_NAME);
 
 		if(mode == "test"){
-			PhysicsModel.context = TestModel.context;
-
+			PhysicsModel.context = PhysicsModel.d_canvas.getContext("2d");
+			
 			PhysicsModel.debugDraw = new B2d.b2DebugDraw();
 			PhysicsModel.debugDraw.SetSprite(PhysicsModel.context);
 			PhysicsModel.debugDraw.SetDrawScale(PhysicsModel.scale);
@@ -43,8 +42,8 @@ var TestController = (function(){
 
 			Config.B2D.debug_draw = true;
 
-			TestModel.d_canvas.width = Config.SCREEN_W;
-			TestModel.d_canvas.height = Config.SCREEN_H;
+			PhysicsModel.d_canvas.width = Config.SCREEN_W;
+			PhysicsModel.d_canvas.height = Config.SCREEN_H;
 			
 
 			//$('#'+Config.DEBUG_CANVAS_NAME).show();
@@ -55,7 +54,7 @@ var TestController = (function(){
 	};
 	
 	//this function sets the x and y offsets of the debug canvas
-	var set_debug_offset function(x_offset,y_offset){
+	var set_debug_offset = function(x_offset, y_offset){
 		TestModel.context.translate(x_offset, y_offset);
 	};
 
@@ -63,7 +62,8 @@ var TestController = (function(){
 		init: init, 
 		test: test,
 		post_loading_tests: post_loading_tests,
-		preinit_tests: preinit_tests
+		preinit_tests: preinit_tests,
+		set_debug_offset: set_debug_offset
 	}
 })();
 

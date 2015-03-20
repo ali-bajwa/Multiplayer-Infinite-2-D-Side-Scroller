@@ -18,8 +18,7 @@ var InitController = (function(){
 		enable_arrowkey_scroll(false);
 		setup_screen();
 		setup_events();
-		setup_debug_canvas(mode);
-
+		
 		// Notice that asset dependent stuff doesn't (and mustn't) start until
 		// all assets are completely loaded. That includes ticker, i.e. no ticks are processed
 		// until everything is loaded. If you want something different, e.g. display some sort of loading
@@ -32,7 +31,6 @@ var InitController = (function(){
 		// or more types of it needs to be added
 		// you can safely make the following a separate function
 			var asset_path = (mode == "test") ? "./assets/art/" : "../Content/gamedemo/assets/art/";
-			setup_debug_canvas();
 
 		AssetController.init(asset_path);
 
@@ -55,7 +53,7 @@ var InitController = (function(){
 		PlayerController.init();
 		TerrainController.init();
 		TerrainSliceController.init();
-		TestController.init();
+		TestController.init(mode);
 		WorldController.init();
 
 		// WARNING!!! GraphicsController.init is called from the
@@ -76,41 +74,6 @@ var InitController = (function(){
 				}                                                                   
 			})                                                                      
 		}		
-	};
-
-	var setup_debug_canvas = function(mode){
-		// more stuff may be done later
-		// should be refactored and prettyfied
-		
-		// does in need to be moved to graphics controller?
-		// test controller? (although we have QUnit testing, hm)
-
-		// does this way and not with jquery due to some strange bugs
-		var d_canvas = document.getElementById(Config.DEBUG_CANVAS_NAME);
-		var context = d_canvas.getContext("2d");
-
-		if(mode == "test"){
-			PhysicsModel.context = context;
-
-			PhysicsModel.debugDraw = new B2d.b2DebugDraw();
-			PhysicsModel.debugDraw.SetSprite(PhysicsModel.context);
-			PhysicsModel.debugDraw.SetDrawScale(PhysicsModel.scale);
-			PhysicsModel.debugDraw.SetFillAlpha(0.3);
-			PhysicsModel.debugDraw.SetLineThickness(1.0);
-			PhysicsModel.debugDraw.SetFlags(B2d.b2DebugDraw.e_shapeBit | B2d.b2DebugDraw.e_jointBit);
-			PhysicsModel.world.SetDebugDraw(PhysicsModel.debugDraw);
-
-			Config.B2D.debug_draw = true;
-
-			d_canvas.width = Config.SCREEN_W;
-			d_canvas.height = Config.SCREEN_H;
-
-			//$('#'+Config.DEBUG_CANVAS_NAME).show();
-
-		}else{
-			//d_canvas.hide();
-		}
-	
 	};
 	
 	var setup_screen = function(){

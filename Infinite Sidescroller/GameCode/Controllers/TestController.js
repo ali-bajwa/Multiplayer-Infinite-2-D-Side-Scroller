@@ -27,23 +27,23 @@ var TestController = (function(){
 	var init = function(mode){
 		include();
 		// Sets up the debug canvas during testing
-		PhysicsModel.d_canvas = document.getElementById(Config.DEBUG_CANVAS_NAME);
+		TestModel.d_canvas = document.getElementById(Config.DEBUG_CANVAS_NAME);
 
 		if(mode == "test"){
-			PhysicsModel.context = PhysicsModel.d_canvas.getContext("2d");
+			TestModel.context = TestModel.d_canvas.getContext("2d");
 			
-			PhysicsModel.debugDraw = new B2d.b2DebugDraw();
-			PhysicsModel.debugDraw.SetSprite(PhysicsModel.context);
-			PhysicsModel.debugDraw.SetDrawScale(PhysicsModel.scale);
-			PhysicsModel.debugDraw.SetFillAlpha(0.3);
-			PhysicsModel.debugDraw.SetLineThickness(1.0);
-			PhysicsModel.debugDraw.SetFlags(B2d.b2DebugDraw.e_shapeBit | B2d.b2DebugDraw.e_jointBit);
-			PhysicsModel.world.SetDebugDraw(PhysicsModel.debugDraw);
+			TestModel.debugDraw = new B2d.b2DebugDraw();
+			TestModel.debugDraw.SetSprite(TestModel.context);
+			TestModel.debugDraw.SetDrawScale(TestModel.scale);
+			TestModel.debugDraw.SetFillAlpha(0.3);
+			TestModel.debugDraw.SetLineThickness(1.0);
+			TestModel.debugDraw.SetFlags(B2d.b2DebugDraw.e_shapeBit | B2d.b2DebugDraw.e_jointBit);
+			PhysicsController.get_world().SetDebugDraw(TestModel.debugDraw);
 
 			Config.B2D.debug_draw = true;
 
-			PhysicsModel.d_canvas.width = Config.SCREEN_W;
-			PhysicsModel.d_canvas.height = Config.SCREEN_H;
+			TestModel.d_canvas.width = Config.SCREEN_W;
+			TestModel.d_canvas.height = Config.SCREEN_H;
 			
 
 			//$('#'+Config.DEBUG_CANVAS_NAME).show();

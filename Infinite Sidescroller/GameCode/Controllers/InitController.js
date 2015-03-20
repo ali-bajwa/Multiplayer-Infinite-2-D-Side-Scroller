@@ -1,4 +1,4 @@
-var InitController = (function(){
+var InitController = (function(mode){
 	// why do you want to put initialization of everything into the InitController?
 	// Because if initialization of smth depends on initialization of smth else,
 	// it's easier to control here
@@ -10,10 +10,10 @@ var InitController = (function(){
 	// using html (<body onload=...); maybe using JS would be better? Idk;
 		
 
-	var init = function(mode){
+	var init = function(){
 		include();
 
-		init_all_modules(); // call .init function of everyone. e.g. PlayerController.init(); etc.
+		init_all_modules(mode); // call .init function of everyone. e.g. PlayerController.init(); etc.
 
 		enable_arrowkey_scroll(false);
 		setup_screen();
@@ -36,7 +36,7 @@ var InitController = (function(){
 
 	};
 
-	var init_all_modules = function(){
+	var init_all_modules = function(mode){
 		// TODO: better way to do stuff like that (call certain function
 		// of every module in the order. 
 		// Also, init and update functions of each module should probably

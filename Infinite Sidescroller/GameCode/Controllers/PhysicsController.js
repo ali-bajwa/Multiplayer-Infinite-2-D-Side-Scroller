@@ -40,9 +40,9 @@ var PhysicsController = (function(){
 				B2dConfig.VELOCITY_ITR // position iterations
 			);
 		}
-			if (B2dConfig.debug_draw) {
-				PhysicsModel.world.DrawDebugData();
-			}
+		if (B2dConfig.debug_draw) {
+			PhysicsModel.world.DrawDebugData();
+		}
 	};  // end step 
 
 	var get_parent_chain = function(template, default_def){
@@ -270,8 +270,8 @@ var PhysicsController = (function(){
 		});
 	};
 	
-	var get_world = function(){
-		return PhysicsModel.world;
+	var set_debug_draw = function(debug_draw){
+		PhysicsModel.world.SetDebugDraw(debug_draw);
 	};
 	
 	
@@ -281,7 +281,7 @@ var PhysicsController = (function(){
 		get_rectangular: get_rectangular,
 		step: step,
 		init: init,
-		get_world: get_world,
+		set_debug_draw: set_debug_draw,
 	};
 })();
 

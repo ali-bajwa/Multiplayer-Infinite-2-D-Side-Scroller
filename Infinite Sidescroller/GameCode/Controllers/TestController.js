@@ -34,17 +34,18 @@ var TestController = (function(){
 			
 			TestModel.debugDraw = new B2d.b2DebugDraw();
 			TestModel.debugDraw.SetSprite(TestModel.context);
-			TestModel.debugDraw.SetDrawScale(TestModel.scale);
+			TestModel.debugDraw.SetDrawScale(Config.B2D.SCALE);
 			TestModel.debugDraw.SetFillAlpha(0.3);
 			TestModel.debugDraw.SetLineThickness(1.0);
 			TestModel.debugDraw.SetFlags(B2d.b2DebugDraw.e_shapeBit | B2d.b2DebugDraw.e_jointBit);
-			PhysicsController.get_world().SetDebugDraw(TestModel.debugDraw);
+
+			PhysicsController.set_debug_draw(TestModel.debugDraw);
 
 			Config.B2D.debug_draw = true;
+			// Screen_W was setup only after this was called
 
 			TestModel.d_canvas.width = Config.SCREEN_W;
 			TestModel.d_canvas.height = Config.SCREEN_H;
-			
 
 			//$('#'+Config.DEBUG_CANVAS_NAME).show();
 

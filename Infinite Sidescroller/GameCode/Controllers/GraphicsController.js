@@ -47,10 +47,16 @@ var GraphicsController = (function(){
 
 		ant_special_render_temp(); // TEMPORARY!!!!!!!!!!!
 			
+		adjust_debug_draw();
+
 		GraphicsModel.stage.update();
 	};
 
 
+	var adjust_debug_draw = function(){
+		var camera_offset = GraphicsModel.camera.offset;
+		//TestController.set_debug_offset(camera_offset.x, camera_offset.y);
+	};
 	var init_animations = function(){
 		
 		GraphicsModel.spritesheets["ant"] = new createjs.SpriteSheet({

@@ -13,11 +13,12 @@ var InitController = (function(){
 	var init = function(mode){
 		include();
 
-		init_all_modules(mode); // call .init function of everyone. e.g. PlayerController.init(); etc.
-
 		enable_arrowkey_scroll(false);
 		setup_screen();
 		setup_events();
+
+		init_all_modules(mode); // call .init function of everyone. e.g. PlayerController.init(); etc.
+
 		
 		// Notice that asset dependent stuff doesn't (and mustn't) start until
 		// all assets are completely loaded. That includes ticker, i.e. no ticks are processed
@@ -50,10 +51,12 @@ var InitController = (function(){
 		GameController.init();
 		KeyboardController.init();
 		PhysicsController.init();
+
+		TestController.init(mode);
+
 		PlayerController.init();
 		TerrainController.init();
 		TerrainSliceController.init();
-		TestController.init(mode);
 		WorldController.init();
 
 		// WARNING!!! GraphicsController.init is called from the

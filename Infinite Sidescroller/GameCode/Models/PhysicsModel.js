@@ -5,8 +5,6 @@ var PhysicsModel = function() {
 	this.world;
  
 	// getting context of the debug canvas, for box2d to draw debuggin boxes
-	this.context = undefined;
-
 
 	// timeToCover is the time that simulation must cover to catch up to the real world time;
 	// since createjs ticker is what we use for timing, and box2d ticks

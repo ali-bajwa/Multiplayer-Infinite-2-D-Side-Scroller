@@ -24,9 +24,39 @@ var TestController = (function(){
 		// InitController.setup_asset_dependent methods
 	};
 
-	var init = function(){
-		include();	
-		
+	var init = function(mode){
+		include();
+		// Sets up the debug canvas during testing
+		TestModel.d_canvas = document.getElementById(Config.DEBUG_CANVAS_NAME);
+		TestModel.context = TestModel.d_canvas.getContext("2d");
+
+		if(mode == "test"){
+			PhysicsModel.context = TestModel.context;
+
+			PhysicsModel.debugDraw = new B2d.b2DebugDraw();
+			PhysicsModel.debugDraw.SetSprite(PhysicsModel.context);
+			PhysicsModel.debugDraw.SetDrawScale(PhysicsModel.scale);
+			PhysicsModel.debugDraw.SetFillAlpha(0.3);
+			PhysicsModel.debugDraw.SetLineThickness(1.0);
+			PhysicsModel.debugDraw.SetFlags(B2d.b2DebugDraw.e_shapeBit | B2d.b2DebugDraw.e_jointBit);
+			PhysicsModel.world.SetDebugDraw(PhysicsModel.debugDraw);
+
+			Config.B2D.debug_draw = true;
+
+			TestModel.d_canvas.width = Config.SCREEN_W;
+			TestModel.d_canvas.height = Config.SCREEN_H;
+			
+
+			//$('#'+Config.DEBUG_CANVAS_NAME).show();
+
+		}else{
+			//d_canvas.hide();
+		}
+	};
+	
+	//this function sets the x and y offsets of the debug canvas
+	var set_debug_offset function(x_offset,y_offset){
+		TestModel.context.translate(x_offset, y_offset);
 	};
 
 	return {

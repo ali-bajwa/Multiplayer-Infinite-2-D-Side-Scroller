@@ -1,4 +1,4 @@
-var InitController = (function(mode){
+var InitController = (function(){
 	// why do you want to put initialization of everything into the InitController?
 	// Because if initialization of smth depends on initialization of smth else,
 	// it's easier to control here
@@ -10,7 +10,7 @@ var InitController = (function(mode){
 	// using html (<body onload=...); maybe using JS would be better? Idk;
 		
 
-	var init = function(){
+	var init = function(mode){
 		include();
 
 		init_all_modules(mode); // call .init function of everyone. e.g. PlayerController.init(); etc.
@@ -30,7 +30,7 @@ var InitController = (function(mode){
 		// if more stuff needs to be done for the test mode, 
 		// or more types of it needs to be added
 		// you can safely make the following a separate function
-			var asset_path = (mode == "test") ? "./assets/art/" : "../Content/gamedemo/assets/art/";
+			var asset_path = (mode == "test") ? "./assets/art/" : "../GameCode/assets/art/";
 
 		AssetController.init(asset_path);
 

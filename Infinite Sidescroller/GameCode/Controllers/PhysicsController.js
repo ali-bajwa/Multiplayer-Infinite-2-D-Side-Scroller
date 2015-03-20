@@ -269,14 +269,19 @@ var PhysicsController = (function(){
 			fixedRotation: true // temporary/test
 		});
 	};
- 
+	
+	var get_world = function(){
+		return PhysicsModel.world;
+	};
+	
+	
 	return {
 		get_body: get_body,
 		get_rectangular_body: get_rectangular_body,
 		get_rectangular: get_rectangular,
 		step: step,
 		init: init,
-
+		get_world: get_world,
 	};
 })();
 

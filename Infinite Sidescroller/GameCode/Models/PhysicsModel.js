@@ -57,17 +57,22 @@ PhysicsModel.prototype.c_templates = c_templates = {};
 PhysicsModel.prototype.p_templates = p_templates = {};
 
 
+
 r_templates["default"] = {
 
 	//shape: "rectangle", // implied from the template type
 	x: 3,
 	y: 3,
+	vx: 0,
+	vy: 0,
+
 	width: 5,
 	height: 5,
-
 	density: 2,
 	friction: 1,
 	restitution: 0.2,
+	isSensor: false,
+
 
 	active: true,
 	allowSleep: true,
@@ -75,44 +80,48 @@ r_templates["default"] = {
 	angularVelocity: 0,
 	awake: true,
 	bullet: false,
-	fixedRotation: false
+	fixedRotation: false,
+	type: "dynamic",
 
 };
 
+r_templates.living = {
+	fixedRotation: true,
+	awake: true,
+	isSensor: false,
+	//mobexp++
+};
+
+r_templates.terrain_tile = {
+	type: "static",
+	width: 1,
+	height: 1,
+	//mobexp++
+};
+
 r_templates.player = {
+	parent: r_templates.living,
 	width: 1.5,
 	height: 2.5,
 	type: "dynamic",
 	//mobexp++
 };
 
-
-// Will be DEPRECATED soon:
-
-PhysicsModel.prototype.defaults = {
-		shape: "block",
-		width: 5,
-		height: 5,
-		radius: 2.5
-	};
-	 
-PhysicsModel.prototype.fixture_defaults = {
-	density: 2,
-	friction: 1,
-	restitution: 0.2
+r_templates.ant = {
+	parent: r_templates.living,
+	width: 1,
+	height: 0.5,
+	type: "dynamic",
+	x: 40,
+	y: 10,
+	//mobexp++
 };
- 
-PhysicsModel.prototype.definition_defaults = {
-	active: true,
-	allowSleep: true,
-	angle: 0,
-	angularVelocity: 0,
-	awake: true,
-	bullet: false,
-	fixedRotation: false
-}; 
 
-
-
+r_templates.test = {
+	width: 1,
+	height: 2,
+	fixedRotation: false,
+	//mobexp++
+}
 
 module.exports = new PhysicsModel;

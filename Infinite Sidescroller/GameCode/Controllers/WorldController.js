@@ -11,7 +11,7 @@ var WorldController = (function(){
 
 		include(); // satisfy requirements
 
-		body_test = PhysicsController.get_rectangular_body(1.3, 2.5, 10, 3.3, true);
+		body_test = PhysicsController.get_rectangular({}, "test");
 	};
 
 	var update = function(delta){

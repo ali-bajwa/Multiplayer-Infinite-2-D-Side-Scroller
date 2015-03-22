@@ -5,6 +5,10 @@
 //
 // bodies are allowed to have userData on them that is just reference to some object.
 // may be useful in some situations
+//
+// Question:
+// does it make sense to allow users to pass any properties as part of object definition
+// and just apply those properties automatically to the userData property of body?
 
 var B2dConfig;
 
@@ -62,34 +66,17 @@ var PhysicsController = (function(){
 		
 	};
 
-	var apply_parents = function(template_name, type){
+	var apply_parents = function(template_name, template_collection){
 		// TODO: refactor the code so this thing is done only once
 		// at the load tim
 		// that could probably be done even for other things.
 		// idea: store compiled body/fixture etc. together with the
 		// template. this way you'll have easy access to the all defined
 		// options for debugging;
-		var template_collection;
-		switch (type) {
-			case "rectangular":
-				template_collection = PhysicsModel.r_templates;
-
-				break;
-			case "circular":
-
-				break;
-			case "polygonal":
-
-				break;
-			
-			default:
-				throw "Error: type doesn't match anything";
-		} // end switch
 		
-		// rename; it's default, not definition as it seems
-		var def = template_collection["default"];
+		var default_tmplate = template_collection["default"];
 
-		var chain = get_parent_chain(template_collection[template_name], def);
+		var chain = get_parent_chain(template_collection[template_name], default_tmplate);
 
 		var final_definition = {};
 
@@ -107,17 +94,212 @@ var PhysicsController = (function(){
 		return final_definition;
 	}; // end apply_parents
 		
+	var target_props = {
+		body_def: [
+			"active",
+			"allowSleep",
+			"angle",
+			"angularDamping",
+			"angularVelocity",
+			"awake",
+			"bullet",
+			"fixedRotation",
+			"inertiaScale",
+			"linearDamping",
+			"linearVelocity",
+			"position",
+			"type",
+			"userData"
+		],
+		fixture_def: [
+			"density",
+			//"filter", implement later if needed
+			"friction",
+			"isSensor",
+			"restitution",
+			"shape",
+			"userData"
+		]
+	};
+
+	var apply_property_list = function(source, destination, list){
+		/**
+		 * takes two objects and the list of strings
+		 * copies all properties with names found in the list
+		 * from source to destination
+		 * scips properties which are null/undefined
+		 */
+
+		for(var i = 0; i < list.length; i++){
+			var prop = list[i];
+			if(source[prop] != null){
+				destination[prop] = source[prop];
+			}
+		}
+
+		return destination;
+	};
+
+	var PropertyUndefined = function PropertyUndefined(property_name){
+		this.name = "PropertyUndefined";
+		this.message = "Error: " + property_name + " is not defined";
+	};
+	PropertyUndefined.prototype = Object.create(Error.prototype);
+	PropertyUndefined.prototype.constructor = PropertyUndefined;
+
+	var get_formal_body_def = function(non_formal_def){
+		/**
+		 * turn non formal definition into the formal one
+		 * non-formal definition is an object that contains
+		 * properties SOME of which are box2d properties or are 
+		 * intended to be transformed into such. E.g. the non-formal
+		 * definition may contain properties vx and vy which will be transformed
+		 * into the linearVelocity vector in the formal definition
+		 */
+
+		var nfdef = non_formal_def;
+
+		var definition = new B2d.b2BodyDef();
+
+		if(nfdef.vx != null && nfdef.vy != null){
+			// check for informal parameter specification first
+			nfdef.linearVelocity = new B2d.b2Vec2(nfdef.vx, nfdef.vy);
+		}else{
+			// maybe the linearVelocity was specified directly as vector,
+			// and not through informal parameters; checking that, and if not,
+			// exception
+			if(!(nfdef.linearVelocity)){
+				throw new PropertyUndefined("linearVelocity");
+			}
+		}
+
+		if(nfdef.x != null && nfdef.y != null){
+			// same procedure as for the linear velocity
+			// checking for informal specification here
+			// and if present, turning into the formal
+			nfdef.position = new B2d.b2Vec2(nfdef.x, nfdef.y);
+		}else{
+			// checking if formal was specified directly
+			if(!(nfdef.position)){
+				// if not, throw custom exception
+				throw new PropertyUndefined("position");
+			}
+		}
+
+		if(nfdef.type){
+			nfdef.type = {
+				"static": B2d.b2Body.b2_staticBody, 
+				"dynamic": B2d.b2Body.b2_dynamicBody,
+				"kinematic": B2d.b2Body.b2_kinematicBody
+			}[nfdef.type]; // turn string-type into b2d type
+		}else{
+			throw new PropertyUndefined("type");
+		}
+
+		apply_property_list(nfdef, definition, target_props.body_def);
+
+		return definition;
+
+	};
+
+	var get_formal_fixture_def = function(non_formal_def){
+		/**
+		 * turns non-formal definition into the formal one
+		 * see get_fromal_body_def for explanation
+		 */
+
+		var nfdef = non_formal_def;
+		var shape = nfdef.shape;
+		var fixture_def = new B2d.b2FixtureDef();
+
+		apply_property_list(non_formal_def, fixture_def, target_props.fixture_def);
+
+		switch (shape) {
+			case "rectangle":
+
+				if(nfdef.width != null && nfdef.height != null){
+					fixture_def.shape = new B2d.b2PolygonShape();
+					fixture_def.shape.SetAsBox(nfdef.width/2, nfdef.height/2);
+				}else{
+					throw new PropertyUndefined("width or height");
+				}
+				break;
+			case "polygon":
+
+				if(nfdef.points != null){
+					fixture_def.shape = new B2d.b2PolygonShape();
+					fixture_def.shape.SetAsArray(nfdef.points, nfdef.points.length);
+				}else{
+					throw new PropertyUndefined("points");
+				}
+				break;
+			case "circle":
+
+				if(nfdef.radius != null){
+					fixture_def.shape = new B2d.b2CircleShape(nfdef.radius);
+				}else{
+					throw new PropertyUndefined("radius");
+				}
+				break;
+			default:
+				throw "Error: shape must be one of the following: " + 
+					'"polygon", "rectangle", "circle". You specified: ' +
+					String(shape);
+		}
+
+		return fixture_def;
+
+	};
+	
+
+	var get_body = function(non_formal_def){
+		/**
+		 * takes non-formal definition
+		 * returns body based on this definition
+		 *
+		 */
+		var definition = get_formal_body_def(non_formal_def);
+
+		var body = PhysicsModel.world.CreateBody(definition);
+
+		if(body.userData == null){
+			body.userData = {};
+		}
+
+		// append passed definition to the user data of the body
+		// for debugging purposes, and also to allow easy specification of 
+		// custom parameters during definition. If this will cause confusion,
+		// I'll remove that
+		body.userData.def = non_formal_def;
+
+		return body;
+	
+	};
+
+	var attach_fixture = function(body, non_formal_def, fixture_description){
+		/**
+		 * given b2d body, (non-formal) fixture definition and (OPTIONAL) fixture_description
+		 * this function attaches fixture to the body
+		 */
+
+		var fixture_def = get_formal_fixture_def(non_formal_def);
+
+		if(fixture_def.userData == null){
+			fixture_def.userData = {};
+		}
+
+		fixture_def.userData.def = non_formal_def;
+		fixture_def.userData.description = fixture_description;
+		
+		body.CreateFixture(fixture_def);
+	};
+	
+	
 
 	var get_rectangular = function(def, template_name){
-		var type = "rectangular";
-		var compiled_template = apply_parents(template_name, type);
+		// get appropriate template collection to draw from
 		var template_collection = PhysicsModel.r_templates;
-
-		// target these properties (everything else will go onto the userData in the end
-		// some of this stuff will be moved to set_common
-		var target_body = ["type", "x", "y", "linearVelocity", "vx", "vy"];
-		var target_fixture = ["width", "height"];
-
+		var compiled_template = apply_parents(template_name, template_collection);
 
 		// apply custom override
 		var final_def = compiled_template;
@@ -125,50 +307,19 @@ var PhysicsController = (function(){
 			final_def[prop] = def[prop];
 		}
 
+		final_def.shape = "rectangle";
 
-		if(!final_def.width || !final_def.height){
-			//required properties
-			throw "Both width and height must be specified, either through defaults, " + 
-				"or directly"
-		}
-		
-		// BODY stuff
-		var definition = new B2d.b2BodyDef();
+		// final_def contains all final data, about body we are about to create
+		// it takes into account template given and all it's parents
+		// and also manually specified parameters. However, this definition is raw,
+		// i.e. some data in it may not be in its final form, e.g. linear velocity is specified
+		// as two parameters, vx and vy, while it whould be converted into the vector
+		// for box2d. so final_def is a final description, but not in final form
 
-		definition.position = new B2d.b2Vec2(final_def.x, final_def.y);
-		definition.linearVelocity = new B2d.b2Vec2(final_def.vx, final_def.vy);
-		definition.type = {
-			"static": B2d.b2Body.b2_staticBody, 
-			"dynamic": B2d.b2Body.b2_dynamicBody,
-			"kinematic": B2d.b2Body.b2_kinematicBody
-		}[final_def.type];
 
-		var body = PhysicsModel.world.CreateBody(definition);
+		var body = get_body(final_def);
 		 
-		// FIXTURE stuff; note that you can add more fixtures later
-		// or it can be allowed to specify several fixtures later
-		// through these methods?
-		var fixture_def = new B2d.b2FixtureDef();
-
-		// box2d wants you to specify half width and half height
-		final_def.width /= 2;
-		final_def.height /= 2;
-
-		// belongs in some form of loop and into set_common
-		// or maybe even into some other function called from set_common,
-		// that'll handle fixture definition, also allowing to add them to bodies at
-		// runtime separately (set_fixture(body, parameters, template_name?)
-		// can also tweak this function to allow to specify multiple fixtures (like give
-		// fixtures array in the definition))
-		fixture_def.density = final_def.density;
-		fixture_def.friction = final_def.friction;
-		fixture_def.restitution = final_def.restitution;
-
-		fixture_def.shape = new B2d.b2PolygonShape();
-
-		fixture_def.shape.SetAsBox(final_def.width, final_def.height);
-
-		body.CreateFixture(fixture_def);
+		attach_fixture(body, final_def, "main fixture");
 
 		return body;
 	};
@@ -189,87 +340,6 @@ var PhysicsController = (function(){
 		
 	};
 
-	var set_common = function(def){
-		// type: static | dynamic | kinematic
-
-		// array of setting this function will look for:
-		var settings = ["position", "linearVelocity", "type"];
-		
-		var definition = new B2d.b2BodyDef();
-		
-	};
-	
-	
-
-	// WILL BE DEPRECATED SOON
-	
-	var get_body = function(details){
-
-		var details = details || {};
-		 
-		// Create the definition
-		var definition = new B2d.b2BodyDef();
-		 
-		// Set up the definition
-		for (var k in PhysicsModel.definition_defaults) {
-			// questionable practice. I need to rewrite this for loop later
-			definition[k] = details[k] || PhysicsModel.definition_defaults[k];
-		}
-
-		definition.position = new B2d.b2Vec2(details.x || 0, details.y || 0);
-		definition.linearVelocity = new B2d.b2Vec2(details.vx || 0, details.vy || 0);
-		//this.definition.userData = this;
-		definition.type = (details.type == "static") ? B2d.b2Body.b2_staticBody : B2d.b2Body.b2_dynamicBody;
-		 
-		// Create the Body
-		var body = PhysicsModel.world.CreateBody(definition);
-		 
-		// Create the fixture
-		var fixtureDef = new B2d.b2FixtureDef();
-		for (var l in PhysicsModel.fixture_defaults) {
-			fixtureDef[l] = details[l] || PhysicsModel.fixture_defaults[l];
-		}
-		 
-		details.shape = details.shape || PhysicsModel.defaults.shape;
-		 
-		switch (details.shape) {
-			case "circle":
-				details.radius = details.radius || PhysicsModel.defaults.radius;
-				fixtureDef.shape = new B2d.b2CircleShape(details.radius);
-				break;
-			case "polygon":
-				fixtureDef.shape = new B2d.b2PolygonShape();
-				fixtureDef.shape.SetAsArray(details.points, details.points.length);
-				break;
-			case "block":
-			default:
-				details.width = details.width || PhysicsModel.defaults.width;
-				details.height = details.height || PhysicsModel.defaults.height;
-			 
-				fixtureDef.shape = new B2d.b2PolygonShape();
-				fixtureDef.shape.SetAsBox(details.width / 2,
-				details.height / 2);
-			break;
-		}
-	 
-		body.CreateFixture(fixtureDef);
-
-		return body;
-	};
-	 
-	var get_rectangular_body = function(width, height, x, y, dynamic){
-
-		return get_body({
-			shape: "block", 
-			width: width,
-			type: dynamic ? "dynamic" : "static",
-			height: height,
-			x: x,
-			y: y,
-			fixedRotation: true // temporary/test
-		});
-	};
-	
 	var set_debug_draw = function(debug_draw){
 		PhysicsModel.world.SetDebugDraw(debug_draw);
 	};
@@ -277,7 +347,6 @@ var PhysicsController = (function(){
 	
 	return {
 		get_body: get_body,
-		get_rectangular_body: get_rectangular_body,
 		get_rectangular: get_rectangular,
 		step: step,
 		init: init,

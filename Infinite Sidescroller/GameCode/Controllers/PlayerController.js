@@ -5,12 +5,7 @@ var PlayerController = (function(){
 
 	var init = function(){
 		include();
-		// temporary/testing, do not try to understand numbers involved. I repeat, do not try to understand numbers;
-		PlayerModel.hero = PhysicsController.get_rectangular_body(1.5, 2.5, 100/30 + (1.5/2), 510/30 - (2.5/2), true);
-		// TESTING PHYSICS TEMPLATES
-		//console.log(PlayerModel.hero);
-		//PlayerModel.hero = PhysicsController.get_rectangular({}, "player");
-		//console.log(PlayerModel.hero);
+		PlayerModel.hero = PhysicsController.get_rectangular({}, "player");
 		hero = PlayerModel.hero;
 	};
 

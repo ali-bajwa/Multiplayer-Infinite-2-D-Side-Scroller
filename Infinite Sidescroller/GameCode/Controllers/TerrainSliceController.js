@@ -68,7 +68,7 @@ var TerrainSliceController = (function () {
 				if(id != 0){ // if not air
 					var x = slice.origin.x + j * slice.cell_w + slice.cell_w/2;
 					var y = slice.origin.y + i * slice.cell_w + slice.cell_w/2;
-					var body = PhysicsController.get_rectangular_body(1, 1, x, y, false);
+					var body = PhysicsController.get_rectangular({x: x, y: y}, "terrain_tile");
 					slice.grid[i][j].body = body;
 				}
 

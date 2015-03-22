@@ -129,7 +129,6 @@ r_templates.platform = {
     y: 11,
     width: 10,
     height: .5,
-    fixedRotation: true,
     type: "static",
 }
 

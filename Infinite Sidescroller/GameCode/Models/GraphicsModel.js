@@ -5,6 +5,9 @@ var GraphicsModel = function(){
 	this.hero;
 	this.other_players = []; // array of players other then hero for multiplayer
 	this.ant;
+    //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	this.health;
+	this.score;
 	// all object registered for continious update to match their physical body
 	// position 
 	this.all_physical = []; 

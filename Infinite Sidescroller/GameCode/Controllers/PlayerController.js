@@ -17,14 +17,14 @@ var PlayerController = (function(){
 
 
 		if(cmds("right")){
-			// temporary
+		    // temporary
 
-			move_right(hero);
+		    move_right(hero);
 		}
 		if(cmds("left")){
 			// temporary
-
-			move_left(hero);
+		    
+		    move_left(hero);
 		}
 
 		if(cmds("up")){

@@ -36,24 +36,51 @@ var GraphicsController = (function(){
 		reg_for_render(GraphicsModel.ant, AntController.get_ant());
 
 		GraphicsModel.camera.following = hero;
-
+        //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+		GraphicsModel.score = new createjs.Text();
+		reg_for_render(GraphicsModel.score);
+		GraphicsModel.health = new createjs.Text();
+		reg_for_render(GraphicsModel.health);
+		hud_temp();
 
 	};
-
+    
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
 
-		update_camera(); // needs to be updated first
+	    update_camera(); // needs to be updated first
 
 		check_for_new_terrain();
 
 		synchronize_to_physical_bodies();
 
+	    //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+		hud_temp_update();
+
 		ant_special_render_temp(); // TEMPORARY!!!!!!!!!!!
-			
 
 		GraphicsModel.stage.update();
 	};
+
+    //DELETE ME PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	var hud_temp = function () {
+	    GraphicsModel.health.text = "100";
+	    GraphicsModel.health.x = 10;
+	    GraphicsModel.health.y = 30;
+	    GraphicsModel.health.font = "20px Arial";
+	    GraphicsModel.health.color = "#ff0000";
+	    GraphicsModel.score.text = "10";
+	    GraphicsModel.score.x = 10;
+	    GraphicsModel.score.y = 10;
+	    GraphicsModel.score.font = "20px Arial";
+	}
+
+    //DELETE ME PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+	var hud_temp_update = function () {
+	    temp_score = parseInt(GraphicsModel.score.text);
+	    temp_score += 1;
+	    GraphicsModel.score.text = temp_score.toString();
+	}
 
 	var update_camera = function(){
 		var camera = GraphicsModel.camera;

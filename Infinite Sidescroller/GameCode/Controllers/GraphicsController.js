@@ -43,13 +43,14 @@ var GraphicsController = (function(){
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
 
+		update_camera(); // needs to be updated first
+
 		check_for_new_terrain();
 
 		synchronize_to_physical_bodies();
 
 		ant_special_render_temp(); // TEMPORARY!!!!!!!!!!!
 			
-		update_camera();
 
 		GraphicsModel.stage.update();
 	};
@@ -61,10 +62,10 @@ var GraphicsController = (function(){
 
 		if(camera.following != null){
 			camera.offset.x = center.x - camera.following.body.GetWorldCenter().x * Config.B2D.SCALE;
-			camera.offset.y = center.y - camera.following.body.GetWorldCenter().y * Config.B2D.SCALE;
+			camera.offset.y =  center.y - camera.following.body.GetWorldCenter().y * Config.B2D.SCALE;
 		}
 
-		adjust_debug_draw();
+		adjust_debug_draw(); // goes last
 	};
 	
 

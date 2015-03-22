@@ -1,11 +1,3 @@
-// WARNING!  this file doesn't adhere to the MVC yet, 
-// parts of it shuld be merged into the PhysicsController and/or InitController
-
-var B2dConfig, B2d, Config;
-
-Config = require("../Config.js");
-B2dConfig = Config.B2D;
-B2d = require("../B2d.js");
 
 var PhysicsModel = function() {
 	
@@ -13,9 +5,6 @@ var PhysicsModel = function() {
 	this.world;
  
 	// getting context of the debug canvas, for box2d to draw debuggin boxes
-	this.context = undefined;
-
-	this.scale = B2dConfig.SCALE;
 
 	// timeToCover is the time that simulation must cover to catch up to the real world time;
 	// since createjs ticker is what we use for timing, and box2d ticks
@@ -26,39 +15,113 @@ var PhysicsModel = function() {
 	// If anything is still unclear, ask me (AK);
 		this.timeToCover = 0; 
 
-	this.stepAmount = 1/(B2dConfig.SPS);
+	this.step_amount;
 
 }; 
 
 var templates;
-PhysicsModel.prototype.templates = templates = {};
+/*
+ * Parameters for b2d body definition
+	active: true
+	allowSleep: true
+	angle: 0
+	angularDamping: 0
+	angularVelocity: 0
+	awake: true
+	bullet: false
+	fixedRotation: false
+	inertiaScale: 1
+	linearDamping: 0
+	linearVelocity: b2Vec2
+	position: b2Vec2
+	type: 0
+	userData: null
+*/
+
+/*
+ * Fixture definition parameters:
+	density: 0
+	filter: b2FilterData
+	friction: 0.2
+	isSensor: false
+	restitution: 0
+	shape: null
+	userData: null
+ */
+
+// rectangular
+PhysicsModel.prototype.r_templates = r_templates = {};
+// circular
+PhysicsModel.prototype.c_templates = c_templates = {};
+// polygonal
+PhysicsModel.prototype.p_templates = p_templates = {};
 
 
 
-PhysicsModel.prototype.defaults = {
-		shape: "block",
-		width: 5,
-		height: 5,
-		radius: 2.5
-	};
-	 
-PhysicsModel.prototype.fixture_defaults = {
+r_templates["default"] = {
+
+	//shape: "rectangle", // implied from the template type
+	x: 3,
+	y: 3,
+	vx: 0,
+	vy: 0,
+
+	width: 5,
+	height: 5,
 	density: 2,
 	friction: 1,
-	restitution: 0.2
-};
- 
-PhysicsModel.prototype.definition_defaults = {
+	restitution: 0.2,
+	isSensor: false,
+
+
 	active: true,
 	allowSleep: true,
 	angle: 0,
 	angularVelocity: 0,
 	awake: true,
 	bullet: false,
-	fixedRotation: false
-}; 
+	fixedRotation: false,
+	type: "dynamic",
 
+};
 
+r_templates.living = {
+	fixedRotation: true,
+	awake: true,
+	isSensor: false,
+	//mobexp++
+};
 
+r_templates.terrain_tile = {
+	type: "static",
+	width: 1,
+	height: 1,
+	//mobexp++
+};
+
+r_templates.player = {
+	parent: r_templates.living,
+	width: 1.5,
+	height: 2.5,
+	type: "dynamic",
+	//mobexp++
+};
+
+r_templates.ant = {
+	parent: r_templates.living,
+	width: 1,
+	height: 0.5,
+	type: "dynamic",
+	x: 40,
+	y: 10,
+	//mobexp++
+};
+
+r_templates.test = {
+	width: 1,
+	height: 2,
+	fixedRotation: false,
+	//mobexp++
+}
 
 module.exports = new PhysicsModel;

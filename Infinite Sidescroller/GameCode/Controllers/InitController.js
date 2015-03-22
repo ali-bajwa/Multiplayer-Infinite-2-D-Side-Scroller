@@ -13,13 +13,13 @@ var InitController = (function(){
 	var init = function(mode){
 		include();
 
-		init_all_modules(); // call .init function of everyone. e.g. PlayerController.init(); etc.
-
 		enable_arrowkey_scroll(false);
 		setup_screen();
 		setup_events();
-		setup_debug_canvas(mode);
 
+		init_all_modules(mode); // call .init function of everyone. e.g. PlayerController.init(); etc.
+
+		
 		// Notice that asset dependent stuff doesn't (and mustn't) start until
 		// all assets are completely loaded. That includes ticker, i.e. no ticks are processed
 		// until everything is loaded. If you want something different, e.g. display some sort of loading
@@ -31,14 +31,13 @@ var InitController = (function(){
 		// if more stuff needs to be done for the test mode, 
 		// or more types of it needs to be added
 		// you can safely make the following a separate function
-			var asset_path = (mode == "test") ? "./assets/art/" : "../Content/gamedemo/assets/art/";
-			setup_debug_canvas();
+			var asset_path = (mode == "test") ? "./assets/art/" : "../GameCode/assets/art/";
 
 		AssetController.init(asset_path);
 
 	};
 
-	var init_all_modules = function(){
+	var init_all_modules = function(mode){
 		// TODO: better way to do stuff like that (call certain function
 		// of every module in the order. 
 		// Also, init and update functions of each module should probably
@@ -52,10 +51,12 @@ var InitController = (function(){
 		GameController.init();
 		KeyboardController.init();
 		PhysicsController.init();
+
+		TestController.init(mode);
+
 		PlayerController.init();
 		TerrainController.init();
 		TerrainSliceController.init();
-		TestController.init();
 		WorldController.init();
 
 		// WARNING!!! GraphicsController.init is called from the
@@ -76,41 +77,6 @@ var InitController = (function(){
 				}                                                                   
 			})                                                                      
 		}		
-	};
-
-	var setup_debug_canvas = function(mode){
-		// more stuff may be done later
-		// should be refactored and prettyfied
-		
-		// does in need to be moved to graphics controller?
-		// test controller? (although we have QUnit testing, hm)
-
-		// does this way and not with jquery due to some strange bugs
-		var d_canvas = document.getElementById(Config.DEBUG_CANVAS_NAME);
-		var context = d_canvas.getContext("2d");
-
-		if(mode == "test"){
-			PhysicsModel.context = context;
-
-			PhysicsModel.debugDraw = new B2d.b2DebugDraw();
-			PhysicsModel.debugDraw.SetSprite(PhysicsModel.context);
-			PhysicsModel.debugDraw.SetDrawScale(PhysicsModel.scale);
-			PhysicsModel.debugDraw.SetFillAlpha(0.3);
-			PhysicsModel.debugDraw.SetLineThickness(1.0);
-			PhysicsModel.debugDraw.SetFlags(B2d.b2DebugDraw.e_shapeBit | B2d.b2DebugDraw.e_jointBit);
-			PhysicsModel.world.SetDebugDraw(PhysicsModel.debugDraw);
-
-			Config.B2D.debug_draw = true;
-
-			d_canvas.width = Config.SCREEN_W;
-			d_canvas.height = Config.SCREEN_H;
-
-			//$('#'+Config.DEBUG_CANVAS_NAME).show();
-
-		}else{
-			//d_canvas.hide();
-		}
-	
 	};
 	
 	var setup_screen = function(){

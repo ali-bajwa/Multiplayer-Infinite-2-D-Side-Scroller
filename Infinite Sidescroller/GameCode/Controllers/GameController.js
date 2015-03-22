@@ -26,7 +26,6 @@ var GameController = (function(){
 
 		TerrainController.update();
 
-		
 		// Should be called after all movement of objects is done:
 		AntController.update();
 		GraphicsController.update();

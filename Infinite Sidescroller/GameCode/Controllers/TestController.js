@@ -56,7 +56,12 @@ var TestController = (function(){
 	
 	//this function sets the x and y offsets of the debug canvas
 	var set_debug_offset = function(x_offset, y_offset){
-		TestModel.context.translate(x_offset, y_offset);
+		context = TestModel.context;
+		context.save();
+		context.clearRect(0, 0, Config.SCREEN_W, Config.SCREEN_H);
+		context.translate(x_offset, y_offset);
+		PhysicsController.draw_debug();
+		context.restore();
 	};
 
 	return {

@@ -35,6 +35,8 @@ var GraphicsController = (function(){
 		reg_for_render(GraphicsModel.hero, PlayerController.get_hero());
 		reg_for_render(GraphicsModel.ant, AntController.get_ant());
 
+		GraphicsModel.camera.following = hero;
+
 
 	};
 
@@ -47,16 +49,30 @@ var GraphicsController = (function(){
 
 		ant_special_render_temp(); // TEMPORARY!!!!!!!!!!!
 			
-		adjust_debug_draw();
+		update_camera();
 
 		GraphicsModel.stage.update();
 	};
 
+	var update_camera = function(){
+		var camera = GraphicsModel.camera;
+
+		var center = {x: Config.SCREEN_W/2, y: Config.SCREEN_H/2};
+
+		if(camera.following != null){
+			camera.offset.x = center.x - camera.following.body.GetWorldCenter().x * Config.B2D.SCALE;
+			camera.offset.y = center.y - camera.following.body.GetWorldCenter().y * Config.B2D.SCALE;
+		}
+
+		adjust_debug_draw();
+	};
+	
 
 	var adjust_debug_draw = function(){
-		var camera_offset = GraphicsModel.camera.offset;
-		//TestController.set_debug_offset(camera_offset.x, camera_offset.y);
+		var camera = GraphicsModel.camera;
+		TestController.set_debug_offset(camera.offset.x, camera.offset.y);
 	};
+
 	var init_animations = function(){
 		
 		GraphicsModel.spritesheets["ant"] = new createjs.SpriteSheet({
@@ -176,15 +192,24 @@ var GraphicsController = (function(){
 		} // end while
 
 	}; // end check_for_new_terrain
-	
+
+	var get_camera_offset = function(){
+		var camera = GraphicsModel.camera;
+
+		var x = camera.offset.x + camera.offset_from_followed.x;
+		var y = camera.offset.y + camera.offset_from_followed.y;
+		
+		return {x: x, y: y};
+	};
+		
 
 	var trans_xy = function(position_vector_unscaled){
 		// takes position vector with values in meters, translates
 		// it to pixel position taking the camera position into account
 		var camera = GraphicsModel.camera;
 
-		var x = (position_vector_unscaled.x * Config.B2D.SCALE) + camera.offset.x;
-		var y = (position_vector_unscaled.y * Config.B2D.SCALE) + camera.offset.y;
+		var x = (position_vector_unscaled.x * Config.B2D.SCALE) + get_camera_offset().x;
+		var y = (position_vector_unscaled.y * Config.B2D.SCALE) + get_camera_offset().y;
 
 		return {x: x, y: y};	
 	};

@@ -10,15 +10,26 @@ var GraphicsModel = function(){
 	this.all_physical = []; 
 
 	// all spritesheet definitions (added at the initialization stage
-	// because they need assets to be loaded
+	// because they need assets to be loaded)
 	this.spritesheets = {}; 
 
 	this.camera = {
 		// should be easeljs object or null
 		following: null,
 
+		// internal camera implementation thing to know how far to offset from the
+		// initial position
 		offset: {x: 0, y: 0},
-		offset_from_followed: {x: 0, y: 0}
+
+		// the offset of the camera from the followed object
+		// e.g. offset of {x: 100, y: 100} will center camera
+		// 100 pixels to the right and 100 pixels below the followed object
+		offset_from_followed: {x: 400, y: -100},
+
+		// this is center of the screen in pixels. gets dynamically recalculated 
+		// during the camera update so if it's ever changed, camera still works as expected
+		center: {x: 0, y: 0}
+
 	};
 };
 

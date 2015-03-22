@@ -57,8 +57,10 @@ var GraphicsController = (function(){
 
 	var update_camera = function(){
 		var camera = GraphicsModel.camera;
+		var center = camera.center;
 
-		var center = {x: Config.SCREEN_W/2, y: Config.SCREEN_H/2};
+		center.x = Config.SCREEN_W/2 - camera.offset_from_followed.x;
+		center.y = Config.SCREEN_H/2 - camera.offset_from_followed.y;
 
 		if(camera.following != null){
 			camera.offset.x = center.x - camera.following.body.GetWorldCenter().x * Config.B2D.SCALE;
@@ -194,23 +196,13 @@ var GraphicsController = (function(){
 
 	}; // end check_for_new_terrain
 
-	var get_camera_offset = function(){
-		var camera = GraphicsModel.camera;
-
-		var x = camera.offset.x + camera.offset_from_followed.x;
-		var y = camera.offset.y + camera.offset_from_followed.y;
-		
-		return {x: x, y: y};
-	};
-		
-
 	var trans_xy = function(position_vector_unscaled){
 		// takes position vector with values in meters, translates
 		// it to pixel position taking the camera position into account
 		var camera = GraphicsModel.camera;
 
-		var x = (position_vector_unscaled.x * Config.B2D.SCALE) + get_camera_offset().x;
-		var y = (position_vector_unscaled.y * Config.B2D.SCALE) + get_camera_offset().y;
+		var x = (position_vector_unscaled.x * Config.B2D.SCALE) + camera.offset.x;
+		var y = (position_vector_unscaled.y * Config.B2D.SCALE) + camera.offset.y;
 
 		return {x: x, y: y};	
 	};

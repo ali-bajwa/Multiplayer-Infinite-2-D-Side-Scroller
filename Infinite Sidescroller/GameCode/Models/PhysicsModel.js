@@ -124,4 +124,13 @@ r_templates.test = {
 	//mobexp++
 }
 
+r_templates.platform = {
+    x: 10,
+    y: 11,
+    width: 10,
+    height: .5,
+    fixedRotation: true,
+    type: "static",
+}
+
 module.exports = new PhysicsModel;

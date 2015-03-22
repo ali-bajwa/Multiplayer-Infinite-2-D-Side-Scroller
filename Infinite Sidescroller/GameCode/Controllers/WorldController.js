@@ -3,7 +3,8 @@ var WorldController = (function(){
 	/* all the physics control of the whole world
 	*/
 
-	var body_test;
+    var body_test;
+    var body_test2;
 	//var temp = 0;
 
 	var init = function(){
@@ -12,6 +13,7 @@ var WorldController = (function(){
 		include(); // satisfy requirements
 
 		body_test = PhysicsController.get_rectangular({}, "test");
+		body_test2 = PhysicsController.get_rectangular({}, "platform");
 	};
 
 	var update = function(delta){

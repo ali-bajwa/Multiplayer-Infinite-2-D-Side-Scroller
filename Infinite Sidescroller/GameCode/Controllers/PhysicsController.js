@@ -44,10 +44,13 @@ var PhysicsController = (function(){
 				B2dConfig.VELOCITY_ITR // position iterations
 			);
 		}
+	};  // end step 
+
+	var draw_debug = function(){
 		if (B2dConfig.debug_draw) {
 			PhysicsModel.world.DrawDebugData();
 		}
-	};  // end step 
+	};
 
 	var get_parent_chain = function(template, default_def){
 		var next = template;
@@ -293,6 +296,12 @@ var PhysicsController = (function(){
 		
 		body.CreateFixture(fixture_def);
 	};
+
+	var attach_sensors = function(body){
+		
+		
+	};
+	
 	
 	
 
@@ -351,6 +360,7 @@ var PhysicsController = (function(){
 		step: step,
 		init: init,
 		set_debug_draw: set_debug_draw,
+		draw_debug: draw_debug,
 	};
 })();
 

@@ -14,8 +14,11 @@ var GraphicsModel = function(){
 	this.spritesheets = {}; 
 
 	this.camera = {
+		// should be easeljs object or null
 		following: null,
+
 		offset: {x: 0, y: 0},
+		offset_from_followed: {x: 0, y: 0}
 	};
 };
 

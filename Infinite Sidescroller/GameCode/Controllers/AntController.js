@@ -8,7 +8,7 @@ var AntController = (function() {
 		AntModel.ant = PhysicsController.get_rectangular({}, "ant");
 	};
 
-	var change_state = function(progress_state, state_num) {
+	var change_state = function(progress_state) {
 		AntModel.state = progress_state;
 
 	}
@@ -58,12 +58,12 @@ var AntController = (function() {
 
 		//if enemy is dead, die
 		if (AntModel.hp == 1) {
-			change_state("upside_down", 1);
+			change_state("upside_down");
 		} else if (AntModel.hp <= 0 && model.death_tick == 30) {
 
 		} else if (AntModel.hp <= 0) {
 			AntModel.body.destroy();
-			change_state("death", 2);
+			change_state("death");
 			AntModel.death_tick++;
 		}
 		//else move & attack

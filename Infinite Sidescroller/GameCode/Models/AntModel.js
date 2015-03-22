@@ -6,6 +6,7 @@ var AntModel = function(){
 	this.H = 31;//height
 	this.W = 50;
 	this.sprite_array = [];  //single source for sprites
+	this.type = "enemy";
 	
 	this.hero_hurt_me = false;
 	this.me_hurt_hero = false;

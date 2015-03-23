@@ -295,11 +295,25 @@ var PhysicsController = (function(){
 		fixture_def.userData.description = fixture_description;
 		
 		body.CreateFixture(fixture_def);
+
+		// TODO: implement; @Sean
+		// offset if of the form {x: number, y: number}
+		//
+		// if(non_fromal_def.offset){
+		// 	code to offset fixture
+		// }
 	};
 
 	var attach_sensors = function(body){
-		
-		
+
+		// TODO: implement; @Sean
+		// get the width and height of the body's main fixture
+		// using them create 4 sensor fixtures
+		// calculate offset of sensors so that they match the main fixture
+		var top_fixture, bottom_fixture; // those are non formal fixture definitions
+		//attach_fixture(body, top_fixture, "top")
+		//attach_fixture(body, bottom_fixture, "bottom")
+		//sensors must be weightless to not change center of mass
 	};
 	
 	
@@ -328,7 +342,11 @@ var PhysicsController = (function(){
 
 		var body = get_body(final_def);
 		 
-		attach_fixture(body, final_def, "main fixture");
+		attach_fixture(body, final_def, "main");
+		
+		// TODO: implement; @Sean
+		// if final_def.border_sensors
+		// 	attach_sensors(body);
 
 		return body;
 	};

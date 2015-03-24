@@ -310,7 +310,19 @@ var PhysicsController = (function(){
 		// get the width and height of the body's main fixture
 		// using them create 4 sensor fixtures
 		// calculate offset of sensors so that they match the main fixture
-		var top_fixture, bottom_fixture; // those are non formal fixture definitions
+		var top_fixture, bottom_fixture, left_fixture, right_fixture;
+		var x = body.GetPosition().x;
+		var y = body.GetPosition().y;
+		var h = body.GetFixtureList().GetAABB().GetExtents().x;
+		var w = body.GetFixtureList().GetAABB().GetExtents().y;
+		
+		// those are non-formal fixture definitions
+		var top_position = {hx:x,hy:y+h};
+		top_fixture = new B2d.b2FixtureDef();
+		top_fixture.shape = new B2d.b2PolygonShape();
+		top_fixture.shape.SetAsOrientedBox(1,w,top_position,0);
+		attach_fixture(body,top_fixture,"top fixture");
+		
 		//attach_fixture(body, top_fixture, "top")
 		//attach_fixture(body, bottom_fixture, "bottom")
 		//sensors must be weightless to not change center of mass
@@ -343,11 +355,15 @@ var PhysicsController = (function(){
 		var body = get_body(final_def);
 		 
 		attach_fixture(body, final_def, "main");
-		
+		console.log(body.GetFixtureList())
 		// TODO: implement; @Sean
 		// if final_def.border_sensors
 		// 	attach_sensors(body);
-
+		if (def["border_sensors"] == true)
+			{
+			attach_sensors(body);
+			}
+		
 		return body;
 	};
 

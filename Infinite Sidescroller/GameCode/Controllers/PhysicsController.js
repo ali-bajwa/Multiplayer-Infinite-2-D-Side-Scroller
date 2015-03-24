@@ -2,8 +2,7 @@
 // notice that you can reuse body definitions multiple times, it makes sense to have
 // collection of body definitions that are commonly use and maybe allow some sort of 
 // inheritance (i.e. you can make some definition on top of the another definition)
-//
-// bodies are allowed to have userData on them that is just reference to some object.
+// // bodies are allowed to have userData on them that is just reference to some object.
 // may be useful in some situations
 //
 // Question:
@@ -310,19 +309,7 @@ var PhysicsController = (function(){
 		// get the width and height of the body's main fixture
 		// using them create 4 sensor fixtures
 		// calculate offset of sensors so that they match the main fixture
-		var top_fixture, bottom_fixture, left_fixture, right_fixture;
-		var x = body.GetPosition().x;
-		var y = body.GetPosition().y;
-		var h = body.GetFixtureList().GetAABB().GetExtents().x;
-		var w = body.GetFixtureList().GetAABB().GetExtents().y;
-		
-		// those are non-formal fixture definitions
-		var top_position = {hx:x,hy:y+h};
-		top_fixture = new B2d.b2FixtureDef();
-		top_fixture.shape = new B2d.b2PolygonShape();
-		top_fixture.shape.SetAsOrientedBox(1,w,top_position,0);
-		attach_fixture(body,top_fixture,"top fixture");
-		
+		var top_fixture, bottom_fixture; // those are non formal fixture definitions
 		//attach_fixture(body, top_fixture, "top")
 		//attach_fixture(body, bottom_fixture, "bottom")
 		//sensors must be weightless to not change center of mass
@@ -355,15 +342,11 @@ var PhysicsController = (function(){
 		var body = get_body(final_def);
 		 
 		attach_fixture(body, final_def, "main");
-		console.log(body.GetFixtureList())
+		
 		// TODO: implement; @Sean
 		// if final_def.border_sensors
 		// 	attach_sensors(body);
-		if (def["border_sensors"] == true)
-			{
-			attach_sensors(body);
-			}
-		
+
 		return body;
 	};
 
@@ -386,11 +369,117 @@ var PhysicsController = (function(){
 	var set_debug_draw = function(debug_draw){
 		PhysicsModel.world.SetDebugDraw(debug_draw);
 	};
+
+	var setup_collision_listener = function(functions, optional){
+		
+		/**
+		 * takes two objects, >functions< and >optional<
+		 * first object should contain any of the following properties:
+		 * BeginContact, PreSolve, PostSolve, EndContact
+		 * with there values being functions to be called on each event
+		 * the optional object is for some named parameters that might be used later
+		 * Notice that this function wraps calls of the given functions, to give more
+		 * helpful info about the collision in particular, it will provide info about the
+		 * sides on which objects collided, granted that sided sensors are present
+		 *
+		 * supported properties of >optional<:
+		 * 	must_be_involved: b2d_body
+		 * 		report only contacts in which this body is involved
+		 * 		e.g. if you pass it body of the player, only collisions with the
+		 * 		player will cause passed functions to be called
+		 */
+
+		var listener = new B2d.b2ContactListener;
+
+		var names = ["BeginContact", "EndContact", "PreSolve", "PostSolve"];
+		for(var i = 0; i < 4; i++){
+			var name = names[i];
+			var custom_function = functions[name];
+
+			if(custom_function){
+				// if given function was specified
+				
+				// wrap it properly and attach to the listener
+				listener[name] = (function(custom_function, must_be_involved){
+					// self calling function to deal with scope issues
+					 
+					return function wrapper(contact, second_arg){
+						// >second_arg< will be impulse of collision in case of PreSolve,
+						// oldManifold in case of PostSolve, and null otherwise
+						
+						var fixture_A = contact.m_fixtureA;
+						var fixture_B = contact.m_fixtureB;
+						var body_A = fixture_A.GetBody();
+						var body_B = fixture_B.GetBody();
+						
+						if(!must_be_involved || // if no checking for bodies involved OR
+							body_A === must_be_involved || // first body matches OR
+							body_B === must_be_involved // second body matches
+						){
+							// whatever info you want to unpack for the custom function to easily use:
+							var info = {}; 
+
+							// TODO:THIS SHOULD BE CHANGED together with
+							// how id's are attached to the fixtures
+							// not changing now, to avoid merge conflicts with
+							// @Sean's work >>>
+							info.A = {};
+							info.B = {};
+
+							info.A.fixture = fixture_A;
+							info.B.fixture = fixture_B;
+
+							info.A.body = body_A;
+							info.B.body = body_B;
+
+							info.A.body_id = get_custom_property(body_A, "id");
+							info.B.body_id = get_custom_property(body_B, "id");
+
+							info.A.fixture_id = get_custom_property(fixture_A, "description");
+							info.B.fixture_id = get_custom_property(fixture_B, "description");
+							// <<< end of terribleness
+
+							// call the custom function
+							if(second_arg){
+								// specifying the implulse/oldManifold if present
+								custom_function(contact, second_arg, info);
+							}else{
+								// or not specifying if it is not
+								custom_function(contact, info);
+							}
+						}
+					};
+				})(custom_function, optional.must_be_involved);
+			}
+		}
+
+		PhysicsModel.world.SetContactListener(listener);
+	
+	};
+
+	var get_custom_property = function(b2d_obj, property_name){
+		
+		/**
+		 * given any box2d object that has GetUserData method
+		 * this function will return custom property with given
+		 * property_name if this property is set on userData of the object
+		 * if not, the function returns null
+		 */
+		var user_data = b2d_obj.GetUserData();
+		if(user_data && user_data[property_name]){
+			return user_data[property_name];
+		}else{
+			return null;
+		}
+	};
+	
+	
 	
 	
 	return {
 		get_body: get_body,
 		get_rectangular: get_rectangular,
+		setup_collision_listener: setup_collision_listener,
 		step: step,
 		init: init,
 		set_debug_draw: set_debug_draw,

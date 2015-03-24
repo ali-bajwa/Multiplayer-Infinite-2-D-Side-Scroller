@@ -16,7 +16,7 @@ var AntController = (function() {
 
 	// // //Set up Collision handler
 	
-	/*
+	
 	var begin_contact = function(contact, info)
 		{
 		//handle collisions here
@@ -46,7 +46,7 @@ var AntController = (function() {
 		
 		};
 	PhysicsController.setup_collision_listener({BeginContact: begin_contact}, {must_be_involved: ant});
-	*/
+	
 	//add the new listener to the main listener in PhysicsController
 	//PhysicsController.SetContactListener(this.listener);
 

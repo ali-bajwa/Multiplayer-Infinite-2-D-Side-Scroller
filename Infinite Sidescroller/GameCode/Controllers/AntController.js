@@ -5,39 +5,48 @@ var AntController = (function() {
 	var init = function() {
 		include();
 		//AntModel.ant = PhysicsController.get_rectangular_body(1, 0.5, 600 / 30 + (2.5 / 2), 510 / 30 - (1.5 / 2), true);
-		AntModel.ant = PhysicsController.get_rectangular({userData: {id: "ant"}}, "ant");
+		AntModel.ant = PhysicsController.get_rectangular({userData: {id: "ant", state: AntModel.AI_state}}, "ant");
+		ant = AntModel.ant;
 	};
 
 	var change_state = function(progress_state) {
-		AntModel.state = progress_state;
+		AntModel.AI_state = {ant: progress_state};
 
 	}
 
 	// // //Set up Collision handler
-	/*
-	var b2Listener = Box2d.Dynamics.b2ContactListener;
-
-	//Add listeners for contact
-	this.listener = new box2d.Dynamics.b2Listener;
-	this.listener.BeginContact = function(contact)
+	
+	
+	var begin_contact = function(contact, info)
 		{
 		//handle collisions here
-		console.log(contact.GetFixtureA().GetBody().GetUserData());
-		switch (contact.object_id)
+		console.log(contact);
+		console.log(info);
+		var mean_hero;
+		if(info.A.body_id == "hero")
+		{
+			mean_hero = info.A;
+		}
+		else if(info.B.body_id == "hero")
+		{
+			mean_hero = info.B;
+		}
+
+		switch (mean_hero.fixture)
 			{
 
-			case 0:
+			case !"bottom":
 				this.me_hurt_hero = true;
 				break;
 				
-			case 1:
+			case "bottom":
 				this.hero_hurt_me = true;
 				break;
 			}
 		
-		}
+		};
+	PhysicsController.setup_collision_listener({BeginContact: begin_contact}, {must_be_involved: ant});
 
-	*/
 	//add the new listener to the main listener in PhysicsController
 	//PhysicsController.SetContactListener(this.listener);
 
@@ -77,12 +86,14 @@ var AntController = (function() {
 				Antbody.SetAwake(true);
 			}
 
-			if (AntModel.can_attack && AntModel.me_hurt_hero && model.AI_state == "walk") {
+			if (AntModel.can_attack && AntModel.me_hurt_hero && model.AI_state == "walk") 
+			{
 
-				AntModel.me_hurt_hero = false;
+				
 			}
-			if (AntModel.hero_hurt_me) {
-
+			if (AntModel.hero_hurt_me)
+			{
+				AntModel.hp--;
 				AntModel.hero_hurt_me = false;
 			}
 		}

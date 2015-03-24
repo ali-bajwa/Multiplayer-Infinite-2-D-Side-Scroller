@@ -157,7 +157,7 @@ var GraphicsController = (function(){
 		var hero_pos = hero.body.GetWorldCenter();
 		var ant_pos = ant.body.GetWorldCenter();
 
-		if(((Math.abs(hero_pos.x - ant_pos.x)) < 2) && (Math.abs(hero_pos.y - ant_pos.y) < 2)){
+		if(ant.body.userdata.state.ant == "death"){
 			ant.gotoAndStop("death");
 		}
 

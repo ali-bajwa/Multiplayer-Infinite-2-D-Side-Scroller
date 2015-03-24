@@ -5,18 +5,18 @@ var AntController = (function() {
 	var init = function() {
 		include();
 		//AntModel.ant = PhysicsController.get_rectangular_body(1, 0.5, 600 / 30 + (2.5 / 2), 510 / 30 - (1.5 / 2), true);
-		AntModel.ant = PhysicsController.get_rectangular({userData: {id: "ant", state: AntModel.AI_state}}, "ant");
+		AntModel.ant = PhysicsController.get_rectangular({userData: {id: "ant"}}, "ant");
 		ant = AntModel.ant;
 	};
 
 	var change_state = function(progress_state) {
-		AntModel.AI_state = {ant: progress_state};
+		AntModel.AI_state = progress_state;
 
 	}
 
 	// // //Set up Collision handler
 	
-	
+	/*
 	var begin_contact = function(contact, info)
 		{
 		//handle collisions here
@@ -36,17 +36,17 @@ var AntController = (function() {
 			{
 
 			case !"bottom":
-				this.me_hurt_hero = true;
+				ant.me_hurt_hero = true;
 				break;
 				
 			case "bottom":
-				this.hero_hurt_me = true;
+				ant.hero_hurt_me = true;
 				break;
 			}
 		
 		};
 	PhysicsController.setup_collision_listener({BeginContact: begin_contact}, {must_be_involved: ant});
-
+	*/
 	//add the new listener to the main listener in PhysicsController
 	//PhysicsController.SetContactListener(this.listener);
 
@@ -76,6 +76,7 @@ var AntController = (function() {
 			AntModel.death_tick++;
 		}
 		//else move & attack
+	
 		else {
 
 			if (AntModel.AI_state == "walk") {

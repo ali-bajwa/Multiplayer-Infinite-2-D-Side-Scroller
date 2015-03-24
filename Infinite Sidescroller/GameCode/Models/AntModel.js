@@ -15,12 +15,12 @@ var AntModel = function(){
 	//set your game logic parameters here
 	this.object_id = 1; //hardcode a unique identifier for each new enemy class
 	this.hp = 2;
-	this.speed = 2;
+	this.speed = 4;
 	this.damage = 1;
 	//this.attack_cooldown = 4; //use this for enemies who need
 	this.can_attack = true;//use this for enemies who alternate between 
 	//this.cooldown_timer=-1;
-	this.AI_state = {ant_state: "walk"};//use this to keep track of the enemy's AI state
+	this.AI_state = "walk";//use this to keep track of the enemy's AI state
 	
 	/* THIS DOES NOT BELONG HERE. 
 	//define fixture (friction, density, etc.)

@@ -157,9 +157,9 @@ var GraphicsController = (function(){
 		var hero_pos = hero.body.GetWorldCenter();
 		var ant_pos = ant.body.GetWorldCenter();
 
-		if(ant.body.userdata.state.ant == "death"){
-			ant.gotoAndStop("death");
-		}
+		//if(ant.body.userdata.state.ant == "death"){
+		//	ant.gotoAndStop("death");
+		//}
 
 		//ant.gotoAndPlay("upside_down");
 

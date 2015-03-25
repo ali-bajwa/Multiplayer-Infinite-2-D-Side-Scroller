@@ -13,7 +13,10 @@ namespace Infinite_Sidescroller
 									"~/Scripts/utility.js"));
 
       bundles.Add(new ScriptBundle("~/bundles/gamescripts").Include(
-        "~/GameCode/bundle.js"
+        "~/GameCode/bundle.js",
+        "~/GameCode/lib/jquery-1.11.2.min.js",
+        "~/GameCode/lib/createjs-2014.12.12.min.js",
+        "~/GameCode/lib/qunit-1.17.1.js"
         ));
 
 			bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(

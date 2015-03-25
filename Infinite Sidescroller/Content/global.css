@@ -10,7 +10,7 @@ html {
 body {
     margin: 0 0 80px;
     background: 
-        url("../img/cracktexture.png") no-repeat center center,
+        url("../Content/images/cracktexture.png") no-repeat center center,
         rgb(60, 0, 0);
     background-size: cover;
     font-family: 'Cinzel', serif;
@@ -27,7 +27,7 @@ body {
     line-height: 500px;
     font-size: 30pt;
     font-weight: 700;
-    background: url("../img/garden.jpg") no-repeat center top;
+    background: url("../Content/images/garden.jpg") no-repeat center top;
     background-size: cover;
     text-align: center;
 }
@@ -62,13 +62,13 @@ body {
     background-color: #e7e2b6;
     border: 30px solid transparent;
     opacity: 0.9;
-    border-image: url("../img/greek_borderC.png") 60 60 round;
+    border-image: url("../Content/images/greek_borderC.png") 60 60 round;
 }
 
 .front_page_border {
     height: 40px;
     background: 
-        url("../img/border.gif") repeat,
+        url("../Content/images/border.gif") repeat,
         #e7e2b6;
     background-size: contain;
     width: 100%;
@@ -214,7 +214,7 @@ nav ul li.active a:before {
     padding-bottom:  100px;
     text-align: center;
     background: 
-        url("../img/pillar_background.png") no-repeat center top;
+        url("../Content/images/pillar_background.png") no-repeat center top;
     background-size: cover;
 }
 

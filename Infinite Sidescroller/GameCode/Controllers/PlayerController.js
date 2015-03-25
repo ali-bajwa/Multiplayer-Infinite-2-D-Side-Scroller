@@ -5,13 +5,13 @@ var PlayerController = (function(){
 
 	var init = function(){
 		include();
-		PlayerModel.hero = PhysicsController.get_rectangular({userData: {id: "hero"}}, "player");
+		PlayerModel.hero = PhysicsController.get_rectangular({userData: {id: "hero"}, border_sensors: true}, "player");
 		hero = PlayerModel.hero;
 
 		var end_contact = function(contact, info){
 			
-			//console.log(contact);
-			//console.log(info);
+			console.log(contact);
+			console.log(info);
 		};
 
 		PhysicsController.setup_collision_listener({EndContact: end_contact}, {must_be_involved: hero});

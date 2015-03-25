@@ -319,43 +319,43 @@ var PhysicsController = (function(){
 		var w = body.GetFixtureList().GetAABB().GetExtents().y;
 		
 		//attach top fixture
-		var top_sensor = new non_formal_def();
+		var top_sensor = {};
 		top_sensor.shape = "rectangle";
 		top_sensor.density = 0;
 		top_sensor.isSensor = true;
-		top_sensor.height = 1;
+		top_sensor.height = 0.1;
 		top_sensor.width = w*2;
 		top_sensor.offset = {x:0, y:(-1*h)};
 		attach_fixture(body,top_sensor,"top sensor");
-		
+
 		//attach bottom fixture
-		var bottom_sensor = new non_formal_def();
+		var bottom_sensor = {}
 		bottom_sensor.shape = "rectangle";
 		bottom_sensor.density = 0;
 		bottom_sensor.isSensor = true;
-		bottom_sensor.height = 1;
+		bottom_sensor.height = 0.1;
 		bottom_sensor.width = w*2;
 		bottom_sensor.offset = {x:0, y:h};
 		attach_fixture(body,bottom_sensor,"bottom sensor");
 		
 		//attach left fixture
-		var left_sensor = new non_formal_def();
+		var left_sensor = {};
 		left_sensor.shape = "rectangle";
 		left_sensor.density = 0;
 		left_sensor.isSensor = true;
 		left_sensor.height = h*2;
-		left_sensor.width = 1;
+		left_sensor.width = 0.1;
 		left_sensor.offset = {x:(-1*w),y:0};
-		//attach_fixture(body,left_sensor,"left sensor");
+		attach_fixture(body,left_sensor,"left sensor");
 		
 		//attach right fixture
-		var right_sensor = new non_formal_def();
+		var right_sensor = {};
 		right_sensor.shape = "rectangle";
 		right_sensor.density = 0;
 		right_sensor.isSensor = true;
 		right_sensor.height = h*2;
-		right_sensor.width = 1;
-		//right_sensor.offset = (x:w, y:0);
+		right_sensor.width = 0.1;
+		right_sensor.offset = {x:w, y:0};
 		attach_fixture(body,right_sensor,"right sensor");
 	};
 	
@@ -387,9 +387,9 @@ var PhysicsController = (function(){
 		 
 		attach_fixture(body, final_def, "main");
 		
-		// TODO: implement; @Sean
-		// if final_def.border_sensors
-		// 	attach_sensors(body);
+		if(final_def.border_sensors){
+			attach_sensors(body);
+		}
 
 		return body;
 	};

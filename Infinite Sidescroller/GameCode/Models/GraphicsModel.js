@@ -28,7 +28,7 @@ var GraphicsModel = function(){
 		// e.g. offset of {x: 100, y: 100} will center camera
 		// 100 pixels to the right and 100 pixels below the followed object
 		offset_from_followed: {x: 400, y: -100},
-
+		//offset_from_followed: {x: 330, y: -205}, //FOR GAME PAGE
 		// this is center of the screen in pixels. gets dynamically recalculated 
 		// during the camera update so if it's ever changed, camera still works as expected
 		center: {x: 0, y: 0}

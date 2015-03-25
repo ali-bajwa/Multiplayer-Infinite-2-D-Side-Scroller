@@ -221,11 +221,12 @@ var PhysicsController = (function(){
 
 				if(nfdef.width != null && nfdef.height != null){
 					fixture_def.shape = new B2d.b2PolygonShape();
-					fixture_def.shape.SetAsBox(nfdef.width/2, nfdef.height/2);
-					if (nfdef.offset != null)
-						{
-						fixture_def.shape.SetAsOrientedBox(nfdef.width/2, nfdef.height/2,nfdef.offset,0);
-						}
+					if (nfdef.offset != null){
+						var offset = new B2d.b2Vec2(nfdef.offset.x ,nfdef.offset.y);
+						fixture_def.shape.SetAsOrientedBox(nfdef.width/2, nfdef.height/2, offset, 0);
+					}else{
+						fixture_def.shape.SetAsBox(nfdef.width/2, nfdef.height/2);
+					}
 				}else{
 					throw new PropertyUndefined("width or height");
 				}
@@ -301,66 +302,45 @@ var PhysicsController = (function(){
 		
 	};
 
-	//non_formal_def class, used to contain informal data
-	var non_formal_def = function(){
-		var shape,density,isSensor,height,width,offset;
-	}
-	
-	
 	var attach_sensors = function(body){
+		var SENSOR_THICKNESS = 0.1;
 		
 		// get the width and height of the body's main fixture
 		// and create 4 sensor fixtures based on those parameters
 		// calculate offset of sensors so that they match the main fixture
 		var x = body.GetPosition().x;
 		var y = body.GetPosition().y;
+
+		// TODO: change to getting dimentions of main fixture
 		var h = body.GetFixtureList().GetAABB().GetExtents().y;
 		var w = body.GetFixtureList().GetAABB().GetExtents().x;
 		
 		//attach top fixture
-		var top_sensor = new non_formal_def();
+		var top_sensor = {};
 		top_sensor.shape = "rectangle";
 		top_sensor.density = 0;
 		top_sensor.isSensor = true;
-		top_sensor.height = .5;
+		top_sensor.height = SENSOR_THICKNESS;
 		top_sensor.width = w*2;
 		top_sensor.offset = {x:0, y:(-1*h)};
 		attach_fixture(body,top_sensor,"top sensor");
 		
 		//attach bottom fixture
-		var bottom_sensor = new non_formal_def();
-		bottom_sensor.shape = "rectangle";
-		bottom_sensor.density = 0;
-		bottom_sensor.isSensor = true;
-		bottom_sensor.height = .5;
-		bottom_sensor.width = w*2;
+		var bottom_sensor = top_sensor;
 		bottom_sensor.offset = {x:0, y:h};
 		attach_fixture(body,bottom_sensor,"bottom sensor");
 		
 		//attach left fixture
-		var left_sensor = new non_formal_def();
-		left_sensor.shape = "rectangle";
-		left_sensor.density = 0;
-		left_sensor.isSensor = true;
+		var left_sensor = top_sensor;
 		left_sensor.height = h*2;
-		left_sensor.width = .5;
+		left_sensor.width = SENSOR_THICKNESS;
 		left_sensor.offset = {x:(-1*w),y:0};
 		attach_fixture(body,left_sensor,"left sensor");
 		
 		//attach right fixture
-		var right_sensor = new non_formal_def();
-		right_sensor.shape = "rectangle";
-		right_sensor.density = 0;
-		right_sensor.isSensor = true;
-		right_sensor.height = h*2;
-		right_sensor.width = .5;
+		var right_sensor = left_sensor;
 		right_sensor.offset = {x:w, y:0};
 		attach_fixture(body,right_sensor,"right sensor");
-		
-		//these are non formal fixture definitions
-		//attach_fixture(body, top_fixture, "top")
-		//attach_fixture(body, bottom_fixture, "bottom")
-		//sensors must be weightless to not change center of mass
 	};
 	
 	

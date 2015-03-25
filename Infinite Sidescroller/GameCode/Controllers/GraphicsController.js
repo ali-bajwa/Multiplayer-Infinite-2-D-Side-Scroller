@@ -96,8 +96,26 @@ var GraphicsController = (function(){
 
 		adjust_debug_draw(); // goes last
 	};
-	
 
+	//**********TEMPORARY*****************
+	var change_ant = function(state){
+		if(state == "death")
+		{	
+			console.log("ANT GOES HERE")
+			ant.gotoAndStop("death");
+		}
+		else if(state == "upside_down")
+		{
+			console.log("ANT GOES HERE")
+			ant.gotoAndPlay("upside_down");
+		}
+		
+
+
+	}	
+
+
+	//*************************************
 	var adjust_debug_draw = function(){
 		var camera = GraphicsModel.camera;
 		TestController.set_debug_offset(camera.offset.x, camera.offset.y);
@@ -291,6 +309,7 @@ var GraphicsController = (function(){
 		init: init, 
 		update: update,
 		get_stage: get_stage,
+		change_ant: change_ant,
 	};
 })();
 

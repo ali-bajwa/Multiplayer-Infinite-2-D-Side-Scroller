@@ -7,6 +7,7 @@ var AntController = (function() {
 		//AntModel.ant = PhysicsController.get_rectangular_body(1, 0.5, 600 / 30 + (2.5 / 2), 510 / 30 - (1.5 / 2), true);
 		AntModel.ant = PhysicsController.get_rectangular({userData: {id: "ant"}}, "ant");
 		ant = AntModel.ant;
+		PhysicsController.setup_collision_listener({BeginContact: begin_contact}, {must_be_involved: ant});
 	};
 
 	var change_state = function(progress_state) {
@@ -26,34 +27,41 @@ var AntController = (function() {
 		if(info.A.body_id == "hero")
 		{
 			mean_hero = info.A;
+			//switch (mean_hero.fixture)
+			//{
+
+			//case !"bottom":
+				//ant.me_hurt_hero = true;
+				//break;
+				
+			//default:
+				ant.hero_hurt_me = true;
+				//break;
+			//}
 		}
 		else if(info.B.body_id == "hero")
 		{
 			mean_hero = info.B;
+			//switch (mean_hero.fixture)
+			//{
+
+			//case !"bottom":
+				//ant.me_hurt_hero = true;
+				//break;
+				
+			//default:
+				ant.hero_hurt_me = true;
+				//break;
+			//}
 		}
 
-		switch (mean_hero.fixture)
-			{
-
-			case !"bottom":
-				ant.me_hurt_hero = true;
-				break;
-				
-			case "bottom":
-				ant.hero_hurt_me = true;
-				break;
-			}
+		
 		
 		};
-	PhysicsController.setup_collision_listener({BeginContact: begin_contact}, {must_be_involved: ant});
+	
 	
 	//add the new listener to the main listener in PhysicsController
-	//PhysicsController.SetContactListener(this.listener);
 
-	//listener.BeginContact = function(contact) 
-	//{
-	//console.log(contact.GetFixtureA().GetBody().GetUserData());
-	//}
 
 	//gameController calls update for each instance
 	var get_ant = function() {
@@ -68,11 +76,14 @@ var AntController = (function() {
 		//if enemy is dead, die
 		if (AntModel.hp == 1) {
 			change_state("upside_down");
+			GraphicsController.change_ant("upside_down");
 		} else if (AntModel.hp <= 0 && model.death_tick == 30) {
-
-		} else if (AntModel.hp <= 0) {
 			AntModel.body.destroy();
+		} else if (AntModel.hp <= 0) {
+			
 			change_state("death");
+			GraphicsController.change_ant("death");
+			console.log("Death Triggered");
 			AntModel.death_tick++;
 		}
 		//else move & attack
@@ -86,13 +97,12 @@ var AntController = (function() {
 				Antbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 				Antbody.SetAwake(true);
 			}
-
-			if (AntModel.can_attack && AntModel.me_hurt_hero && model.AI_state == "walk") 
+			else if (AntModel.can_attack && AntModel.me_hurt_hero && model.AI_state == "walk") 
 			{
 
 				
 			}
-			if (AntModel.hero_hurt_me)
+			else if (AntModel.hero_hurt_me)
 			{
 				AntModel.hp--;
 				AntModel.hero_hurt_me = false;

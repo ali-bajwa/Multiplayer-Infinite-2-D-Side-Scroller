@@ -21,8 +21,7 @@ var AntController = (function() {
 	var begin_contact = function(contact, info)
 		{
 		//handle collisions here
-		console.log(contact);
-		console.log(info);
+		
 		var mean_hero;
 		if(info.A.body_id == "hero")
 		{
@@ -35,7 +34,9 @@ var AntController = (function() {
 				//break;
 				
 			//default:
-				ant.hero_hurt_me = true;
+				AntModel.hero_hurt_me = true;
+				console.log(contact);
+				console.log(info);
 				//break;
 			//}
 		}
@@ -50,8 +51,10 @@ var AntController = (function() {
 				//break;
 				
 			//default:
-				ant.hero_hurt_me = true;
+				AntModel.hero_hurt_me = true;
 				//break;
+				console.log(contact);
+		console.log(info);
 			//}
 		}
 
@@ -74,12 +77,22 @@ var AntController = (function() {
 		//example maintenance: check cooldown
 
 		//if enemy is dead, die
+		console.log(AntModel.hp);
 		if (AntModel.hp == 1) {
 			change_state("upside_down");
 			GraphicsController.change_ant("upside_down");
-		} else if (AntModel.hp <= 0 && model.death_tick == 30) {
-			AntModel.body.destroy();
-		} else if (AntModel.hp <= 0) {
+			if (AntModel.hero_hurt_me)
+			{
+				AntModel.hp--;
+				AntModel.hero_hurt_me = false;
+			}
+		} 
+		else if (AntModel.hp <= 0 && AntModel.death_tick == 30) {
+			//AntModel.ant.DestroyFixture();
+			AntModel.death_tick++;
+		}
+		else if (AntModel.hp <= 0 && AntModel.death_tick > 30){}
+		else if (AntModel.hp <= 0) {
 			
 			change_state("death");
 			GraphicsController.change_ant("death");
@@ -97,12 +110,12 @@ var AntController = (function() {
 				Antbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 				Antbody.SetAwake(true);
 			}
-			else if (AntModel.can_attack && AntModel.me_hurt_hero && model.AI_state == "walk") 
+			if (AntModel.can_attack && AntModel.me_hurt_hero && model.AI_state == "walk") 
 			{
 
 				
 			}
-			else if (AntModel.hero_hurt_me)
+			if (AntModel.hero_hurt_me)
 			{
 				AntModel.hp--;
 				AntModel.hero_hurt_me = false;

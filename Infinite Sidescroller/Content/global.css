@@ -1,4 +1,5 @@
 ﻿@import url(http://fonts.googleapis.com/css?family=Fontdiner+Swanky|Cinzel:700,400);
+@import url(http://fonts.googleapis.com/css?family=Gentium+Book+Basic);
 
 *{margin:0;padding:0;}
 
@@ -80,44 +81,6 @@ body {
 }
 /*END FRONT PAGE*/
 
-/* PLAY BUTTON */
-.play_button {
-    background-color: #d4af37;
-    position: absolute;
-    top: 494px;
-    left: 30%;
-    right: 30%;
-    font-family: 'Fontdiner Swanky', serif;
-    border: 1px solid transparent;
-    transition: .5s;
-}
-
-.play_button a {
-    font-size: 26px;
-    color: #880000;
-    text-decoration: none;
-}
-
-.play_button a:hover {
-    color: white;
-}
-
-.play_button:hover {
-    text-decoration-color: white;
-    transition: .5s;
-    -webkit-box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.9);
-    -moz-box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.9);
-    box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.9);
-}
-
-.button_style {
-  cursor: pointer;
-  display: inline-block;
-  padding: 6px 12px;
-  text-align: center;
-}
-
-
 /*NAV BAR*/
 
 nav {
@@ -164,6 +127,22 @@ nav ul li a:hover {
   transition: .25s;
 }
 
+nav ul li #a {
+    display: inline;
+}
+
+nav ul li #b {
+    display: none;
+}
+
+nav ul li:hover #a {
+    display: none;
+}
+
+nav ul li:hover #b {
+    display: inline;
+}
+
 nav ul li a:hover:before {
   width: 100%;
 }
@@ -205,6 +184,22 @@ nav ul li.active a {
 
 nav ul li.active a:before {
   width: 100%;
+}
+
+nav ul li #a {
+    display: inline;
+}
+
+nav ul li #b {
+    display: none;
+}
+
+nav ul li:hover #a {
+    display: none;
+}
+
+nav ul li:hover #b {
+    display: inline;
 }
 /*END NAV BAR*/
 
@@ -291,9 +286,32 @@ canvas {
   text-align:center;
 }
 
+.register_page_wrapper {
+    background: url("../Content/images/blur.jpg") no-repeat top center;
+    background-size: cover;
+    padding: 10%;
+}
+
+.validation-summary-errors {
+    color: red;
+}
+
 form{
-  background:#e7e2b6;
+  background: rgba(231, 226, 182, 0.9);
   padding:6% 4%;
+  width: 300px;
+  margin: 0 auto;
+  -webkit-border-radius: 40px;
+  -moz-border-radius: 40px;
+   border-radius: 40px;
+   font-family: 'Gentium Book Basic', serif;
+   color: rgb(34, 34, 34);
+}
+
+form h4 {
+    margin-bottom: 10px;
+    font-family: "Cinzel", serif;
+    font-size: 25px;
 }
 
 input[type="text"],input[type="password"]{

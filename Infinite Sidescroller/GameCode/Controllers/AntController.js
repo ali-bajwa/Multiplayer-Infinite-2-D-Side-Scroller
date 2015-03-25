@@ -79,8 +79,7 @@ var AntController = (function() {
 		//if enemy is dead, die
 		console.log(AntModel.hp);
 		if (AntModel.hp == 1) {
-			change_state("upside_down");
-			GraphicsController.change_ant("upside_down");
+			
 			if (AntModel.hero_hurt_me)
 			{
 				AntModel.hp--;
@@ -119,6 +118,8 @@ var AntController = (function() {
 			{
 				AntModel.hp--;
 				AntModel.hero_hurt_me = false;
+				change_state("upside_down");
+				GraphicsController.change_ant("upside_down");
 			}
 		}
 	}

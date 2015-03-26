@@ -5,7 +5,7 @@ var AntController = (function() {
 	var init = function() {
 		include();
 		//AntModel.ant = PhysicsController.get_rectangular_body(1, 0.5, 600 / 30 + (2.5 / 2), 510 / 30 - (1.5 / 2), true);
-		AntModel.ant = PhysicsController.get_rectangular({border_sensors:true,userData: {id: "ant"}}, "ant");
+		AntModel.ant = PhysicsController.get_rectangular({border_sensors:true,userData: {id: "enemy"}}, "ant");
 		ant = AntModel.ant;
 		//PhysicsController.setup_collision_listener({BeginContact: begin_contact, EndContact: end_contact}, {});
 	};

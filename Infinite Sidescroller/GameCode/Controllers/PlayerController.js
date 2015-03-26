@@ -7,15 +7,48 @@ var PlayerController = (function(){
 		include();
 		PlayerModel.hero = PhysicsController.get_rectangular({userData: {id: "hero"}, border_sensors: true}, "player");
 		hero = PlayerModel.hero;
-
+		PlayerModel.hp = 100;
+		PlayerModel.wound = false;
+		
+		//PhysicsController.setup_collision_listener({EndContact: end_contact, BeginContact: begin_contact}, {must_be_involved: hero});
+		
 		var end_contact = function(contact, info){
 			console.log(info);
 		};
-
-		//PhysicsController.setup_collision_listener({EndContact: end_contact}, {});
+		
 		
 	};
 
+	var begin_contact = function(contact, info){
+	
+		if(info.A.body_id == "enemy")
+		{
+			
+			if(info.B.fixture != "bottom sensor")
+			{
+				PlayerModel.wound = true;
+				console.log("I am here");
+			}	
+			console.log("Partial");
+		
+		}
+		else if(info.B.body_id == "enemy")
+		{
+		
+			if(info.A.fixture != "bottom sensor")
+			{
+				PlayerModel.wound = true;
+				console.log("I AM HERE");
+			}	
+			console.log("Partial");
+		}
+		
+	};
+
+	var end_contact = function(contact, info){
+			
+		PlayerModel.wound = false;
+	};
 	var update = function (){
 
 		var cmds = KeyboardController.movement_commands();
@@ -36,6 +69,18 @@ var PlayerController = (function(){
 
 		if(cmds("up")){
 			jump();
+		}
+		if(PlayerModel.wound)
+		{
+			PlayerModel.hp--;
+			console.log("Taking damage");
+			GraphicsController.update_health(PlayerModel.hp);
+		}
+		
+		console.log(PlayerModel.hp);
+		if(PlayerModel.hp <= 0)
+		{
+			console.log("Player Is Dead");
 		}
 
 	};

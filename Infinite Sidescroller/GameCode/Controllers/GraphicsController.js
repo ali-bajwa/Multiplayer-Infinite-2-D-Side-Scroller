@@ -81,6 +81,12 @@ var GraphicsController = (function(){
 	    temp_score += 1;
 	    GraphicsModel.score.text = temp_score.toString();
 	}
+	
+	var update_health = function(passed) {
+	
+	GraphicsModel.health.text = passed;
+	console.log("I've been called");
+	}
 
 	var update_camera = function(){
 		var camera = GraphicsModel.camera;
@@ -310,6 +316,7 @@ var GraphicsController = (function(){
 		update: update,
 		get_stage: get_stage,
 		change_ant: change_ant,
+		update_health: update_health,
 	};
 })();
 

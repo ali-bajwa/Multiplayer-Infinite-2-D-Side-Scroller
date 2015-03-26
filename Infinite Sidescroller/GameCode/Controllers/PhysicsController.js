@@ -399,6 +399,38 @@ var PhysicsController = (function(){
 		PhysicsModel.world.SetDebugDraw(debug_draw);
 	};
 
+
+	var unpack_collision_info = function(contact, second_arg){
+		info = {};
+		var fixture_A = contact.m_fixtureA;
+		var fixture_B = contact.m_fixtureB;
+		var body_A = fixture_A.GetBody();
+		var body_B = fixture_B.GetBody();
+
+		// TODO:THIS SHOULD BE CHANGED together with
+		// how id's are attached to the fixtures
+		// not changing now, to avoid merge conflicts with
+		// @Sean's work >>>
+		info.A = {};
+		info.B = {};
+
+		info.A.fixture = fixture_A;
+		info.B.fixture = fixture_B;
+
+		info.A.body = body_A;
+		info.B.body = body_B;
+
+		info.A.body_id = get_custom_property(body_A, "id");
+		info.B.body_id = get_custom_property(body_B, "id");
+
+		info.A.fixture_id = get_custom_property(fixture_A, "description");
+		info.B.fixture_id = get_custom_property(fixture_B, "description");
+		// <<< end of terribleness
+
+		return info;
+	};
+	
+		
 	var setup_collision_listener = function(functions, optional){
 		
 		/**
@@ -436,38 +468,15 @@ var PhysicsController = (function(){
 						// >second_arg< will be impulse of collision in case of PreSolve,
 						// oldManifold in case of PostSolve, and null otherwise
 						
-						var fixture_A = contact.m_fixtureA;
-						var fixture_B = contact.m_fixtureB;
-						var body_A = fixture_A.GetBody();
-						var body_B = fixture_B.GetBody();
-						
+											
 						if(!must_be_involved || // if no checking for bodies involved OR
 							body_A === must_be_involved || // first body matches OR
 							body_B === must_be_involved // second body matches
 						){
 							// whatever info you want to unpack for the custom function to easily use:
-							var info = {}; 
+							var info = unpack_collision_info(contact, second_arg);
 
-							// TODO:THIS SHOULD BE CHANGED together with
-							// how id's are attached to the fixtures
-							// not changing now, to avoid merge conflicts with
-							// @Sean's work >>>
-							info.A = {};
-							info.B = {};
-
-							info.A.fixture = fixture_A;
-							info.B.fixture = fixture_B;
-
-							info.A.body = body_A;
-							info.B.body = body_B;
-
-							info.A.body_id = get_custom_property(body_A, "id");
-							info.B.body_id = get_custom_property(body_B, "id");
-
-							info.A.fixture_id = get_custom_property(fixture_A, "description");
-							info.B.fixture_id = get_custom_property(fixture_B, "description");
-							// <<< end of terribleness
-
+							
 							// call the custom function
 							if(second_arg){
 								// specifying the implulse/oldManifold if present

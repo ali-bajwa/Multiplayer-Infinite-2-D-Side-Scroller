@@ -17,9 +17,20 @@ var PhysicsModel = function() {
 
 	this.step_amount;
 
+	// arrays of objects which have
+	// a function awaiting each specific type of contact as it's >function< property
+	// and body that must be involved in the contact for function to be called as
+	// it's (OPTIONAL) >must_be_involved< property
+	// do not add entries manually, call PhysicsController.setup_collision_listener
+	this.awaiting_contact = {
+		PreSolve: [],
+		PostSolve: [],
+		BeginContact: [],
+		EndContact: [],
+	};
+
 }; 
 
-var templates;
 /*
  * Parameters for b2d body definition
 	active: true

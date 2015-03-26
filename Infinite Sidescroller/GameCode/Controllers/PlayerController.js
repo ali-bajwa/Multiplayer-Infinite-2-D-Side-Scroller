@@ -9,12 +9,10 @@ var PlayerController = (function(){
 		hero = PlayerModel.hero;
 
 		var end_contact = function(contact, info){
-			
-			console.log(contact);
 			console.log(info);
 		};
 
-		PhysicsController.setup_collision_listener({EndContact: end_contact}, {must_be_involved: hero});
+		//PhysicsController.setup_collision_listener({EndContact: end_contact}, {});
 		
 	};
 

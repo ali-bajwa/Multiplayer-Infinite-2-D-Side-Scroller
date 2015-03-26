@@ -7,7 +7,7 @@ var AntController = (function() {
 		//AntModel.ant = PhysicsController.get_rectangular_body(1, 0.5, 600 / 30 + (2.5 / 2), 510 / 30 - (1.5 / 2), true);
 		AntModel.ant = PhysicsController.get_rectangular({border_sensors:true,userData: {id: "ant"}}, "ant");
 		ant = AntModel.ant;
-		PhysicsController.setup_collision_listener({BeginContact: begin_contact, EndContact: end_contact}, {must_be_involved: ant});
+		//PhysicsController.setup_collision_listener({BeginContact: begin_contact, EndContact: end_contact}, {});
 	};
 
 	var change_state = function(progress_state) {
@@ -29,15 +29,11 @@ var AntController = (function() {
 			if(mean_hero.fixture != "bottom sensor" && AntModel.can_attack)
 			{
 				ant.me_hurt_hero = true;
-				console.log(contact);
-				console.log(info);
 			}	
 			else
 			{
 
 				AntModel.hero_hurt_me = true;
-				console.log(contact);
-				console.log(info);
 			}
 		}
 		else if(info.B.body_id == "hero")
@@ -46,15 +42,11 @@ var AntController = (function() {
 			if(mean_hero.fixture != "bottom sensor" && AntModel.can_attack)
 			{
 				ant.me_hurt_hero = true;
-				console.log(contact);
-				console.log(info);
 			}	
 			else
 			{
 
 				AntModel.hero_hurt_me = true;
-				console.log(contact);
-				console.log(info);
 			}
 		}
 	};

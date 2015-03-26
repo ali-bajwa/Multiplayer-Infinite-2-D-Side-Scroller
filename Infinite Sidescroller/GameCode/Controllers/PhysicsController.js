@@ -400,35 +400,49 @@ var PhysicsController = (function(){
 	};
 
 
-	var unpack_collision_info = function(contact, second_arg){
-		info = {};
-		var fixture_A = contact.m_fixtureA;
-		var fixture_B = contact.m_fixtureB;
-		var body_A = fixture_A.GetBody();
-		var body_B = fixture_B.GetBody();
+	
+	var listen_for_contact_with = function(what, collision_event_name, custom_function){
+		/**
+		 * setups custom_function to be called each time the collision event 
+		 * occurs and involves >what<
+		 * TAKES:
+		 * 	>what<
+		 * 		string 
+		 * 		id of an object ("383") or it's type ("player")
+		 * 	>collision_event_name<
+		 * 		string. one of:
+		 * 		BeginContact, EndContact, PreSolve, PostSolve
+		 * 	>custom_function< 
+		 * 		function
+		 * 		function to be called on one of those events
+		 * 		notice that function will be wrapped, so it should
+		 * 		accept extra parameter >info< that will contain
+		 * 		unpacked information about the collision
+		 */
 
-		// TODO:THIS SHOULD BE CHANGED together with
-		// how id's are attached to the fixtures
-		// not changing now, to avoid merge conflicts with
-		// @Sean's work >>>
-		info.A = {};
-		info.B = {};
 
-		info.A.fixture = fixture_A;
-		info.B.fixture = fixture_B;
+		if(what == null){
+			throw new PropertyUndefined("what");
+		}
 
-		info.A.body = body_A;
-		info.B.body = body_B;
+		if(
+			collision_event_name != "BeginContact" && collision_event_name != "EndContact" &&
+			collision_event_name != "PreSolve" && collision_event_name != "PostSolve" 
+		){
+			throw "collision_event_name should be one of: PreSolve, PostSolve, EndContact, BeginContact";
+		}
 
-		info.A.body_id = get_custom_property(body_A, "id");
-		info.B.body_id = get_custom_property(body_B, "id");
+		var target_function_table = PhysicsModel.awaiting_contact[collision_event_name]; 
 
-		info.A.fixture_id = get_custom_property(fixture_A, "description");
-		info.B.fixture_id = get_custom_property(fixture_B, "description");
-		// <<< end of terribleness
-
-		return info;
+		if(target_function_table[what] == null){
+			target_function_table[what] = [custom_function];
+		}else{
+			target_function_table[what].push(custom_function);
+		}
+		
+		
 	};
+	
 	
 		
 	var setup_collision_listener = function(functions, optional){
@@ -449,7 +463,77 @@ var PhysicsController = (function(){
 		 * 		e.g. if you pass it body of the player, only collisions with the
 		 * 		player will cause passed functions to be called
 		 */
+		var unpack_collision_info = function(contact, second_arg){
+			info = {};
+			var fixture_A = contact.m_fixtureA;
+			var fixture_B = contact.m_fixtureB;
+			var body_A = fixture_A.GetBody();
+			var body_B = fixture_B.GetBody();
 
+			// TODO:THIS SHOULD BE CHANGED together with
+			// how id's are attached to the fixtures
+			// not changing now, to avoid merge conflicts with
+			// @Sean's work >>>
+			info.A = {};
+			info.B = {};
+
+			info.A.fixture = fixture_A;
+			info.B.fixture = fixture_B;
+
+			info.A.body = body_A;
+			info.B.body = body_B;
+
+			info.A.body_id = get_custom_property(body_A, "id");
+			info.B.body_id = get_custom_property(body_B, "id");
+
+			info.A.fixture_id = get_custom_property(fixture_A, "description");
+			info.B.fixture_id = get_custom_property(fixture_B, "description");
+			// <<< end of terribleness
+
+			return info;
+		};
+
+		var call_all = function(list, args){
+			/**
+			 * call all functions in list providing arguments
+			 * from the array args
+			 */
+
+			for(var i = 0; i < list.length; i++){
+				list[i].apply(this, args);
+			}
+		};
+
+		var get_id = function(obj){
+			if(obj.userData){
+				return obj.userData.id;
+			}else{
+				return null
+			}
+			
+		};
+		
+		var match_id = function(id, b2d_body){
+			return (get_id(b2d_body) == id)
+		};
+		
+		var PreSolve = function(contact, impulse){
+			var id1 = get_id(contact.m_fixtureA.GetBody());
+			var id2 = get_id(contact.m_fixtureB.GetBody());
+			// TODO: finish this
+		};
+		
+		var PostSolve = function(contact, oldManifold){
+		};
+
+		var BeginContact = function(contact){
+		};
+
+		var EndContact = function(contact){
+		};
+		
+		
+		
 		var listener = new B2d.b2ContactListener;
 
 		var names = ["BeginContact", "EndContact", "PreSolve", "PostSolve"];
@@ -517,7 +601,6 @@ var PhysicsController = (function(){
 	return {
 		get_body: get_body,
 		get_rectangular: get_rectangular,
-		setup_collision_listener: setup_collision_listener,
 		step: step,
 		init: init,
 		set_debug_draw: set_debug_draw,

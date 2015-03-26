@@ -77,7 +77,6 @@ var PlayerController = (function(){
 			GraphicsController.update_health(PlayerModel.hp);
 		}
 		
-		console.log(PlayerModel.hp);
 		if(PlayerModel.hp <= 0)
 		{
 			console.log("Player Is Dead");

@@ -20,8 +20,8 @@ var AntController = (function() {
 	var begin_contact = function(contact, info){
 		//handle collisions here
 		
-		console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
-			"'" + info.Them.fixture_name + "'", "of", info.Them.id);
+		//console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
+			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
 
 		
 		//var mean_hero;

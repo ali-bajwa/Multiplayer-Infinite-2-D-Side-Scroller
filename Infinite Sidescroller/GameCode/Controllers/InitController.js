@@ -46,6 +46,7 @@ var InitController = (function(){
 		// we won't need to change anything
 		
 		B2d.init(); // goes first
+		IdentificationController.init();
 
 		//AssetController.init(); // called from the InitController.init// stuff has to change
 		GameController.init();

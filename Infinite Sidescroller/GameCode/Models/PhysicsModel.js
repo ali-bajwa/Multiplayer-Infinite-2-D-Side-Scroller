@@ -17,9 +17,15 @@ var PhysicsModel = function() {
 
 	this.step_amount;
 
+	this.awaiting_contact = {
+		PreSolve: {},
+		PostSolve: {},
+		BeginContact: {},
+		EndContact: {},
+	};
+
 }; 
 
-var templates;
 /*
  * Parameters for b2d body definition
 	active: true

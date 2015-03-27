@@ -18,6 +18,7 @@ B2d.prototype.init = function(){
 	this.b2PolygonShape = Box2D.Collision.Shapes.b2PolygonShape;
 	this.b2CircleShape = Box2D.Collision.Shapes.b2CircleShape;
 	this.b2DebugDraw = Box2D.Dynamics.b2DebugDraw; 
+	this.b2ContactListener = Box2D.Dynamics.b2ContactListener;
 
 };
 

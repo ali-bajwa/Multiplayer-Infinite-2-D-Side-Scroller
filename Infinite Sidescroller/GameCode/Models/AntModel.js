@@ -15,7 +15,7 @@ var AntModel = function(){
 	//set your game logic parameters here
 	this.object_id = 1; //hardcode a unique identifier for each new enemy class
 	this.hp = 2;
-	this.speed = 2;
+	this.speed = 4;
 	this.damage = 1;
 	//this.attack_cooldown = 4; //use this for enemies who need
 	this.can_attack = true;//use this for enemies who alternate between 

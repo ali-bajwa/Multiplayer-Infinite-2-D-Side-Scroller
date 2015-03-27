@@ -81,6 +81,12 @@ var GraphicsController = (function(){
 	    temp_score += 1;
 	    GraphicsModel.score.text = temp_score.toString();
 	}
+	
+	var update_health = function(passed) {
+	
+	GraphicsModel.health.text = passed;
+	console.log("I've been called");
+	}
 
 	var update_camera = function(){
 		var camera = GraphicsModel.camera;
@@ -96,8 +102,26 @@ var GraphicsController = (function(){
 
 		adjust_debug_draw(); // goes last
 	};
-	
 
+	//**********TEMPORARY*****************
+	var change_ant = function(state){
+		if(state == "death")
+		{	
+			console.log("ANT GOES HERE")
+			ant.gotoAndStop("death");
+		}
+		else if(state == "upside_down")
+		{
+			console.log("ANT GOES HERE")
+			ant.gotoAndPlay("upside_down");
+		}
+		
+
+
+	}	
+
+
+	//*************************************
 	var adjust_debug_draw = function(){
 		var camera = GraphicsModel.camera;
 		TestController.set_debug_offset(camera.offset.x, camera.offset.y);
@@ -157,9 +181,9 @@ var GraphicsController = (function(){
 		var hero_pos = hero.body.GetWorldCenter();
 		var ant_pos = ant.body.GetWorldCenter();
 
-		if(((Math.abs(hero_pos.x - ant_pos.x)) < 2) && (Math.abs(hero_pos.y - ant_pos.y) < 2)){
-			ant.gotoAndStop("death");
-		}
+		//if(ant.body.userdata.state.ant == "death"){
+		//	ant.gotoAndStop("death");
+		//}
 
 		//ant.gotoAndPlay("upside_down");
 
@@ -291,6 +315,8 @@ var GraphicsController = (function(){
 		init: init, 
 		update: update,
 		get_stage: get_stage,
+		change_ant: change_ant,
+		update_health: update_health,
 	};
 })();
 

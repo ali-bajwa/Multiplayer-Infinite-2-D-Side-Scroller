@@ -5,8 +5,26 @@ var PlayerController = (function(){
 
 	var init = function(){
 		include();
-		PlayerModel.hero = PhysicsController.get_rectangular({}, "player");
+		PlayerModel.hero = PhysicsController.get_rectangular({id: "hero", border_sensors: true}, "player");
 		hero = PlayerModel.hero;
+		PlayerModel.hp = 100;
+		PlayerModel.wound = false;
+		
+		PhysicsController.listen_for_contact_with("hero", "BeginContact", begin_contact);
+		
+		
+	};
+
+	var begin_contact = function(contact, info){
+		console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
+			"'" + info.Them.fixture_name + "'", "of", info.Them.id);
+			
+				
+	};
+
+	var end_contact = function(contact, info){
+			
+		PlayerModel.wound = false;
 	};
 
 	var update = function (){
@@ -29,6 +47,17 @@ var PlayerController = (function(){
 
 		if(cmds("up")){
 			jump();
+		}
+		if(PlayerModel.wound)
+		{
+			PlayerModel.hp--;
+			console.log("Taking damage");
+			GraphicsController.update_health(PlayerModel.hp);
+		}
+		
+		if(PlayerModel.hp <= 0)
+		{
+			console.log("Player Is Dead");
 		}
 
 	};

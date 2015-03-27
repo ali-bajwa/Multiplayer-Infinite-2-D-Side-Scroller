@@ -2,8 +2,7 @@
 // notice that you can reuse body definitions multiple times, it makes sense to have
 // collection of body definitions that are commonly use and maybe allow some sort of 
 // inheritance (i.e. you can make some definition on top of the another definition)
-//
-// bodies are allowed to have userData on them that is just reference to some object.
+// // bodies are allowed to have userData on them that is just reference to some object.
 // may be useful in some situations
 //
 // Question:
@@ -24,6 +23,8 @@ var PhysicsController = (function(){
 
 		PhysicsModel.gravity = new B2d.b2Vec2(0,20); // earth gravity
 		PhysicsModel.world = new B2d.b2World(PhysicsModel.gravity, true);
+
+		init_collision_listener();
 
 	};
 	
@@ -112,7 +113,7 @@ var PhysicsController = (function(){
 			"linearVelocity",
 			"position",
 			"type",
-			"userData"
+			//"userData" // doesn't seem to properly work, doing it differently
 		],
 		fixture_def: [
 			"density",
@@ -222,7 +223,12 @@ var PhysicsController = (function(){
 
 				if(nfdef.width != null && nfdef.height != null){
 					fixture_def.shape = new B2d.b2PolygonShape();
-					fixture_def.shape.SetAsBox(nfdef.width/2, nfdef.height/2);
+					if (nfdef.offset != null){
+						var offset = new B2d.b2Vec2(nfdef.offset.x ,nfdef.offset.y);
+						fixture_def.shape.SetAsOrientedBox(nfdef.width/2, nfdef.height/2, offset, 0);
+					}else{
+						fixture_def.shape.SetAsBox(nfdef.width/2, nfdef.height/2);
+					}
 				}else{
 					throw new PropertyUndefined("width or height");
 				}
@@ -265,23 +271,27 @@ var PhysicsController = (function(){
 
 		var body = PhysicsModel.world.CreateBody(definition);
 
-		if(body.userData == null){
-			body.userData = {};
-		}
+		//if(body.userData == null){
+			//body.userData = {};
+		//}
 
 		// append passed definition to the user data of the body
 		// for debugging purposes, and also to allow easy specification of 
 		// custom parameters during definition. If this will cause confusion,
 		// I'll remove that
-		body.userData.def = non_formal_def;
+		//body.userData.def = non_formal_def;
+		body.SetUserData({def: non_formal_def});
+
+		// TODO: make some global id service to auto assign
+		body.GetUserData().id = non_formal_def.id; 
 
 		return body;
 	
 	};
 
-	var attach_fixture = function(body, non_formal_def, fixture_description){
+	var attach_fixture = function(body, non_formal_def, fixture_name){
 		/**
-		 * given b2d body, (non-formal) fixture definition and (OPTIONAL) fixture_description
+		 * given b2d body, (non-formal) fixture definition and (OPTIONAL) fixture_name
 		 * this function attaches fixture to the body
 		 */
 
@@ -292,14 +302,51 @@ var PhysicsController = (function(){
 		}
 
 		fixture_def.userData.def = non_formal_def;
-		fixture_def.userData.description = fixture_description;
+		fixture_def.userData.name = fixture_name;
 		
 		body.CreateFixture(fixture_def);
+		
 	};
 
 	var attach_sensors = function(body){
+		var SENSOR_THICKNESS = 0.1;
 		
+		// get the width and height of the body's main fixture
+		// and create 4 sensor fixtures based on those parameters
+		// calculate offset of sensors so that they match the main fixture
+		var x = body.GetPosition().x;
+		var y = body.GetPosition().y;
+
+		// TODO: change to getting dimentions of main fixture
+		var h = body.GetFixtureList().GetAABB().GetExtents().y;
+		var w = body.GetFixtureList().GetAABB().GetExtents().x;
 		
+		//attach top fixture
+		var top_sensor = {};
+		top_sensor.shape = "rectangle";
+		top_sensor.density = 0;
+		top_sensor.isSensor = true;
+		top_sensor.height = SENSOR_THICKNESS;
+		top_sensor.width = w*2 - SENSOR_THICKNESS*2;
+		top_sensor.offset = {x:0, y: (-1*h) + SENSOR_THICKNESS/2};
+		attach_fixture(body,top_sensor,"top sensor");
+		
+		//attach bottom fixture
+		var bottom_sensor = top_sensor;
+		bottom_sensor.offset = {x:0, y: h - SENSOR_THICKNESS/2};
+		attach_fixture(body,bottom_sensor,"bottom sensor");
+		
+		//attach left fixture
+		var left_sensor = top_sensor;
+		left_sensor.height = h*2 - SENSOR_THICKNESS*2;
+		left_sensor.width = SENSOR_THICKNESS;
+		left_sensor.offset = {x:(-1*w) + SENSOR_THICKNESS/2,y:0};
+		attach_fixture(body,left_sensor,"left sensor");
+		
+		//attach right fixture
+		var right_sensor = left_sensor;
+		right_sensor.offset = {x:w - SENSOR_THICKNESS/2, y:0};
+		attach_fixture(body,right_sensor,"right sensor");
 	};
 	
 	
@@ -328,7 +375,12 @@ var PhysicsController = (function(){
 
 		var body = get_body(final_def);
 		 
-		attach_fixture(body, final_def, "main fixture");
+		attach_fixture(body, final_def, "main");
+		
+		//If the object has directional sensors, attach sensors here
+		if(final_def.border_sensors){
+			attach_sensors(body);
+		}
 
 		return body;
 	};
@@ -352,6 +404,213 @@ var PhysicsController = (function(){
 	var set_debug_draw = function(debug_draw){
 		PhysicsModel.world.SetDebugDraw(debug_draw);
 	};
+
+
+	
+	var listen_for_contact_with = function(what, collision_event_name, custom_function){
+		/**
+		 * setups custom_function to be called each time the collision event 
+		 * occurs and involves >what<
+		 * TAKES:
+		 * 	>what<
+		 * 		string 
+		 * 		id of an object ("383") or it's type ("player")
+		 * 	>collision_event_name<
+		 * 		string. one of:
+		 * 		BeginContact, EndContact, PreSolve, PostSolve
+		 * 	>custom_function< 
+		 * 		function
+		 * 		function to be called on one of those events
+		 * 		notice that function will be wrapped, so it should
+		 * 		accept extra parameter >info< that will contain
+		 * 		unpacked information about the collision
+		 */
+
+
+		if(what == null){
+			throw new PropertyUndefined("what");
+		}
+
+		if(
+			collision_event_name != "BeginContact" && collision_event_name != "EndContact" &&
+			collision_event_name != "PreSolve" && collision_event_name != "PostSolve" 
+		){
+			throw "collision_event_name should be one of: PreSolve, PostSolve, EndContact, BeginContact";
+		}
+
+		if(custom_function == null || typeof(custom_function) != "function"){
+			throw "Property custom_function is not defined or isn't a function"
+		}
+
+		var target_function_table = PhysicsModel.awaiting_contact[collision_event_name]; 
+
+		if(target_function_table[what] == null){
+			target_function_table[what] = [custom_function];
+		}else{
+			target_function_table[what].push(custom_function);
+		}
+		
+		
+	};
+	
+	
+		
+	var init_collision_listener = function(){
+		
+		/**
+		 */
+		
+		var call_all = function(list, args, info){
+			/**
+			 * call all functions in list providing arguments
+			 * from the array args
+			 * if list give is null/undefined, do nothing
+			 */
+
+			if(list != null){
+				args.push(info);
+				for(var i = 0; i < list.length; i++){
+					list[i].apply(this, args);
+				}
+			}
+		};
+
+		var get_id = function(obj){
+			userData = obj.GetUserData();
+			if(userData != null && userData.id != null){
+				return userData.id;
+			}else{
+				return "[NO_ID]"
+			}
+			
+		};
+		
+		var unpack_contact_info = function(contact, me){
+			/**
+			 * unpacks info about the collision and 
+			 * returns it
+			 * >me< is an id of an object that will
+			 * go under the >Me< parameter inside of info
+			 * (As opposed to Them, which is the other object)
+			 */
+			if(me == null){
+				// >me< isn't supposed to be null/undefined
+				throw new PropertyUndefined("me");
+			}
+
+			var A = {};
+			var B = {};
+
+			A.fixture = contact.m_fixtureA;
+			B.fixture = contact.m_fixtureB;
+			A.body = A.fixture.GetBody();
+			B.body = B.fixture.GetBody();
+
+			A.id = get_id(A.body);
+			B.id = get_id(B.body);
+
+			A.fixture_name = get_custom_property(A.fixture, "name");
+			B.fixture_name = get_custom_property(B.fixture, "name");
+
+			// TODO: unpack more info if necessary
+
+			var info = {};
+
+			if(A.id == me){
+				info.Me = A;
+				info.Them = B;
+			}else{
+				info.Me = B;
+				info.Them = A;
+			}
+
+			return info;
+			
+		};
+		
+		var common_contact = function(contact, args, lists){
+			// create info, call respective functions for each id. use provided arguments >args<
+			// lookup ids in the provided table of lists >lists<
+			
+			var id1 = get_id(contact.m_fixtureA.GetBody());
+			var id2 = get_id(contact.m_fixtureB.GetBody());
+
+
+			if(id1 != null){
+				var info = unpack_contact_info(args[0], id1);
+				call_all(lists[id1], args, info);
+			}
+
+			if(id2 != null){
+				var info = unpack_contact_info(args[0], id2);
+				call_all(lists[id2], args, info);
+			}
+
+		};
+		
+		var PreSolve = function(contact, impulse){
+			
+			var lists = PhysicsModel.awaiting_contact.PreSolve;
+
+			var args = [contact, impulse];
+
+			common_contact(contact, args, lists);
+	
+		};
+		
+		var PostSolve = function(contact, oldManifold){
+			var lists = PhysicsModel.awaiting_contact.PostSolve;
+
+			var args = [contact, oldManifold];
+
+			common_contact(contact, args, lists);
+		};
+
+		var BeginContact = function(contact){
+			var lists = PhysicsModel.awaiting_contact.BeginContact;
+
+			var args = [contact];
+
+			common_contact(contact, args, lists);
+		};
+
+		var EndContact = function(contact){
+			var lists = PhysicsModel.awaiting_contact.EndContact;
+
+			var args = [contact];
+
+			common_contact(contact, args, lists);
+		};
+		
+		
+		
+		var listener = new B2d.b2ContactListener;
+		listener.PreSolve = PreSolve;
+		listener.PostSolve = PostSolve;
+		listener.BeginContact = BeginContact;
+		listener.EndContact = EndContact;
+		
+		PhysicsModel.world.SetContactListener(listener);
+	
+	};
+
+	var get_custom_property = function(b2d_obj, property_name){
+		
+		/**
+		 * given any box2d object that has GetUserData method
+		 * this function will return custom property with given
+		 * property_name if this property is set on userData of the object
+		 * if not, the function returns null
+		 */
+		var user_data = b2d_obj.GetUserData();
+		if(user_data && user_data[property_name]){
+			return user_data[property_name];
+		}else{
+			return null;
+		}
+	};
+	
+	
 	
 	
 	return {
@@ -361,6 +620,7 @@ var PhysicsController = (function(){
 		init: init,
 		set_debug_draw: set_debug_draw,
 		draw_debug: draw_debug,
+		listen_for_contact_with: listen_for_contact_with,
 	};
 })();
 

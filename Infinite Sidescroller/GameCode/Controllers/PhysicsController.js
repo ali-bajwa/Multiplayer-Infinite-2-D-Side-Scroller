@@ -24,6 +24,8 @@ var PhysicsController = (function(){
 		PhysicsModel.gravity = new B2d.b2Vec2(0,20); // earth gravity
 		PhysicsModel.world = new B2d.b2World(PhysicsModel.gravity, true);
 
+		init_collision_listener();
+
 	};
 	
 	var step = function (delta_ms) {
@@ -111,7 +113,7 @@ var PhysicsController = (function(){
 			"linearVelocity",
 			"position",
 			"type",
-			"userData"
+			//"userData" // doesn't seem to properly work, doing it differently
 		],
 		fixture_def: [
 			"density",
@@ -269,23 +271,27 @@ var PhysicsController = (function(){
 
 		var body = PhysicsModel.world.CreateBody(definition);
 
-		if(body.userData == null){
-			body.userData = {};
-		}
+		//if(body.userData == null){
+			//body.userData = {};
+		//}
 
 		// append passed definition to the user data of the body
 		// for debugging purposes, and also to allow easy specification of 
 		// custom parameters during definition. If this will cause confusion,
 		// I'll remove that
-		body.userData.def = non_formal_def;
+		//body.userData.def = non_formal_def;
+		body.SetUserData({def: non_formal_def});
+
+		// TODO: make some global id service to auto assign
+		body.GetUserData().id = non_formal_def.id; 
 
 		return body;
 	
 	};
 
-	var attach_fixture = function(body, non_formal_def, fixture_description){
+	var attach_fixture = function(body, non_formal_def, fixture_name){
 		/**
-		 * given b2d body, (non-formal) fixture definition and (OPTIONAL) fixture_description
+		 * given b2d body, (non-formal) fixture definition and (OPTIONAL) fixture_name
 		 * this function attaches fixture to the body
 		 */
 
@@ -296,7 +302,7 @@ var PhysicsController = (function(){
 		}
 
 		fixture_def.userData.def = non_formal_def;
-		fixture_def.userData.description = fixture_description;
+		fixture_def.userData.name = fixture_name;
 		
 		body.CreateFixture(fixture_def);
 		
@@ -321,25 +327,25 @@ var PhysicsController = (function(){
 		top_sensor.density = 0;
 		top_sensor.isSensor = true;
 		top_sensor.height = SENSOR_THICKNESS;
-		top_sensor.width = w*2;
-		top_sensor.offset = {x:0, y:(-1*h)};
+		top_sensor.width = w*2 - SENSOR_THICKNESS*2;
+		top_sensor.offset = {x:0, y: (-1*h) + SENSOR_THICKNESS/2};
 		attach_fixture(body,top_sensor,"top sensor");
 		
 		//attach bottom fixture
 		var bottom_sensor = top_sensor;
-		bottom_sensor.offset = {x:0, y:h};
+		bottom_sensor.offset = {x:0, y: h - SENSOR_THICKNESS/2};
 		attach_fixture(body,bottom_sensor,"bottom sensor");
 		
 		//attach left fixture
 		var left_sensor = top_sensor;
-		left_sensor.height = h*2;
+		left_sensor.height = h*2 - SENSOR_THICKNESS*2;
 		left_sensor.width = SENSOR_THICKNESS;
-		left_sensor.offset = {x:(-1*w),y:0};
+		left_sensor.offset = {x:(-1*w) + SENSOR_THICKNESS/2,y:0};
 		attach_fixture(body,left_sensor,"left sensor");
 		
 		//attach right fixture
 		var right_sensor = left_sensor;
-		right_sensor.offset = {x:w, y:0};
+		right_sensor.offset = {x:w - SENSOR_THICKNESS/2, y:0};
 		attach_fixture(body,right_sensor,"right sensor");
 	};
 	
@@ -432,6 +438,10 @@ var PhysicsController = (function(){
 			throw "collision_event_name should be one of: PreSolve, PostSolve, EndContact, BeginContact";
 		}
 
+		if(custom_function == null || typeof(custom_function) != "function"){
+			throw "Property custom_function is not defined or isn't a function"
+		}
+
 		var target_function_table = PhysicsModel.awaiting_contact[collision_event_name]; 
 
 		if(target_function_table[what] == null){
@@ -445,136 +455,141 @@ var PhysicsController = (function(){
 	
 	
 		
-	var setup_collision_listener = function(functions, optional){
+	var init_collision_listener = function(){
 		
 		/**
-		 * takes two objects, >functions< and >optional<
-		 * first object should contain any of the following properties:
-		 * BeginContact, PreSolve, PostSolve, EndContact
-		 * with there values being functions to be called on each event
-		 * the optional object is for some named parameters that might be used later
-		 * Notice that this function wraps calls of the given functions, to give more
-		 * helpful info about the collision in particular, it will provide info about the
-		 * sides on which objects collided, granted that sided sensors are present
-		 *
-		 * supported properties of >optional<:
-		 * 	must_be_involved: b2d_body
-		 * 		report only contacts in which this body is involved
-		 * 		e.g. if you pass it body of the player, only collisions with the
-		 * 		player will cause passed functions to be called
 		 */
-		var unpack_collision_info = function(contact, second_arg){
-			info = {};
-			var fixture_A = contact.m_fixtureA;
-			var fixture_B = contact.m_fixtureB;
-			var body_A = fixture_A.GetBody();
-			var body_B = fixture_B.GetBody();
-
-			// TODO:THIS SHOULD BE CHANGED together with
-			// how id's are attached to the fixtures
-			// not changing now, to avoid merge conflicts with
-			// @Sean's work >>>
-			info.A = {};
-			info.B = {};
-
-			info.A.fixture = fixture_A;
-			info.B.fixture = fixture_B;
-
-			info.A.body = body_A;
-			info.B.body = body_B;
-
-			info.A.body_id = get_custom_property(body_A, "id");
-			info.B.body_id = get_custom_property(body_B, "id");
-
-			info.A.fixture_id = get_custom_property(fixture_A, "description");
-			info.B.fixture_id = get_custom_property(fixture_B, "description");
-			// <<< end of terribleness
-
-			return info;
-		};
-
-		var call_all = function(list, args){
+		
+		var call_all = function(list, args, info){
 			/**
 			 * call all functions in list providing arguments
 			 * from the array args
+			 * if list give is null/undefined, do nothing
 			 */
 
-			for(var i = 0; i < list.length; i++){
-				list[i].apply(this, args);
+			if(list != null){
+				args.push(info);
+				for(var i = 0; i < list.length; i++){
+					list[i].apply(this, args);
+				}
 			}
 		};
 
 		var get_id = function(obj){
-			if(obj.userData){
-				return obj.userData.id;
+			userData = obj.GetUserData();
+			if(userData != null && userData.id != null){
+				return userData.id;
 			}else{
-				return null
+				return "[NO_ID]"
 			}
 			
 		};
 		
-		var match_id = function(id, b2d_body){
-			return (get_id(b2d_body) == id)
+		var unpack_contact_info = function(contact, me){
+			/**
+			 * unpacks info about the collision and 
+			 * returns it
+			 * >me< is an id of an object that will
+			 * go under the >Me< parameter inside of info
+			 * (As opposed to Them, which is the other object)
+			 */
+			if(me == null){
+				// >me< isn't supposed to be null/undefined
+				throw new PropertyUndefined("me");
+			}
+
+			var A = {};
+			var B = {};
+
+			A.fixture = contact.m_fixtureA;
+			B.fixture = contact.m_fixtureB;
+			A.body = A.fixture.GetBody();
+			B.body = B.fixture.GetBody();
+
+			A.id = get_id(A.body);
+			B.id = get_id(B.body);
+
+			A.fixture_name = get_custom_property(A.fixture, "name");
+			B.fixture_name = get_custom_property(B.fixture, "name");
+
+			// TODO: unpack more info if necessary
+
+			var info = {};
+
+			if(A.id == me){
+				info.Me = A;
+				info.Them = B;
+			}else{
+				info.Me = B;
+				info.Them = A;
+			}
+
+			return info;
+			
+		};
+		
+		var common_contact = function(contact, args, lists){
+			// create info, call respective functions for each id. use provided arguments >args<
+			// lookup ids in the provided table of lists >lists<
+			
+			var id1 = get_id(contact.m_fixtureA.GetBody());
+			var id2 = get_id(contact.m_fixtureB.GetBody());
+
+
+			if(id1 != null){
+				var info = unpack_contact_info(args[0], id1);
+				call_all(lists[id1], args, info);
+			}
+
+			if(id2 != null){
+				var info = unpack_contact_info(args[0], id2);
+				call_all(lists[id2], args, info);
+			}
+
 		};
 		
 		var PreSolve = function(contact, impulse){
-			var id1 = get_id(contact.m_fixtureA.GetBody());
-			var id2 = get_id(contact.m_fixtureB.GetBody());
-			// TODO: finish this
+			
+			var lists = PhysicsModel.awaiting_contact.PreSolve;
+
+			var args = [contact, impulse];
+
+			common_contact(contact, args, lists);
+	
 		};
 		
 		var PostSolve = function(contact, oldManifold){
+			var lists = PhysicsModel.awaiting_contact.PostSolve;
+
+			var args = [contact, oldManifold];
+
+			common_contact(contact, args, lists);
 		};
 
 		var BeginContact = function(contact){
+			var lists = PhysicsModel.awaiting_contact.BeginContact;
+
+			var args = [contact];
+
+			common_contact(contact, args, lists);
 		};
 
 		var EndContact = function(contact){
+			var lists = PhysicsModel.awaiting_contact.EndContact;
+
+			var args = [contact];
+
+			common_contact(contact, args, lists);
 		};
 		
 		
 		
 		var listener = new B2d.b2ContactListener;
-
-		var names = ["BeginContact", "EndContact", "PreSolve", "PostSolve"];
-		for(var i = 0; i < 4; i++){
-			var name = names[i];
-			var custom_function = functions[name];
-
-			if(custom_function){
-				// if given function was specified
-				
-				// wrap it properly and attach to the listener
-				listener[name] = (function(custom_function, must_be_involved){
-					// self calling function to deal with scope issues
-					 
-					return function wrapper(contact, second_arg){
-						// >second_arg< will be impulse of collision in case of PreSolve,
-						// oldManifold in case of PostSolve, and null otherwise
-						
-											
-						if(!must_be_involved || // if no checking for bodies involved OR
-							body_A === must_be_involved || // first body matches OR
-							body_B === must_be_involved // second body matches
-						){
-							// whatever info you want to unpack for the custom function to easily use:
-							var info = unpack_collision_info(contact, second_arg);
-
-							
-							// call the custom function
-							if(second_arg){
-								// specifying the implulse/oldManifold if present
-								custom_function(contact, second_arg, info);
-							}else{
-								// or not specifying if it is not
-								custom_function(contact, info);
-							}
-						}
-					};
-				})(custom_function, optional.must_be_involved);
-			}
-		}
-
+		listener.PreSolve = PreSolve;
+		listener.PostSolve = PostSolve;
+		listener.BeginContact = BeginContact;
+		listener.EndContact = EndContact;
+		
 		PhysicsModel.world.SetContactListener(listener);
 	
 	};
@@ -605,6 +620,7 @@ var PhysicsController = (function(){
 		init: init,
 		set_debug_draw: set_debug_draw,
 		draw_debug: draw_debug,
+		listen_for_contact_with: listen_for_contact_with,
 	};
 })();
 

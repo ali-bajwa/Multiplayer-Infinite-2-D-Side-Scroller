@@ -5,50 +5,28 @@ var PlayerController = (function(){
 
 	var init = function(){
 		include();
-		PlayerModel.hero = PhysicsController.get_rectangular({userData: {id: "hero"}, border_sensors: true}, "player");
+		PlayerModel.hero = PhysicsController.get_rectangular({id: "hero", border_sensors: true}, "player");
 		hero = PlayerModel.hero;
 		PlayerModel.hp = 100;
 		PlayerModel.wound = false;
 		
-		//PhysicsController.setup_collision_listener({EndContact: end_contact, BeginContact: begin_contact}, {must_be_involved: hero});
-		
-		var end_contact = function(contact, info){
-			console.log(info);
-		};
+		PhysicsController.listen_for_contact_with("hero", "BeginContact", begin_contact);
 		
 		
 	};
 
 	var begin_contact = function(contact, info){
-	
-		if(info.A.body_id == "enemy")
-		{
+		console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
+			"'" + info.Them.fixture_name + "'", "of", info.Them.id);
 			
-			if(info.B.fixture != "bottom sensor")
-			{
-				PlayerModel.wound = true;
-				console.log("I am here");
-			}	
-			console.log("Partial");
-		
-		}
-		else if(info.B.body_id == "enemy")
-		{
-		
-			if(info.A.fixture != "bottom sensor")
-			{
-				PlayerModel.wound = true;
-				console.log("I AM HERE");
-			}	
-			console.log("Partial");
-		}
-		
+				
 	};
 
 	var end_contact = function(contact, info){
 			
 		PlayerModel.wound = false;
 	};
+
 	var update = function (){
 
 		var cmds = KeyboardController.movement_commands();

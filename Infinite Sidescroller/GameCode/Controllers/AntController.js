@@ -4,10 +4,9 @@ var AntController = (function() {
 
 	var init = function() {
 		include();
-		//AntModel.ant = PhysicsController.get_rectangular_body(1, 0.5, 600 / 30 + (2.5 / 2), 510 / 30 - (1.5 / 2), true);
-		AntModel.ant = PhysicsController.get_rectangular({border_sensors:true,userData: {id: "enemy"}}, "ant");
+		AntModel.ant = PhysicsController.get_rectangular({border_sensors: true, id: "enemy"}, "ant");
 		ant = AntModel.ant;
-		//PhysicsController.setup_collision_listener({BeginContact: begin_contact, EndContact: end_contact}, {});
+		PhysicsController.listen_for_contact_with("enemy", "BeginContact", begin_contact);
 	};
 
 	var change_state = function(progress_state) {
@@ -18,37 +17,40 @@ var AntController = (function() {
 	// // //Set up Collision handler
 	
 	
-	var begin_contact = function(contact, info)
-		{
+	var begin_contact = function(contact, info){
 		//handle collisions here
 		
-		var mean_hero;
-		if(info.A.body_id == "hero")
-		{
-			mean_hero = info.A;
-			if(mean_hero.fixture != "bottom sensor" && AntModel.can_attack)
-			{
-				ant.me_hurt_hero = true;
-			}	
-			else
-			{
+		console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
+			"'" + info.Them.fixture_name + "'", "of", info.Them.id);
 
-				AntModel.hero_hurt_me = true;
-			}
-		}
-		else if(info.B.body_id == "hero")
-		{
-			mean_hero = info.B;
-			if(mean_hero.fixture != "bottom sensor" && AntModel.can_attack)
-			{
-				ant.me_hurt_hero = true;
-			}	
-			else
-			{
+		
+		//var mean_hero;
+		//if(info.A.body_id == "hero")
+		//{
+			//mean_hero = info.A;
+			//if(mean_hero.fixture != "bottom sensor" && AntModel.can_attack)
+			//{
+				//ant.me_hurt_hero = true;
+			//}	
+			//else
+			//{
 
-				AntModel.hero_hurt_me = true;
-			}
-		}
+				//AntModel.hero_hurt_me = true;
+			//}
+		//}
+		//else if(info.B.body_id == "hero")
+		//{
+			//mean_hero = info.B;
+			//if(mean_hero.fixture != "bottom sensor" && AntModel.can_attack)
+			//{
+				//ant.me_hurt_hero = true;
+			//}	
+			//else
+			//{
+
+				//AntModel.hero_hurt_me = true;
+			//}
+		//}
 	};
 
 	var end_contact = function() {

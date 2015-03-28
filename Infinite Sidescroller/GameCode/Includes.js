@@ -5,7 +5,7 @@ var Include = function(){
 	// simple enumerator // option codes MUST be power of 2 or sum of other options (with 0 being the only exception), and unique
 	var choices = (function(){
 		// simple options: numberic value must be 0 or some power of 2, name should be all caps and unique
-		var result = {NONE: 0, ALL_CONTROLLERS: 1, ALL_MODELS: 2, OWN_MODEL: 4, OTHER_STUFF: 8};
+		var result = {NONE: 0, ALL_CONTROLLERS: 1, ALL_MODELS: 2, OWN_MODEL: 4, OTHER_STUFF: 8, RENDERERS: 16};
 
 		// complex options: should consist of simple options, bitwise(!) OR'ed or AND'ed together in any fashion
 		result.DEFAULT = (result.ALL_CONTROLLERS | result.OWN_MODEL | result.OTHER_STUFF);
@@ -30,6 +30,7 @@ var Include = function(){
 			"TestController",
 			"WorldController",
 			"AntController",
+			"IdentificationController",
 		],
 
 		Models: [
@@ -53,7 +54,11 @@ var Include = function(){
 			"Box2D",
 			"Config",
 			"GameUtility",
-		]
+		],
+
+		Renderers: [
+			"AntRenderer",
+		],
 
 	};//end module_names
 
@@ -74,6 +79,8 @@ var Include = function(){
 			GameController: require("./Controllers/GameController.js"),
 			EnemyController: require("./Controllers/EnemyController.js"),
 			AntController: require("./Controllers/AntController.js"),
+			IdentificationController: require("./Controllers/IdentificationController.js"),
+			
 			
 			// Models
 
@@ -88,6 +95,8 @@ var Include = function(){
 			PlayerModel: require("./Models/PlayerModel.js"),
 			TestModel: require("./Models/TestModel.js"),
 			AntModel: require("./Models/AntModel.js"),
+			IdentificationModel: require("./Models/IdentificationModel.js"),
+			
 				
 			// Other stuff
 			
@@ -95,8 +104,13 @@ var Include = function(){
 			GameUtility: require("./GameUtility.js"),
 			B2d: require("./B2d.js"),
 			Box2D: require("box2dweb"),
-		
+			
+			// Renderers
+			
+			AntRenderer: require("./Renderers/AntRenderer.js"),
+
 		};
+
 	}; // end init
 
 	var option_is_set = function(what_mods_selected, options){
@@ -131,7 +145,7 @@ var Include = function(){
 	
 
 	var get_names = function(current_module_name, options_code){
-		var result = {Models: [], Controllers: [], Other: []};
+		var result = {Models: [], Controllers: [], Other: [], Renderers: []};
 
 		if(option_is_set(choices.NONE, options_code)){
 			return result;
@@ -154,8 +168,7 @@ var Include = function(){
 
 		if (option_is_set(choices.ALL_MODELS, options_code)){
 			result.Models = module_names.Models;
-		}
-		else if(option_is_set(choices.OWN_MODEL, options_code)){
+		}else if(option_is_set(choices.OWN_MODEL, options_code)){
 			var own_model = current_module_name.replace("Controller", "Model");
 			result.Models.push(own_model);
 		}
@@ -164,13 +177,18 @@ var Include = function(){
 			result.Other = module_names.Other;
 		}
 
+		if(option_is_set(choices.RENDERERS, options_code)){
+			result.Renderers = module_names.Renderers;
+		}
+
 		return result;
 	};//end get_names
 
 	var get_name_statements = function(names){
+		var sections = ["Models", "Controllers", "Other", "Renderers"];
 		var result = "";
-		for(var section_index = 0; section_index < 3; section_index++){
-			var section = ["Models", "Controllers", "Other"][section_index];
+		for(var section_index = 0; section_index < sections.length; section_index++){
+			var section = sections[section_index];
 			for(var i = 0; i < names[section].length; i++){
 				result += ("var " + names[section][i] + "; ");
 			}
@@ -181,9 +199,10 @@ var Include = function(){
 	};//end get_name_statements
 
 	var get_module_statements = function(names){
+		var sections = ["Models", "Controllers", "Other", "Renderers"];
 		var result = "";
-		for(var section_index = 0; section_index < 3; section_index++){
-			var section = ["Models", "Controllers", "Other"][section_index];
+		for(var section_index = 0; section_index < sections.length; section_index++){
+			var section = sections[section_index];
 			for(var i = 0; i < names[section].length; i++){
 				result += (names[section][i] + " = Includes.get_module(\"" + names[section][i] + "\"); ");
 			}

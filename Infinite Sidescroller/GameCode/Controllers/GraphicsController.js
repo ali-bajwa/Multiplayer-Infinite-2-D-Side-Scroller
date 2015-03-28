@@ -21,20 +21,15 @@ var GraphicsController = (function(){
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
 
 		GraphicsModel.hero = request_bitmap("greek_warrior");
-		GraphicsModel.ant = request_animated("ant", "walk");
 
 		hero = GraphicsModel.hero;
 
-		ant = GraphicsModel.ant;
-		ant.gotoAndPlay("walk");
-
 		set_reg_position(hero, -20, +10);
 		
-		set_reg_position(ant, 0, 0);
 		
 		reg_for_render(GraphicsModel.hero, PlayerController.get_hero());
-		reg_for_render(GraphicsModel.ant, AntController.get_ant());
 
+		
 		GraphicsModel.camera.following = hero;
         //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		GraphicsModel.score = new createjs.Text();
@@ -43,6 +38,8 @@ var GraphicsController = (function(){
 		reg_for_render(GraphicsModel.health);
 		hud_temp();
 
+		// TODO: init all renderers; change Includes to package renderers
+		AntRenderer.init({get_asset: AssetController.get_asset, });
 	};
     
 	var update = function(delta){
@@ -57,8 +54,18 @@ var GraphicsController = (function(){
 	    //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		hud_temp_update();
 
-		ant_special_render_temp(); // TEMPORARY!!!!!!!!!!!
-
+		// TODO call renderers.update for all renderers; markforupdate stuff? mark-for-rendering-with?
+		// how the hell will we organize that?
+		// >>>
+		var ants = AntController.get_new_ants();
+		var Graphics = {request_animated: request_animated, reg_for_render: reg_for_render, 
+			set_reg_position: set_reg_position};
+		for(var i = 0; i < ants.length; i++){
+			var ant = ants[i];
+			AntRenderer.render(ant, Graphics);
+		}
+		// <<<<
+		
 		GraphicsModel.stage.update();
 	};
 
@@ -129,17 +136,7 @@ var GraphicsController = (function(){
 
 	var init_animations = function(){
 		
-		GraphicsModel.spritesheets["ant"] = new createjs.SpriteSheet({
-			"framerate": 1,
-			"images": [get_asset("Ant1"), get_asset("Ant2"), get_asset("Ant3")],
-			"frames": { "regX": 3, "regY": 6, "height": 25, "width": 50, "count": 6},
-			"animations": {
-				"walk": [0, 1, "walk"],
-				"upside_down": [2, 3, "upside_down"],
-				"death": [4, 5, "death"]
-			}
-		})
-
+		
 	};
 	
 	var request_bitmap = function(id){
@@ -170,24 +167,11 @@ var GraphicsController = (function(){
 			}
 		};
 
-		var sprite = new createjs.Sprite(GraphicsModel.spritesheets[id], start_frame);
+		var sprite = new createjs.Sprite(id, start_frame);
 
 		return sprite;
 	};
 
-	var ant_special_render_temp = function(){
-		/* how to handle special render? TEMPORARY */
-
-		var hero_pos = hero.body.GetWorldCenter();
-		var ant_pos = ant.body.GetWorldCenter();
-
-		//if(ant.body.userdata.state.ant == "death"){
-		//	ant.gotoAndStop("death");
-		//}
-
-		//ant.gotoAndPlay("upside_down");
-
-	};
 	
 	
 	var synchronize_to_physical_bodies = function(){
@@ -324,6 +308,6 @@ module.exports = GraphicsController;
 
 var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
 	current_module: "GraphicsController", 
-	include_options: Includes.choices.DEFAULT
+	include_options: Includes.choices.DEFAULT | Includes.choices.RENDERERS
 }); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
 

@@ -1,19 +1,5 @@
 var KeyboardController = (function()
 {
-	// TODO: does this section belong into the controller? >>>
-	var keys = {};
-
-	var TR_TABLES = // translation tables
-	{
-		code_to_name: {
-			37: "left",
-			38: "up",
-			39: "right",
-			40: "down"
-		}
-	}
-
-	// <<< end TODO
 
 	var init = function(){
 		
@@ -25,12 +11,16 @@ var KeyboardController = (function()
 		// and are currently pressed
 		//
 		// returns: array of commands
+		//
+		// TODO: REFACTOR this function to work better and so people do not
+		// need to call it each tick. instead they should get reference to function one time
+		// and stay updated on the active commands
 		
 		var commands = [];
 		
-		$.each(table, function(key, cmd){
-			if(keys[key]){
-				commands.push(cmd);
+		$.each(KeyboardModel.translation_tables.code_to_name, function(key, cmd){
+			if(KeyboardModel.keys[key] && table[cmd]){
+				commands.push(table[cmd]);
 			}
 		});
 
@@ -48,24 +38,32 @@ var KeyboardController = (function()
 	// public:
 	
 	var keydown = function(event){
-		keys[event.keyCode] = true;
+		KeyboardModel.keys[event.keyCode] = true;
 	};
 
 	var keyup = function(event){
-		delete keys[event.keyCode];
+		delete KeyboardModel.keys[event.keyCode];
 	};
 
 
 	var movement_commands = function(){
-		return get_active_commands_function(TR_TABLES.code_to_name);
+		return get_active_commands_function(KeyboardModel.translation_tables.movement);
 	};
 
+	var debug_commands = function(){
+		/**
+		* commands active in debug mode
+		*/
+		return get_active_commands_function(KeyboardModel.translation_tables.debug);
+	};
+	
 
 	return {
 		keydown: keydown,
 		keyup: keyup,
 
 		movement_commands: movement_commands,
+		debug_commands: debug_commands,
 		init: init,
 	};
 

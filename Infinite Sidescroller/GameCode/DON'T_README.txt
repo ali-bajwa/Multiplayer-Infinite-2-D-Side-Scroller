@@ -29,12 +29,6 @@ TOOLS that we use and respective COMMANDS with options and such:
 			short options:
 				watchify -vd main.js -o bundle.js
 
-		
-	folderify (not using yet, but planning to)
-		description:
-			plugin for browserify
-			allows to include all files in the specified directory
-
 LIBRARIES:
 	box2dweb - world physics simulation (may change to the liquidfun library in the future)
 	createjs package  - graphics, asset loading, sound etc. (only easeljs and preloadjs modules for now)
@@ -58,7 +52,7 @@ GAME ARCHITECTURE
 			include short comment when makeing public to make it easy for people
 			to explore API w/o looking into the main code
 	RENDERERS
-		[not implemented yet]
+		half-implemented (implemented for ant, need to generalize)
 
 	OTHER
 		Include

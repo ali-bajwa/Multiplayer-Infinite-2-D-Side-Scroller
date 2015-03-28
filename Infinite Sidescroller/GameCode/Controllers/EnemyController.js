@@ -1,19 +1,24 @@
 
 var EnemyController = (function(){
+	/* Description
+	*/
+
 	var init = function(){
-		
-		include();
-	};
-	
-	var move = function(offset_x, offset_y){
-		// needs to change to not use gamemodel directly
-		//GameModel.chomper.x += offset_x;
-		//GameModel.chomper.y += offset_y;
+		/* is ran from the InitController once when the game is loaded */
+
+		include(); // satisfy requirements
+
 	};
 
+	var update = function(delta){
+		/* is ran each tick from the GameController.update_all */
+
+	};
+	
 	return {
-		move: move,
-		init: init,
+		// declare public
+		init: init, 
+		update: update,
 	};
 })();
 

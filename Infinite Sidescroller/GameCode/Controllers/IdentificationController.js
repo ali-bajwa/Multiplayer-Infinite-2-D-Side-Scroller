@@ -84,6 +84,38 @@ var IdentificationController = (function(){
 		IdentificationModel.free_ids.push(id);
 	};
 	
+	var assign_type = function(obj, type){
+		/**
+		* assigns wanted type (string) to the given
+		* model definition
+		* if you try to assign same type twice, throws exception;
+		* Id...Controller allows you to retrieve model
+		*/
+
+		var types = IdentificationModel.types;
+		if(types[type]){
+			throw "Error: type " + type + " is already registered. " +
+				"You can't register the same type twice";
+		}else{
+			types[type] = obj;
+			obj.type = type;
+		}
+		
+	};
+
+	var get_by_type = function(type){
+		/**
+		* gets object by it's type
+		*/
+		var types = IdentificationModel.types;
+		if(types[type]){
+			return types[type];
+		}else{
+			throw "Error: type " + type + " wasn't defined yet";
+		}
+	};
+	
+	
 	
 	
 	return {
@@ -93,6 +125,8 @@ var IdentificationController = (function(){
 		assign_id: assign_id,
 		get_by_id: get_by_id,
 		remove_id: remove_id,
+		assign_type: assign_type,
+		get_by_type: get_by_type,
 	};
 })();
 

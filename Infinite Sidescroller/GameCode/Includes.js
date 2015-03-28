@@ -57,7 +57,7 @@ var Include = function(){
 		],
 
 		Renderers: [
-			"Renderers",
+			"AntRenderer",
 		],
 
 	};//end module_names
@@ -107,12 +107,9 @@ var Include = function(){
 			
 			// Renderers
 			
-			Renderers: null, // initialized separately
+			AntRenderer: require("./Renderers/AntRenderer.js"),
 
 		};
-
-		var includeFolder = require('include-folder');
-		modules.Renderers = includeFolder("./Renderers");
 
 	}; // end init
 
@@ -182,8 +179,6 @@ var Include = function(){
 
 		if(option_is_set(choices.RENDERERS, options_code)){
 			result.Renderers = module_names.Renderers;
-			console.log("here");
-			
 		}
 
 		return result;

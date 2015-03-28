@@ -15,9 +15,9 @@ TOOLS that we use and respective COMMANDS with options and such:
 			compiles individual modules into the bundle.js file that will be included into the .html page
 		commands: 
 			long options command:
-				browserify --transform folderify --debug main.js --outfile bundle.js
+				browserify --debug main.js --outfile bundle.js
 			short options command:
-				browserify -t folderify -d main.js -o bundle.js
+				browserify -d main.js -o bundle.js
 	watchify 
 		description:
 			wrapper around browserify
@@ -25,17 +25,9 @@ TOOLS that we use and respective COMMANDS with options and such:
 			only the first compilation takes long
 		commands:
 			long options:
-				watchify --transform folderify --verbose --debug main.js --outfile bundle.js
+				watchify --verbose --debug main.js --outfile bundle.js
 			short options:
-				watchify -t folderify -vd main.js -o bundle.js
-
-		
-	folderify 
-		description:
-			plugin for browserify
-			allows to include all files in the specified directory
-		installation (I ran it in the GameCode folder. Idk if it changes anything):
-			npm install folderify --save
+				watchify -vd main.js -o bundle.js
 
 LIBRARIES:
 	box2dweb - world physics simulation (may change to the liquidfun library in the future)
@@ -60,7 +52,7 @@ GAME ARCHITECTURE
 			include short comment when makeing public to make it easy for people
 			to explore API w/o looking into the main code
 	RENDERERS
-		[not implemented yet]
+		half-implemented (implemented for ant, need to generalize)
 
 	OTHER
 		Include

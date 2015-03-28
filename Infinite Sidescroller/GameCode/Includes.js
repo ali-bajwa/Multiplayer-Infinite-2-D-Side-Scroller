@@ -5,7 +5,7 @@ var Include = function(){
 	// simple enumerator // option codes MUST be power of 2 or sum of other options (with 0 being the only exception), and unique
 	var choices = (function(){
 		// simple options: numberic value must be 0 or some power of 2, name should be all caps and unique
-		var result = {NONE: 0, ALL_CONTROLLERS: 1, ALL_MODELS: 2, OWN_MODEL: 4, OTHER_STUFF: 8, RENDERERS: 16};
+		var result = {NONE: 0, ALL_CONTROLLERS: 1, ALL_MODELS: 2, OWN_MODEL: 4, OTHER_STUFF: 8, RENDERERS: 16, AI: 32};
 
 		// complex options: should consist of simple options, bitwise(!) OR'ed or AND'ed together in any fashion
 		result.DEFAULT = (result.ALL_CONTROLLERS | result.OWN_MODEL | result.OTHER_STUFF);
@@ -60,6 +60,10 @@ var Include = function(){
 			"AntRenderer",
 		],
 
+		AI: [
+			"AntAI",
+		],
+
 	};//end module_names
 
 
@@ -109,6 +113,10 @@ var Include = function(){
 			
 			AntRenderer: require("./Renderers/AntRenderer.js"),
 
+			// AI
+			AntAI: require("./NPC_AI/AntAI.js"),
+			
+
 		};
 
 	}; // end init
@@ -145,7 +153,7 @@ var Include = function(){
 	
 
 	var get_names = function(current_module_name, options_code){
-		var result = {Models: [], Controllers: [], Other: [], Renderers: []};
+		var result = {Models: [], Controllers: [], Other: [], Renderers: [], AI: [],};
 
 		if(option_is_set(choices.NONE, options_code)){
 			return result;
@@ -181,11 +189,15 @@ var Include = function(){
 			result.Renderers = module_names.Renderers;
 		}
 
+		if(option_is_set(choices.AI, options_code)){
+			result.AI = module_names.AI;
+		}
+
 		return result;
 	};//end get_names
 
+	var sections = ["Models", "Controllers", "Other", "Renderers", "AI"];
 	var get_name_statements = function(names){
-		var sections = ["Models", "Controllers", "Other", "Renderers"];
 		var result = "";
 		for(var section_index = 0; section_index < sections.length; section_index++){
 			var section = sections[section_index];
@@ -199,7 +211,6 @@ var Include = function(){
 	};//end get_name_statements
 
 	var get_module_statements = function(names){
-		var sections = ["Models", "Controllers", "Other", "Renderers"];
 		var result = "";
 		for(var section_index = 0; section_index < sections.length; section_index++){
 			var section = sections[section_index];

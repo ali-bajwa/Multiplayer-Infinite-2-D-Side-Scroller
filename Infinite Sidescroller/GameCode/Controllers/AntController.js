@@ -114,62 +114,10 @@ var AntController = (function() {
 		for(var id in AntModel.ants){
 			var ant = AntModel.ants[id];
 			if(ant){
-				tick_AI(ant);
+				AntAI.tick_AI(ant);
 			}// fi
 		} // end for in 
 	};
-
-	var tick_AI = function(ant){
-		/**
-		* tick AI of given ant
-		*/
-
-		//if enemy is dead, die
-		if (ant.hp == 1) {
-			
-			if (ant.hero_hurt_me)
-			{
-				ant.hp--;
-				ant.hero_hurt_me = false;
-			}
-		} 
-		else if (ant.hp <= 0 && ant.death_tick == 30) {
-			//ant.ant.DestroyFixture();
-			ant.death_tick++;
-		}
-		else if (ant.hp <= 0 && ant.death_tick > 30){}
-		else if (ant.hp <= 0) {
-			
-			change_state("death");
-			GraphicsController.change_ant("death");
-			console.log("Death Triggered");
-			ant.death_tick++;
-		}
-		//else move & attack
-	
-		else {
-
-			if (ant.AI_state == "walk") {
-				var Antbody = ant.body;
-				var velocity = Antbody.GetLinearVelocity();
-				velocity.x = -ant.speed;
-				Antbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-				Antbody.SetAwake(true);
-			}
-			if (ant.can_attack && ant.me_hurt_hero && model.AI_state == "walk") 
-			{
-
-				
-			}
-			if (ant.hero_hurt_me)
-			{
-				ant.hp--;
-				ant.hero_hurt_me = false;
-				change_state("upside_down");
-				GraphicsController.change_ant("upside_down");
-			}
-		}
-	};	
 
 	return {
 		init: init,
@@ -184,7 +132,7 @@ module.exports = AntController;
 var Includes = require("../Includes.js");
 var include_data = Includes.get_include_data({
 	current_module: "AntController",
-	include_options: Includes.choices.DEFAULT
+	include_options: Includes.choices.DEFAULT | Includes.choices.AI
 });
 eval(include_data.name_statements);
 var include = function(){eval(include_data.module_statements);}

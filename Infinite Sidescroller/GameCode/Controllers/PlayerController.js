@@ -22,13 +22,13 @@ var PlayerController = (function(){
 			PlayerModel.jumps = 0;
 		}
 		if (info.Me.fixture_name == "top"){
-			take_hit(1)
+			take_hit(100);
 		}
 				
 	};
 
 	var take_hit = function(amount){
-		PlayerModel.hp -= 1;
+		PlayerModel.hp -= amount;
 		GraphicsController.update_health(PlayerModel.hp);
 	}
 
@@ -67,6 +67,7 @@ var PlayerController = (function(){
 		
 		if(PlayerModel.hp <= 0)
 		{
+			createjs.Ticker.paused = true;
 			console.log("Player Is Dead");
 		}
 

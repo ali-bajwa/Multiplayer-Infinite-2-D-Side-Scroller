@@ -30,11 +30,10 @@ var GraphicsController = (function(){
 
 		set_reg_position(hero, -20, +10);
 		
-		set_reg_position(ant, 0, 0);
 		
 		reg_for_render(GraphicsModel.hero, PlayerController.get_hero());
-		reg_for_render(GraphicsModel.ant, AntController.get_ant());
 
+		
 		GraphicsModel.camera.following = hero;
         //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		GraphicsModel.score = new createjs.Text();
@@ -56,6 +55,19 @@ var GraphicsController = (function(){
 
 	    //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		hud_temp_update();
+
+		// TEMPORARY needs to change to some sort of 
+		// spawning notification system which is general 
+		// idea: check for type and call function withing individual RENDERER
+		// to create needed animation
+		var ants = AntController.get_new_ants();
+		for(var i = 0; i < ants.length; i++){
+			var ant = ants[i];
+			var ant_animation = request_animated("ant", "walk");
+			set_reg_position(ant_animation, 0, 0);
+			reg_for_render(ant_animation, ant);
+		}
+
 
 		ant_special_render_temp(); // TEMPORARY!!!!!!!!!!!
 
@@ -178,8 +190,6 @@ var GraphicsController = (function(){
 	var ant_special_render_temp = function(){
 		/* how to handle special render? TEMPORARY */
 
-		var hero_pos = hero.body.GetWorldCenter();
-		var ant_pos = ant.body.GetWorldCenter();
 
 		//if(ant.body.userdata.state.ant == "death"){
 		//	ant.gotoAndStop("death");

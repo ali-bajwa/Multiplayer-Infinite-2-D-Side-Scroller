@@ -63,6 +63,7 @@ var KeyboardController = (function()
 		keyup: keyup,
 
 		movement_commands: movement_commands,
+		debug_commands: debug_commands,
 		init: init,
 	};
 

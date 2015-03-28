@@ -2,26 +2,37 @@
 
 
 var AntModel = function(){
-	//define your constants here
-	this.H = 31;//height
-	this.W = 50;
-	this.sprite_array = [];  //single source for sprites
-	this.type = "enemy";
-	
-	this.hero_hurt_me = false;
-	this.me_hurt_hero = false;
-	this.death_tick = 0;
 
-	//set your game logic parameters here
-	this.object_id = 1; //hardcode a unique identifier for each new enemy class
-	this.hp = 2;
-	this.speed = 4;
-	this.damage = 1;
-	//this.attack_cooldown = 4; //use this for enemies who need
-	this.can_attack = true;//use this for enemies who alternate between 
-	//this.cooldown_timer=-1;
-	this.AI_state = "walk";//use this to keep track of the enemy's AI state
+	this.Ant = function(){
+		this.id = null;
+		this.type = null;
+		this.body = null;
+		//define your constants here
+		this.H = 31;//height
+		this.W = 50;
+		this.sprite_array = [];  //single source for sprites
+		this.type = "enemy";
+		
+		this.hero_hurt_me = false;
+		this.me_hurt_hero = false;
+		this.death_tick = 0;
+
+		//set your game logic parameters here
+		//this.object_id = 1; //hardcode a unique identifier for each new enemy class
+		this.hp = 2;
+		this.speed = 4;
+		this.damage = 1;
+		//this.attack_cooldown = 4; //use this for enemies who need
+		this.can_attack = true;//use this for enemies who alternate between 
+		//this.cooldown_timer=-1;
+		this.AI_state = "walk";//use this to keep track of the enemy's AI state
+	};
 	
+	// table of all ants with ids as keys
+	this.ants = {};
+
+	// marking for update TEMPORARY
+	this.new_ants = {}; 
 	/* THIS DOES NOT BELONG HERE. 
 	//define fixture (friction, density, etc.)
 	this.fixture_def = new box2d.b2FixtureDef

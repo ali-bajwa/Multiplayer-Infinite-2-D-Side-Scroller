@@ -29,7 +29,7 @@ var Include = function(){
 			"TerrainSliceController",
 			"TestController",
 			"WorldController",
-			"AntController",
+			//"AntController",
 			"IdentificationController",
 		],
 
@@ -46,6 +46,7 @@ var Include = function(){
 			"TestModel",
 			"WorldModel",
 			"AntModel",
+			"EnemyModel",
 		],
 
 		Other: [
@@ -100,6 +101,8 @@ var Include = function(){
 			TestModel: require("./Models/TestModel.js"),
 			AntModel: require("./Models/AntModel.js"),
 			IdentificationModel: require("./Models/IdentificationModel.js"),
+			EnemyModel: require("./Models/EnemyModel.js"),
+			
 			
 				
 			// Other stuff

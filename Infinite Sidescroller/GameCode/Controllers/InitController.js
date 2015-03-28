@@ -125,7 +125,7 @@ var InitController = (function(){
 	var setup_asset_dependant = function(){
 		// this may need to move to either load_game or some sort of resizing function
 		
-		AntController.init();
+		EnemyController.init();
 		GraphicsController.init();
 
 

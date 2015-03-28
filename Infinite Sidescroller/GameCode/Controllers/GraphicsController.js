@@ -57,7 +57,7 @@ var GraphicsController = (function(){
 		// TODO call renderers.update for all renderers; markforupdate stuff? mark-for-rendering-with?
 		// how the hell will we organize that?
 		// >>>
-		var ants = AntController.get_new_ants();
+		var ants = EnemyController.get_new_ants();
 		var Graphics = {request_animated: request_animated, reg_for_render: reg_for_render, 
 			set_reg_position: set_reg_position};
 		for(var i = 0; i < ants.length; i++){

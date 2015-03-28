@@ -329,24 +329,24 @@ var PhysicsController = (function(){
 		top_sensor.height = SENSOR_THICKNESS;
 		top_sensor.width = w*2 - SENSOR_THICKNESS*2;
 		top_sensor.offset = {x:0, y: (-1*h) + SENSOR_THICKNESS/2};
-		attach_fixture(body,top_sensor,"top sensor");
+		attach_fixture(body,top_sensor,"top");
 		
 		//attach bottom fixture
 		var bottom_sensor = top_sensor;
 		bottom_sensor.offset = {x:0, y: h - SENSOR_THICKNESS/2};
-		attach_fixture(body,bottom_sensor,"bottom sensor");
+		attach_fixture(body,bottom_sensor,"bottom");
 		
 		//attach left fixture
 		var left_sensor = top_sensor;
 		left_sensor.height = h*2 - SENSOR_THICKNESS*2;
 		left_sensor.width = SENSOR_THICKNESS;
 		left_sensor.offset = {x:(-1*w) + SENSOR_THICKNESS/2,y:0};
-		attach_fixture(body,left_sensor,"left sensor");
+		attach_fixture(body,left_sensor,"left");
 		
 		//attach right fixture
 		var right_sensor = left_sensor;
 		right_sensor.offset = {x:w - SENSOR_THICKNESS/2, y:0};
-		attach_fixture(body,right_sensor,"right sensor");
+		attach_fixture(body,right_sensor,"right");
 	};
 	
 	

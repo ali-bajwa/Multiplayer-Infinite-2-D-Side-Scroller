@@ -92,7 +92,7 @@ var GraphicsController = (function(){
 	var update_health = function(passed) {
 	
 	GraphicsModel.health.text = passed;
-	console.log("I've been called");
+	//console.log("I've been called");
 	}
 
 	var update_camera = function(){

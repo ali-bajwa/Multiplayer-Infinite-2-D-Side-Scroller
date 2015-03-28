@@ -1,5 +1,8 @@
 var AntAI = (function(){
+	var wound_ant = function(ant, wound){
 
+		ant.hp -= wound;
+	}
 	var tick_AI = function(ant, Stuff){
 		/**
 		* tick the AI for the given ant
@@ -13,7 +16,7 @@ var AntAI = (function(){
 			
 			if (ant.hero_hurt_me)
 			{
-				ant.hp--;
+				wound_ant(ant, 1);
 				ant.hero_hurt_me = false;
 			}
 		} 
@@ -25,8 +28,6 @@ var AntAI = (function(){
 		else if (ant.hp <= 0) {
 			
 			change_state("death");
-			GraphicsController.change_ant("death");
-			console.log("Death Triggered");
 			ant.death_tick++;
 		}
 		//else move & attack
@@ -47,10 +48,9 @@ var AntAI = (function(){
 			}
 			if (ant.hero_hurt_me)
 			{
-				ant.hp--;
+				wound_ant(ant, 1);
 				ant.hero_hurt_me = false;
 				change_state("upside_down");
-				//GraphicsController.change_ant("upside_down");
 			}
 		}
 	

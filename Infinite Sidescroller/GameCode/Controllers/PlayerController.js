@@ -22,7 +22,7 @@ var PlayerController = (function(){
 			PlayerModel.jumps = 0;
 		}
 		if (info.Me.fixture_name == "top"){
-			take_hit(100);
+			take_hit(1);
 		}
 				
 	};

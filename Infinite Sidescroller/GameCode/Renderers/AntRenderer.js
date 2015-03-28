@@ -46,19 +46,24 @@ var AntRenderer = (function(){
 		set_reg_position(ant_animation, 0, 0);
 		reg_for_render(ant_animation, ant);
 
-		ant_special_render_temp(); // TEMPORARY!!!!!!!!!!!
+		ant_special_render_temp(ant); // TEMPORARY!!!!!!!!!!!
 
 	};
 	
-	var ant_special_render_temp = function(){
+	var ant_special_render_temp = function(ant){
 		/* how to handle special render? TEMPORARY */
 
 
-		//if(ant.body.userdata.state.ant == "death"){
-		//	ant.gotoAndStop("death");
-		//}
+		if(ant.AI_state == "death"){
+			ant.gotoAndStop("death");
+		}
 
-		//ant.gotoAndPlay("upside_down");
+		if(ant.AI_state == "upside_down")
+		{
+			ant.gotoAndPlay("upside_down");
+		}
+
+		
 
 	};
 

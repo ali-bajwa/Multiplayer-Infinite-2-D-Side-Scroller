@@ -42,33 +42,19 @@ var AntController = (function() {
 			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
 
 		
-		//var mean_hero;
-		//if(info.A.body_id == "hero")
-		//{
-			//mean_hero = info.A;
-			//if(mean_hero.fixture != "bottom sensor" && AntModel.can_attack)
-			//{
-				//ant.me_hurt_hero = true;
-			//}	
-			//else
-			//{
+		if(info.Them.id == "hero")
+		{
+			
+			if(info.Them.fixture_name != "bottom" && AntModel.can_attack)
+			{
+				AntModel.me_hurt_hero = true;
+			}	
+			else
+			{
 
-				//AntModel.hero_hurt_me = true;
-			//}
-		//}
-		//else if(info.B.body_id == "hero")
-		//{
-			//mean_hero = info.B;
-			//if(mean_hero.fixture != "bottom sensor" && AntModel.can_attack)
-			//{
-				//ant.me_hurt_hero = true;
-			//}	
-			//else
-			//{
-
-				//AntModel.hero_hurt_me = true;
-			//}
-		//}
+				AntModel.hero_hurt_me = true;
+			}
+		}
 	};
 
 	var end_contact = function(contact, oldManifold, info) {

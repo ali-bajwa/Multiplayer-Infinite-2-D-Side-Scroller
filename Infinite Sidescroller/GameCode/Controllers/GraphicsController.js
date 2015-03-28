@@ -64,6 +64,8 @@ var GraphicsController = (function(){
 			var ant = ants[i];
 			AntRenderer.render(ant, Graphics);
 		}
+
+
 		// <<<<
 		
 		GraphicsModel.stage.update();
@@ -110,22 +112,7 @@ var GraphicsController = (function(){
 		adjust_debug_draw(); // goes last
 	};
 
-	//**********TEMPORARY*****************
-	var change_ant = function(state){
-		if(state == "death")
-		{	
-			console.log("ANT GOES HERE")
-			ant.gotoAndStop("death");
-		}
-		else if(state == "upside_down")
-		{
-			console.log("ANT GOES HERE")
-			ant.gotoAndPlay("upside_down");
-		}
-		
-
-
-	}	
+	
 
 
 	//*************************************
@@ -299,7 +286,6 @@ var GraphicsController = (function(){
 		init: init, 
 		update: update,
 		get_stage: get_stage,
-		change_ant: change_ant,
 		update_health: update_health,
 	};
 })();

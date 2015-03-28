@@ -27,7 +27,7 @@ var AntAI = (function(){
 		else if (ant.hp <= 0 && ant.death_tick > 30){}
 		else if (ant.hp <= 0) {
 			
-			change_state("death");
+			change_state(ant, "death");
 			ant.death_tick++;
 		}
 		//else move & attack
@@ -50,7 +50,7 @@ var AntAI = (function(){
 			{
 				wound_ant(ant, 1);
 				ant.hero_hurt_me = false;
-				change_state("upside_down");
+				change_state(ant, "upside_down");
 			}
 		}
 	

@@ -155,9 +155,9 @@ var AntAI = (function(){
 		//}
 	};
 
-	var end_contact = function(contact, oldManifold, info) {
-
-			AntModel.ants[info.Me.id].me_hurt_hero = false;
+	var end_contact = function(contact, info) {
+	
+			info.Me.entity.me_hurt_hero = false;
 
 	};
 

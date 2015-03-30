@@ -28,6 +28,7 @@ var EnemyController = (function(){
 
 			if(logic.begin_contact){
 				PhysicsController.listen_for_contact_with(type, "BeginContact", logic.begin_contact);
+				console.log(logic);
 			}
 
 			if(logic.end_contact){

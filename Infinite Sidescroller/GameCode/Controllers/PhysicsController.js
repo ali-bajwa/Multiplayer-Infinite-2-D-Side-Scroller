@@ -261,12 +261,15 @@ var PhysicsController = (function(){
 	};
 	
 
-	var get_body = function(non_formal_def){
+	var get_body = function(non_formal_def, entity_instance){
 		/**
 		 * takes non-formal definition
 		 * returns body based on this definition
 		 *
 		 */
+		if (entity_instance == null){
+		throw new PropertyUndefined("entity_instance");
+		}
 		var definition = get_formal_body_def(non_formal_def);
 
 		var body = PhysicsModel.world.CreateBody(definition);
@@ -280,14 +283,8 @@ var PhysicsController = (function(){
 		// custom parameters during definition. If this will cause confusion,
 		// I'll remove that
 		//body.userData.def = non_formal_def;
-		body.SetUserData({def: non_formal_def});
-
-		if(body.GetUserData().id){
-			// TODO: make some global id service to auto assign
-			body.GetUserData().id = non_formal_def.id; 
-			body.GetUserData().type = IdentificationController.get_by_id(non_formal_def.id).type; 
-		}
-
+		body.SetUserData({def: non_formal_def, entity_instance: entity_instance});
+		
 		return body;
 	
 	};
@@ -355,8 +352,9 @@ var PhysicsController = (function(){
 	
 	
 
-	var get_rectangular = function(def, template_name){
+	var get_rectangular = function(def, entity_instance){
 		// get appropriate template collection to draw from
+		var template_name = entity_instance.type;
 		var template_collection = PhysicsModel.r_templates;
 		var compiled_template = apply_parents(template_name, template_collection);
 
@@ -376,7 +374,7 @@ var PhysicsController = (function(){
 		// for box2d. so final_def is a final description, but not in final form
 
 
-		var body = get_body(final_def);
+		var body = get_body(final_def, entity_instance);
 		 
 		attach_fixture(body, final_def, "main");
 		
@@ -489,11 +487,11 @@ var PhysicsController = (function(){
 		};
 
 		var get_type = function(obj){
-			userData = obj.GetUserData();
-			if(userData != null && userData.type != null){
-				return userData.type;
+			var userData = obj.GetUserData();
+			if(userData != null && userData.entity_instance.type != null){
+				return userData.entity_instance.type;
 			}else{
-				return "[NO_ID]"
+				return null;
 			}
 			
 		};

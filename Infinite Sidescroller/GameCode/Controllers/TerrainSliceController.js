@@ -3,8 +3,8 @@ var TerrainSliceController = (function () {
 
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
-
 		include(); // satisfy requirements
+		IdentificationController.assign_type(TerrainSliceModel.Cell, "terrain_cell");
 
 	};
 
@@ -70,7 +70,7 @@ var TerrainSliceController = (function () {
 				if(id != 0){ // if not air
 					var x = slice.origin.x + j * slice.cell_w + slice.cell_w/2;
 					var y = slice.origin.y + i * slice.cell_w + slice.cell_w/2;
-					var body = PhysicsController.get_rectangular({x: x, y: y}, "terrain_tile");
+					var body = PhysicsController.get_rectangular({x: x, y: y}, slice.grid[i][j]);
 					slice.grid[i][j].body = body;
 				}
 

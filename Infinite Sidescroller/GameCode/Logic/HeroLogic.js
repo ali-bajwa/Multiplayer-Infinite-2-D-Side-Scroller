@@ -28,11 +28,11 @@ var AntAI = (function(){
 	var spawn = function(x, y){
 		var hero = new Player();
 
-		hero.body = PhysicsController.get_rectangular({x: x, y: y, id: "hero", border_sensors: true}, "player");
+		hero.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, hero);
 
 		hero.hp = 100;
 		hero.wound = false;
-		
+		hero.jumps = 0;
 
 
 		return hero;
@@ -81,7 +81,7 @@ var AntAI = (function(){
 			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
 		console.log("here");
 		
-		if (info.Me.fixture_name == "bottom"){
+		if /*(info.Me.fixture_name == "bottom")*/(true){
 			info.Me.entity.jumps = 0;
 		}
 		if (info.Me.fixture_name == "top"){
@@ -165,6 +165,7 @@ var AntAI = (function(){
 		init: init,
 		begin_contact: begin_contact,
 		end_contact: end_contact,
+		jump: jump,
 	};
 })();
 

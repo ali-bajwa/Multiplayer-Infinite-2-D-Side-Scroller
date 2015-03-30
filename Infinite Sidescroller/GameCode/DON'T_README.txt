@@ -110,7 +110,6 @@ GAME ARCHITECTURE
 		- listen_for_contact_with(int id, string event_name, function listener_callback)
 			use this function to set up the objects' listeners. 
 		- step
-		
 	DESCRIPTION OF INDIVIDUAL CONTROLLERS
 
 		two bodies with velocity forceably set can produce weird results when colliding (sticking?)

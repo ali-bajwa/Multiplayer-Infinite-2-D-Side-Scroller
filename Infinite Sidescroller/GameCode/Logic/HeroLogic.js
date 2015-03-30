@@ -81,7 +81,7 @@ var AntAI = (function(){
 			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
 		console.log("here");
 		
-		if /*(info.Me.fixture_name == "bottom")*/(true){
+		if (info.Me.fixture_name == "bottom"){
 			info.Me.entity.jumps = 0;
 		}
 		if (info.Me.fixture_name == "top"){
@@ -165,7 +165,6 @@ var AntAI = (function(){
 		init: init,
 		begin_contact: begin_contact,
 		end_contact: end_contact,
-		jump: jump,
 	};
 })();
 

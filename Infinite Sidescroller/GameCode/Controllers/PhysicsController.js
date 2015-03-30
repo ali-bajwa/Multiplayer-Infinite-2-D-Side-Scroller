@@ -520,8 +520,10 @@ var PhysicsController = (function(){
 			A.id = get_id(A.body);
 			B.id = get_id(B.body);
 
-			A.entity = IdentificationController.get_by_id(A.id);
-			B.entity = IdentificationController.get_by_id(B.id);
+			//A.entity = IdentificationController.get_by_id(A.id);
+			//B.entity = IdentificationController.get_by_id(B.id);
+			A.entity = A.body.GetUserData().entity_instance;
+			B.entity = B.body.GetUserData().entity_instance;
 
 			A.type = get_type(A.body);
 			B.type = get_type(B.body);

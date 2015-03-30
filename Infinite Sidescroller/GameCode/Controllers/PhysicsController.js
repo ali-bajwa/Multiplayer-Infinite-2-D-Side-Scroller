@@ -282,8 +282,11 @@ var PhysicsController = (function(){
 		//body.userData.def = non_formal_def;
 		body.SetUserData({def: non_formal_def});
 
-		// TODO: make some global id service to auto assign
-		body.GetUserData().id = non_formal_def.id; 
+		if(body.GetUserData().id){
+			// TODO: make some global id service to auto assign
+			body.GetUserData().id = non_formal_def.id; 
+			body.GetUserData().type = IdentificationController.get_by_id(non_formal_def.id).type; 
+		}
 
 		return body;
 	
@@ -484,18 +487,28 @@ var PhysicsController = (function(){
 			}
 			
 		};
-		
-		var unpack_contact_info = function(contact, me){
+
+		var get_type = function(obj){
+			userData = obj.GetUserData();
+			if(userData != null && userData.type != null){
+				return userData.type;
+			}else{
+				return "[NO_ID]"
+			}
+			
+		};
+
+		var unpack_contact_info = function(contact, my_type){
 			/**
 			 * unpacks info about the collision and 
 			 * returns it
-			 * >me< is an id of an object that will
-			 * go under the >Me< parameter inside of info
+			 * >my_type< is an type of an object that will
+			 * go under the >Me< parameeter inside of info
 			 * (As opposed to Them, which is the other object)
 			 */
-			if(me == null){
-				// >me< isn't supposed to be null/undefined
-				throw new PropertyUndefined("me");
+			if(my_type == null){
+				// >my_type< isn't supposed to be null/undefined
+				throw new PropertyUndefined("my_type");
 			}
 
 			var A = {};
@@ -509,6 +522,12 @@ var PhysicsController = (function(){
 			A.id = get_id(A.body);
 			B.id = get_id(B.body);
 
+			A.entity = IdentificationController.get_by_id(A.id);
+			B.entity = IdentificationController.get_by_id(B.id);
+
+			A.type = get_type(A.body);
+			B.type = get_type(B.body);
+
 			A.fixture_name = get_custom_property(A.fixture, "name");
 			B.fixture_name = get_custom_property(B.fixture, "name");
 
@@ -516,7 +535,7 @@ var PhysicsController = (function(){
 
 			var info = {};
 
-			if(A.id == me){
+			if(A.type == my_type){
 				info.Me = A;
 				info.Them = B;
 			}else{
@@ -532,18 +551,18 @@ var PhysicsController = (function(){
 			// create info, call respective functions for each id. use provided arguments >args<
 			// lookup ids in the provided table of lists >lists<
 			
-			var id1 = get_id(contact.m_fixtureA.GetBody());
-			var id2 = get_id(contact.m_fixtureB.GetBody());
+			var type1 = get_type(contact.m_fixtureA.GetBody());
+			var type2 = get_type(contact.m_fixtureB.GetBody());
 
 
-			if(id1 != null){
-				var info = unpack_contact_info(args[0], id1);
-				call_all(lists[id1], args, info);
+			if(type1 != null){
+				var info = unpack_contact_info(args[0], type1);
+				call_all(lists[type1], args, info);
 			}
 
-			if(id2 != null){
-				var info = unpack_contact_info(args[0], id2);
-				call_all(lists[id2], args, info);
+			if(type2 != null){
+				var info = unpack_contact_info(args[0], type2);
+				call_all(lists[type2], args, info);
 			}
 
 		};

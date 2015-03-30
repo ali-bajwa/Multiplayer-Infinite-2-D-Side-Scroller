@@ -98,7 +98,7 @@ var IdentificationController = (function(){
 				"You can't register the same type twice";
 		}else{
 			types[type] = obj;
-			obj.type = type;
+			obj.prototype.type = type;
 		}
 		
 	};

@@ -5,7 +5,7 @@ var Include = function(){
 	// simple enumerator // option codes MUST be power of 2 or sum of other options (with 0 being the only exception), and unique
 	var choices = (function(){
 		// simple options: numberic value must be 0 or some power of 2, name should be all caps and unique
-		var result = {NONE: 0, ALL_CONTROLLERS: 1, ALL_MODELS: 2, OWN_MODEL: 4, OTHER_STUFF: 8, RENDERERS: 16, AI: 32};
+		var result = {NONE: 0, ALL_CONTROLLERS: 1, ALL_MODELS: 2, OWN_MODEL: 4, OTHER_STUFF: 8, RENDERERS: 16, LOGIC: 32};
 
 		// complex options: should consist of simple options, bitwise(!) OR'ed or AND'ed together in any fashion
 		result.DEFAULT = (result.ALL_CONTROLLERS | result.OWN_MODEL | result.OTHER_STUFF);
@@ -24,13 +24,14 @@ var Include = function(){
 			"InitController",
 			"KeyboardController",
 			"PhysicsController",
-			"PlayerController",
+			//"PlayerController",
 			"TerrainController",
 			"TerrainSliceController",
 			"TestController",
 			"WorldController",
 			//"AntController",
 			"IdentificationController",
+			"RegisterAsController",
 		],
 
 		Models: [
@@ -40,13 +41,14 @@ var Include = function(){
 			"GraphicsModel",
 			"KeyboardModel",
 			"PhysicsModel",
-			"PlayerModel",
+			//"PlayerModel",
 			"TerrainModel",
 			"TerrainSliceModel",
 			"TestModel",
 			"WorldModel",
-			"AntModel",
+			//"AntModel",
 			"EnemyModel",
+			"RegisterAsModel",
 		],
 
 		Other: [
@@ -59,10 +61,12 @@ var Include = function(){
 
 		Renderers: [
 			"AntRenderer",
+			"HeroRenderer",
 		],
 
-		AI: [
-			"AntAI",
+		Logic: [
+			"AntLogic",
+			"HeroLogic",
 		],
 
 	};//end module_names
@@ -75,7 +79,7 @@ var Include = function(){
 			GraphicsController: require("./Controllers/GraphicsController.js"),
 			KeyboardController: require("./Controllers/KeyboardController.js"),
 			PhysicsController: require("./Controllers/PhysicsController.js"),
-			PlayerController: require("./Controllers/PlayerController.js"),
+			//PlayerController: require("./Controllers/PlayerController.js"),
 			TerrainController: require("./Controllers/TerrainController.js"),
 			TerrainSliceController: require("./Controllers/TerrainSliceController.js"),
 			WorldController: require("./Controllers/WorldController.js"),
@@ -83,8 +87,10 @@ var Include = function(){
 			TestController: require("./Controllers/TestController.js"),
 			GameController: require("./Controllers/GameController.js"),
 			EnemyController: require("./Controllers/EnemyController.js"),
-			AntController: require("./Controllers/AntController.js"),
+			//AntController: require("./Controllers/AntController.js"),
 			IdentificationController: require("./Controllers/IdentificationController.js"),
+			RegisterAsController: require("./Controllers/RegisterAsController.js"),
+			
 			
 			
 			// Models
@@ -97,11 +103,13 @@ var Include = function(){
 			TerrainModel: require("./Models/TerrainModel.js"),
 			WorldModel: require("./Models/WorldModel.js"),
 			KeyboardModel: require("./Models/KeyboardModel.js"),
-			PlayerModel: require("./Models/PlayerModel.js"),
+			//PlayerModel: require("./Models/PlayerModel.js"),
 			TestModel: require("./Models/TestModel.js"),
-			AntModel: require("./Models/AntModel.js"),
+			//AntModel: require("./Models/AntModel.js"),
 			IdentificationModel: require("./Models/IdentificationModel.js"),
 			EnemyModel: require("./Models/EnemyModel.js"),
+			RegisterAsModel: require("./Models/RegisterAsModel.js"),
+			
 			
 			
 				
@@ -115,9 +123,13 @@ var Include = function(){
 			// Renderers
 			
 			AntRenderer: require("./Renderers/AntRenderer.js"),
+			HeroRenderer: require("./Renderers/HeroRenderer.js"),
+			
 
-			// AI
-			AntAI: require("./NPC_AI/AntAI.js"),
+			// Logic
+			AntLogic: require("./Logic/AntLogic.js"),
+			HeroLogic: require("./Logic/HeroLogic.js"),
+			
 			
 
 		};
@@ -156,7 +168,7 @@ var Include = function(){
 	
 
 	var get_names = function(current_module_name, options_code){
-		var result = {Models: [], Controllers: [], Other: [], Renderers: [], AI: [],};
+		var result = {Models: [], Controllers: [], Other: [], Renderers: [], Logic: [],};
 
 		if(option_is_set(choices.NONE, options_code)){
 			return result;
@@ -192,14 +204,14 @@ var Include = function(){
 			result.Renderers = module_names.Renderers;
 		}
 
-		if(option_is_set(choices.AI, options_code)){
-			result.AI = module_names.AI;
+		if(option_is_set(choices.LOGIC, options_code)){
+			result.Logic = module_names.Logic;
 		}
 
 		return result;
 	};//end get_names
 
-	var sections = ["Models", "Controllers", "Other", "Renderers", "AI"];
+	var sections = ["Models", "Controllers", "Other", "Renderers", "Logic"];
 	var get_name_statements = function(names){
 		var result = "";
 		for(var section_index = 0; section_index < sections.length; section_index++){

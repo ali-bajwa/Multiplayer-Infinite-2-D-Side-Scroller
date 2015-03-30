@@ -5,11 +5,23 @@ var GraphicsController = (function(){
 
 	var get_asset; 
 	var hero, ant; // for quicker access
+	var type_renerer_table;
+	var Graphics;
 
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
 
 		include(); // satisfy requirements
+
+		// this will be passed to rendereres
+		Graphics = {request_animated: request_animated, reg_for_render: reg_for_render, 
+			set_reg_position: set_reg_position, request_bitmap: request_bitmap};
+
+		type_renderer_table = {
+		// type:	renderer:
+			"ant": AntRenderer,
+			"hero": HeroRenderer,
+		};
 
 		get_asset = AssetController.get_asset; // for quicker access
 
@@ -20,17 +32,9 @@ var GraphicsController = (function(){
 		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
 
-		GraphicsModel.hero = request_bitmap("greek_warrior");
-
-		hero = GraphicsModel.hero;
-
-		set_reg_position(hero, -20, +10);
 		
 		
-		reg_for_render(GraphicsModel.hero, PlayerController.get_hero());
-
-		
-		GraphicsModel.camera.following = hero;
+		//GraphicsModel.camera.following = hero;
         //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		GraphicsModel.score = new createjs.Text();
 		reg_for_render(GraphicsModel.score);
@@ -47,29 +51,71 @@ var GraphicsController = (function(){
 
 	    update_camera(); // needs to be updated first
 
+		register_new_stuff();
+
 		check_for_new_terrain();
 
+		render_things();
 		synchronize_to_physical_bodies();
 
 	    //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		hud_temp_update();
 
-		// TODO call renderers.update for all renderers; markforupdate stuff? mark-for-rendering-with?
-		// how the hell will we organize that?
-		// >>>
-		var ants = EnemyController.get_new_ants();
-		var Graphics = {request_animated: request_animated, reg_for_render: reg_for_render, 
-			set_reg_position: set_reg_position};
-		for(var i = 0; i < ants.length; i++){
-			var ant = ants[i];
-			AntRenderer.render(ant, Graphics);
-		}
-
-
 		// <<<<
 		
 		GraphicsModel.stage.update();
 	};
+
+	var register_new_stuff = function(){
+		/**
+		* description
+		*/
+
+		// retrieve instances of physical things that do not have graphics yet
+		var new_stuff = RegisterAsController.retrieve_registered_as("awaiting_graphics_initialization");
+
+		var length = new_stuff.length
+		for(var i = 0; i < length; i++){
+			var new_obj = new_stuff.pop();
+			if(type_renderer_table[new_obj.type]){
+				// if renderer exists for this type, register through it
+				type_renderer_table[new_obj.type].register(new_obj, Graphics);	
+
+				if(GraphicsModel.special_render[new_obj.type]){
+					GraphicsModel.special_render[new_obj.type].push(new_obj);
+				}else{
+					GraphicsModel.special_render[new_obj.type] = [new_obj];
+				}
+			}else{
+				console.log(new_obj);
+				
+				throw "No renderer found for the type " + String(new_obj.type) +
+					" confirm that renderer exists and is added to the GraphicsController.type_renderer_table"
+			}
+		}
+
+	};
+	
+	var render_things = function(){
+		/**
+		* call renderers for everything
+		*/
+		
+		var to_render = GraphicsModel.special_render;
+
+		for(var type in to_render){
+
+			var list = to_render[type];
+			var renderer = type_renderer_table[type];
+
+			for(var i = 0; i < list.length; i++){
+				renderer.render(list[i], Graphics);
+			}
+
+		}
+		
+	};
+	
 
     //DELETE ME PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 	var hud_temp = function () {
@@ -105,8 +151,8 @@ var GraphicsController = (function(){
 		center.y = Config.SCREEN_H/2 - camera.offset_from_followed.y;
 
 		if(camera.following != null){
-			camera.offset.x = center.x - camera.following.body.GetWorldCenter().x * Config.B2D.SCALE;
-			camera.offset.y =  center.y - camera.following.body.GetWorldCenter().y * Config.B2D.SCALE;
+			camera.offset.x = center.x - camera.following.physical_instance.body.GetWorldCenter().x * Config.B2D.SCALE;
+			camera.offset.y =  center.y - camera.following.physical_instance.body.GetWorldCenter().y * Config.B2D.SCALE;
 		}
 
 		adjust_debug_draw(); // goes last
@@ -167,7 +213,7 @@ var GraphicsController = (function(){
 
 		for(var i = 0; i < tiles.length; i++){
 			var tile = tiles[i];
-			var body = tile.body;
+			var body = tile.physical_instance.body;
 
 			var tile_pos = trans_xy(body.GetWorldCenter());
 
@@ -201,12 +247,12 @@ var GraphicsController = (function(){
 						// TODO: should make proper terrain collection thing to pull from 
 						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][id-1];
 						var tile = request_bitmap(tile_texture);
-						var body = slice.grid[i][j].body;
-						var body_position = body.GetWorldCenter();
+						var physical_instance = slice.grid[i][j];
+						var body_position = physical_instance.body.GetWorldCenter();
 						var trans_pos = trans_xy(body_position);
 						tile.x = trans_pos.x;
 						tile.y = trans_pos.y;
-						reg_for_render(tile, body);
+						reg_for_render(tile, physical_instance);
 					} // fi
 
 
@@ -257,14 +303,15 @@ var GraphicsController = (function(){
 
 	};
 
-	var reg_for_render = function(easeljs_obj, physical_body){
+	var reg_for_render = function(easeljs_obj, physical_instance){
 		// registeres object for rendering within graphics controller
-		// if (OPTIONAL!) physical_body is given, graphics controller will automatically
+		// if (OPTIONAL!) physical_instance is given, graphics controller will automatically
 		// set the easeljs_obj's position to position of that body, each tick.
+		// if the type of the physical instance is associated with some renderer
 			
-		if(physical_body){
+		if(physical_instance){
 
-			easeljs_obj.body = physical_body;
+			easeljs_obj.physical_instance = physical_instance;
 			GraphicsModel.all_physical.push(easeljs_obj);
 		}
 
@@ -280,6 +327,7 @@ var GraphicsController = (function(){
 	var get_stage = function(){
 		return GraphicsModel.stage;
 	};
+	
 
 	return {
 		// declare public

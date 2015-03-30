@@ -20,7 +20,7 @@ var GameController = (function(){
 			// as per current design, will take delta as an argument
 		
 			//TerrainController.generate_terrain(); 
-			PlayerController.update();
+			//PlayerController.update();
 		
 			WorldController.update(delta);
 

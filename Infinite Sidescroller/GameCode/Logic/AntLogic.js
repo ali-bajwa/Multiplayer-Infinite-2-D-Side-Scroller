@@ -1,13 +1,10 @@
 var AntAI = (function(){
+
 	var Ant = function(){
-		this.id = null;
-		this.type = null;
-		this.body = null;
 		//define your constants here
 		this.H = 31;//height
 		this.W = 50;
 		this.sprite_array = [];  //single source for sprites
-		this.type = "enemy";
 		
 		this.hero_hurt_me = false;
 		this.me_hurt_hero = false;
@@ -24,28 +21,33 @@ var AntAI = (function(){
 		this.AI_state = "walk";//use this to keep track of the enemy's AI state
 	};
 
-	var init = function(IdentificationController){
+	var IdentificationController, PhysicsController, RegisterAsController;
+
+	var init = function(imports){
 		/**
 		* initialize and register stuff
 		*/
+
+		IdentificationController = imports.IdentificationController;
+		PhysicsController = imports.PhysicsController;
+		RegisterAsController = imports.RegisterAsController;
+
 		IdentificationController.assign_type(Ant, "ant");	
 	};
 	
 
-	var spawn = function(x, y, IdentificationController, PhysicsController, EnemyModel){
+	var spawn = function(x, y){
 		/**
 		* spawn ant
 		*/
+
 		var new_ant = new Ant();
 		var id = IdentificationController.assign_id(new_ant);
 
 		new_ant.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true, id: id}, "ant");	
+
+		// listen for type, put shit into the EnemyController
 		PhysicsController.listen_for_contact_with(id, "BeginContact", begin_contact);
-
-		EnemyModel.ants[id] = new_ant;
-
-		// TEMPORARY, before mark for new controller 
-		EnemyModel.new_ants[id] = new_ant; 
 		
 		return new_ant;
 
@@ -163,6 +165,8 @@ var AntAI = (function(){
 		tick_AI: tick_AI,
 		spawn: spawn,
 		init: init,
+		end_contact: end_contact,
+		begin_contact: begin_contact
 	};
 })();
 

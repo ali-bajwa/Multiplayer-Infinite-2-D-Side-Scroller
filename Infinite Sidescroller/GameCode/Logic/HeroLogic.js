@@ -79,7 +79,7 @@ var AntAI = (function(){
 	var begin_contact = function(contact, info){
 		//console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
 			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
-		console.log("here");
+		//console.log("here");
 		
 		if (info.Me.fixture_name == "bottom"){
 			info.Me.entity.jumps = 0;
@@ -91,7 +91,7 @@ var AntAI = (function(){
 	};
 
 	var take_hit = function(hero, amount){
-		hero.hp -= amount;
+	    hero.hp -= amount;
 		GraphicsController.update_health(hero.hp);
 	}
 

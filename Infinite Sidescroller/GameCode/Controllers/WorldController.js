@@ -12,8 +12,18 @@ var WorldController = (function(){
 
 		include(); // satisfy requirements
 
-		body_test = PhysicsController.get_rectangular({}, "test");
-		body_test2 = PhysicsController.get_rectangular({}, "platform");
+		body_test = new platform();
+		var id = IdentificationController.assign_id(body_test);
+		var body_test = PhysicsController.get_rectangular({}, body_test);
+
+	};
+
+	var platform = function(){
+	    //define your constants here
+	    this.H = 31;//height
+	    this.W = 50;
+	    this.id;
+	    this.type = "platform";
 	};
 
 	var update = function(delta){

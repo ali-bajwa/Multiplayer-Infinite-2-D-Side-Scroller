@@ -29,7 +29,7 @@ var GraphicsController = (function(){
 
 
 		GraphicsModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
-		GraphicsModel.stage.canvas.width = Config.SCREEN_W; //need to get element width, not screen width
+		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
 
 		

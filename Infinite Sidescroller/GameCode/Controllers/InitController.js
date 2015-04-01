@@ -54,7 +54,7 @@ var InitController = (function(){
 		KeyboardController.init();
 		PhysicsController.init();
 
-		//TestController.init(mode);
+		TestController.init(mode);
 
 		//PlayerController.init();
 		TerrainController.init();

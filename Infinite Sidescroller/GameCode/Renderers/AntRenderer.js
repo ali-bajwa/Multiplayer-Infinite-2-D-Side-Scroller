@@ -24,6 +24,19 @@ var AntRenderer = (function(){
 
 	};
 	
+	var register = function(physical_instance, Graphics){
+		/**
+		* this is called when new ant is first registered in graphics controller
+		* you are responsible for registering it for rendering etc.
+		* >Graphics< object gives you access to various functions and modules you are
+		* allowed to use
+		*/
+		var ant_animation = Graphics.request_animated(spritesheets["ant"], "walk");
+		Graphics.set_reg_position(ant_animation, 0, 0); // change that to adjust sprite position relative to the body
+		Graphics.reg_for_render(ant_animation, physical_instance); // sets ant_animation's position to track the ant's position (updates each tick)
+
+	};
+	
 
 	var render = function(ant, Graphics){
 		/**
@@ -33,38 +46,37 @@ var AntRenderer = (function(){
 		* will be called each tick
 		*/
 
-		var
-			request_animated = Graphics.request_animated,
-			reg_for_render = Graphics.reg_for_render
-			set_reg_position = Graphics.set_reg_position;
-
 		// TEMPORARY needs to change to some sort of 
 		// spawning notification system which is general 
 		// idea: check for type and call function withing individual RENDERER
 		// to create needed animation
-		var ant_animation = request_animated(spritesheets["ant"], "walk");
-		set_reg_position(ant_animation, 0, 0);
-		reg_for_render(ant_animation, ant);
-
-		ant_special_render_temp(); // TEMPORARY!!!!!!!!!!!
+		
+		ant_special_render_temp(ant); 
+		
 
 	};
 	
-	var ant_special_render_temp = function(){
+	var ant_special_render_temp = function(ant){
 		/* how to handle special render? TEMPORARY */
 
 
-		//if(ant.body.userdata.state.ant == "death"){
-		//	ant.gotoAndStop("death");
-		//}
+		if(ant.AI_state == "death"){
+			ant.gotoAndStop("death");
+		}
 
-		//ant.gotoAndPlay("upside_down");
+		if(ant.AI_state == "upside_down")
+		{
+			ant.gotoAndPlay("upside_down");
+		}
+
+		
 
 	};
 
 	return {
 		init: init, 
 		render: render,
+		register: register
 	};
 })();
 

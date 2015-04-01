@@ -13,22 +13,23 @@ var GameController = (function(){
 		 * everyghing else is called from here every tick
 		 */
 		
+		if (!createjs.Ticker.paused){
+			var delta = event.delta;
 
-		var delta = event.delta;
-
-		// !!!! world simulation step goes somewhere right here
-		// as per current design, will take delta as an argument
+			// !!!! world simulation step goes somewhere right here
+			// as per current design, will take delta as an argument
 		
-		//TerrainController.generate_terrain(); 
-		PlayerController.update();
+			//TerrainController.generate_terrain(); 
+			//PlayerController.update();
 		
-		WorldController.update(delta);
+			WorldController.update(delta);
 
-		TerrainController.update();
+			TerrainController.update();
+			EnemyController.update();
 
-		// Should be called after all movement of objects is done:
-		AntController.update();
-		GraphicsController.update();
+			// Should be called after all movement of objects is done:
+			GraphicsController.update();
+		}
 	};
 
 

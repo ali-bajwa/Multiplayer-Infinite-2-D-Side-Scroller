@@ -11,6 +11,7 @@ var GraphicsModel = function(){
 	// all object registered for continious update to match their physical body
 	// position 
 	this.all_physical = []; 
+	this.special_render = {}; // matches type with array of all objects of that type to be rendered
 
 	// all spritesheet definitions (added at the initialization stage
 	// because they need assets to be loaded)
@@ -34,6 +35,7 @@ var GraphicsModel = function(){
 		center: {x: 0, y: 0}
 
 	};
+
 };
 
 module.exports = new GraphicsModel;

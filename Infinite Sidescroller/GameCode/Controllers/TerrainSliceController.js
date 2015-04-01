@@ -3,8 +3,8 @@ var TerrainSliceController = (function () {
 
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
-
 		include(); // satisfy requirements
+		IdentificationController.assign_type(TerrainSliceModel.Cell, "terrain_cell");
 
 	};
 
@@ -18,9 +18,12 @@ var TerrainSliceController = (function () {
 
 	var generate = function(){
 
-		var slice = new TerrainSliceModel();
+		var slice = new TerrainSliceModel.Slice();
+
 		slice.origin.x = slice.id * slice.grid_columns * slice.cell_w;
 		slice.origin.y = 0;
+
+		// TODO: id's in this function should be actually called types and registered accordingly
 
 		for(var i = 0; i < slice.grid_rows; i++){
 			/* 	assigning id's
@@ -31,7 +34,7 @@ var TerrainSliceController = (function () {
 
 			slice.grid[i] = [];
 			var lvl = slice.grid_rows - i; // level from the bottom
-			var prob = slice.lvl_prob[lvl];
+			var prob = TerrainSliceModel.lvl_prob[lvl];
 
 			for(var j = 0; j < slice.grid_columns; j++){
 				if(prob){
@@ -41,11 +44,10 @@ var TerrainSliceController = (function () {
 					// such as type of terrain etc. the tiles with different id's do not
 					// necessarily differ in physics representation, they might just have
 					// different appearance
-					slice.grid[i][j] = {id: random_id};
-
+					slice.grid[i][j] = new TerrainSliceModel.Cell(random_id);
 				}else{
 					// 0 will be the id for the "air" i.e. nothing
-					slice.grid[i][j] = {id: 0};
+					slice.grid[i][j] = new TerrainSliceModel.Cell(0);
 				}
 			} // for end
 			// <<< assigning ids
@@ -68,7 +70,7 @@ var TerrainSliceController = (function () {
 				if(id != 0){ // if not air
 					var x = slice.origin.x + j * slice.cell_w + slice.cell_w/2;
 					var y = slice.origin.y + i * slice.cell_w + slice.cell_w/2;
-					var body = PhysicsController.get_rectangular({x: x, y: y}, "terrain_tile");
+					var body = PhysicsController.get_rectangular({x: x, y: y}, slice.grid[i][j]);
 					slice.grid[i][j].body = body;
 				}
 

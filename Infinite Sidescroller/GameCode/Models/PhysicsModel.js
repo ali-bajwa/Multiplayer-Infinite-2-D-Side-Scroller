@@ -98,14 +98,14 @@ r_templates.living = {
 	//mobexp++
 };
 
-r_templates.terrain_tile = {
+r_templates.terrain_cell = {
 	type: "static",
 	width: 1,
 	height: 1,
 	//mobexp++
 };
 
-r_templates.player = {
+r_templates.hero = {
 	parent: r_templates.living,
 	width: 1.5,
 	height: 2.5,

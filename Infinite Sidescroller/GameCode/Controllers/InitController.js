@@ -47,6 +47,7 @@ var InitController = (function(){
 		
 		B2d.init(); // goes first
 		IdentificationController.init();
+		RegisterAsController.init();
 
 		//AssetController.init(); // called from the InitController.init// stuff has to change
 		GameController.init();
@@ -55,7 +56,7 @@ var InitController = (function(){
 
 		//TestController.init(mode);
 
-		PlayerController.init();
+		//PlayerController.init();
 		TerrainController.init();
 		TerrainSliceController.init();
 		WorldController.init();
@@ -125,7 +126,7 @@ var InitController = (function(){
 	var setup_asset_dependant = function(){
 		// this may need to move to either load_game or some sort of resizing function
 		
-		AntController.init();
+		EnemyController.init();
 		GraphicsController.init();
 
 

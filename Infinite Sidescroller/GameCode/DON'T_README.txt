@@ -21,7 +21,7 @@ TOOLS that we use and respective COMMANDS with options and such:
 	watchify 
 		description:
 			wrapper around browserify
-			automatically browserifies project each time one of the sources change. Due to agressive caching,
+			automatically browserifies project each time one of the sources change. Due to aggressive caching,
 			only the first compilation takes long
 		commands:
 			long options:
@@ -39,7 +39,7 @@ LIBRARIES:
 GAME ARCHITECTURE
 
 	MODELS
-		singleton vs. instantiateable
+		singleton vs. instantiable
 		can contain data but not methods
 		should not initialize non-trivial stuff because of undefined includes
 			initialization goes into the respective controller's init function
@@ -58,32 +58,79 @@ GAME ARCHITECTURE
 		Include
 			enumerator
 			code for include and what it does
+			
+	INITIALIZATION ORDER
+		The various modules are initialized in the following order
+		Be careful not to call any module before it has been initialized
+				B2d														Initializes Box2d (physics library)
+				IdentificationController			Initializes ID assignment system
+				GameController								Initializes the game
+				KeyboardController						Defines keyboard inputs
+				PhysicsController							Initializes Physics Controller
+				TestController								Sets up debug canvas (testing only)
+				PlayerController							Initializes the player
+				TerrainController							Initializes the Terrain generator
+				TerrainSliceController				Initializes the TerrainSlice generator
+				WorldController								Initializes
+		
 	DESCRIPTION OF THE FLOW
 		main.js -> InitController.init
 		When ticker is started (after assets are loaded) the GameController.update_all is called
 		each tick, and calls update method of each controller in the specified order
-
+		
+	PROCEDURAL GENERATION THEORY(To be Implemented)
+		procedural generation will be performed in screen-sized chunks called terrain_slices
+		procedural generation will be performed an arbitrary of screens in advance, defined as slice_buffer_size
+		all static objects (terrain, platforms, static visuals etc.) will be generated first.
+		for the time being, ground_lvl will remain constant, but could be changed to a variable in the future.
+		terrain will be generated bottom-up, with the ground (blocks at or below ground_lvl) being handled separately from free-floating platforms
+		Currently, the possible pathing detection is as follows:
+			-gaps in the ground cannot exceed max_pit_width
+			-platforms will not be generated closer than min_hgap_width
+			-platforms will not be longer than max_platform_width
+			-no more than one (maybe 2?) platform can be generated in the same column (not counting ground)
+		This eliminates uncrossable pits, impassable walls, and inescapable tunnels.
+		Method of Enemy generation is still undefined
+		
+		
+	PHYSICSCONTROLLER PUBLIC FUNCTIONS
+		Using PhysicsController in other objects
+			All physics related functionality, including the generation of internal physical representations of objects, is abstracted into PhysicsController.
+			If a controller for an object will need to access physics information, it must include PhysicsController.
+		- get_rectangular({tags},string description)
+				creates a rectangular physical representation for the calling object
+				description is used for identification purposes
+				tags is of the form {tag1:value1,tag2:value2,...,tagn:valuen}
+					VALID TAGS (and expected value type) values with * are required
+						*-width: int
+						*-height: int
+						-isSensor: bool
+						-border_sensors: bool
+						-id: int
+		- listen_for_contact_with(int id, string event_name, function listener_callback)
+			use this function to set up the objects' listeners. 
+		- step
 	DESCRIPTION OF INDIVIDUAL CONTROLLERS
 
 		two bodies with velocity forceably set can produce weird results when colliding (sticking?)
 
-		Graphics step follows Physics step and is complitely separate; Graphics step draws information about
-		physics body and its state to display crrect visual representation
-		E.g. if you want to change face of the monster to angry face whenver it's hit by the player, 
+		Graphics step follows Physics step and is completely separate; Graphics step draws information about
+		physics body and its state to display correct visual representation
+		E.g. if you want to change face of the monster to angry face whenever it's hit by the player, 
 		keep the property "angry" to the MonsterModel and set it whenever monster collides with the player during physics step.
 		Then in the graphics step check whether property is set to true and if so, change the animation frame to display angry face.
 		rendering is done in special functions in graphics controller, but will probably be changed 
-		to either separate modules or withing the respective controller;
+		to either separate modules or within the respective controller;
 
 		animations are defined in the graphics controller. Can change that but must be 
 		mindful because animation definitions uses asset loader, so AssetController 
-		should be initialized before anything that wants to setup animations
+		should be initialized before anything that wants to set up animations
 
 		many things in the project are forced to be as modular as possible, so if changes 
 		are made, need to change only one place and everything else works as usually. Example: 
-		instead of you quarying physics body etc. from renderer, you are getting passed this 
+		instead of you querying physics body etc. from renderer, you are getting passed this 
 		info as the parameters, so if place where body is stored relative to graphics representation is changed,
-		you only need to change place in graphics controller from which it's passsed
+		you only need to change place in graphics controller from which it's passed
 	POSSIBLE OPTIMIZATIONS 
 
 FACTS TO REMEMBER (AVOIDING MISTAKES)
@@ -113,15 +160,15 @@ DEBUGGING
 	the compiled bundle.js
 
 SNIPPETS
-	[short desctiption of what snippets are and where to find them]
+	[short description of what snippets are and where to find them]
 
 FINALLY
 	If you have any questions or ideas for improvement to my designs, it's best if you ask me immediately.
 	Even if you have idea that is cool, but is hard to implement (you think), let me know about it,
-	I'll just keep it in mind when I'm reserching stuff, and maybe it'll turn out to be easier than
+	I'll just keep it in mind when I'm researching stuff, and maybe it'll turn out to be easier than
 	it seems to be.
 
-	This guide is a subject to continious update. I'll notify everyone of new versions
+	This guide is a subject to continuous update. I'll notify everyone of new versions
 
 	I'll try to document my code as much as possible, you probably should leave minimal documentation too,
 	although do not spend too much time on it. 

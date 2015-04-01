@@ -521,15 +521,16 @@ input[type="submit"]:hover{
 }
 
 #regform{
-  background: rgba(231, 226, 182, 0.9);
-  padding:6% 4%;
-  width: 300px;
-  margin: 0 auto;
-  -webkit-border-radius: 40px;
-  -moz-border-radius: 40px;
-   border-radius: 40px;
-   font-family: 'Gentium Book Basic', serif;
-   color: rgb(34, 34, 34);
+    background: rgba(231, 226, 182, 0.9);
+    padding: 4% 4%;
+    width: 300px;
+    margin: 0 auto;
+    font-family: 'Gentium Book Basic', serif;
+    color: rgb(34, 34, 34);
+    border-style:solid;
+    border-color:#222222;
+    border-width:thin;
+
 }
 
 form h4 {

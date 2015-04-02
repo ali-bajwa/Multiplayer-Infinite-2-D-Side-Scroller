@@ -53,6 +53,7 @@ var AntRenderer = (function(){
 		// to create needed animation
 		
 		ant_special_render_temp(ant, Graphics); 
+		console.log(ant);
 		
 
 	};

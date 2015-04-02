@@ -21,6 +21,7 @@ var GraphicsController = (function(){
 		// type:	renderer:
 			"ant": AntRenderer,
 			"hero": HeroRenderer,
+			"terrain_cell": TerrainCellRenderer,
 		};
 
 		get_asset = AssetController.get_asset; // for quicker access
@@ -81,11 +82,7 @@ var GraphicsController = (function(){
 				// if renderer exists for this type, register through it
 				type_renderer_table[new_obj.type].register(new_obj, Graphics);	
 
-				if(GraphicsModel.special_render[new_obj.type]){
-					GraphicsModel.special_render[new_obj.type].push(new_obj);
-				}else{
-					GraphicsModel.special_render[new_obj.type] = [new_obj];
-				}
+				
 			}else{
 				console.log(new_obj);
 				
@@ -313,6 +310,12 @@ var GraphicsController = (function(){
 
 			easeljs_obj.physical_instance = physical_instance;
 			GraphicsModel.all_physical.push(easeljs_obj);
+
+			if(GraphicsModel.special_render[physical_instance.type]){
+				GraphicsModel.special_render[physical_instance.type].push(easeljs_obj);
+			}else{
+				GraphicsModel.special_render[physical_instance.type] = [easeljs_obj];
+			}
 		}
 
 

@@ -62,6 +62,7 @@ var Include = function(){
 		Renderers: [
 			"AntRenderer",
 			"HeroRenderer",
+			"TerrainCellRenderer",
 		],
 
 		Logic: [
@@ -124,8 +125,8 @@ var Include = function(){
 			
 			AntRenderer: require("./Renderers/AntRenderer.js"),
 			HeroRenderer: require("./Renderers/HeroRenderer.js"),
+			TerrainCellRenderer: require("./Renderers/TerrainCellRenderer.js"),
 			
-
 			// Logic
 			AntLogic: require("./Logic/AntLogic.js"),
 			HeroLogic: require("./Logic/HeroLogic.js"),

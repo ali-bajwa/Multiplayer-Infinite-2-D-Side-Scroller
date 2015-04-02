@@ -1,4 +1,4 @@
-var AntAI = (function(){
+var HeroAI = (function(){
 
 	this.Player = function(){
 		this.hp = 100;
@@ -6,7 +6,7 @@ var AntAI = (function(){
 		this.jumps = 0;
 	}
 
-	var IdentificationController, PhysicsController, RegisterAsController, KeyboardController, B2d;
+	var IdentificationController, PhysicsController, RegisterAsController, KeyboardController, B2d, GraphicsController;
 	var hero;
 
 	var init = function(imports){
@@ -17,6 +17,7 @@ var AntAI = (function(){
 		PhysicsController = imports.PhysicsController;
 		RegisterAsController = imports.RegisterAsController;
 		KeyboardController = imports.KeyboardController;
+		GraphicsController = imports.GraphicsController;
 		B2d = imports.B2d;
 
 
@@ -168,4 +169,4 @@ var AntAI = (function(){
 	};
 })();
 
-module.exports = AntAI;
+module.exports = HeroAI;

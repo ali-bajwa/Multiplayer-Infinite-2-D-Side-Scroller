@@ -25,7 +25,7 @@ var GameController = (function(){
 			WorldController.update(delta);
 
 			TerrainController.update();
-			EnemyController.update();
+			EntityController.update();
 
 			// Should be called after all movement of objects is done:
 			GraphicsController.update();

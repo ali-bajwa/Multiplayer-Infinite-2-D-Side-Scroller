@@ -1,4 +1,4 @@
-var EnemyModel = function(){	
+var EntityModel = function(){	
 	// associates type with the AI
 	this.type_to_AI = {};
 
@@ -9,5 +9,5 @@ var EnemyModel = function(){
 
 };
 
-module.exports = new EnemyModel;
+module.exports = new EntityModel;
 

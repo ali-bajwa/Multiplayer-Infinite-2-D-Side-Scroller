@@ -18,7 +18,7 @@ var Include = function(){
 	var module_names = {
 		Controllers: [
 			"AssetController",
-			"EnemyController",
+			"EntityController",
 			"GameController",
 			"GraphicsController",
 			"InitController",
@@ -47,7 +47,7 @@ var Include = function(){
 			"TestModel",
 			"WorldModel",
 			//"AntModel",
-			"EnemyModel",
+			"EntityModel",
 			"RegisterAsModel",
 		],
 
@@ -62,6 +62,7 @@ var Include = function(){
 		Renderers: [
 			"AntRenderer",
 			"HeroRenderer",
+			"TerrainCellRenderer",
 		],
 
 		Logic: [
@@ -86,7 +87,7 @@ var Include = function(){
 			InitController: require("./Controllers/InitController.js"),
 			TestController: require("./Controllers/TestController.js"),
 			GameController: require("./Controllers/GameController.js"),
-			EnemyController: require("./Controllers/EnemyController.js"),
+			EntityController: require("./Controllers/EntityController.js"),
 			//AntController: require("./Controllers/AntController.js"),
 			IdentificationController: require("./Controllers/IdentificationController.js"),
 			RegisterAsController: require("./Controllers/RegisterAsController.js"),
@@ -107,7 +108,7 @@ var Include = function(){
 			TestModel: require("./Models/TestModel.js"),
 			//AntModel: require("./Models/AntModel.js"),
 			IdentificationModel: require("./Models/IdentificationModel.js"),
-			EnemyModel: require("./Models/EnemyModel.js"),
+			EntityModel: require("./Models/EntityModel.js"),
 			RegisterAsModel: require("./Models/RegisterAsModel.js"),
 			
 			
@@ -124,8 +125,8 @@ var Include = function(){
 			
 			AntRenderer: require("./Renderers/AntRenderer.js"),
 			HeroRenderer: require("./Renderers/HeroRenderer.js"),
+			TerrainCellRenderer: require("./Renderers/TerrainCellRenderer.js"),
 			
-
 			// Logic
 			AntLogic: require("./Logic/AntLogic.js"),
 			HeroLogic: require("./Logic/HeroLogic.js"),

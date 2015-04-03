@@ -1,5 +1,5 @@
 
-var EnemyController = (function(){
+var EntityController = (function(){
 	/* Description
 	*/
 
@@ -19,6 +19,7 @@ var EnemyController = (function(){
 			PhysicsController: PhysicsController,
 			IdentificationController: IdentificationController,
 			KeyboardController: KeyboardController,
+			GraphicsController: GraphicsController,
 			B2d: B2d
 		};
 
@@ -58,11 +59,11 @@ var EnemyController = (function(){
 		if(logic){
 			var new_entity = logic.spawn(x, y);
 			RegisterAsController.register_as("awaiting_graphics_initialization", new_entity)
-			var logic_upd_list = EnemyModel.for_logic_update[type];
+			var logic_upd_list = EntityModel.for_logic_update[type];
 			if(logic_upd_list){
 				logic_upd_list.push(new_entity);
 			}else{
-				EnemyModel.for_logic_update[type] = [new_entity]
+				EntityModel.for_logic_update[type] = [new_entity]
 			}
 		}else{
 			throw "Logic for the type " + type + " is not defined";
@@ -81,8 +82,8 @@ var EnemyController = (function(){
 			var new_ant = spawn(Math.random()*50 + 10, 10, "ant");
 		}
 
-		for(var type in EnemyModel.for_logic_update){
-			var list = EnemyModel.for_logic_update[type];
+		for(var type in EntityModel.for_logic_update){
+			var list = EntityModel.for_logic_update[type];
 
 			var logic = type_logic_table[type];
 			for(var i = 0; i < list.length; i++){
@@ -100,10 +101,10 @@ var EnemyController = (function(){
 	};
 })();
 
-module.exports = EnemyController;
+module.exports = EntityController;
 
 var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
-	current_module: "EnemyController", 
+	current_module: "EntityController", 
 	include_options: Includes.choices.DEFAULT | Includes.choices.LOGIC
 }); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
 

@@ -48,7 +48,7 @@ var AntAI = (function(){
 
 		// listen for type, put shit into the EnemyController
 		PhysicsController.listen_for_contact_with(id, "BeginContact", begin_contact);
-		
+		PhysicsController.listen_for_contact_with(id, "EndContact", end_contact);
 		return new_ant;
 
 	};
@@ -65,7 +65,8 @@ var AntAI = (function(){
 		* >Stuff< which is object containing functions you need
 		* and other stuff
 		*/
-
+	
+		
 		//if enemy is dead, die
 		if (ant.hp == 1) {
 			
@@ -84,6 +85,7 @@ var AntAI = (function(){
 			
 			change_state(ant, "death");
 			ant.death_tick++;
+			
 		}
 		//else move & attack
 	
@@ -96,9 +98,9 @@ var AntAI = (function(){
 				Antbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 				Antbody.SetAwake(true);
 			}
-			if (ant.can_attack && ant.me_hurt_hero && model.AI_state == "walk") 
+			if (ant.can_attack && ant.me_hurt_hero && ant.AI_state == "walk") 
 			{
-
+				
 				
 			}
 			if (ant.hero_hurt_me)
@@ -106,6 +108,8 @@ var AntAI = (function(){
 				wound_ant(ant, 1);
 				ant.hero_hurt_me = false;
 				change_state(ant, "upside_down");
+				
+				
 			}
 		}
 	
@@ -126,33 +130,22 @@ var AntAI = (function(){
 			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
 
 		
-		//var mean_hero;
-		//if(info.A.body_id == "hero")
-		//{
-			//mean_hero = info.A;
-			//if(mean_hero.fixture != "bottom sensor" && AntModel.can_attack)
-			//{
-				//ant.me_hurt_hero = true;
-			//}	
-			//else
-			//{
+		//console.log(info.Me);
+		if(info.Them.type == "hero")
+		{
+			
+			if(info.Them.fixture_name != "bottom" && info.Me.entity.can_attack)
+			{
+				info.Me.entity.me_hurt_hero = true;
+				info.Them.entity.hp--;
+			}	
+			else
+			{
 
-				//AntModel.hero_hurt_me = true;
-			//}
-		//}
-		//else if(info.B.body_id == "hero")
-		//{
-			//mean_hero = info.B;
-			//if(mean_hero.fixture != "bottom sensor" && AntModel.can_attack)
-			//{
-				//ant.me_hurt_hero = true;
-			//}	
-			//else
-			//{
+				info.Me.entity.hero_hurt_me = true;
+			}
+		}
 
-				//AntModel.hero_hurt_me = true;
-			//}
-		//}
 	};
 
 	var end_contact = function(contact, info) {

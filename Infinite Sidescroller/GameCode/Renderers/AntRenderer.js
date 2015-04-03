@@ -63,13 +63,13 @@ var AntRenderer = (function(){
 
 		console.log(ant);
 		if(ant.AI_state == "death"){
-			ant_animation.gotoAndStop("death");
+			ant.gotoAndPlay("death");
 			
 		}
 
 		if(ant.AI_state == "upside_down")
 		{
-			ant_animation.gotoAndStop("upside-down");
+			ant.gotoAndPlay("upside-down");
 			
 		}
 

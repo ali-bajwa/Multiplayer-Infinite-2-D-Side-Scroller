@@ -1,0 +1,179 @@
+snippet ctl "custom controller def."
+
+	var ${1:ControllerName} = (function(){
+		/* ${2:Description}
+		*/
+
+		var init = function(){
+			/* is ran from the InitController once when the game is loaded */
+
+			include(); // satisfy requirements
+
+		};
+
+		var update = function(delta){
+			/* is ran each tick from the GameController.update_all */
+
+		};
+		${0}
+		return {
+			// declare public
+			init: init, 
+			update: update,
+		};
+	})();
+
+	module.exports = $1;
+
+	var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
+		current_module: "$1", 
+		include_options: Includes.choices.${3:DEFAULT}
+	}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
+
+
+snippet mdl "custom model def."
+	var ${1:ModelName} = function(${2}){
+		${0}
+	};
+
+	module.exports = ${3:new} $1;
+
+
+snippet bre "browserify require statement"
+	${1:ModuleName} = require("${2}/$1.js");
+
+
+snippet brei "Includes.js browserify require statement"
+	${1:ModuleName}: require("${2:./Controllers}/$1.js"),${0}
+
+
+snippet fu "function assigned to the variable"
+	var ${1:FunctionName} = function(${2:arguments}){
+		/**
+		* ${3:description}
+		*/
+		${VISUAL}${0}
+	};
+
+
+snippet ainc "automatic include mechanism"
+	var Includes = require("${1:..}/Includes.js"); var include_data = Includes.get_include_data({
+		current_module: "${2:CurrentModuleName}", 
+		include_options: Includes.choices.${3:DEFAULT}
+	}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
+
+
+snippet lg "console.log"
+	console.log(${1:"here"});${0}
+
+
+snippet mob "multi line object"
+	{
+		${1:property}: ${2:value},
+		//mobexp++${0}
+	};
+
+
+snippet //mobexp++ "expansion for the multi line object"
+	${1:property}: ${2:value},
+	//mobexp++${0}
+
+
+snippet rndr "renderer (infinite sidescroller project)" 
+	var ${1:RendererName} = (function(){
+
+		var spritesheets = {}; // to store spritesheets used by this entity
+
+		var init = function(){
+			/* is ran from GraphicsController.init once during game loading
+				use this function to create spritesheets and such
+				like spritesheets.first = new createjs.Spritesheet(...);
+			*/
+			include(); // satisfy requirements, GOES FIRST
+
+		};
+
+		var register = function(${2:entity_instance}){
+			/* is ran for every entity of this type that was just created and should
+			get graphics representation. You are given the entity instance and is supposed
+			to crete graphics instance, and GraphicsController.reg_for_render(graphics_instance, entity_instance); it 
+			*/
+
+			${0}
+		};
+
+		var render = function(${3:graphics_instance}){
+			/* 	is ran each tick from GraphicsController, for every registered object of this type
+				is given >graphics_instance< parameter, which is also supposed to contain
+				physical_instance property containing entity_instance, if it was attched correctly
+			*/
+
+		};
+
+		return {
+			// declare public
+			init: init, 
+			register: register,
+			render: render,
+		};
+	})();
+
+	module.exports = $1;
+
+	var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
+		current_module: "$1", 
+		include_options: Includes.choices.RENDERER_SPECIFIC
+	}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
+
+snippet logic "logic module (infinite sidescroller project)" 
+	var ${1:LogicModuleName} = (function(){
+
+		var ${2:EntityModel} = function(){
+			/* Will be instantiated for every created entity to hold all the information 
+				about the physical (not graphical) state of the entity in question. 
+				declare the properties like this:
+				this.some_state_variable_initial_value = 0;
+				instantiate (most likely in the spawn function) like that:
+				var new_entity_instance = new $2();
+			*/
+		};
+
+		var init = function(){
+			/* Is ran from the EntityController.init once during game loading 
+				you should assign type to your model here using the identification controller
+			*/
+			include(); // satisfy requirements, GOES FIRST
+			IdentificationController.assign_type($2, "${3:type_name}");
+		};
+
+		var spawn = function(x, y){
+			/* spawn instance of this entity at the given coordinates
+				you will have to create new entity instance, assign it id
+				using the IdentificationController.assign_id(entity_instance),
+				assign it a body which you can get through PhysicsController
+				do any other stuff you want to do during spawning,
+				and finally you HAVE TO(!!!) return the instance you just created from this function
+			*/
+			${0}
+		};
+
+		var tick_AI = function(${4:entity_instance}){
+			/* Is ran each tick from the EntityController.update for every registered
+				entity of this type. I given entity_instance
+			*/
+		};
+
+		return {
+			// declare public
+			init: init, 
+			spawn: spawn,
+			tick_AI: tick_AI,
+		};
+	})();
+
+	module.exports = $1;
+
+	var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
+		current_module: "$1", 
+		include_options: Includes.choices.LOGIC_SPECIFIC
+	}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}

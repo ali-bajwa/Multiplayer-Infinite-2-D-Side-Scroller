@@ -1,33 +1,37 @@
-var HeroAI = (function(){
+var HeroLogic = (function(){
 
-	this.Player = function(){
+		
+	var Hero = function(){
+		/* Will be instantiated for every created entity to hold all the information 
+			about the physical (not graphical) state of the entity in question. 
+			declare the properties like this:
+			this.some_state_variable_initial_value = 0;
+			instantiate (most likely in the spawn function) like that:
+			var new_entity_instance = new Hero();
+		*/
 		this.hp = 100;
 		this.wound = false;
 		this.jumps = 0;
-	}
-
-	var IdentificationController, PhysicsController, RegisterAsController, KeyboardController, B2d, GraphicsController;
-	var hero;
-
-	var init = function(imports){
-		/**
-		* initialize and register stuff
-		*/
-		IdentificationController = imports.IdentificationController;
-		PhysicsController = imports.PhysicsController;
-		RegisterAsController = imports.RegisterAsController;
-		KeyboardController = imports.KeyboardController;
-		GraphicsController = imports.GraphicsController;
-		B2d = imports.B2d;
-
-
-		IdentificationController.assign_type(Player, "hero");	
-
 	};
-	
+
+	var init = function(){
+		/* Is ran from the EntityController.init once during game loading 
+			you should assign type to your model here using the identification controller
+		*/
+		include(); // satisfy requirements, GOES FIRST
+		IdentificationController.assign_type(Hero, "hero");
+	};
 
 	var spawn = function(x, y){
-		var hero = new Player();
+		/* spawn instance of this entity at the given coordinates
+			you will have to create new entity instance, assign it id
+			using the IdentificationController.assign_id(entity_instance),
+			assign it a body which you can get through PhysicsController
+			do any other stuff you want to do during spawning,
+			and finally you HAVE TO(!!!) return the instance you just created from this function
+		*/
+
+		var hero = new Hero();
 
 		hero.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, hero);
 
@@ -37,12 +41,14 @@ var HeroAI = (function(){
 
 
 		return hero;
-	};
 	
-	var tick_AI = function(entity){
+	};
 
-		hero = entity;
-		
+	var tick_AI = function(hero){
+		/* Is ran each tick from the EntityController.update for every registered
+			entity of this type. I given entity_instance
+		*/
+
 		var cmds = KeyboardController.movement_commands();
 
 		var MOVEMENT_EDGE = 500; // where terrain start scrolling
@@ -74,7 +80,6 @@ var HeroAI = (function(){
 			createjs.Ticker.paused = true;
 			console.log("Player Is Dead");
 		}
-	
 	};
 
 	var begin_contact = function(contact, info){
@@ -134,7 +139,7 @@ var HeroAI = (function(){
 	
 	};
 
-	var set_coordinates = function(position_vector){
+	var set_coordinates = function(position_vector, hero){
 		// TODO: remove;
 		// temporary/testing
 		hero.x = (position_vector.x - 1.5/2) * 30 ;
@@ -142,39 +147,43 @@ var HeroAI = (function(){
 
 	};
 
-	var b2b_get_coordinates = function(){
+	var b2b_get_coordinates = function(hero){
 		return hero.body.GetWorldCenter();
 	};
 
-	var move_left = function(){
+	var move_left = function(hero){
 		var velocity = hero.body.GetLinearVelocity();
 		velocity.x = -5;
 		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 		hero.body.SetAwake(true);
 	};
 
-	var move_right = function(){
+	var move_right = function(hero){
 		var velocity = hero.body.GetLinearVelocity();
 		velocity.x = +5;
 		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 		hero.body.SetAwake(true);
 	};
 
-	var move = function(offset_x, offset_y){
+	var move = function(offset_x, offset_y, hero){
 		// unimplemented
 		// should it hard-set position (not safe!)
 		// or just allow to set any velocity/impulse vector?
 	};
 
-
-
 	return {
-		tick_AI: tick_AI,
+		// declare public
+		init: init, 
 		spawn: spawn,
-		init: init,
+		tick_AI: tick_AI,
 		begin_contact: begin_contact,
 		end_contact: end_contact,
 	};
 })();
 
-module.exports = HeroAI;
+module.exports = HeroLogic;
+
+var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
+	current_module: "HeroLogic", 
+	include_options: Includes.choices.LOGIC_SPECIFIC
+}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}

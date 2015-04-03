@@ -1,7 +1,14 @@
-var AntAI = (function(){
+var AntLogic = (function(){
 
 	var Ant = function(){
-		//define your constants here
+		/* Will be instantiated for every created entity to hold all the information 
+			about the physical (not graphical) state of the entity in question. 
+			declare the properties like this:
+			this.some_state_variable_initial_value = 0;
+			instantiate (most likely in the spawn function) like that:
+			var new_entity_instance = new Ant();
+		*/
+
 		this.H = 31;//height
 		this.W = 50;
 		this.sprite_array = [];  //single source for sprites
@@ -19,26 +26,24 @@ var AntAI = (function(){
 		this.can_attack = true;//use this for enemies who alternate between 
 		//this.cooldown_timer=-1;
 		this.AI_state = "walk";//use this to keep track of the enemy's AI state
+
 	};
 
-	var IdentificationController, PhysicsController, RegisterAsController;
-
-	var init = function(imports){
-		/**
-		* initialize and register stuff
-		*/
-
-		IdentificationController = imports.IdentificationController;
-		PhysicsController = imports.PhysicsController;
-		RegisterAsController = imports.RegisterAsController;
-
-		IdentificationController.assign_type(Ant, "ant");	
+	var init = function(){
+		/* Is ran from the EntityController.init once during game loading 
+		 	you should assign type to your model here using the identification controller
+		 */
+		include(); // satisfy requirements, GOES FIRST
+		IdentificationController.assign_type(Ant, "ant");
 	};
-	
 
 	var spawn = function(x, y){
-		/**
-		* spawn ant
+		/* spawn instance of this entity at the given coordinates
+			you will have to create new entity instance, assign it id
+			using the IdentificationController.assign_id(entity_instance),
+			assign it a body which you can get through PhysicsController
+			do any other stuff you want to do during spawning,
+			and finally you HAVE TO(!!!) return the instance you just created from this function
 		*/
 
 		var new_ant = new Ant();
@@ -46,27 +51,15 @@ var AntAI = (function(){
 
 		new_ant.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, new_ant);	
 
-		// listen for type, put shit into the EnemyController
-		//PhysicsController.listen_for_contact_with(id, "BeginContact", begin_contact);
-		//PhysicsController.listen_for_contact_with(id, "EndContact", end_contact);
 		return new_ant;
 
 	};
-	
-	var wound_ant = function(ant, wound){
 
-		ant.hp -= wound;
-	}
-
-	var tick_AI = function(ant, Stuff){
-		/**
-		* tick the AI for the given ant
-		* gets instance of the ant and
-		* >Stuff< which is object containing functions you need
-		* and other stuff
+	var tick_AI = function(ant){
+		/* Is ran each tick from the EntityController.update for every registered
+			entity of this type. I given entity_instance
 		*/
-	
-		
+
 		//if enemy is dead, die
 		if (ant.hp == 1) {
 			
@@ -112,9 +105,13 @@ var AntAI = (function(){
 				
 			}
 		}
-	
+
 	};
-	
+
+	var wound_ant = function(ant, wound){
+
+		ant.hp -= wound;
+	}
 	var change_state = function(ant, progress_state) {
 		ant.AI_state = progress_state;
 
@@ -154,13 +151,20 @@ var AntAI = (function(){
 
 	};
 
+	
 	return {
-		tick_AI: tick_AI,
+		// declare public
+		init: init, 
 		spawn: spawn,
-		init: init,
+		tick_AI: tick_AI,
+		begin_contact: begin_contact,
 		end_contact: end_contact,
-		begin_contact: begin_contact
 	};
 })();
 
-module.exports = AntAI;
+module.exports = AntLogic;
+
+var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
+	current_module: "AntLogic", 
+	include_options: Includes.choices.LOGIC_SPECIFIC
+}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}

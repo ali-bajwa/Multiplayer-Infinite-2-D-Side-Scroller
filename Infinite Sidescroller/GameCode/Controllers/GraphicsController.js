@@ -10,12 +10,7 @@ var GraphicsController = (function(){
 
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
-
 		include(); // satisfy requirements
-
-		// this will be passed to rendereres
-		Graphics = {request_animated: request_animated, reg_for_render: reg_for_render, 
-			set_reg_position: set_reg_position, request_bitmap: request_bitmap};
 
 		type_renderer_table = {
 		// type:	renderer:
@@ -43,8 +38,10 @@ var GraphicsController = (function(){
 		reg_for_render(GraphicsModel.health);
 		hud_temp();
 
-		// TODO: init all renderers; change Includes to package renderers
-		AntRenderer.init({get_asset: AssetController.get_asset, });
+		// init all renderers
+		for(type in type_renderer_table){
+			type_renderer_table[type].init();
+		}
 	};
     
 	var update = function(delta){
@@ -338,6 +335,11 @@ var GraphicsController = (function(){
 		update: update,
 		get_stage: get_stage,
 		update_health: update_health,
+		get_asset: get_asset,
+		reg_for_render: reg_for_render,
+		set_reg_position: set_reg_position,
+		request_bitmap: request_bitmap,
+		request_animated: request_animated,
 	};
 })();
 

@@ -1,16 +1,16 @@
 var AntRenderer = (function(){
-	// TODO: mechanism for easy finding of new ants to render
 
 	var spritesheets = {};
 	var ant_animation;
 
-	var init = function(InitGraphics){
-		/**
-		* will be called once when game is loaded from the GraphicsController.init
-		* initialize you animation definitions and other stuff here
-		* >InitGraphics< contains graphics functions needed (and available) during initialization
+	var init = function(){
+		/* is ran from GraphicsController.init once during game loading
+		 	use this function to create spritesheets and such
+			like spritesheets.first = new createjs.Spritesheet(...);
 		*/
-		var get_asset = InitGraphics.get_asset;
+
+		include(); // satisfy requirements, GOES FIRST
+		var get_asset = AssetController.get_asset;
 
 		spritesheets["ant"] = new createjs.SpriteSheet({
 			"framerate": 1,
@@ -24,41 +24,30 @@ var AntRenderer = (function(){
 		})
 
 	};
-	
-	var register = function(physical_instance, Graphics){
-		/**
-		* this is called when new ant is first registered in graphics controller
-		* you are responsible for registering it for rendering etc.
-		* >Graphics< object gives you access to various functions and modules you are
-		* allowed to use
-		*/
-		ant_animation = Graphics.request_animated(spritesheets["ant"], "walk");
-		Graphics.set_reg_position(ant_animation, 0, 0); // change that to adjust sprite position relative to the body
-		Graphics.reg_for_render(ant_animation, physical_instance); // sets ant_animation's position to track the ant's position (updates each tick)
 
-	};
-	
-
-	var render = function(ant, Graphics){
-		/**
-		* takes >ant< (the ant object) and 
-		* >Graphics< which is an object containing various functions/objects
-		* passed from the GraphicsController to allow you to properly render the ant
-		* will be called each tick
+	var register = function(entity_ant){
+		/* is ran for every entity of this type that was just created and should
+		get graphics representation. You are given the entity instance and is supposed
+		to crete graphics instance, and GraphicsController.reg_for_render(graphics_instance, entity_instance); it 
 		*/
 
-		// TEMPORARY needs to change to some sort of 
-		// spawning notification system which is general 
-		// idea: check for type and call function withing individual RENDERER
-		// to create needed animation
-		
-		ant_special_render_temp(ant, Graphics); 
-	
-		
+		ant_animation = GraphicsController.request_animated(spritesheets["ant"], "walk");
+		GraphicsController.set_reg_position(ant_animation, 0, 0); // change that to adjust sprite position relative to the body
+		GraphicsController.reg_for_render(ant_animation, entity_ant); // sets ant_animation's position to track the ant's position (updates each tick)
 
+		
 	};
-	
-	var ant_special_render_temp = function(ant, Graphics){
+
+	var render = function(ant){
+		/* 	is ran each tick from GraphicsController, for every registered object of this type
+			is given >graphics_instance< parameter, which is also supposed to contain
+			physical_instance property containing entity_instance, if it was attched correctly
+		*/
+
+		ant_special_render_temp(ant); 
+	};
+
+	var ant_special_render_temp = function(ant){
 		/* how to handle special render? TEMPORARY */
 
 		
@@ -74,15 +63,19 @@ var AntRenderer = (function(){
 			
 		}
 
-		
-
 	};
 
 	return {
+		// declare public
 		init: init, 
+		register: register,
 		render: render,
-		register: register
 	};
 })();
 
 module.exports = AntRenderer;
+
+var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
+	current_module: "AntRenderer", 
+	include_options: Includes.choices.RENDERER_SPECIFIC
+}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}

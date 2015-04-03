@@ -10,6 +10,8 @@ var Include = function(){
 		// complex options: should consist of simple options, bitwise(!) OR'ed or AND'ed together in any fashion
 		result.DEFAULT = (result.ALL_CONTROLLERS | result.OWN_MODEL | result.OTHER_STUFF);
 		result.ALL =  (result.ALL_CONTROLLERS | result.ALL_MODELS | result.OTHER_STUFF); 
+		result.RENDERER_SPECIFIC = (result.ALL_CONTROLLERS | result.OTHER_STUFF);
+		result.LOGIC_SPECIFIC = (result.ALL_CONTROLLERS | result.OTHER_STUFF);
 
 		// object is immutable
 		return Object.freeze(result);

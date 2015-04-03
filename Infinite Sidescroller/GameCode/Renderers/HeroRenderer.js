@@ -1,41 +1,47 @@
 var HeroRenderer = (function(){
-	// TODO: mechanism for easy finding of new ants to render
 
-	var spritesheets = {};
+	var spritesheets = {}; // to store spritesheets used by this entity
 
-	var init = function(InitGraphics){
-		/**
-		* will be called once when game is loaded from the GraphicsController.init
-		* initialize you animation definitions and other stuff here
-		* >InitGraphics< contains graphics functions needed (and available) during initialization
+	var init = function(){
+		/* is ran from GraphicsController.init once during game loading
+			use this function to create spritesheets and such
+			like spritesheets.first = new createjs.Spritesheet(...);
 		*/
-		var get_asset = InitGraphics.get_asset;
-
+		include(); // satisfy requirements, GOES FIRST
 	};
-	
-	var register = function(physical_instance, Graphics){
-		/**
-		* description
+
+	var register = function(entity_hero){
+		/* is ran for every entity of this type that was just created and should
+		get graphics representation. You are given the entity instance and is supposed
+		to crete graphics instance, and GraphicsController.reg_for_render(graphics_instance, entity_instance); it 
 		*/
 
-		var hero = Graphics.request_bitmap("greek_warrior");
+		var hero = GraphicsController.request_bitmap("greek_warrior");
 
-		Graphics.set_reg_position(hero, -20, +10);
-		Graphics.reg_for_render(hero, physical_instance);
+		GraphicsController.set_reg_position(hero, -20, +10);
+		GraphicsController.reg_for_render(hero, entity_hero);
 
 	};
-	
 
-	var render = function(hero, Graphics, update_health){
-		update_health(hero.physical_instance.hp);
+	var render = function(hero){
+		/* 	is ran each tick from GraphicsController, for every registered object of this type
+			is given >graphics_instance< parameter, which is also supposed to contain
+			physical_instance property containing entity_instance, if it was attched correctly
+		*/
+		GraphicsController.update_health(hero.physical_instance.hp);
 	};
-	
 
 	return {
+		// declare public
 		init: init, 
+		register: register,
 		render: render,
-		register: register
 	};
 })();
 
 module.exports = HeroRenderer;
+
+var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
+	current_module: "HeroRenderer", 
+	include_options: Includes.choices.RENDERER_SPECIFIC
+}); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}

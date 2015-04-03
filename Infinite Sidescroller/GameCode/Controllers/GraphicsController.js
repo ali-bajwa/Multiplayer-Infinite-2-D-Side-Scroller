@@ -63,7 +63,7 @@ var GraphicsController = (function(){
 		hud_temp_update();
 
 		// <<<<
-		
+		//update_health(hero.hp);
 		GraphicsModel.stage.update();
 	};
 
@@ -106,7 +106,7 @@ var GraphicsController = (function(){
 			var renderer = type_renderer_table[type];
 
 			for(var i = 0; i < list.length; i++){
-				renderer.render(list[i], Graphics);
+				renderer.render(list[i], Graphics, update_health);
 			}
 
 		}

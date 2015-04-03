@@ -26,8 +26,8 @@ var HeroRenderer = (function(){
 	};
 	
 
-	var render = function(hero, Graphics){
-		
+	var render = function(hero, Graphics, update_health){
+		update_health(hero.physical_instance.hp);
 	};
 	
 

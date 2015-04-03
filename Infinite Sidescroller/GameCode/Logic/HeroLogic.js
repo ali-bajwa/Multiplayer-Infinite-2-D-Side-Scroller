@@ -101,7 +101,7 @@ var HeroAI = (function(){
 
 	var take_hit = function(hero, amount){
 	    hero.hp -= amount;
-		GraphicsController.update_health(hero.hp);
+		//GraphicsController.update_health(hero.hp);
 	}
 
 	var end_contact = function(contact, info){

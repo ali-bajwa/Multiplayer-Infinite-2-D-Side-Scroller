@@ -53,7 +53,7 @@ var AntRenderer = (function(){
 		// to create needed animation
 		
 		ant_special_render_temp(ant, Graphics); 
-		console.log(ant);
+	
 		
 
 	};
@@ -61,16 +61,17 @@ var AntRenderer = (function(){
 	var ant_special_render_temp = function(ant, Graphics){
 		/* how to handle special render? TEMPORARY */
 
-		console.log(ant);
-		if(ant.AI_state == "death"){
+		
+		if(ant.physical_instance.AI_state == "death"){
 			ant.gotoAndPlay("death");
+			console.log("Yoyo");
 			
 		}
 
-		if(ant.AI_state == "upside_down")
+		if(ant.physical_instance.AI_state == "upside_down")
 		{
 			ant.gotoAndPlay("upside-down");
-			
+			console.log("Yoyo");
 		}
 
 		

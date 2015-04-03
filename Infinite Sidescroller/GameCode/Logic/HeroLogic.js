@@ -88,8 +88,16 @@ var HeroAI = (function(){
 		if (info.Me.fixture_name == "top"){
 			take_hit(info.Me.entity, 1);
 		}
+		
+		if(info.Me.fixture_name != "bottom" && info.Them.entity.can_attack)
+		{
+			info.Me.entity.wound = true;
+		}
 				
 	};
+	
+
+	
 
 	var take_hit = function(hero, amount){
 	    hero.hp -= amount;

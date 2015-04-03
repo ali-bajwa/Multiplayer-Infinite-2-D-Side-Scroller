@@ -48,7 +48,7 @@ var AntAI = (function(){
 
 		// listen for type, put shit into the EnemyController
 		PhysicsController.listen_for_contact_with(id, "BeginContact", begin_contact);
-		
+		PhysicsController.listen_for_contact_with(id, "EndContact", end_contact);
 		return new_ant;
 
 	};
@@ -65,7 +65,8 @@ var AntAI = (function(){
 		* >Stuff< which is object containing functions you need
 		* and other stuff
 		*/
-
+	
+		
 		//if enemy is dead, die
 		if (ant.hp == 1) {
 			
@@ -99,7 +100,7 @@ var AntAI = (function(){
 			}
 			if (ant.can_attack && ant.me_hurt_hero && ant.AI_state == "walk") 
 			{
-
+				
 				
 			}
 			if (ant.hero_hurt_me)
@@ -129,13 +130,14 @@ var AntAI = (function(){
 			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
 
 		
-	
+		//console.log(info.Me);
 		if(info.Them.type == "hero")
 		{
-		
-			if(info.Them.fixture != "bottom" && info.Me.entity.can_attack)
+			
+			if(info.Them.fixture_name != "bottom" && info.Me.entity.can_attack)
 			{
 				info.Me.entity.me_hurt_hero = true;
+				info.Them.entity.hp--;
 			}	
 			else
 			{

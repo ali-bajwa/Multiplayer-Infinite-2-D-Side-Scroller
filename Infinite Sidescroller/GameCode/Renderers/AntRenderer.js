@@ -64,14 +64,14 @@ var AntRenderer = (function(){
 		
 		if(ant.physical_instance.AI_state == "death"){
 			ant.gotoAndPlay("death");
-			console.log("Yoyo");
+			
 			
 		}
 
 		if(ant.physical_instance.AI_state == "upside_down")
 		{
 			ant.gotoAndPlay("upside-down");
-			console.log("Yoyo");
+			
 		}
 
 		

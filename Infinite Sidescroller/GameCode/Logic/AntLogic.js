@@ -47,8 +47,8 @@ var AntAI = (function(){
 		new_ant.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, new_ant);	
 
 		// listen for type, put shit into the EnemyController
-		PhysicsController.listen_for_contact_with(id, "BeginContact", begin_contact);
-		PhysicsController.listen_for_contact_with(id, "EndContact", end_contact);
+		//PhysicsController.listen_for_contact_with(id, "BeginContact", begin_contact);
+		//PhysicsController.listen_for_contact_with(id, "EndContact", end_contact);
 		return new_ant;
 
 	};
@@ -137,7 +137,7 @@ var AntAI = (function(){
 			if(info.Them.fixture_name != "bottom" && info.Me.entity.can_attack)
 			{
 				info.Me.entity.me_hurt_hero = true;
-				info.Them.entity.hp--;
+				
 			}	
 			else
 			{

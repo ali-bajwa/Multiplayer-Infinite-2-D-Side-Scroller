@@ -15,21 +15,12 @@ var EntityController = (function(){
 			"hero": HeroLogic,
 		};
 
-		var imports = {RegisterAsController: RegisterAsController,
-			PhysicsController: PhysicsController,
-			IdentificationController: IdentificationController,
-			KeyboardController: KeyboardController,
-			GraphicsController: GraphicsController,
-			B2d: B2d
-		};
-
 		for(type in type_logic_table){
 			var logic = type_logic_table[type];
-			logic.init(imports);
+			logic.init();
 
 			if(logic.begin_contact){
 				PhysicsController.listen_for_contact_with(type, "BeginContact", logic.begin_contact);
-				console.log(logic);
 			}
 
 			if(logic.end_contact){
@@ -89,6 +80,7 @@ var EntityController = (function(){
 			for(var i = 0; i < list.length; i++){
 				logic.tick_AI(list[i]);
 			}
+			
 		} // end for in 
 
 	};

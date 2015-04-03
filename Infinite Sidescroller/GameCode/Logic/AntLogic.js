@@ -8,11 +8,6 @@ var AntLogic = (function(){
 			instantiate (most likely in the spawn function) like that:
 			var new_entity_instance = new Ant();
 		*/
-
-		this.H = 31;//height
-		this.W = 50;
-		this.sprite_array = [];  //single source for sprites
-		
 		this.hero_hurt_me = false;
 		this.me_hurt_hero = false;
 		this.death_tick = 0;
@@ -63,26 +58,22 @@ var AntLogic = (function(){
 		//if enemy is dead, die
 		if (ant.hp == 1) {
 			
-			if (ant.hero_hurt_me)
-			{
+			if (ant.hero_hurt_me){
 				wound_ant(ant, 1);
 				ant.hero_hurt_me = false;
 			}
-		} 
-		else if (ant.hp <= 0 && ant.death_tick == 30) {
-			//ant.ant.DestroyFixture();
-			ant.death_tick++;
-		}
-		else if (ant.hp <= 0 && ant.death_tick > 30){}
-		else if (ant.hp <= 0) {
-			
+
+		}else if (ant.hp <= 0) {
 			change_state(ant, "death");
 			ant.death_tick++;
-			
-		}
-		//else move & attack
-	
-		else {
+
+			if(ant.death_tick == 30){
+				//ant.ant.DestroyFixture();
+				ant.death_tick++;
+			}else if(ant.death_tick > 30){
+			}
+
+		}else { // ant.hp >= 1
 
 			if (ant.AI_state == "walk") {
 				var Antbody = ant.body;
@@ -91,10 +82,8 @@ var AntLogic = (function(){
 				Antbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 				Antbody.SetAwake(true);
 			}
-			if (ant.can_attack && ant.me_hurt_hero && ant.AI_state == "walk") 
-			{
-				
-				
+			if (ant.can_attack && ant.me_hurt_hero && ant.AI_state == "walk"){
+				// pass
 			}
 			if (ant.hero_hurt_me)
 			{
@@ -102,20 +91,20 @@ var AntLogic = (function(){
 				ant.hero_hurt_me = false;
 				change_state(ant, "upside_down");
 				
-				
 			}
 		}
 
 	};
 
 	var wound_ant = function(ant, wound){
-
 		ant.hp -= wound;
-	}
+		ant.hero_hurt_me = false;
+	};
+
 	var change_state = function(ant, progress_state) {
 		ant.AI_state = progress_state;
 
-	}
+	};
 
 	// // //Set up Collision handler
 	
@@ -125,9 +114,13 @@ var AntLogic = (function(){
 		
 		//console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
 			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
-
 		
-		//console.log(info.Me);
+		var type = info.Me.type;
+
+		if(type !== "ant")
+			console.log("Error", type, "instead of ant with other being", info.Them.type);
+		
+		
 		if(info.Them.type == "hero")
 		{
 			
@@ -147,8 +140,6 @@ var AntLogic = (function(){
 
 	var end_contact = function(contact, info) {
 	
-			info.Me.entity.me_hurt_hero = false;
-
 	};
 
 	

@@ -461,7 +461,7 @@ var PhysicsController = (function(){
 		/**
 		 */
 		
-		var call_all = function(list, args, info){
+		var call_all = function(list, args){
 			/**
 			 * call all functions in list providing arguments
 			 * from the array args
@@ -469,7 +469,6 @@ var PhysicsController = (function(){
 			 */
 
 			if(list != null){
-				args.push(info);
 				for(var i = 0; i < list.length; i++){
 					list[i].apply(this, args);
 				}
@@ -551,18 +550,22 @@ var PhysicsController = (function(){
 			// create info, call respective functions for each id. use provided arguments >args<
 			// lookup ids in the provided table of lists >lists<
 			
+			/* next available index in the args array 
+			 * it's used to determine at what index the info object should be inserted as*/
+			var next_arg_index = args.length; 
+
 			var type1 = get_type(contact.m_fixtureA.GetBody());
 			var type2 = get_type(contact.m_fixtureB.GetBody());
 
-
 			if(type1 != null){
-				var info = unpack_contact_info(args[0], type1);
-				call_all(lists[type1], args, info);
+				
+				args[next_arg_index] = unpack_contact_info(contact, type1);
+				call_all(lists[type1], args);
 			}
 
 			if(type2 != null){
-				var info = unpack_contact_info(args[0], type2);
-				call_all(lists[type2], args, info);
+				args[next_arg_index] = unpack_contact_info(contact, type2);
+				call_all(lists[type2], args);
 			}
 
 		};

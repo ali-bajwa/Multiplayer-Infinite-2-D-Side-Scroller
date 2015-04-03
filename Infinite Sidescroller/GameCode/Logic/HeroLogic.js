@@ -85,8 +85,6 @@ var HeroLogic = (function(){
 	var begin_contact = function(contact, info){
 		//console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
 			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
-		//console.log("here");
-		
 		if (info.Me.fixture_name == "bottom"){
 			info.Me.entity.jumps = 0;
 		}

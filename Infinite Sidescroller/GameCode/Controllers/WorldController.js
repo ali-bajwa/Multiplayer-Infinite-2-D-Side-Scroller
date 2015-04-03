@@ -4,7 +4,6 @@ var WorldController = (function(){
 	*/
 
     var body_test;
-    var body_test2;
 	//var temp = 0;
 
 	var init = function(){

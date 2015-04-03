@@ -24,10 +24,13 @@ var TestController = (function(){
 		// InitController.setup_asset_dependent methods
 	};
 
+	var testMode;
+
 	var init = function(mode){
 		include();
 		// Sets up the debug canvas during testing
 		TestModel.d_canvas = document.getElementById(Config.DEBUG_CANVAS_NAME);
+		testMode = mode;
 
 		if(mode == "test"){
 			TestModel.context = TestModel.d_canvas.getContext("2d");
@@ -56,12 +59,14 @@ var TestController = (function(){
 	
 	//this function sets the x and y offsets of the debug canvas
 	var set_debug_offset = function(x_offset, y_offset){
-		context = TestModel.context;
-		context.save();
-		context.clearRect(0, 0, Config.SCREEN_W, Config.SCREEN_H);
-		context.translate(x_offset, y_offset);
-		PhysicsController.draw_debug();
-		context.restore();
+	    if (testMode == "test"){
+	        context = TestModel.context;
+	        context.save();
+	        context.clearRect(0, 0, Config.SCREEN_W, Config.SCREEN_H);
+	        context.translate(x_offset, y_offset);
+	        PhysicsController.draw_debug();
+	        context.restore();
+	    }
 	};
 
 	return {

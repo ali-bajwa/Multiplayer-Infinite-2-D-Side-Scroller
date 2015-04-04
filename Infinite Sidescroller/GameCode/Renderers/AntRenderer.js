@@ -13,7 +13,7 @@ var AntRenderer = (function(){
 		var get_asset = AssetController.get_asset;
 
 		spritesheets["ant"] = new createjs.SpriteSheet({
-			"framerate": 0.0000001,
+			"framerate": 1,
 			"images": [get_asset("Ant1"), get_asset("Ant2"), get_asset("Ant3")],
 			"frames": { "regX": 3, "regY": 6, "height": 25, "width": 50, "count": 6},
 			"animations": {
@@ -60,7 +60,7 @@ var AntRenderer = (function(){
 
 		if(ant.physical_instance.AI_state == "upside_down" && ant.physical_instance.unhurtflag)
 		{
-			ant.gotoAndPlay("upside-down");
+			ant.gotoAndPlay("upside_down");
 			ant.physical_instance.unhurtflag = false;
 			
 			

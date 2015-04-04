@@ -80,7 +80,7 @@ var IdentificationController = (function(){
 
 		// TODO: make sure that all known places that use ids (PhysicsControllers'
 		// contact listener for example) are notified that id had been unregistered
-		IdentificationModel.id_matching[id] = null;
+		delete IdentificationModel.id_matching[id];
 		IdentificationModel.free_ids.push(id);
 	};
 	

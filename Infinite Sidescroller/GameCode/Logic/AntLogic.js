@@ -71,8 +71,8 @@ var AntLogic = (function(){
 			ant.death_tick++;
 			
 			if(ant.death_tick == 30){
-				//ant.ant.DestroyFixture();
-				ant.death_tick++;
+				EntityController.delete_entity(ant);
+				return 
 			}else if(ant.death_tick > 30){
 			}
 

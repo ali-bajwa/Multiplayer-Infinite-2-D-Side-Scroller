@@ -2,10 +2,7 @@ var EntityModel = function(){
 	// associates type with the AI
 	this.type_to_AI = {};
 
-	// DEPRECATED
-	this.ants = {};
-
-	this.for_logic_update = {}; // key: type, value: array of objects
+	this.for_logic_update = {}; // key: type, value: table of objects with id for key, object for value
 
 };
 

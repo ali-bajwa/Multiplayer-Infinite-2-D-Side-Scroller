@@ -2,15 +2,13 @@ var GraphicsModel = function(){
 	this.stage; // main stage to where everything will be drawn
 	// note that every graphics object must be augmented with
 	// the reference to the corresponding physics object, if any
-	this.hero;
 	this.other_players = []; // array of players other then hero for multiplayer
-	this.ant;
     //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 	this.health;
 	this.score;
 	// all object registered for continious update to match their physical body
 	// position 
-	this.all_physical = []; 
+	this.all_physical = {}; 
 	this.special_render = {}; // matches type with array of all objects of that type to be rendered
 
 	// all spritesheet definitions (added at the initialization stage

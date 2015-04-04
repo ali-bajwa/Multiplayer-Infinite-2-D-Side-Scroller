@@ -99,11 +99,11 @@ var GraphicsController = (function(){
 
 		for(var type in to_render){
 
-			var list = to_render[type];
+			var table = to_render[type];
 			var renderer = type_renderer_table[type];
 
-			for(var i = 0; i < list.length; i++){
-				renderer.render(list[i], Graphics, update_health);
+			for(var id in table){
+				renderer.render(table[id]);
 			}
 
 		}
@@ -205,8 +205,8 @@ var GraphicsController = (function(){
 
 		var tiles = GraphicsModel.all_physical;
 
-		for(var i = 0; i < tiles.length; i++){
-			var tile = tiles[i];
+		for(var id in tiles){
+			var tile = tiles[id];
 			var body = tile.physical_instance.body;
 
 			var tile_pos = trans_xy(body.GetWorldCenter());
@@ -303,16 +303,24 @@ var GraphicsController = (function(){
 		// set the easeljs_obj's position to position of that body, each tick.
 		// if the type of the physical instance is associated with some renderer
 			
+		
 		if(physical_instance){
+			var id = physical_instance.id;
+			var type = physical_instance.type;
+
+			if(id == null || type == null){
+				console.log(physical_instance);
+				throw "Id or type is undefined for this physical instance";
+			}
 
 			easeljs_obj.physical_instance = physical_instance;
-			GraphicsModel.all_physical.push(easeljs_obj);
+			GraphicsModel.all_physical[id] = easeljs_obj;
 
-			if(GraphicsModel.special_render[physical_instance.type]){
-				GraphicsModel.special_render[physical_instance.type].push(easeljs_obj);
-			}else{
-				GraphicsModel.special_render[physical_instance.type] = [easeljs_obj];
+			if(!GraphicsModel.special_render[type]){
+				GraphicsModel.special_render[type] = {};
 			}
+
+			GraphicsModel.special_render[type][id] = easeljs_obj;
 		}
 
 
@@ -328,6 +336,50 @@ var GraphicsController = (function(){
 		return GraphicsModel.stage;
 	};
 	
+	var destroy_graphics_for = function(id){
+		/**
+		* remove from the stage and destroy graphics instances for the object with the given id
+		* this includes removing all references to it.
+		* TODO: IMPORTANT!!! if GraphicsController was updated to store more
+		* references to some graphics instances, UPDATE this function to reflect changes
+		* even a single reference to the object may cause it to stay in memory
+		*/
+
+		if(GraphicsModel.all_physical[id] != null){
+			var graphics_instance = GraphicsModel.all_physical[id];
+		}else{
+			// if you encounter this exception, maybe implementation changed. 
+			// If that's the case, some things need rewriting. This function in
+			// prticular. Or maybe there is a bug.
+			throw "The graphics object with id " + String(id) + " isn't registered as having physical body";
+		}
+
+		if(graphics_instance.physical_instance.type != null){
+			var type = graphics_instance.physical_instance.type;
+
+		}else{
+			// if you encounter this exception it may mean a bug, or alternatively
+			// it may mean that implementation changed and this function needs an update
+			throw "Physical instance with id " + String(id) + " doesn't seem to have a type";
+		}
+
+		
+		
+		// remove from the stage 
+		
+			/* graphics_instance.removeAllEventListeners(); 
+			   could be necessary to remove attached event listeners, but it seems, at least
+			   so far, that this stuff is done automatically be easeljs */
+
+			GraphicsModel.stage.removeChild(graphics_instance);
+
+		// remove from all_physical (responsible tracking for body position)
+			delete GraphicsModel.all_physical[id];
+		// remove from special_render
+			delete GraphicsModel.special_render[type][id];
+		// TODO: remove camera reference if following this object
+			
+	};
 
 	return {
 		// declare public
@@ -340,6 +392,7 @@ var GraphicsController = (function(){
 		set_reg_position: set_reg_position,
 		request_bitmap: request_bitmap,
 		request_animated: request_animated,
+		destroy_graphics_for: destroy_graphics_for,
 	};
 })();
 

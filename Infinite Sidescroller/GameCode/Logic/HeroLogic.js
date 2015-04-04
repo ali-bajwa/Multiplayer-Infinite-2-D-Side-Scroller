@@ -35,6 +35,8 @@ var HeroLogic = (function(){
 
 		hero.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, hero);
 
+		var id = IdentificationController.assign_id(hero);
+
 		hero.hp = 100;
 		hero.wound = false;
 		hero.jumps = 0;

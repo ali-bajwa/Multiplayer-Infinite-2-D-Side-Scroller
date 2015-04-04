@@ -632,7 +632,19 @@ var PhysicsController = (function(){
 		}
 	};
 	
+	var remove_body = function(body){
+		/**
+		* destroy given body (remove it from world and remove all references Physics has to it)
+		*/
+		
+		// TODO: IMPORTANT!!! update this function if you store extra references
+		// to the body within PhysicsModel/Controller.
+		// Even a single reference to the body may keep it from being deleted
+		// from the memory 
+		PhysicsModel.world.DestroyBody(body);
+	};
 	
+		
 	
 	
 	return {
@@ -643,6 +655,7 @@ var PhysicsController = (function(){
 		set_debug_draw: set_debug_draw,
 		draw_debug: draw_debug,
 		listen_for_contact_with: listen_for_contact_with,
+		remove_body: remove_body,
 	};
 })();
 

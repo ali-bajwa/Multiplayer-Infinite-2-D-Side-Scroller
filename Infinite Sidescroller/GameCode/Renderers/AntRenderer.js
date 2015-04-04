@@ -13,7 +13,7 @@ var AntRenderer = (function(){
 		var get_asset = AssetController.get_asset;
 
 		spritesheets["ant"] = new createjs.SpriteSheet({
-			"framerate": 1,
+			"framerate": 0.0000001,
 			"images": [get_asset("Ant1"), get_asset("Ant2"), get_asset("Ant3")],
 			"frames": { "regX": 3, "regY": 6, "height": 25, "width": 50, "count": 6},
 			"animations": {
@@ -51,15 +51,18 @@ var AntRenderer = (function(){
 		/* how to handle special render? TEMPORARY */
 
 		
-		if(ant.physical_instance.AI_state == "death"){
+		if(ant.physical_instance.AI_state == "death"&& ant.physical_instance.aliveflag){
 			ant.gotoAndPlay("death");
+			ant.physical_instance.aliveflag = false;
 			
 			
 		}
 
-		if(ant.physical_instance.AI_state == "upside_down")
+		if(ant.physical_instance.AI_state == "upside_down" && ant.physical_instance.unhurtflag)
 		{
 			ant.gotoAndPlay("upside-down");
+			ant.physical_instance.unhurtflag = false;
+			
 			
 		}
 

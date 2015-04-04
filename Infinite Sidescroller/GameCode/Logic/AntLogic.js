@@ -15,13 +15,14 @@ var AntLogic = (function(){
 		//set your game logic parameters here
 		//this.object_id = 1; //hardcode a unique identifier for each new enemy class
 		this.hp = 2;
-		this.speed = 4;
+		this.speed = 2;
 		this.damage = 1;
 		//this.attack_cooldown = 4; //use this for enemies who need
 		this.can_attack = true;//use this for enemies who alternate between 
 		//this.cooldown_timer=-1;
 		this.AI_state = "walk";//use this to keep track of the enemy's AI state
-
+		this.aliveflag = true;
+		this.unhurtflag = true;
 	};
 
 	var init = function(){
@@ -61,12 +62,14 @@ var AntLogic = (function(){
 			if (ant.hero_hurt_me){
 				wound_ant(ant, 1);
 				ant.hero_hurt_me = false;
+				ant.can_attack = false;
 			}
 
 		}else if (ant.hp <= 0) {
 			change_state(ant, "death");
+			ant.can_attack = false;
 			ant.death_tick++;
-
+			
 			if(ant.death_tick == 30){
 				//ant.ant.DestroyFixture();
 				ant.death_tick++;
@@ -89,6 +92,7 @@ var AntLogic = (function(){
 			{
 				wound_ant(ant, 1);
 				ant.hero_hurt_me = false;
+				ant.can_attack = false;
 				change_state(ant, "upside_down");
 				
 			}

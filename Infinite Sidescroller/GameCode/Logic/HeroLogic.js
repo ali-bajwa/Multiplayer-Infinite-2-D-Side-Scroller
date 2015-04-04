@@ -55,7 +55,6 @@ var HeroLogic = (function(){
 
 		var MOVEMENT_EDGE = 500; // where terrain start scrolling
 
-
 		if(cmds("right")){
 		    // temporary
 

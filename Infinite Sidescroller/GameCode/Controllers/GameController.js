@@ -12,6 +12,13 @@ var GameController = (function(){
 		 * main function pretty much
 		 * everyghing else is called from here every tick
 		 */
+	    var cmds = KeyboardController.movement_commands();
+	    if (cmds("pause") && GameModel.pauseCounter > 10) {
+	        createjs.Ticker.paused = !createjs.Ticker.paused;
+	        GameModel.pauseCounter = 0;
+	        console.log("pause");
+	    }
+	    GameModel.pauseCounter += 1;
 		
 		if (!createjs.Ticker.paused){
 			var delta = event.delta;

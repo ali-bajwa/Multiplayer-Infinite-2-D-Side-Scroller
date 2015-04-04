@@ -108,6 +108,7 @@ var KeyboardModel = function(){
 			"up arrow": "up",
 			"down arrow": "down",
 			"right arrow": "right",
+			"p": "pause",
 		},
 		
 		debug: {

@@ -34,6 +34,7 @@ var Include = function(){
 			//"AntController",
 			"IdentificationController",
 			"RegisterAsController",
+			"RemoteController",
 		],
 
 		Models: [
@@ -51,6 +52,7 @@ var Include = function(){
 			//"AntModel",
 			"EntityModel",
 			"RegisterAsModel",
+			"RemoteModel",
 		],
 
 		Other: [
@@ -93,6 +95,9 @@ var Include = function(){
 			//AntController: require("./Controllers/AntController.js"),
 			IdentificationController: require("./Controllers/IdentificationController.js"),
 			RegisterAsController: require("./Controllers/RegisterAsController.js"),
+			RemoteController: require("./Controllers/RemoteController.js"),
+			
+			
 			
 			
 			
@@ -112,8 +117,7 @@ var Include = function(){
 			IdentificationModel: require("./Models/IdentificationModel.js"),
 			EntityModel: require("./Models/EntityModel.js"),
 			RegisterAsModel: require("./Models/RegisterAsModel.js"),
-			
-			
+			RemoteModel: require("./Models/RemoteModel.js"),
 			
 				
 			// Other stuff

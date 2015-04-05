@@ -23,6 +23,8 @@ var AntRenderer = (function(){
 			}
 		})
 
+		AssetController.register_spritesheet(spritesheets["ant"], "ant");
+
 	};
 
 	var register = function(entity_ant){
@@ -32,6 +34,7 @@ var AntRenderer = (function(){
 		*/
 
 		ant_animation = GraphicsController.request_animated(spritesheets["ant"], "walk");
+		ant_animation.graphics_id = "ant";
 		GraphicsController.set_reg_position(ant_animation, 0, 0); // change that to adjust sprite position relative to the body
 		GraphicsController.reg_for_render(ant_animation, entity_ant); // sets ant_animation's position to track the ant's position (updates each tick)
 

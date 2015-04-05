@@ -21,8 +21,6 @@ var GraphicsController = (function(){
 
 		get_asset = AssetController.get_asset; // for quicker access
 
-		init_animations();
-
 
 		GraphicsModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
 		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
@@ -47,22 +45,93 @@ var GraphicsController = (function(){
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
 
-	    update_camera(); // needs to be updated first
+		if(Config.Remote.i_am == "host"){
+			update_camera(); // needs to be updated first
 
-		register_new_stuff();
+			register_new_stuff();
 
-		check_for_new_terrain();
+			check_for_new_terrain();
 
-		render_things();
-		synchronize_to_physical_bodies();
+			render_things();
+			synchronize_to_physical_bodies();
 
-	    //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-		hud_temp_update();
+			//PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+			hud_temp_update();
 
-		// <<<<
-		//update_health(hero.hp);
+			package_data();
+
+			// <<<<
+			//update_health(hero.hp);
+		}else{
+			// simply update to match the remote data
+			var data = RemoteController.get_graphics_data();
+			display_remote_data(data);
+
+		}
+
 		GraphicsModel.stage.update();
 	};
+
+	var package_data = function(){
+		/**
+		* package graphics data and send it to remotes
+		*/
+		var packet = {};
+		var phy = GraphicsModel.all_physical;
+		for(id in phy){
+			var easeljs_obj = phy[id];
+			var entity = easeljs_obj.physical_instance;
+			var info = {type: entity.type, id: entity.id, graphics_id: easeljs_obj.graphics_id};
+			info.x = easeljs_obj.x;
+			info.y = easeljs_obj.y;
+			info.regX = easeljs_obj.regX;
+			info.regY = easeljs_obj.regY;
+			if(entity.type == "ant"){
+				// set the frame
+			}
+			packet[id] = info;
+		}
+
+		RemoteController.send_graphics_data(packet);
+	};
+	
+	
+	var display_remote_data = function(data){
+		/**
+		* display the graphics data recieved from the remote
+		*/
+		var rem_graphics = GraphicsModel.remote_graphics;
+		
+		for(var id in data){
+			var obj = data[id];
+
+			if(rem_graphics[id] == null){
+				// if new
+				
+				if(obj.graphics_id == "ant"){
+
+					var spritesheet = AssetController.get_spritesheet("ant");
+					var new_easeljs_obj = request_animated(spritesheet, "walk");
+				}else{
+					var new_easeljs_obj = request_bitmap(obj.graphics_id);
+				}
+
+				new_easeljs_obj.x = obj.x;
+				new_easeljs_obj.y = obj.y;
+				new_easeljs_obj.regX = obj.regX;
+				new_easeljs_obj.regY = obj.regY;
+
+				rem_graphics[id] = new_easeljs_obj;
+				GraphicsModel.stage.addChild(new_easeljs_obj);
+			}else{
+				var existing = rem_graphics[id];
+				existing.x = obj.x;
+				existing.y = obj.y;
+			}
+		}
+	};
+	
+	
 
 	var register_new_stuff = function(){
 		/**
@@ -167,10 +236,6 @@ var GraphicsController = (function(){
 		TestController.set_debug_offset(camera.offset.x, camera.offset.y);
 	};
 
-	var init_animations = function(){
-		
-		
-	};
 	
 	var request_bitmap = function(id){
 		// if id is invalid, throw meaningful exception?
@@ -242,11 +307,12 @@ var GraphicsController = (function(){
 				var lvl = slice.grid_rows - i; // level from the bottom
 
 				for(var j = 0; j < slice.grid_columns; j++){
-					var id = slice.grid[i][j].id;
-					if(id != 0){
+					var content_name = slice.grid[i][j].content_name;
+					if(content_name != 0){
 						// TODO: should make proper terrain collection thing to pull from 
-						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][id-1];
+						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][content_name-1];
 						var tile = request_bitmap(tile_texture);
+						tile.graphics_id = tile_texture;
 						var physical_instance = slice.grid[i][j];
 						var body_position = physical_instance.body.GetWorldCenter();
 						var trans_pos = trans_xy(body_position);
@@ -387,6 +453,17 @@ var GraphicsController = (function(){
 			
 	};
 
+	var become_remote = function(){
+		/**
+		* description
+		*/
+		GraphicsModel.stage.removeAllChildren();
+		GraphicsModel.stage.update();
+		
+	};
+	
+	
+
 	return {
 		// declare public
 		init: init, 
@@ -401,6 +478,7 @@ var GraphicsController = (function(){
 		request_bitmap: request_bitmap,
 		request_animated: request_animated,
 		destroy_graphics_for: destroy_graphics_for,
+		become_remote: become_remote,
 	};
 })();
 

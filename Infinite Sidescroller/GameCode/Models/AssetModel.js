@@ -21,6 +21,8 @@ var AssetModel = new function(){
 	this.bitmaps = {};
 
 	this.animations = {};
+	
+	this.spritesheets = {}; // registered spritesheets
 
 };
 

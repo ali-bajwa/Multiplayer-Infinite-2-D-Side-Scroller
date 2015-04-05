@@ -129,6 +129,7 @@ var InitController = (function(){
 		
 		EntityController.init();
 		GraphicsController.init();
+		RemoteController.init();
 
 
 		setup_ticker();

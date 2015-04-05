@@ -126,7 +126,7 @@ var GraphicsController = (function(){
 
     //DELETE ME PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 	var hud_temp_update = function () {
-	    add_score(1);
+	    update_score(1);
 	}
 	
 	var update_health = function(passed) {
@@ -135,10 +135,14 @@ var GraphicsController = (function(){
 	//console.log("I've been called");
 	}
 
-	var add_score = function (passed) {
+	var update_score = function (passed) {
 	    temp_score = parseInt(GraphicsModel.score.text);
 	    temp_score += passed;
 	    GraphicsModel.score.text = temp_score.toString();
+	}
+
+	var get_health = function () {
+	    return GraphicsModel.health.text;
 	}
 
 	var update_camera = function(){
@@ -391,6 +395,8 @@ var GraphicsController = (function(){
 		update: update,
 		get_stage: get_stage,
 		update_health: update_health,
+		get_health: get_health,
+		update_score: update_score,
 		get_asset: get_asset,
 		reg_for_render: reg_for_render,
 		set_reg_position: set_reg_position,

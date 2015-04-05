@@ -13,7 +13,7 @@ var GameController = (function(){
 		 * everyghing else is called from here every tick
 		 */
 	    var cmds = KeyboardController.movement_commands();
-	    if (cmds("pause") && GameModel.pauseCounter > 10 && GameModel.health > 0) {
+	    if (cmds("pause") && GameModel.pauseCounter > 10 && GraphicsController.get_health() > 0) {
 	        createjs.Ticker.paused = !createjs.Ticker.paused;
 	        GameModel.pauseCounter = 0;
 	        console.log("pause");

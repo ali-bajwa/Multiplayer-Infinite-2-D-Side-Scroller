@@ -12,6 +12,7 @@ var HeroLogic = (function(){
 		this.hp = 100;
 		this.wound = false;
 		this.jumps = 0;
+		this.score = 0;
 	};
 
 	var init = function(){
@@ -40,6 +41,7 @@ var HeroLogic = (function(){
 		hero.hp = 100;
 		hero.wound = false;
 		hero.jumps = 0;
+		hero.score = 0;
 
 
 		return hero;
@@ -57,7 +59,7 @@ var HeroLogic = (function(){
 
 		if(cmds("right")){
 		    // temporary
-
+		    add_score(hero, 1);
 		    move_right(hero);
 		}
 		if(cmds("left")){
@@ -81,6 +83,7 @@ var HeroLogic = (function(){
 			createjs.Ticker.paused = true;
 			console.log("Player Is Dead");
 		}
+		GraphicsController.update_score(hero.score);
 	};
 
 	var begin_contact = function(contact, info){
@@ -95,12 +98,15 @@ var HeroLogic = (function(){
 		
 		if(info.Me.fixture_name != "bottom" && info.Them.entity.can_attack)
 		{
-			info.Me.entity.wound = true;
+		    info.Me.entity.wound = true;
+		    add_score(info.Me.entity, 100);
 		}
 				
 	};
 	
-
+	var add_score = function (hero, amount) {
+	    hero.score += amount;
+	}
 	
 
 	var take_hit = function(hero, amount){

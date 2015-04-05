@@ -50,6 +50,10 @@ var KeyboardController = (function()
 		return get_active_commands_function(KeyboardModel.translation_tables.movement);
 	};
 
+	var pause_commands = function () {
+	    return get_active_commands_function(KeyboardModel.translation_tables.pause);
+	};
+
 	var debug_commands = function(){
 		/**
 		* commands active in debug mode
@@ -61,7 +65,7 @@ var KeyboardController = (function()
 	return {
 		keydown: keydown,
 		keyup: keyup,
-
+        pause_commands: pause_commands,
 		movement_commands: movement_commands,
 		debug_commands: debug_commands,
 		init: init,

@@ -126,7 +126,7 @@ var GraphicsController = (function(){
 
     //DELETE ME PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 	var hud_temp_update = function () {
-	    update_score(1);
+
 	}
 	
 	var update_health = function(passed) {
@@ -136,9 +136,7 @@ var GraphicsController = (function(){
 	}
 
 	var update_score = function (passed) {
-	    temp_score = parseInt(GraphicsModel.score.text);
-	    temp_score += passed;
-	    GraphicsModel.score.text = temp_score.toString();
+	    GraphicsModel.score.text = passed;
 	}
 
 	var get_health = function () {

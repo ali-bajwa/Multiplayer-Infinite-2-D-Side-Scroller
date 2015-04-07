@@ -5,9 +5,10 @@ var GraphicsController = (function(){
 
 	var get_asset; 
 	var hero, ant; // for quicker access
-	var type_renerer_table;
+	var type_renderer_table;
 	var Graphics;
-
+	var reRender = false;
+	
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
 		include(); // satisfy requirements
@@ -27,10 +28,12 @@ var GraphicsController = (function(){
 		GraphicsModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
 		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
-
+		generate_season("Fall", GraphicsModel.stage.canvas.width);
+		edge = Graphics.stage.canvas.width;
 		
 		
-		//GraphicsModel.camera.following = hero;
+		
+		GraphicsModel.camera.following = hero;
         //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		GraphicsModel.score = new createjs.Text();
 		reg_for_render(GraphicsModel.score);
@@ -42,6 +45,17 @@ var GraphicsController = (function(){
 		for(type in type_renderer_table){
 			type_renderer_table[type].init();
 		}
+	};
+	var generate_season = function(season_name, canvas_width){
+		/*Generates tiled background for season */
+	
+		for(var i = 0; i <= canvas_width + 1; i += season.image.width){
+			var season = request_scenery(season_name);
+			season.x = i;
+			AddToStage(season);
+			
+		}
+	
 	};
     
 	var update = function(delta){
@@ -55,6 +69,12 @@ var GraphicsController = (function(){
 
 		render_things();
 		synchronize_to_physical_bodies();
+		
+		//NEED to know when to reRender background
+		if(reRender)
+		{
+			generate_season("Fall");
+		}
 
 	    //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		hud_temp_update();
@@ -146,10 +166,14 @@ var GraphicsController = (function(){
 	var update_camera = function(){
 		var camera = GraphicsModel.camera;
 		var center = camera.center;
-
+		
+		
+		
 		center.x = Config.SCREEN_W/2 - camera.offset_from_followed.x;
 		center.y = Config.SCREEN_H/2 - camera.offset_from_followed.y;
-
+		
+	
+		
 		if(camera.following != null){
 			camera.offset.x = center.x - camera.following.physical_instance.body.GetWorldCenter().x * Config.B2D.SCALE;
 			camera.offset.y =  center.y - camera.following.physical_instance.body.GetWorldCenter().y * Config.B2D.SCALE;
@@ -183,6 +207,22 @@ var GraphicsController = (function(){
 		bitmap.regX = bitmap.image.width/2;
 		bitmap.regY = bitmap.image.height/2;
 
+		return bitmap;
+		// TODO research DisplayObject's caching. and maybe incorporate
+	};
+	var request_scenery = function(id, offset){
+		// if id is invalid, throw meaningful exception?
+		var bitmap = new createjs.Bitmap(get_asset(id));
+		// more complicated setting for registration position may be needed, depending on the body attached
+		if (!(bitmap.image)){
+			throw "Error: image wasn't correctly loaded for this bitmap";
+		}
+		
+		//offset for tiling
+		bitmap.x = offset;
+		
+		
+		
 		return bitmap;
 		// TODO research DisplayObject's caching. and maybe incorporate
 	};
@@ -337,6 +377,7 @@ var GraphicsController = (function(){
 		// can be updated later to manage z-index or whatever
 		GraphicsModel.stage.addChild(element);
 	};
+	
 
 	var get_stage = function(){
 		return GraphicsModel.stage;

@@ -183,7 +183,7 @@ var GraphicsController = (function(){
 	
 		
 		if(camera.following != null){
-			camera.offset.x = center.x - camera.following.physical_instance.body.GetWorldCenter().x * Config.B2D.SCALE;
+		    camera.offset.x = center.x - camera.following.physical_instance.body.GetWorldCenter().x * Config.B2D.SCALE + (1614 - GraphicsModel.stage.canvas.width)/3;
 			camera.offset.y =  center.y - camera.following.physical_instance.body.GetWorldCenter().y * Config.B2D.SCALE;
 		}
 

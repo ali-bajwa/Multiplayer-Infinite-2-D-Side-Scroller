@@ -27,12 +27,6 @@ var Config = function(){
 		// is automatically incremented each time new TerrainSliceModel is instantiated:
 		next_slice_id: 0 
 	};
-
-	this.Remote = {
-		i_am: "host"
-		// MEDIATOR_SERVER_KEY:,
-		//
-	};
 	
 	// <<<
 };

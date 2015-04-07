@@ -17,7 +17,6 @@ var HeroRenderer = (function(){
 		*/
 
 		var hero = GraphicsController.request_bitmap("greek_warrior");
-		hero.graphics_id = "greek_warrior";
 
 		GraphicsController.set_reg_position(hero, -20, +10);
 		GraphicsController.reg_for_render(hero, entity_hero);

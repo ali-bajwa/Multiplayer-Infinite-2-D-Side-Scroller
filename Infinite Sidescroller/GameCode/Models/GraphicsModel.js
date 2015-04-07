@@ -15,8 +15,6 @@ var GraphicsModel = function(){
 	// because they need assets to be loaded)
 	this.spritesheets = {}; 
 
-	this.remote_graphics = {}; // associates id with the created easeljs obje
-
 	this.camera = {
 		// should be easeljs object or null
 		following: null,

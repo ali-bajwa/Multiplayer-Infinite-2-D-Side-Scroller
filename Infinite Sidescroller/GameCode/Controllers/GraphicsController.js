@@ -5,9 +5,10 @@ var GraphicsController = (function(){
 
 	var get_asset; 
 	var hero, ant; // for quicker access
-	var type_renerer_table;
+	var type_renderer_table;
 	var Graphics;
-
+	var reRender = false;
+	
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
 		include(); // satisfy requirements
@@ -21,14 +22,18 @@ var GraphicsController = (function(){
 
 		get_asset = AssetController.get_asset; // for quicker access
 
+		init_animations();
+
 
 		GraphicsModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
 		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
-
+		generate_season("Fall", GraphicsModel.stage.canvas.width);
+	
 		
 		
-		//GraphicsModel.camera.following = hero;
+		
+		GraphicsModel.camera.following = hero;
         //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		GraphicsModel.score = new createjs.Text();
 		reg_for_render(GraphicsModel.score);
@@ -41,97 +46,43 @@ var GraphicsController = (function(){
 			type_renderer_table[type].init();
 		}
 	};
+	var generate_season = function(season_name, canvas_width){
+		/*Generates tiled background for season */
+	
+		for(var i = 0; i <= canvas_width + 1; i += season.image.width){
+			var season = request_scenery(season_name);
+			season.x = i;
+			AddToStage(season);
+			
+		}
+	
+	};
     
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
 
-		if(Config.Remote.i_am == "host"){
-			update_camera(); // needs to be updated first
+	    update_camera(); // needs to be updated first
 
-			register_new_stuff();
+		register_new_stuff();
 
-			check_for_new_terrain();
+		check_for_new_terrain();
 
-			render_things();
-			synchronize_to_physical_bodies();
-
-			//PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-			hud_temp_update();
-
-			package_data();
-
-			// <<<<
-			//update_health(hero.hp);
-		}else{
-			// simply update to match the remote data
-			var data = RemoteController.get_graphics_data();
-			display_remote_data(data);
-
+		render_things();
+		synchronize_to_physical_bodies();
+		
+		//NEED to know when to reRender background
+		if(reRender)
+		{
+			generate_season("Fall");
 		}
 
+	    //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+		hud_temp_update();
+
+		// <<<<
+		//update_health(hero.hp);
 		GraphicsModel.stage.update();
 	};
-
-	var package_data = function(){
-		/**
-		* package graphics data and send it to remotes
-		*/
-		var packet = {};
-		var phy = GraphicsModel.all_physical;
-		for(id in phy){
-			var easeljs_obj = phy[id];
-			var entity = easeljs_obj.physical_instance;
-			var info = {type: entity.type, id: entity.id, graphics_id: easeljs_obj.graphics_id};
-			info.x = easeljs_obj.x;
-			info.y = easeljs_obj.y;
-			info.regX = easeljs_obj.regX;
-			info.regY = easeljs_obj.regY;
-			if(entity.type == "ant"){
-				// set the frame
-			}
-			packet[id] = info;
-		}
-
-		RemoteController.send_graphics_data(packet);
-	};
-	
-	
-	var display_remote_data = function(data){
-		/**
-		* display the graphics data recieved from the remote
-		*/
-		var rem_graphics = GraphicsModel.remote_graphics;
-		
-		for(var id in data){
-			var obj = data[id];
-
-			if(rem_graphics[id] == null){
-				// if new
-				
-				if(obj.graphics_id == "ant"){
-
-					var spritesheet = AssetController.get_spritesheet("ant");
-					var new_easeljs_obj = request_animated(spritesheet, "walk");
-				}else{
-					var new_easeljs_obj = request_bitmap(obj.graphics_id);
-				}
-
-				new_easeljs_obj.x = obj.x;
-				new_easeljs_obj.y = obj.y;
-				new_easeljs_obj.regX = obj.regX;
-				new_easeljs_obj.regY = obj.regY;
-
-				rem_graphics[id] = new_easeljs_obj;
-				GraphicsModel.stage.addChild(new_easeljs_obj);
-			}else{
-				var existing = rem_graphics[id];
-				existing.x = obj.x;
-				existing.y = obj.y;
-			}
-		}
-	};
-	
-	
 
 	var register_new_stuff = function(){
 		/**
@@ -215,10 +166,14 @@ var GraphicsController = (function(){
 	var update_camera = function(){
 		var camera = GraphicsModel.camera;
 		var center = camera.center;
-
+		
+		
+		
 		center.x = Config.SCREEN_W/2 - camera.offset_from_followed.x;
 		center.y = Config.SCREEN_H/2 - camera.offset_from_followed.y;
-
+		
+	
+		
 		if(camera.following != null){
 			camera.offset.x = center.x - camera.following.physical_instance.body.GetWorldCenter().x * Config.B2D.SCALE;
 			camera.offset.y =  center.y - camera.following.physical_instance.body.GetWorldCenter().y * Config.B2D.SCALE;
@@ -236,6 +191,10 @@ var GraphicsController = (function(){
 		TestController.set_debug_offset(camera.offset.x, camera.offset.y);
 	};
 
+	var init_animations = function(){
+		
+		
+	};
 	
 	var request_bitmap = function(id){
 		// if id is invalid, throw meaningful exception?
@@ -248,6 +207,22 @@ var GraphicsController = (function(){
 		bitmap.regX = bitmap.image.width/2;
 		bitmap.regY = bitmap.image.height/2;
 
+		return bitmap;
+		// TODO research DisplayObject's caching. and maybe incorporate
+	};
+	var request_scenery = function(id, offset){
+		// if id is invalid, throw meaningful exception?
+		var bitmap = new createjs.Bitmap(get_asset(id));
+		// more complicated setting for registration position may be needed, depending on the body attached
+		if (!(bitmap.image)){
+			throw "Error: image wasn't correctly loaded for this bitmap";
+		}
+		
+		//offset for tiling
+		bitmap.x = offset;
+		
+		
+		
 		return bitmap;
 		// TODO research DisplayObject's caching. and maybe incorporate
 	};
@@ -307,12 +282,11 @@ var GraphicsController = (function(){
 				var lvl = slice.grid_rows - i; // level from the bottom
 
 				for(var j = 0; j < slice.grid_columns; j++){
-					var content_name = slice.grid[i][j].content_name;
-					if(content_name != 0){
+					var id = slice.grid[i][j].id;
+					if(id != 0){
 						// TODO: should make proper terrain collection thing to pull from 
-						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][content_name-1];
+						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][id-1];
 						var tile = request_bitmap(tile_texture);
-						tile.graphics_id = tile_texture;
 						var physical_instance = slice.grid[i][j];
 						var body_position = physical_instance.body.GetWorldCenter();
 						var trans_pos = trans_xy(body_position);
@@ -403,6 +377,7 @@ var GraphicsController = (function(){
 		// can be updated later to manage z-index or whatever
 		GraphicsModel.stage.addChild(element);
 	};
+	
 
 	var get_stage = function(){
 		return GraphicsModel.stage;
@@ -453,17 +428,6 @@ var GraphicsController = (function(){
 			
 	};
 
-	var become_remote = function(){
-		/**
-		* description
-		*/
-		GraphicsModel.stage.removeAllChildren();
-		GraphicsModel.stage.update();
-		
-	};
-	
-	
-
 	return {
 		// declare public
 		init: init, 
@@ -478,7 +442,6 @@ var GraphicsController = (function(){
 		request_bitmap: request_bitmap,
 		request_animated: request_animated,
 		destroy_graphics_for: destroy_graphics_for,
-		become_remote: become_remote,
 	};
 })();
 

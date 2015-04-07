@@ -52,27 +52,12 @@ var AssetController = (function(){
 		return result;
 	};
 		
-	var get_spritesheet = function(name){
-		/**
-		* get registered spritesheet
-		*/
-		var sheets = AssetModel.spritesheets;
-		if(sheets[name]){
-			return sheets[name];
-		}else{
-			throw "No spritesheet with the name " + String(name);
-		}
-	};
 
-	var register_spritesheet = function(spritesheet, name){
-		AssetModel.spritesheets[name] = spritesheet;
-	}
 
+	
 	return {
 		init: init,
 		get_asset: get_asset,
-		get_spritesheet: get_spritesheet,
-		register_spritesheet: register_spritesheet,
 	};
 
 })();

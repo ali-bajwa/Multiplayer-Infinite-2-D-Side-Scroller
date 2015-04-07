@@ -11,7 +11,8 @@ var AssetModel = new function(){
 			{src: "grass.png", id: "grass"},
 			{src: "AntChompers.png", id: "Ant1"},
 			{src: "AntChompers2.png", id: "Ant2"},
-			{src: "AntChompersDeath.png", id: "Ant3"}
+			{src: "AntChompersDeath.png", id: "Ant3"},
+			{src: "Greek Landscape fall.png", id: "Fall"}
 		]; 
 		// TODO make adding resources easier? Automatic loading 
 		// of everything from assets, automatic names etc.?
@@ -21,8 +22,6 @@ var AssetModel = new function(){
 	this.bitmaps = {};
 
 	this.animations = {};
-	
-	this.spritesheets = {}; // registered spritesheets
 
 };
 

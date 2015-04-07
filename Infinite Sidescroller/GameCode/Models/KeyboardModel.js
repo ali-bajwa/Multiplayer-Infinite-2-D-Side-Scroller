@@ -116,11 +116,6 @@ var KeyboardModel = function(){
 		
 		debug: {
 			"a": "spawn_ant",
-
-			// remote stuff:
-			"h": "host",
-			"c": "connect",
-			"s": "send",
 		},
 
 	}

@@ -45,11 +45,9 @@ var TerrainSliceController = (function () {
 					// necessarily differ in physics representation, they might just have
 					// different appearance
 					slice.grid[i][j] = new TerrainSliceModel.Cell(random_id);
-					IdentificationController.assign_id(slice.grid[i][j]);
 				}else{
 					// 0 will be the id for the "air" i.e. nothing
 					slice.grid[i][j] = new TerrainSliceModel.Cell(0);
-					IdentificationController.assign_id(slice.grid[i][j]);
 				}
 			} // for end
 			// <<< assigning ids
@@ -68,8 +66,8 @@ var TerrainSliceController = (function () {
 			var lvl = slice.grid_rows - i; // level from the bottom
 
 			for(var j = 0; j < slice.grid_columns; j++){
-				var content_name = slice.grid[i][j].content_name;
-				if(content_name != 0){ // if not air
+				var id = slice.grid[i][j].id;
+				if(id != 0){ // if not air
 					var x = slice.origin.x + j * slice.cell_w + slice.cell_w/2;
 					var y = slice.origin.y + i * slice.cell_w + slice.cell_w/2;
 					var body = PhysicsController.get_rectangular({x: x, y: y}, slice.grid[i][j]);

@@ -29,7 +29,7 @@ var GraphicsController = (function(){
 		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
 		generate_season("Fall", GraphicsModel.stage.canvas.width);
-		edge = Graphics.stage.canvas.width;
+	
 		
 		
 		

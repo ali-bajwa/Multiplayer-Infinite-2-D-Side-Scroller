@@ -36,6 +36,7 @@ var GameController = (function(){
 
 			// Should be called after all movement of objects is done:
 			GraphicsController.update();
+			RemoteController.update();
 		}
 	};
 

@@ -116,6 +116,7 @@ var KeyboardModel = function(){
 		
 		debug: {
 			"a": "spawn_ant",
+			"c": "connect",
 		},
 
 	}

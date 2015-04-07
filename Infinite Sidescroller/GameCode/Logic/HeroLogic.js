@@ -99,7 +99,6 @@ var HeroLogic = (function(){
 		if(info.Me.fixture_name != "bottom" && info.Them.entity.can_attack)
 		{
 		    info.Me.entity.wound = true;
-		    add_score(info.Me.entity, 100);
 		}
 				
 	};

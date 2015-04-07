@@ -20,6 +20,7 @@ var HeroRenderer = (function(){
 
 		GraphicsController.set_reg_position(hero, -20, +10);
 		GraphicsController.reg_for_render(hero, entity_hero);
+		GraphicsController.follow(entity_hero.id);
 
 	};
 

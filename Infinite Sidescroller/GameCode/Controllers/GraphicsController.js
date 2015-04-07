@@ -30,11 +30,7 @@ var GraphicsController = (function(){
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
 		generate_season("Fall", GraphicsModel.stage.canvas.width);
 	
-		
-		
-		
-		GraphicsModel.camera.following = hero;
-        //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+		//PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		GraphicsModel.score = new createjs.Text();
 		reg_for_render(GraphicsModel.score);
 		GraphicsModel.health = new createjs.Text();
@@ -46,6 +42,7 @@ var GraphicsController = (function(){
 			type_renderer_table[type].init();
 		}
 	};
+
 	var generate_season = function(season_name, canvas_width){
 		/*Generates tiled background for season */
 	
@@ -83,6 +80,17 @@ var GraphicsController = (function(){
 		//update_health(hero.hp);
 		GraphicsModel.stage.update();
 	};
+
+	var follow = function(id){
+		/**
+		* order camera to follow the graphical representation
+		* of an object with the given id, if it exists
+		*/
+
+		GraphicsModel.camera.following = GraphicsModel.all_physical[id];
+	};
+	
+	
 
 	var register_new_stuff = function(){
 		/**
@@ -282,10 +290,10 @@ var GraphicsController = (function(){
 				var lvl = slice.grid_rows - i; // level from the bottom
 
 				for(var j = 0; j < slice.grid_columns; j++){
-					var id = slice.grid[i][j].id;
-					if(id != 0){
+					var kind = slice.grid[i][j].kind;
+					if(kind != 0){
 						// TODO: should make proper terrain collection thing to pull from 
-						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][id-1];
+						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][kind-1];
 						var tile = request_bitmap(tile_texture);
 						var physical_instance = slice.grid[i][j];
 						var body_position = physical_instance.body.GetWorldCenter();
@@ -442,6 +450,7 @@ var GraphicsController = (function(){
 		request_bitmap: request_bitmap,
 		request_animated: request_animated,
 		destroy_graphics_for: destroy_graphics_for,
+		follow: follow,
 	};
 })();
 

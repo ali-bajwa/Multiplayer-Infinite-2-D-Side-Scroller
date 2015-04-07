@@ -35,8 +35,8 @@ var TerrainSliceModel = function(){
 
 	};
 
-	this.Cell = function(id){
-		this.id = id;
+	this.Cell = function(kind){
+		this.kind = kind;
 		this.body;
 	}
 	

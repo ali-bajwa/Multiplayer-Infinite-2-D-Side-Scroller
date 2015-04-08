@@ -270,11 +270,7 @@ var RemoteController = (function(){
 		* is called whenever new data arrives
 		*/
 
-		console.log("recieved data", data);
-		
-		RemoteModel.input_cell = RemoteModel.input_cell || {};
-		
-		RemoteModel.input_cell[data.purpose] = data.content;
+		RemoteModel.input_cell = data;
 	};
 
 	var on_error = function(error){
@@ -293,9 +289,6 @@ var RemoteController = (function(){
 
 		return conn;
 	};
-
-	
-
 	
 	var retrieve_from_backlog = function(){
 		/**
@@ -346,9 +339,6 @@ var RemoteController = (function(){
 		// TEMPORARYYYYYYYYYYYYYYYYYYYYYYYYYY	
 		RemoteModel.output_cell = RemoteModel.output_cell || {};
 		RemoteModel.output_cell[data.purpose] = data.content;
-		console.log("added to update, update now is ", RemoteModel.output_cell);
-		
-		
 	};
 
 	var send_out_data = function(){
@@ -357,7 +347,6 @@ var RemoteController = (function(){
 		*/
 		if(RemoteModel.output_cell != null){
 			distribute_data(RemoteModel.output_cell);
-			console.log("data sent", RemoteModel.output_cell);
 			RemoteModel.output_cell = null;
 			
 			
@@ -369,6 +358,7 @@ var RemoteController = (function(){
 		/**
 		* temp
 		*/
+		
 		return RemoteModel.input_cell;
 	};
 

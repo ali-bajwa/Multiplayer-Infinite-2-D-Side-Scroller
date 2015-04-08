@@ -24,7 +24,7 @@ var RemoteController = (function(){
 			start_multiplayer_session();
 		}
 
-		if(RemoteModel.counter > 10){
+		if(RemoteModel.counter > 5){
 			RemoteModel.counter = 0;
 			send_out_data();
 		}else{
@@ -270,6 +270,10 @@ var RemoteController = (function(){
 		* is called whenever new data arrives
 		*/
 
+		console.log("recieved data", data);
+		
+		RemoteModel.input_cell = RemoteModel.input_cell || {};
+		
 		RemoteModel.input_cell[data.purpose] = data.content;
 	};
 
@@ -340,17 +344,25 @@ var RemoteController = (function(){
 		*/
 
 		// TEMPORARYYYYYYYYYYYYYYYYYYYYYYYYYY	
+		RemoteModel.output_cell = RemoteModel.output_cell || {};
 		RemoteModel.output_cell[data.purpose] = data.content;
+		console.log("added to update, update now is ", RemoteModel.output_cell);
+		
+		
 	};
 
 	var send_out_data = function(){
 		/**
 		* temp
 		*/
+		if(RemoteModel.output_cell != null){
+			distribute_data(RemoteModel.output_cell);
+			console.log("data sent", RemoteModel.output_cell);
+			RemoteModel.output_cell = null;
+			
+			
+		}
 
-		distribute_data(RemoteModel.output_cell);
-
-		RemoteModel.output_cell = {};
 	};
 
 	var get_data = function(){

@@ -82,14 +82,21 @@ var HeroLogic = (function(){
 			
 		}else{
 			var data = RemoteController.get_data();
-			if(data["hero"]){
-				var body = hero.body;
-				console.log("setting pos to", data["hero"].pos);
-				
-				
-				body.SetLinearVelocity(data["hero"].vel)
+			if(data && data["hero"] != null){
 
-				body.SetPosition(data["hero"].pos)
+				var body = hero.body;
+				
+				var vel = data["hero"].vel;
+				vel = new B2d.b2Vec2(vel.x, vel.y);
+
+				var pos = data["hero"].pos
+				pos = new B2d.b2Vec2(pos.x, pos.y);
+				
+				console.log("SET THINGS");
+				
+				
+				body.SetLinearVelocity(vel)
+				body.SetPosition(pos)
 			}
 		}
 

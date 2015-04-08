@@ -36,8 +36,8 @@ var RemoteModel = function(){
 
 	this.one_packet = null; // used to store one packet, for one packet communication
 
-	this.input_cell = {};
-	this.output_cell = {};
+	this.input_cell = null;
+	this.output_cell = null;
 	this.counter = 0; // temp
 
 	// linked list to store the backlog of packets for the communication that needs that

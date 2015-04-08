@@ -9,6 +9,7 @@ var GraphicsController = (function(){
 	var Graphics;
 	var reRender = false;
 	var seasonArray = [];
+	var seasonImg = ["Fall", "Spring", "Winter"];
 	
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -29,7 +30,7 @@ var GraphicsController = (function(){
 		GraphicsModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
 		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
-		generate_season("Fall", GraphicsModel.stage.canvas.width, 0);
+		generate_season("Winter", GraphicsModel.stage.canvas.width, 0);
 	
 		//PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		GraphicsModel.score = new createjs.Text();
@@ -78,10 +79,27 @@ var GraphicsController = (function(){
 		}
 	
 	};
+	var delete_season = function(y){
+		for(var i = 0; i < seasonArray.length; i++){
+			
+			
+			seasonArray[i].y = y;
+			
+		}
+	
+	};
     
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
-
+		var cmds = KeyboardController.movement_commands();
+		
+		if(cmds("season"))
+		{
+		console.log("Captain Kirk");
+			generate_season("Winter", GraphicsModel.stage.canvas.width, 0);
+		
+		}
+		
 	    update_camera(); // needs to be updated first
 
 		register_new_stuff();

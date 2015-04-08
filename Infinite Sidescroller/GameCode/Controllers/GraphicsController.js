@@ -8,6 +8,7 @@ var GraphicsController = (function(){
 	var type_renderer_table;
 	var Graphics;
 	var reRender = false;
+	var seasonArray = [];
 	
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -28,7 +29,7 @@ var GraphicsController = (function(){
 		GraphicsModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
 		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
-		generate_season("Fall", GraphicsModel.stage.canvas.width);
+		generate_season("Fall", GraphicsModel.stage.canvas.width, 0);
 	
 		//PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		GraphicsModel.score = new createjs.Text();
@@ -45,13 +46,24 @@ var GraphicsController = (function(){
 		}
 	};
 
-	var generate_season = function(season_name, canvas_width){
+	var generate_season = function(season_name, canvas_width, start){
 		/*Generates tiled background for season */
 	
-		for(var i = 0; i <= canvas_width + 1; i += season.image.width){
+		for(var i = start; i <= canvas_width + 1; i += season.image.width){
 			var season = request_scenery(season_name);
+			
 			season.x = i;
 			AddToStage(season);
+			seasonArray.push(season);
+			
+		}
+		
+	};
+	var set_season = function(hero){
+		for(var i = 0; i < seasonArray.length; i++){
+			
+			seasonArray[i].x = (i * 799) - (hero.x * 4);
+			
 			
 		}
 	
@@ -69,12 +81,12 @@ var GraphicsController = (function(){
 		render_things();
 		synchronize_to_physical_bodies();
 		
+		
 		//NEED to know when to reRender background
-		if(reRender)
-		{
-			generate_season("Fall");
-		}
-
+	
+		
+		
+		
 	    //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		hud_temp_update();
 
@@ -455,6 +467,7 @@ var GraphicsController = (function(){
 		request_animated: request_animated,
 		destroy_graphics_for: destroy_graphics_for,
 		follow: follow,
+		set_season: set_season,
 	};
 })();
 

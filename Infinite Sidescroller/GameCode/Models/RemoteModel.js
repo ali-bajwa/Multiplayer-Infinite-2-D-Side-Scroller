@@ -5,8 +5,6 @@ var RemoteModel = function(){
 	// more attempts to connect when connection is already being established
 	this.block_connections; 
 
-	this.am_master = false; // am I the one with whome people sync?
-	
 	this.my_peer = null;
 	this.my_id = null;
 
@@ -37,6 +35,10 @@ var RemoteModel = function(){
 	};
 
 	this.one_packet = null; // used to store one packet, for one packet communication
+
+	this.input_cell = {};
+	this.output_cell = {};
+	this.counter = 0; // temp
 
 	// linked list to store the backlog of packets for the communication that needs that
 	this.package_backlog = {HEAD: null, TAIL: null} 

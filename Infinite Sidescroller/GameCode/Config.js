@@ -27,6 +27,10 @@ var Config = function(){
 		// is automatically incremented each time new TerrainSliceModel is instantiated:
 		next_slice_id: 0 
 	};
+
+	this.Remote = {
+		master: false, // I am one with whome other players sync? 
+	};
 	
 	// <<<
 };

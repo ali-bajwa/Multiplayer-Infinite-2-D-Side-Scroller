@@ -24,6 +24,14 @@ var RemoteController = (function(){
 			start_multiplayer_session();
 		}
 
+		if(RemoteModel.counter > 10){
+			RemoteModel.counter = 0;
+			send_out_data();
+		}else{
+			RemoteModel.counter++
+		}
+
+
 	};
 
 	var start_multiplayer_session = function(){
@@ -62,6 +70,12 @@ var RemoteController = (function(){
 				connection.on('data', on_data_arrival);
 				connection.on('close', on_connection_closed);
 			}
+		}
+
+		// TEMPORARRYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
+		// TODO: determine that dynamically and make sure there ia always a host
+		if(id === "player8"){
+			this.am_master = true;
 		}
 
 	};
@@ -222,6 +236,13 @@ var RemoteController = (function(){
 		* will pull thir hair out trying to understand why their stuff doesn't get sent)
 		* Second, send the data to all the connected players in this game
 		*/
+
+		var conns = RemoteModel.connections;
+		for(var id in conns){
+			if(id != RemoteModel.my_id && conns[id]){
+				conns[id].send(data);
+			}
+		}
 		
 	};
 
@@ -248,6 +269,8 @@ var RemoteController = (function(){
 		/**
 		* is called whenever new data arrives
 		*/
+
+		RemoteModel.input_cell[data.purpose] = data.content;
 	};
 
 	var on_error = function(error){
@@ -315,15 +338,34 @@ var RemoteController = (function(){
 		* You should account for that. This function is meant to be intelligent and prioritize more important
 		* stuff
 		*/
-		
+
+		// TEMPORARYYYYYYYYYYYYYYYYYYYYYYYYYY	
+		RemoteModel.output_cell[data.purpose] = data.content;
 	};
-	
-	
-	
+
+	var send_out_data = function(){
+		/**
+		* temp
+		*/
+
+		distribute_data(RemoteModel.output_cell);
+
+		RemoteModel.output_cell = {};
+	};
+
+	var get_data = function(){
+		/**
+		* temp
+		*/
+		return RemoteModel.input_cell;
+	};
+
 	return {
 		// declare public
 		init: init, 
 		update: update,
+		add_to_next_update: add_to_next_update,
+		get_data: get_data,
 	};
 })();
 

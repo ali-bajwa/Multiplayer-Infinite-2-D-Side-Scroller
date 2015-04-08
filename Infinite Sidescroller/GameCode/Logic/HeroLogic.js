@@ -71,6 +71,28 @@ var HeroLogic = (function(){
 		if(cmds("up")){
 			jump(hero);
 		}
+
+		// TEMPORARYYYYYYYYYYYYYYYY
+		if(cmds("up") || cmds("right") || cmds("left")){
+			var vel = hero.body.GetLinearVelocity();
+			vel = {x: vel.x, y: vel.y};
+			var pos = hero.body.GetWorldCenter();
+			pos = {x: pos.x, y: pos.y};
+			RemoteController.add_to_next_update({purpose: "hero", content: {pos: pos, vel: vel}});
+			
+		}else{
+			var data = RemoteController.get_data();
+			if(data["hero"]){
+				var body = hero.body;
+				console.log("setting pos to", data["hero"].pos);
+				
+				
+				body.SetLinearVelocity(data["hero"].vel)
+
+				body.SetPosition(data["hero"].pos)
+			}
+		}
+
 		if(hero.wound)
 		{
 			hero.hp--;

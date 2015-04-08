@@ -2,14 +2,14 @@
 var GraphicsController = (function(){
 	/* all the graphics stuff. and what did you expect?
 	*/
-	var colorTick; //to slow down season changes
+	var colorTick = 0; //to slow down season changes
 	var get_asset; 
 	var hero, ant; // for quicker access
 	var type_renderer_table;
 	var Graphics;
 	var reRender = false;
 	var seasonArray = [];
-	var seasonImg = ["Fall", "Summer", "Spring", "Winter"];
+	var seasonImg = ["Winter", "Spring", "Summer", "Fall" ];
 	var cycle = 0;
 	
 	var init = function(){
@@ -100,7 +100,7 @@ var GraphicsController = (function(){
 		//Temporary Keyboard Call for Season Change
 		var cmds = KeyboardController.debug_commands();
 		
-		if(cmds("season") && colorTick == 5)
+		if(cmds("season") && colorTick > 10)
 		{
 			colorTick = 0;
 			delete_all_season();
@@ -113,6 +113,7 @@ var GraphicsController = (function(){
 			}
 		}
 		colorTick++;
+		console.log(colorTick);
 		
 		
 		

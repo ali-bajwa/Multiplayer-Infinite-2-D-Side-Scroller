@@ -49,7 +49,7 @@ var GraphicsController = (function(){
 	var generate_season = function(season_name, canvas_width, start){
 		/*Generates tiled background for season */
 	
-		for(var i = start; i <= canvas_width + 1; i += season.image.width){
+	    for (var i = start; i <= canvas_width + canvas_width + 1; i += season.image.width) {
 			var season = request_scenery(season_name);
 			
 			season.x = i;

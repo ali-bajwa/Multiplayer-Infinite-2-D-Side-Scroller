@@ -4,6 +4,8 @@ var RemoteModel = function(){
 	// flag to indicate whether to disallow connections, useful to prevent
 	// more attempts to connect when connection is already being established
 	this.block_connections; 
+
+	this.am_master = false; // am I the one with whome people sync?
 	
 	this.my_peer = null;
 	this.my_id = null;

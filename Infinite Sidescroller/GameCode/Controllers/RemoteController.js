@@ -10,6 +10,7 @@ var RemoteController = (function(){
 		/* is ran from the InitController once when the game is loaded */
 		include(); // satisfy requirements
 
+		document.onbeforeunload = on_unload; // will be executed before user leaves page
 	};
 
 
@@ -31,9 +32,7 @@ var RemoteController = (function(){
 		* other connected people
 		*/
 		setup_my_peer(); // setup peer // also picks free id
-		console.log("here");
-		
-		
+				
 	};
 
 	var on_obtaining_id_successfully = function(id){
@@ -54,6 +53,16 @@ var RemoteController = (function(){
 
 		console.log("obtained id sucessfully, my id is", id);
 
+		for(var i = 0; i < RemoteModel.non_free_ids.length; i++){
+			// establish connections with every other player
+			var id = RemoteModel.non_free_ids[i];
+			if(id != RemoteModel.my_id){
+				var connection = RemoteModel.my_peer.connect(id);
+				RemoteModel.connections[id] =  connection;
+				connection.on('data', on_data_arrival);
+				connection.on('close', on_connection_closed);
+			}
+		}
 
 	};
 	
@@ -95,6 +104,22 @@ var RemoteController = (function(){
 		}
 		
 	};
+
+	var on_connection_closed = function(){
+		/**
+		* called when some connection closes
+		*/
+		var id = this.peer;
+		var nfree = RemoteModel.non_free_ids;
+
+		nfree.splice(nfree.indexOf(id), 1);
+
+		RemoteModel.free_ids.push(id);
+
+		delete RemoteModel.connections[id];
+	};
+	
+	
 	
 	var new_peer = function(id){
 		/**
@@ -103,18 +128,9 @@ var RemoteController = (function(){
 		*/
 		
 		var peer = new Peer(id, {key: MEDIATOR_SERVER_KEY});
-		peer.on('connection', function(connection) {
-			conn = connection;
-		});
 
+		peer.on('connection', accept_connection);
 
-		peer.on('data', on_data_arrival);
-		//peer.on('error', on_error);
-
-		//peer.on('disconnected', on_event);
-		//peer.on('close', on_event);
-		//peer.on('open', on_event);
-		//peer.on('connection', accept_connection);
 
 		return peer;
 	};
@@ -125,7 +141,23 @@ var RemoteController = (function(){
 		* is called when someone attempts to establish connection
 		* with this client
 		*/
+
+		var free_ids = RemoteModel.free_ids;
+		var nfree_ids = RemoteModel.non_free_ids;
+
+		var id = conn.peer;
+		RemoteModel.connections[id] = conn;
+
+		// remove the id from list of free ids. notice that 
+		// array is relatively small, and operation happends seldomly
+		free_ids.splice(free_ids.indexOf(id), 1); 
+
+		console.log("accepting connection from peer", id);
 		
+		nfree_ids.push(id);
+
+		conn.on('data', on_data_arrival);
+
 	};
 
 	var connection_unsuccessful = function(error){
@@ -192,6 +224,18 @@ var RemoteController = (function(){
 		*/
 		
 	};
+
+	var on_unload = function(arguments){
+		/**
+		* will be called when the user is about to leave the web page
+		* will make sure connections are gracefully closed and peers are destroyed
+		*/
+
+		console.log("document is unloaded now. Destroying peer, disconnecting from others");
+		RemoteModel.my_peer.destroy();	
+	};
+	
+	
 	
 	var on_event = function(smth){
 		/**
@@ -211,8 +255,6 @@ var RemoteController = (function(){
 		* called when error occurs with the peer
 		*/
 	};
-	
-	
 
 	var connect_to = function(id, peer){
 		/**
@@ -264,6 +306,18 @@ var RemoteController = (function(){
 			list.TAIL = packet_container;
 		}
 	};
+	
+	var add_to_next_update = function(data){
+		/**
+		* call this function to schedule the data to be passed to the master/clients.
+		* note that this module will decide itself when and how to send the data,
+		* so you are not guaranteed that it'll be send immediately, or with the next update
+		* You should account for that. This function is meant to be intelligent and prioritize more important
+		* stuff
+		*/
+		
+	};
+	
 	
 	
 	return {

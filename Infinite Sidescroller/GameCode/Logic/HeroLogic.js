@@ -67,12 +67,12 @@ var HeroLogic = (function(){
 		if(cmds("left")){
 		    // temporary
 		    move_left(hero);
-		    GraphicsController.set_season(hero.body.GetWorldCenter());
+		    
 		}
 
 		if(cmds("up")){
 			jump(hero);
-			
+			GraphicsController.set_season(hero.body.GetWorldCenter());
 		}
 		if(hero.wound)
 		{

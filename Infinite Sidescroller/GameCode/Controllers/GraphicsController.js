@@ -49,7 +49,7 @@ var GraphicsController = (function(){
 	var generate_season = function(season_name, canvas_width, start){
 		/*Generates tiled background for season */
 	
-		for(var i = start; i <= canvas_width + canvas_width + 1; i += season.image.width){
+		for(var i = start; i <= canvas_width + 1; i += season.image.width){
 			var season = request_scenery(season_name);
 			
 			season.x = i;
@@ -63,17 +63,7 @@ var GraphicsController = (function(){
 		for(var i = 0; i < seasonArray.length; i++){
 			
 			seasonArray[i].x = (i * 799) - (hero.x * 4);
-			seasonArray[i].y = GraphicsModel.camera.offset.y;
 			
-		}
-	
-	};
-	
-	var set_seasonY = function(y){
-		for(var i = 0; i < seasonArray.length; i++){
-			
-			
-			seasonArray[i].y = y;
 			
 		}
 	
@@ -93,7 +83,7 @@ var GraphicsController = (function(){
 		
 		
 		//NEED to know when to reRender background
-		set_seasonY(GraphicsModel.camera.offset.y);
+	
 		
 		
 		

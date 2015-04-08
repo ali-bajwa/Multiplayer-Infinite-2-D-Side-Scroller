@@ -139,6 +139,10 @@ var GraphicsController = (function(){
 		}
 		
 	};
+
+	var get_movement_edge = function () {
+	    return (GraphicsModel.camera.offset.x - 20)/(-30);
+	}
 	
 
     //DELETE ME PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -455,6 +459,7 @@ var GraphicsController = (function(){
 		request_animated: request_animated,
 		destroy_graphics_for: destroy_graphics_for,
 		follow: follow,
+        get_movement_edge: get_movement_edge,
 	};
 })();
 

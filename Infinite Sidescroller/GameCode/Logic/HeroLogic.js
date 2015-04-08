@@ -55,7 +55,7 @@ var HeroLogic = (function(){
 
 		var cmds = KeyboardController.movement_commands();
 
-		var MOVEMENT_EDGE = 500; // where terrain start scrolling
+		var MOVEMENT_EDGE = GraphicsController.get_movement_edge(); // where terrain start scrolling
 
 		if(cmds("right")){
 		    // temporary
@@ -63,9 +63,9 @@ var HeroLogic = (function(){
 		    move_right(hero);
 		}
 		if(cmds("left")){
-			// temporary
-		    
+		    // temporary
 		    move_left(hero);
+		    
 		}
 
 		if(cmds("up")){
@@ -82,6 +82,10 @@ var HeroLogic = (function(){
 		{
 			createjs.Ticker.paused = true;
 			console.log("Player Is Dead");
+		}
+		if (hero.body.GetWorldCenter().x < MOVEMENT_EDGE && hero.body.GetLinearVelocity().x < 0) {
+		    stop_hero(hero);
+		    console.log("working");
 		}
 		GraphicsController.update_score(hero.score);
 	};
@@ -117,6 +121,14 @@ var HeroLogic = (function(){
 			
 		info.Me.entity.wound = false;
 	};
+
+	var stop_hero = function (hero) {
+	    var body = hero.body;
+	    var velocity = body.GetLinearVelocity();
+	    velocity.x = 0;
+	    body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+	    body.SetAwake(true);
+	}
 
 	var move_right = function(hero){
 		var body = hero.body;

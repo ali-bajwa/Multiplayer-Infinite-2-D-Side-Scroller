@@ -2,13 +2,15 @@
 var GraphicsController = (function(){
 	/* all the graphics stuff. and what did you expect?
 	*/
-
+	var colorTick = 0; //to slow down season changes
 	var get_asset; 
 	var hero, ant; // for quicker access
 	var type_renderer_table;
 	var Graphics;
 	var reRender = false;
 	var seasonArray = [];
+	var seasonImg = ["Winter", "Spring", "Summer", "Fall" ];
+	var cycle = 0;
 	
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -49,11 +51,11 @@ var GraphicsController = (function(){
 	var generate_season = function(season_name, canvas_width, start){
 		/*Generates tiled background for season */
 	
-	    for (var i = start; i <= canvas_width + canvas_width + 1; i += season.image.width) {
+		for(var i = start; i <= canvas_width + canvas_width + 1; i += season.image.width){
 			var season = request_scenery(season_name);
 			
 			season.x = i;
-			AddToStage(season);
+			GraphicsModel.stage.addChildAt(season, 0);
 			seasonArray.push(season);
 			
 		}
@@ -62,16 +64,59 @@ var GraphicsController = (function(){
 	var set_season = function(hero){
 		for(var i = 0; i < seasonArray.length; i++){
 			
-			seasonArray[i].x = (i * 799) - (hero.x * 4);
 			
+			//seasonArray[i].x = (i * 799) + GraphicsModel.camera.offset.x;
+			//seasonArray[i].y = GraphicsModel.camera.offset.y;
+			
+			seasonArray[i].x = (i * 799) - (hero.x * 4);
+			seasonArray[i].y = GraphicsModel.camera.offset.y;
 			
 		}
 	
 	};
+	
+	var set_seasonY = function(y){
+		for(var i = 0; i < seasonArray.length; i++){
+			
+			
+			seasonArray[i].y = y;
+			
+		}
+	
+	};
+	var delete_all_season = function(){
+		for(var i = 0; i < seasonArray.length; i++){
+			
+			
+			GraphicsModel.stage.removeChild(seasonArray[i]);
+			
+		}
+		seasonArray.length = 0;
+	};
     
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
-
+		
+		//Temporary Keyboard Call for Season Change
+		var cmds = KeyboardController.debug_commands();
+		
+		if(cmds("season") && colorTick > 10)
+		{
+			colorTick = 0;
+			delete_all_season();
+			console.log("Captain Kirk");
+			generate_season(seasonImg[cycle], GraphicsModel.stage.canvas.width, 0);
+			cycle++;
+			if(cycle == 4)
+			{
+				cycle = 0;
+			}
+		}
+		colorTick++;
+		console.log(colorTick);
+		
+		
+		
 	    update_camera(); // needs to be updated first
 
 		register_new_stuff();
@@ -83,7 +128,7 @@ var GraphicsController = (function(){
 		
 		
 		//NEED to know when to reRender background
-	
+		set_seasonY(GraphicsModel.camera.offset.y);
 		
 		
 		

@@ -1,0 +1,20 @@
+diff a/Infinite Sidescroller/GameCode/Controllers/GraphicsController.js b/Infinite Sidescroller/GameCode/Controllers/GraphicsController.js	(rejected hunks)
+@@ -63,18 +63,8 @@
+ 		for(var i = 0; i < seasonArray.length; i++){
+ 			
+ 			seasonArray[i].x = (i * 799) - (hero.x * 4);
+-			seasonArray[i].y = GraphicsModel.camera.offset.y;
+-			
+-		}
+-	
+-	};
+-	
+-	var set_seasonY = function(y){
+-		for(var i = 0; i < seasonArray.length; i++){
+ 			
+ 			
+-			seasonArray[i].y = y;
+-			
+ 		}
+ 	
+ 	};

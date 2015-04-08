@@ -1,0 +1,16 @@
+diff a/Infinite Sidescroller/GameCode/Logic/HeroLogic.js b/Infinite Sidescroller/GameCode/Logic/HeroLogic.js	(rejected hunks)
+@@ -67,12 +67,12 @@
+ 		if(cmds("left")){
+ 		    // temporary
+ 		    move_left(hero);
+-		    GraphicsController.set_season(hero.body.GetWorldCenter());
++		    
+ 		}
+ 
+ 		if(cmds("up")){
+ 			jump(hero);
+-			
++			GraphicsController.set_season(hero.body.GetWorldCenter());
+ 		}
+ 		if(hero.wound)
+ 		{

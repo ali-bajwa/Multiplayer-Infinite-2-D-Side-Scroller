@@ -61,6 +61,8 @@ var HeroLogic = (function(){
 		    // temporary
 		    add_score(hero, 1);
 		    move_right(hero);
+			
+			GraphicsController.set_season(hero.body.GetWorldCenter());
 		}
 		if(cmds("left")){
 		    // temporary
@@ -70,6 +72,7 @@ var HeroLogic = (function(){
 
 		if(cmds("up")){
 			jump(hero);
+			GraphicsController.set_season(hero.body.GetWorldCenter());
 		}
 		if(hero.wound)
 		{
@@ -186,6 +189,10 @@ var HeroLogic = (function(){
 		// should it hard-set position (not safe!)
 		// or just allow to set any velocity/impulse vector?
 	};
+	var get_hero_x = function(){
+			return hero.body.GetWorldCenter().x;
+	
+	};
 
 	return {
 		// declare public
@@ -194,6 +201,7 @@ var HeroLogic = (function(){
 		tick_AI: tick_AI,
 		begin_contact: begin_contact,
 		end_contact: end_contact,
+		get_hero_x: get_hero_x,
 	};
 })();
 

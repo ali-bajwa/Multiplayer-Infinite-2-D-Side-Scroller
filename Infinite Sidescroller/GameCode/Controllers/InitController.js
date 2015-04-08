@@ -129,7 +129,9 @@ var InitController = (function(){
 		
 		EntityController.init();
 		GraphicsController.init();
-		RemoteController.init();
+
+		MultiplayerSyncController.init(); // 
+		NetworkController.init(); // 
 
 
 		setup_ticker();

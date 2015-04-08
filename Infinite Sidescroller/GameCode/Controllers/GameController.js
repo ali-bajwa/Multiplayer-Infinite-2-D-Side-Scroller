@@ -31,12 +31,15 @@ var GameController = (function(){
 		
 			WorldController.update(delta);
 
-			TerrainController.update();
-			EntityController.update();
+			TerrainController.update(delta);
+			EntityController.update(delta);
 
 			// Should be called after all movement of objects is done:
-			GraphicsController.update();
-			RemoteController.update();
+			GraphicsController.update(delta);
+
+			MultiplayerSyncController.update(delta);
+			NetworkController.update(delta);
+
 		}
 	};
 

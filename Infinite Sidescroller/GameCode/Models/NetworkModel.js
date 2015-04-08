@@ -1,4 +1,4 @@
-var RemoteModel = function(){
+var NetworkModel = function(){
 	this.connected = false; // flag to indicate if already connected to the network
 
 	// flag to indicate whether to disallow connections, useful to prevent
@@ -45,6 +45,6 @@ var RemoteModel = function(){
 
 };
 
-module.exports = new RemoteModel;
+module.exports = new NetworkModel;
 
 

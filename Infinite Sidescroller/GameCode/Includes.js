@@ -34,7 +34,8 @@ var Include = function(){
 			//"AntController",
 			"IdentificationController",
 			"RegisterAsController",
-			"RemoteController",
+			"NetworkController",
+			"MultiplayerSyncController",
 		],
 
 		Models: [
@@ -52,7 +53,8 @@ var Include = function(){
 			//"AntModel",
 			"EntityModel",
 			"RegisterAsModel",
-			"RemoteModel",
+			"NetworkModel",
+			"MultiplayerSyncModel",
 		],
 
 		Other: [
@@ -67,11 +69,13 @@ var Include = function(){
 			"AntRenderer",
 			"HeroRenderer",
 			"TerrainCellRenderer",
+			"EsteemedCompanionRenderer",
 		],
 
 		Logic: [
 			"AntLogic",
 			"HeroLogic",
+			"EsteemedCompanionLogic",
 		],
 
 	};//end module_names
@@ -95,11 +99,8 @@ var Include = function(){
 			//AntController: require("./Controllers/AntController.js"),
 			IdentificationController: require("./Controllers/IdentificationController.js"),
 			RegisterAsController: require("./Controllers/RegisterAsController.js"),
-			RemoteController: require("./Controllers/RemoteController.js"),
-			
-			
-			
-			
+			NetworkController: require("./Controllers/NetworkController.js"),
+			MultiplayerSyncController: require("./Controllers/MultiplayerSyncController.js"),
 			
 			// Models
 
@@ -117,13 +118,9 @@ var Include = function(){
 			IdentificationModel: require("./Models/IdentificationModel.js"),
 			EntityModel: require("./Models/EntityModel.js"),
 			RegisterAsModel: require("./Models/RegisterAsModel.js"),
-			RemoteModel: require("./Models/RemoteModel.js"),
-			
-			
-			
-			
-			
-				
+			NetworkModel: require("./Models/NetworkModel.js"),
+			MultiplayerSyncModel: require("./Models/MultiplayerSyncModel.js"),
+						
 			// Other stuff
 			
 			Config: require("./Config.js"),
@@ -136,11 +133,12 @@ var Include = function(){
 			AntRenderer: require("./Renderers/AntRenderer.js"),
 			HeroRenderer: require("./Renderers/HeroRenderer.js"),
 			TerrainCellRenderer: require("./Renderers/TerrainCellRenderer.js"),
+			EsteemedCompanionRenderer: require("./Renderers/EsteemedCompanionRenderer.js"),
 			
 			// Logic
 			AntLogic: require("./Logic/AntLogic.js"),
 			HeroLogic: require("./Logic/HeroLogic.js"),
-			
+			EsteemedCompanionLogic: require("./Logic/EsteemedCompanionLogic.js"),
 			
 
 		};

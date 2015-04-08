@@ -1,5 +1,5 @@
 
-var RemoteController = (function(){
+var NetworkController = (function(){
 	/* manages p2p communication
 	*/
 
@@ -11,6 +11,8 @@ var RemoteController = (function(){
 		include(); // satisfy requirements
 
 		document.onbeforeunload = on_unload; // will be executed before user leaves page
+		NetworkModel.numbr = 0; // temp
+		NetworkModel.numbr_rec = -1;
 	};
 
 
@@ -19,18 +21,12 @@ var RemoteController = (function(){
 
 		var cmds = KeyboardController.debug_commands();
 
-		if(!RemoteModel.block_connections && cmds("connect")){
-			RemoteModel.block_connections = true;
+		if(!NetworkModel.block_connections && cmds("connect")){
+			NetworkModel.block_connections = true;
 			start_multiplayer_session();
 		}
 
-		if(RemoteModel.counter > 5){
-			RemoteModel.counter = 0;
-			send_out_data();
-		}else{
-			RemoteModel.counter++
-		}
-
+		send_out_data();
 
 	};
 
@@ -51,22 +47,22 @@ var RemoteController = (function(){
 		* the multiplayer to work, and connect to the other player
 		*/
 
-		RemoteModel.my_id = id;
-		RemoteModel.connected = true;
+		NetworkModel.my_id = id;
+		NetworkModel.connected = true;
 
-		if(RemoteModel.my_id != RemoteModel.my_peer.id){
+		if(NetworkModel.my_id != NetworkModel.my_peer.id){
 			// not a meaningful check, terrible practices are terrible
 			throw "Id's do not match. Smth went wrong" 
 		}
 
 		console.log("obtained id sucessfully, my id is", id);
 
-		for(var i = 0; i < RemoteModel.non_free_ids.length; i++){
+		for(var i = 0; i < NetworkModel.non_free_ids.length; i++){
 			// establish connections with every other player
-			var id = RemoteModel.non_free_ids[i];
-			if(id != RemoteModel.my_id){
-				var connection = RemoteModel.my_peer.connect(id);
-				RemoteModel.connections[id] =  connection;
+			var id = NetworkModel.non_free_ids[i];
+			if(id != NetworkModel.my_id){
+				var connection = NetworkModel.my_peer.connect(id);
+				NetworkModel.connections[id] =  connection;
 				connection.on('data', on_data_arrival);
 				connection.on('close', on_connection_closed);
 			}
@@ -91,17 +87,17 @@ var RemoteController = (function(){
 		*/
 
 		if(error == null || error.type == "unavailable-id"){
-			if(RemoteModel.free_ids.length > 0){
-				var id = RemoteModel.free_ids.pop();
-				RemoteModel.non_free_ids.push(id);
-				var peer = RemoteModel.my_peer = new_peer(id); 
+			if(NetworkModel.free_ids.length > 0){
+				var id = NetworkModel.free_ids.pop();
+				NetworkModel.non_free_ids.push(id);
+				var peer = NetworkModel.my_peer = new_peer(id); 
 				peer.on('error', setup_my_peer);
 				peer.on('open', on_obtaining_id_successfully);
 			}else{
 				console.warn("Couldn't establish multiplayer session, all 8 available slots taken");
-				RemoteModel.connected = false;
-				RemoteModel.block_connections = false;
-				RemoteModel.free_ids = [
+				NetworkModel.connected = false;
+				NetworkModel.block_connections = false;
+				NetworkModel.free_ids = [
 					"player1",
 					"player2",
 					"player3",
@@ -112,7 +108,7 @@ var RemoteController = (function(){
 					"player8",
 				];
 
-				RemoteModel.non_free_ids = [];
+				NetworkModel.non_free_ids = [];
 
 			}
 		}
@@ -124,13 +120,13 @@ var RemoteController = (function(){
 		* called when some connection closes
 		*/
 		var id = this.peer;
-		var nfree = RemoteModel.non_free_ids;
+		var nfree = NetworkModel.non_free_ids;
 
 		nfree.splice(nfree.indexOf(id), 1);
 
-		RemoteModel.free_ids.push(id);
+		NetworkModel.free_ids.push(id);
 
-		delete RemoteModel.connections[id];
+		delete NetworkModel.connections[id];
 	};
 	
 	
@@ -156,11 +152,11 @@ var RemoteController = (function(){
 		* with this client
 		*/
 
-		var free_ids = RemoteModel.free_ids;
-		var nfree_ids = RemoteModel.non_free_ids;
+		var free_ids = NetworkModel.free_ids;
+		var nfree_ids = NetworkModel.non_free_ids;
 
 		var id = conn.peer;
-		RemoteModel.connections[id] = conn;
+		NetworkModel.connections[id] = conn;
 
 		// remove the id from list of free ids. notice that 
 		// array is relatively small, and operation happends seldomly
@@ -195,9 +191,9 @@ var RemoteController = (function(){
 		* If you need to call it regularly, it probably should be rewritten
 		*/
 
-		var free_ids = RemoteModel.free_ids;
+		var free_ids = NetworkModel.free_ids;
 
-		var peer = RemoteModel.my_peer;
+		var peer = NetworkModel.my_peer;
 		
 		for(var i = 0; i < free_ids.length; i++){
 			var conn = peer.connect(free_ids[i]);
@@ -219,7 +215,7 @@ var RemoteController = (function(){
 		* take place in the "distribute_data" function
 		*/
 
-		var conn = RemoteModel.connections[peer_id];
+		var conn = NetworkModel.connections[peer_id];
 
 		if(conn != null){
 			conn.send(data);
@@ -237,9 +233,9 @@ var RemoteController = (function(){
 		* Second, send the data to all the connected players in this game
 		*/
 
-		var conns = RemoteModel.connections;
+		var conns = NetworkModel.connections;
 		for(var id in conns){
-			if(id != RemoteModel.my_id && conns[id]){
+			if(id != NetworkModel.my_id && conns[id]){
 				conns[id].send(data);
 			}
 		}
@@ -253,7 +249,7 @@ var RemoteController = (function(){
 		*/
 
 		console.log("document is unloaded now. Destroying peer, disconnecting from others");
-		RemoteModel.my_peer.destroy();	
+		NetworkModel.my_peer.destroy();	
 	};
 	
 	
@@ -269,8 +265,11 @@ var RemoteController = (function(){
 		/**
 		* is called whenever new data arrives
 		*/
+		if(data == NetworkModel.numbr_rec + 1){
+		}else{
+		}
 
-		RemoteModel.input_cell = data;
+		NetworkModel.input_cell = data;
 	};
 
 	var on_error = function(error){
@@ -296,7 +295,7 @@ var RemoteController = (function(){
 		* and removes it from the list
 		*/
 		
-		var list = RemoteModel.package_backlog;
+		var list = NetworkModel.package_backlog;
 
 		if(list.HEAD == null){
 			return null;
@@ -315,7 +314,7 @@ var RemoteController = (function(){
 		/**
 		* puts packet into the linked list
 		*/
-		var list = RemoteModel.package_backlog;
+		var list = NetworkModel.package_backlog;
 		var packet_container = {packet: packet}; 
 		if(list.HEAD == null){
 			list.HEAD = packet_container;
@@ -337,19 +336,17 @@ var RemoteController = (function(){
 		*/
 
 		// TEMPORARYYYYYYYYYYYYYYYYYYYYYYYYYY	
-		RemoteModel.output_cell = RemoteModel.output_cell || {};
-		RemoteModel.output_cell[data.purpose] = data.content;
+		NetworkModel.output_cell = NetworkModel.output_cell || {};
+		NetworkModel.output_cell[data.purpose] = data.content;
 	};
 
 	var send_out_data = function(){
 		/**
 		* temp
 		*/
-		if(RemoteModel.output_cell != null){
-			distribute_data(RemoteModel.output_cell);
-			RemoteModel.output_cell = null;
-			
-			
+		if(NetworkModel.output_cell != null){
+			distribute_data(NetworkModel.output_cell);
+			NetworkModel.output_cell = null;
 		}
 
 	};
@@ -358,8 +355,10 @@ var RemoteController = (function(){
 		/**
 		* temp
 		*/
+		var temp = NetworkModel.input_cell;
+		NetworkModel.input_cell = null;
 		
-		return RemoteModel.input_cell;
+		return temp;
 	};
 
 	return {
@@ -371,9 +370,9 @@ var RemoteController = (function(){
 	};
 })();
 
-module.exports = RemoteController;
+module.exports = NetworkController;
 
 var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
-	current_module: "RemoteController", 
+	current_module: "NetworkController", 
 	include_options: Includes.choices.DEFAULT
 }); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}

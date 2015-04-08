@@ -13,6 +13,7 @@ var EntityController = (function(){
 		type_logic_table = {
 			"ant": AntLogic,
 			"hero": HeroLogic,
+			"companion": EsteemedCompanionLogic,
 		};
 
 		for(type in type_logic_table){

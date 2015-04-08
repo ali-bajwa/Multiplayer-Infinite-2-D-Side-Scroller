@@ -1,13 +1,13 @@
-var HeroLogic = (function(){
+var EsteemedCompanionLogic = (function(){
 
 		
-	var Hero = function(){
+	var Companion = function(){
 		/* Will be instantiated for every created entity to hold all the information 
 			about the physical (not graphical) state of the entity in question. 
 			declare the properties like this:
 			this.some_state_variable_initial_value = 0;
 			instantiate (most likely in the spawn function) like that:
-			var new_entity_instance = new Hero();
+			var new_entity_instance = new EsteemedCompanion();
 		*/
 		this.hp = 100;
 		this.wound = false;
@@ -20,7 +20,7 @@ var HeroLogic = (function(){
 			you should assign type to your model here using the identification controller
 		*/
 		include(); // satisfy requirements, GOES FIRST
-		IdentificationController.assign_type(Hero, "hero");
+		IdentificationController.assign_type(Companion, "companion");
 	};
 
 	var spawn = function(x, y){
@@ -32,26 +32,29 @@ var HeroLogic = (function(){
 			and finally you HAVE TO(!!!) return the instance you just created from this function
 		*/
 
-		var hero = new Hero();
+		var companion = new Companion();
 
-		hero.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, hero);
+		companion.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, companion);
 
-		var id = IdentificationController.assign_id(hero);
+		var id = IdentificationController.assign_id(companion);
 
-		hero.hp = 100;
-		hero.wound = false;
-		hero.jumps = 0;
-		hero.score = 0;
+		companion.hp = 100;
+		companion.wound = false;
+		companion.jumps = 0;
+		companion.score = 0;
 
 
-		return hero;
+		return companion;
 	
 	};
 
-	var tick_AI = function(hero){
+	var tick_AI = function(companion){
 		/* Is ran each tick from the EntityController.update for every registered
 			entity of this type. I given entity_instance
 		*/
+
+		
+		
 
 		var cmds = KeyboardController.movement_commands();
 
@@ -59,38 +62,38 @@ var HeroLogic = (function(){
 
 		if(cmds("right")){
 		    // temporary
-		    add_score(hero, 1);
-		    move_right(hero);
+		    add_score(companion, 1);
+		    move_right(companion);
 		}
 		if(cmds("left")){
 			// temporary
 		    
-		    move_left(hero);
+		    move_left(companion);
 		}
 
 		if(cmds("up")){
-			jump(hero);
+			jump(companion);
 		}
 
 		// TEMPORARYYYYYYYYYYYYYYYY
 		if(cmds("up") || cmds("right") || cmds("left")){
-			var vel = hero.body.GetLinearVelocity();
+			var vel = companion.body.GetLinearVelocity();
 			vel = {x: vel.x, y: vel.y};
-			var pos = hero.body.GetWorldCenter();
+			var pos = companion.body.GetWorldCenter();
 			pos = {x: pos.x, y: pos.y};
-			NetworkController.add_to_next_update({purpose: "hero", content: {pos: pos, vel: vel}});
+			NetworkController.add_to_next_update({purpose: "companion", content: {pos: pos, vel: vel}});
 			
 		}else{
 			var data = NetworkController.get_data();
 			
-			if(data && data["hero"] != null){
+			if(data && data["companion"] != null){
 
-				var body = hero.body;
+				var body = companion.body;
 				
-				var vel = data["hero"].vel;
+				var vel = data["companion"].vel;
 				vel = new B2d.b2Vec2(vel.x, vel.y);
 
-				var pos = data["hero"].pos
+				var pos = data["companion"].pos
 				pos = new B2d.b2Vec2(pos.x, pos.y);
 				
 				body.SetLinearVelocity(vel)
@@ -98,19 +101,19 @@ var HeroLogic = (function(){
 			}
 		}
 
-		if(hero.wound)
+		if(companion.wound)
 		{
-			hero.hp--;
+			companion.hp--;
 			console.log("Taking damage");
-			GraphicsController.update_health(hero.hp);
+			GraphicsController.update_health(companion.hp);
 		}
 		
-		if(hero.hp <= 0)
+		if(companion.hp <= 0)
 		{
 			createjs.Ticker.paused = true;
 			console.log("Player Is Dead");
 		}
-		GraphicsController.update_score(hero.score);
+		GraphicsController.update_score(companion.score);
 	};
 
 	var begin_contact = function(contact, info){
@@ -131,14 +134,14 @@ var HeroLogic = (function(){
 				
 	};
 	
-	var add_score = function (hero, amount) {
-	    hero.score += amount;
+	var add_score = function (companion, amount) {
+	    companion.score += amount;
 	}
 	
 
-	var take_hit = function(hero, amount){
-	    hero.hp -= amount;
-		//GraphicsController.update_health(hero.hp);
+	var take_hit = function(companion, amount){
+	    companion.hp -= amount;
+		//GraphicsController.update_health(companion.hp);
 	}
 
 	var end_contact = function(contact, info){
@@ -146,58 +149,58 @@ var HeroLogic = (function(){
 		info.Me.entity.wound = false;
 	};
 
-	var move_right = function(hero){
-		var body = hero.body;
+	var move_right = function(companion){
+		var body = companion.body;
 		var velocity = body.GetLinearVelocity();
 		velocity.x = 5;
 		body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 		body.SetAwake(true);
-		//hero.x += 10; // old
-		//hero.x = (body.GetPosition().x + 1.5/2) * 30 ; 
+		//companion.x += 10; // old
+		//companion.x = (body.GetPosition().x + 1.5/2) * 30 ; 
 	};
 
-	var jump = function(hero){
-	    var body = hero.body;
-		if (hero.jumps == 0){
+	var jump = function(companion){
+	    var body = companion.body;
+		if (companion.jumps == 0){
 		    body.ApplyImpulse(new B2d.b2Vec2(0, -100), body.GetWorldCenter());
-		    hero.jumps += 1;
+		    companion.jumps += 1;
 		}
-		else if (hero.jumps == 1 && body.GetLinearVelocity().y > -1) {
+		else if (companion.jumps == 1 && body.GetLinearVelocity().y > -1) {
 		    body.ApplyImpulse(new B2d.b2Vec2(0, -100), body.GetWorldCenter());
-		    hero.jumps += 1;
+		    companion.jumps += 1;
 		}
 
-		//hero.y = body.GetPosition().y * 30;
+		//companion.y = body.GetPosition().y * 30;
 	
 	};
 
-	var set_coordinates = function(position_vector, hero){
+	var set_coordinates = function(position_vector, companion){
 		// TODO: remove;
 		// temporary/testing
-		hero.x = (position_vector.x - 1.5/2) * 30 ;
-		hero.y = (position_vector.y + 2.5/2) * 30 ;
+		companion.x = (position_vector.x - 1.5/2) * 30 ;
+		companion.y = (position_vector.y + 2.5/2) * 30 ;
 
 	};
 
-	var b2b_get_coordinates = function(hero){
-		return hero.body.GetWorldCenter();
+	var b2b_get_coordinates = function(companion){
+		return companion.body.GetWorldCenter();
 	};
 
-	var move_left = function(hero){
-		var velocity = hero.body.GetLinearVelocity();
+	var move_left = function(companion){
+		var velocity = companion.body.GetLinearVelocity();
 		velocity.x = -5;
-		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-		hero.body.SetAwake(true);
+		companion.body.SetLinearVelocity(velocity); // companion.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		companion.body.SetAwake(true);
 	};
 
-	var move_right = function(hero){
-		var velocity = hero.body.GetLinearVelocity();
+	var move_right = function(companion){
+		var velocity = companion.body.GetLinearVelocity();
 		velocity.x = +5;
-		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-		hero.body.SetAwake(true);
+		companion.body.SetLinearVelocity(velocity); // companion.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		companion.body.SetAwake(true);
 	};
 
-	var move = function(offset_x, offset_y, hero){
+	var move = function(offset_x, offset_y, companion){
 		// unimplemented
 		// should it hard-set position (not safe!)
 		// or just allow to set any velocity/impulse vector?
@@ -213,9 +216,9 @@ var HeroLogic = (function(){
 	};
 })();
 
-module.exports = HeroLogic;
+module.exports = EsteemedCompanionLogic;
 
 var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
-	current_module: "HeroLogic", 
+	current_module: "EsteemedCompanionLogic", 
 	include_options: Includes.choices.LOGIC_SPECIFIC
 }); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}

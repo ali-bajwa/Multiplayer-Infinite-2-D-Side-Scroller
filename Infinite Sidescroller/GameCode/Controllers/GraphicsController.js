@@ -18,6 +18,7 @@ var GraphicsController = (function(){
 			"ant": AntRenderer,
 			"hero": HeroRenderer,
 			"terrain_cell": TerrainCellRenderer,
+			"companion": EsteemedCompanionRenderer,
 		};
 
 		get_asset = AssetController.get_asset; // for quicker access

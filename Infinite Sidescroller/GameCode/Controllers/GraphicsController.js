@@ -10,6 +10,7 @@ var GraphicsController = (function(){
 	var reRender = false;
 	var seasonArray = [];
 	var seasonImg = ["Fall", "Spring", "Winter"];
+	var cycle = 0;
 	
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -30,7 +31,7 @@ var GraphicsController = (function(){
 		GraphicsModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
 		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
-		generate_season("Winter", GraphicsModel.stage.canvas.width, 0);
+		generate_season("Fall", GraphicsModel.stage.canvas.width, 0);
 	
 		//PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		GraphicsModel.score = new createjs.Text();
@@ -54,7 +55,7 @@ var GraphicsController = (function(){
 			var season = request_scenery(season_name);
 			
 			season.x = i;
-			AddToStage(season);
+			GraphicsModel.stage.addChildAt(season, 0);
 			seasonArray.push(season);
 			
 		}
@@ -62,6 +63,10 @@ var GraphicsController = (function(){
 	};
 	var set_season = function(hero){
 		for(var i = 0; i < seasonArray.length; i++){
+			
+			
+			//seasonArray[i].x = (i * 799) + GraphicsModel.camera.offset.x;
+			//seasonArray[i].y = GraphicsModel.camera.offset.y;
 			
 			seasonArray[i].x = (i * 799) - (hero.x * 4);
 			seasonArray[i].y = GraphicsModel.camera.offset.y;
@@ -79,26 +84,36 @@ var GraphicsController = (function(){
 		}
 	
 	};
-	var delete_season = function(y){
+	var delete_all_season = function(){
 		for(var i = 0; i < seasonArray.length; i++){
 			
 			
-			seasonArray[i].y = y;
+			GraphicsModel.stage.removeChild(seasonArray[i]);
 			
 		}
-	
+		seasonArray.length = 0;
 	};
     
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
-		var cmds = KeyboardController.movement_commands();
+		
+		//Temporary Keyboard Call for Season Change
+		var cmds = KeyboardController.debug_commands();
 		
 		if(cmds("season"))
 		{
-		console.log("Captain Kirk");
-			generate_season("Winter", GraphicsModel.stage.canvas.width, 0);
-		
+			delete_all_season();
+			console.log("Captain Kirk");
+			generate_season(seasonImg[cycle], GraphicsModel.stage.canvas.width, 0);
+			cycle++;
+			if(cycle == 4)
+			{
+				cycle = 0;
+			}
 		}
+		
+		
+		
 		
 	    update_camera(); // needs to be updated first
 

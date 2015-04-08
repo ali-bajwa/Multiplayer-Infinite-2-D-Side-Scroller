@@ -37,6 +37,8 @@ var GraphicsController = (function(){
 		reg_for_render(GraphicsModel.health);
 		hud_temp();
 
+		GraphicsModel.camera.offset_from_followed.x -= (1614 - GraphicsModel.stage.canvas.width) / 3;
+
 		// init all renderers
 		for(type in type_renderer_table){
 			type_renderer_table[type].init();
@@ -175,16 +177,15 @@ var GraphicsController = (function(){
 		var camera = GraphicsModel.camera;
 		var center = camera.center;
 		
-		
-		
 		center.x = Config.SCREEN_W/2 - camera.offset_from_followed.x;
 		center.y = Config.SCREEN_H/2 - camera.offset_from_followed.y;
 		
-	
-		
 		if(camera.following != null){
-		    camera.offset.x = center.x - camera.following.physical_instance.body.GetWorldCenter().x * Config.B2D.SCALE + (1614 - GraphicsModel.stage.canvas.width)/3;
+		    camera.offset.x = center.x - camera.following.physical_instance.body.GetWorldCenter().x * Config.B2D.SCALE;
 			camera.offset.y =  center.y - camera.following.physical_instance.body.GetWorldCenter().y * Config.B2D.SCALE;
+		}
+		if (camera.offset.y < 0) {
+		    camera.offset.y = 0;
 		}
 
 		adjust_debug_draw(); // goes last

@@ -9,6 +9,20 @@ var MultiplayerSyncController = (function(){
 
 		include(); // satisfy requirements
 
+		var temp = (function(){
+			var body = B2d.b2Body;
+			var temp = body.prototype.SetLinearVelocity;	
+
+			body.prototype.SetLinearVelocity = function SetLinearVelocity(){
+				return_val = temp.apply(this, arguments);
+
+				return return_val;
+			}
+
+			return temp;
+		})();
+
+		
 	};
 
 	var update = function(delta){

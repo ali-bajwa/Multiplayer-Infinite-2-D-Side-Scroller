@@ -42,12 +42,12 @@ var GriffinLogic = (function(){
 			and finally you HAVE TO(!!!) return the instance you just created from this function
 		*/
 
-		var new_griffin = new Griffin();
-		var id = IdentificationController.assign_id(new_griffin);
+		var new_Griffin = new Griffin();
+		var id = IdentificationController.assign_id(new_Griffin);
 
-		new_griffin.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, new_griffin);	
+		new_Griffin.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, new_Griffin);	
 
-		return new_griffin;
+		return new_Griffin;
 
 	};
 
@@ -60,7 +60,7 @@ var GriffinLogic = (function(){
 		if (Griffin.hp == 1) {
 			
 			if (Griffin.hero_hurt_me){
-				wound_griffin(Griffin, 1);
+				wound_Griffin(Griffin, 1);
 				Griffin.hero_hurt_me = false;
 				Griffin.can_attack = false;
 			}
@@ -90,7 +90,7 @@ var GriffinLogic = (function(){
 			}
 			if (Griffin.hero_hurt_me)
 			{
-				wound_griffin(Griffin, 1);
+				wound_Griffin(Griffin, 1);
 				Griffin.hero_hurt_me = false;
 				Griffin.can_attack = false;
 				change_state(Griffin, "upside_down");
@@ -100,7 +100,7 @@ var GriffinLogic = (function(){
 
 	};
 
-	var wound_griffin = function(Griffin, wound){
+	var wound_Griffin = function(Griffin, wound){
 		Griffin.hp -= wound;
 		Griffin.hero_hurt_me = false;
 	};

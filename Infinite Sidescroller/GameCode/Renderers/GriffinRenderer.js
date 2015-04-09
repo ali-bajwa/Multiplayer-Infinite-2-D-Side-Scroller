@@ -1,7 +1,7 @@
-var AntRenderer = (function(){
+var GriffinRenderer = (function(){
 
 	var spritesheets = {};
-	var griffin_animation;
+	var Griffin_animation;
 
 	var init = function(){
 		/* is ran from GraphicsController.init once during game loading
@@ -12,28 +12,27 @@ var AntRenderer = (function(){
 		include(); // satisfy requirements, GOES FIRST
 		var get_asset = AssetController.get_asset;
 
-		spritesheets["ant"] = new createjs.SpriteSheet({
+		spritesheets["Griffin"] = new createjs.SpriteSheet({
 			"framerate": 1,
-			"images": [get_asset("Ant1"), get_asset("Ant2"), get_asset("Ant3")],
-			"frames": { "regX": 3, "regY": 6, "height": 25, "width": 50, "count": 6},
+			"images": [get_asset("Griffin")],
+			"frames": { "regX": 10, "regY": 28, "height": 413, "width": 420, "count": 3},
 			"animations": {
-				"walk": [0, 1, "walk"],
-				"upside_down": [2, 3, "upside_down"],
-				"death": [4, 5, "death"]
+				"walk": [0, 1, 2, "walk"],
+				//"death": [4, 5, "death"]
 			}
 		})
 
 	};
 
-	var register = function(entity_griffin){
+	var register = function(entity_Griffin){
 		/* is ran for every entity of this type that was just created and should
 		get graphics representation. You are given the entity instance and is supposed
 		to crete graphics instance, and GraphicsController.reg_for_render(graphics_instance, entity_instance); it 
 		*/
 
-		griffin_animation = GraphicsController.request_animated(spritesheets["ant"], "walk");
-		GraphicsController.set_reg_position(ant_animation, 0, 0); // change that to adjust sprite position relative to the body
-		GraphicsController.reg_for_render(ant_animation, entity_ant); // sets griffin_animation's position to track the griffin's position (updates each tick)
+		Griffin_animation = GraphicsController.request_animated(spritesheets["Griffin"], "walk");
+		GraphicsController.set_reg_position(Griffin_animation, 0, 0); // change that to adjust sprite position relative to the body
+		GraphicsController.reg_for_render(Griffin_animation, entity_Griffin); // sets griffin_animation's position to track the griffin's position (updates each tick)
 
 		
 	};
@@ -47,7 +46,7 @@ var AntRenderer = (function(){
 		Griffin_special_render_temp(Griffin); 
 	};
 
-	var griffin_special_render_temp = function(Griffin){
+	var Griffin_special_render_temp = function(Griffin){
 		/* how to handle special render? TEMPORARY */
 
 		
@@ -58,13 +57,13 @@ var AntRenderer = (function(){
 			
 		}
 
-		if(Griffin.physical_instance.AI_state == "upside_down" && Griffin.physical_instance.unhurtflag)
-		{
-			Griffin.gotoAndPlay("upside_down");
-			Griffin.physical_instance.unhurtflag = false;
+		//if(Griffin.physical_instance.AI_state == "upside_down" && Griffin.physical_instance.unhurtflag)
+		//{
+		//	Griffin.gotoAndPlay("upside_down");
+		//	Griffin.physical_instance.unhurtflag = false;
 			
 			
-		}
+		//}
 
 	};
 

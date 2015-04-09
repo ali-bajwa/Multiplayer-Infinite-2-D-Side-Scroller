@@ -4,7 +4,6 @@ var GraphicsController = (function(){
 	*/
 	var colorTick = 0; //to slow down season changes
 	var get_asset; 
-	var hero, ant; // for quicker access
 	var type_renderer_table;
 	var Graphics;
 	var reRender = false;
@@ -20,6 +19,7 @@ var GraphicsController = (function(){
 		// type:	renderer:
 			"ant": AntRenderer,
 			"hero": HeroRenderer,
+			"Griffin":GriffinRenderer,
 			"terrain_cell": TerrainCellRenderer,
 		};
 

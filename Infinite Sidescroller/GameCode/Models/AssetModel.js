@@ -15,7 +15,9 @@ var AssetModel = new function(){
 			{src: "Greek Landscape fall.png", id: "Fall"},
 			{src: "Greek Landscape spring.png", id: "Spring"},
 			{src: "Greek Landscape winter.png", id: "Winter"},
-			{src: "Greek Landscape summer.png", id: "Summer"}
+			{src: "Greek Landscape summer.png", id: "Summer"},
+			{src: "GriffinSpriteSheet.png", id: "Griffin"},
+			
 		]; 
 		// TODO make adding resources easier? Automatic loading 
 		// of everything from assets, automatic names etc.?

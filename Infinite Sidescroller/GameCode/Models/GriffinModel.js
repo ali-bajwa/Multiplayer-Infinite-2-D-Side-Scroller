@@ -29,10 +29,10 @@ var GriffinModel = function(){
 	};
 	
 	// table of all griffins with ids as keys
-	this.griffins = {};
+	this.Griffins = {};
 
 	// marking for update TEMPORARY
-	this.new_griffins = {}; 
+	this.new_Griffins = {}; 
 	/* THIS DOES NOT BELONG HERE. 
 	//define fixture (friction, density, etc.)
 	this.fixture_def = new box2d.b2FixtureDef

@@ -153,7 +153,7 @@ var Include = function(){
 
 	var get_module = function(name){
 		// can be modified to throw object error instead of simple one
-		// in that case it may contain list of difined modules
+		// in that case it may contain list of defined modules
 		// may also be modified to check whether module is missing from 
 		// module_names, modules, or both, and give more accurate description
 		var message = "Module " + name + 

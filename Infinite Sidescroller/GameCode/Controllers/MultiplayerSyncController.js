@@ -9,18 +9,9 @@ var MultiplayerSyncController = (function(){
 
 		include(); // satisfy requirements
 
-		var temp = (function(){
-			var body = B2d.b2Body;
-			var temp = body.prototype.SetLinearVelocity;	
-
-			body.prototype.SetLinearVelocity = function SetLinearVelocity(){
-				return_val = temp.apply(this, arguments);
-
-				return return_val;
-			}
-
-			return temp;
-		})();
+		patch(B2d.b2Body, function SetLinearVelocity(){
+			console.log("hi");
+		});
 
 		
 	};
@@ -29,6 +20,36 @@ var MultiplayerSyncController = (function(){
 		/* is ran each tick from the GameController.update_all */
 
 	};
+
+	var patch = function(object, func){
+		/**
+		* patch object with the function given
+		* >object< - object whose prototype to patch 
+		* >func< - NAMED function. it has to have the same name
+		* as the function on the >object<'s prototype that it's meant to replace
+		* this is function named bar: var hey = function bar(){};
+		* this is unnamed function: var hey = function(){};
+		*
+		* the function that you pass will be called before the normal function body
+		*/
+
+		if(func.name === ""){
+			throw "Function passed should be named function";
+		}
+
+		var old_func = object.prototype[func.name];
+		var custom_function = func;
+
+		var new_function = function overriden_by_multiplayer_controller(){
+			custom_function();
+			return old_func.apply(this, arguments); // call old function and return what it returns
+		}
+
+		object.prototype[func.name] = new_function;
+		
+	};
+	
+	
 	
 	return {
 		// declare public

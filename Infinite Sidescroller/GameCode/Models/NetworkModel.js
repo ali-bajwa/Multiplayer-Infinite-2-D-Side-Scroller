@@ -8,6 +8,8 @@ var NetworkModel = function(){
 	this.my_peer = null;
 	this.my_id = null;
 
+	this.master_id = null; // id of the master with whome everyone synces
+
 	this.free_ids = [
 		"player1",
 		"player2",
@@ -17,6 +19,19 @@ var NetworkModel = function(){
 		"player6",
 		"player7",
 		"player8",
+	];
+
+	this.master_order = [
+		// order in which players will be selected for a master position
+		"player1",
+		"player2",
+		"player3",
+		"player4",
+		"player5",
+		"player6",
+		"player7",
+		"player8",
+
 	];
 
 	this.non_free_ids = [

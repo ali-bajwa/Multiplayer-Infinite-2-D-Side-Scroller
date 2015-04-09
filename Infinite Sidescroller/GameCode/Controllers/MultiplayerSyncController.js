@@ -10,16 +10,33 @@ var MultiplayerSyncController = (function(){
 		include(); // satisfy requirements
 
 		patch(B2d.b2Body, function SetLinearVelocity(){
-			console.log("hi");
-		});
+			//console.log(this.GetUserData().entity_instance);
 
+		});
 		
 	};
+
 
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
 
 	};
+
+	var get_companion_data = function(){
+		/**
+		* is used to get the data for objects that represent
+		* remote players. 
+		*/
+	};
+
+	var get_spawn_data = function(){
+		/**
+		* get data about entities that were recently spawned
+		*/
+		
+	};
+	
+	
 
 	var patch = function(object, func){
 		/**
@@ -31,6 +48,8 @@ var MultiplayerSyncController = (function(){
 		* this is unnamed function: var hey = function(){};
 		*
 		* the function that you pass will be called before the normal function body
+		* when called, your function will be called on the same object (instance) that
+		* old_function is called and will be passed the same arguments
 		*/
 
 		if(func.name === ""){
@@ -41,7 +60,8 @@ var MultiplayerSyncController = (function(){
 		var custom_function = func;
 
 		var new_function = function overriden_by_multiplayer_controller(){
-			custom_function();
+
+			custom_function.apply(this, arguments);
 			return old_func.apply(this, arguments); // call old function and return what it returns
 		}
 

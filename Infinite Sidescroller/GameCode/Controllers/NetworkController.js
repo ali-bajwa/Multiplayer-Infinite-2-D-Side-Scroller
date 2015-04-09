@@ -11,8 +11,7 @@ var NetworkController = (function(){
 		include(); // satisfy requirements
 
 		document.onbeforeunload = on_unload; // will be executed before user leaves page
-		NetworkModel.numbr = 0; // temp
-		NetworkModel.numbr_rec = -1;
+		NetworkModel.hey = false;
 	};
 
 
@@ -55,7 +54,7 @@ var NetworkController = (function(){
 			throw "Id's do not match. Smth went wrong" 
 		}
 
-		console.log("obtained id sucessfully, my id is", id);
+		console.log("Obtained id sucessfully, my id is", id);
 
 		for(var i = 0; i < NetworkModel.non_free_ids.length; i++){
 			// establish connections with every other player
@@ -65,15 +64,11 @@ var NetworkController = (function(){
 				NetworkModel.connections[id] =  connection;
 				connection.on('data', on_data_arrival);
 				connection.on('close', on_connection_closed);
+				console.log("Successfully initiated new connection with the peer", id);
 			}
 		}
 
-		// TEMPORARRYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY
-		// TODO: determine that dynamically and make sure there ia always a host
-		if(id === "player8"){
-			this.am_master = true;
-		}
-
+		pick_the_master();
 	};
 	
 	var setup_my_peer = function(error){
@@ -127,8 +122,42 @@ var NetworkController = (function(){
 		NetworkModel.free_ids.push(id);
 
 		delete NetworkModel.connections[id];
+
+
+		if(NetworkModel.master_id === id){
+			console.log("Closing connection with the master");
+			pick_the_master();
+		}
+
+		console.log("Connection with peer", id, "was successfully closed");
 	};
 	
+	var pick_the_master = function(){
+		/**
+		* pick the master (one with whome everyone synchronizes)
+		* for the current group of peers.
+		*/
+
+		var m_order = NetworkModel.master_order;
+		var conns = NetworkModel.connections;
+
+		for(var i = m_order.length - 1; i >= 0; i--){
+			id = m_order[i];
+			
+			if(conns[id] != null){
+				NetworkModel.master_id = id;
+				console.log("The master is", id);
+				return true;
+			}else if(id == NetworkModel.my_id){
+				// i am the best candidate for master
+				Config.Remote.master = true;
+				console.log("I am the law (was chosen as master)");
+				NetworkModel.master_id = id;
+				return true;
+			}
+		}
+		
+	}; // end pick_the_master
 	
 	
 	var new_peer = function(id){

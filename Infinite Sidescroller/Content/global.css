@@ -221,6 +221,13 @@ nav ul li:hover #b {
     background-size: cover;
 }
 
+@media screen and (min-height:1200px) and (max-height:1400px) {
+    .game_canvas {
+        max-height: 1400px;
+        min-height: 1200px; 
+    }
+}
+
 canvas {
     background-color: skyblue;
 }

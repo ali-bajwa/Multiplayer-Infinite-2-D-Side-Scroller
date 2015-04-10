@@ -114,12 +114,12 @@ var EntityController = (function(){
 
 		// demonstration purposes for ant
 		if(debug_commands("spawn_ant")){
-			var new_ant = spawn(Math.random()*50 + 10, 10, "ant");
+		    var new_ant = spawn(GraphicsController.get_movement_edge() + Math.random() * 50, 10, "ant");
 		}
 
 	    // demonstration purposes for griffin
 		if (debug_commands("spawn_griffin")) {
-		    var new_griffin = spawn(Math.random() * 50 + 10, 10, "Griffin");
+		    var new_griffin = spawn(Math.random() * 50 + GraphicsController.get_movement_edge(), 10, "Griffin");
 		}
 
 		for(var type in EntityModel.for_logic_update){

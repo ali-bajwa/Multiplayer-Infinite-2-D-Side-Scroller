@@ -11,9 +11,9 @@ var WorldController = (function(){
 
 		include(); // satisfy requirements
 
-		body_test = new platform();
-		var id = IdentificationController.assign_id(body_test);
-		var body_test = PhysicsController.get_rectangular({}, body_test);
+		//body_test = new platform();
+		//var id = IdentificationController.assign_id(body_test);
+		//var body_test = PhysicsController.get_rectangular({}, body_test);
 
 	};
 

@@ -150,7 +150,7 @@ var TerrainSliceController = (function () {
 		slice = buildTerrainSlice(slice);
 
 		var slices = [];
-		for (i=1;i<4;i++)
+		for (i=1;i<12;i++)
 			{
 			slices[i] = new TerrainSliceModel.Slice();
 			slices[i].origin.x = x_offset + i*20;

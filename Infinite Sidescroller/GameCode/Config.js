@@ -11,7 +11,7 @@ var Config = function(){
 	this.FPS = 30; 
 	
 	//the movement edge, controls terrain generation
-	this.movement_edge;
+	this.movement_edge = 0;
 
 	// Box2D stuff >>>
 	this.B2D = {

@@ -13,6 +13,7 @@ var EntityController = (function(){
 		type_logic_table = {
 			"ant": AntLogic,
 			"hero": HeroLogic,
+            "Griffin": GriffinLogic,
 		};
 
 		for(type in type_logic_table){
@@ -111,9 +112,14 @@ var EntityController = (function(){
 		/* is ran each tick from the GameController.update_all */
 		var debug_commands = KeyboardController.debug_commands();
 
-		// demonstration purposes
+		// demonstration purposes for ant
 		if(debug_commands("spawn_ant")){
 			var new_ant = spawn(Math.random()*50 + 10, 10, "ant");
+		}
+
+	    // demonstration purposes for griffin
+		if (debug_commands("spawn_griffin")) {
+		    var new_griffin = spawn(Math.random() * 50 + 10, 10, "Griffin");
 		}
 
 		for(var type in EntityModel.for_logic_update){

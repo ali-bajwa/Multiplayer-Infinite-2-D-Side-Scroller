@@ -65,11 +65,13 @@ var Include = function(){
 			"AntRenderer",
 			"HeroRenderer",
 			"TerrainCellRenderer",
+			"GriffinRenderer",
 		],
 
 		Logic: [
 			"AntLogic",
 			"HeroLogic",
+			"GriffinLogic",
 		],
 
 	};//end module_names
@@ -126,11 +128,13 @@ var Include = function(){
 			// Renderers
 			
 			AntRenderer: require("./Renderers/AntRenderer.js"),
+			GriffinRenderer: require("./Renderers/GriffinRenderer.js"),
 			HeroRenderer: require("./Renderers/HeroRenderer.js"),
 			TerrainCellRenderer: require("./Renderers/TerrainCellRenderer.js"),
 			
 			// Logic
 			AntLogic: require("./Logic/AntLogic.js"),
+			GriffinLogic: require("./Logic/GriffinLogic.js"),
 			HeroLogic: require("./Logic/HeroLogic.js"),
 			
 			
@@ -149,7 +153,7 @@ var Include = function(){
 
 	var get_module = function(name){
 		// can be modified to throw object error instead of simple one
-		// in that case it may contain list of difined modules
+		// in that case it may contain list of defined modules
 		// may also be modified to check whether module is missing from 
 		// module_names, modules, or both, and give more accurate description
 		var message = "Module " + name + 

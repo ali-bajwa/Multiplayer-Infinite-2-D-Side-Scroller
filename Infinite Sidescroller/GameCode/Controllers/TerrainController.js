@@ -1,3 +1,4 @@
+config = require ("../Config.js");
 
 var TerrainController = (function(){
 	/* this will be the physical representation of the terrain
@@ -6,14 +7,21 @@ var TerrainController = (function(){
 
 	var init = function(){
 		include();
+		
 	};
 	
-
+	
 	var update = function(){
 		// check for any chunks to be unloaded/deleted will go here, for now
 		// maybe it'll check for all players to be sufficiently far to the right
 		// of it, maybe one chunk in advance, or smth like that
+		//if (config.movement_edge.x > x)
 		while(TerrainModel.terrain_slices_queue.length < 4){
+			var slice = NewTerrainSlice();
+			TerrainModel.terrain_slices_queue.push(slice);
+		};
+		if(config.movement_edge > (TerrainModel.terrain_slices_queue.length-3)*(config.TerrainSlice.cell_w*config.TerrainSlice.cell_rows)){
+			console.log("Grog");
 			var slice = NewTerrainSlice();
 			TerrainModel.terrain_slices_queue.push(slice);
 		};
@@ -25,9 +33,11 @@ var TerrainController = (function(){
 		 * it calculates it's origin x and y positions and whatever other stuff,
 		 * generates slice; sets up everything
 		 */
-
-		var slice = TerrainSliceController.generate();
-		MarkAsNewTerrainSlice(slice); // so that graphics and other stuff will notice
+		
+		x_offset = TerrainModel.terrain_slices_queue.length*20;
+		console.log(TerrainModel.terrain_slices_queue.length);
+		var slice = new TerrainSliceController.generate(x_offset);
+		MarkAsNewTerrainSlice(slice); 
 
 		return slice;
 
@@ -36,7 +46,7 @@ var TerrainController = (function(){
 	var retrieve_world_parameters = function(){};
 	
 	var for_each_tile = function(f){
-		// takes function >f< that takes three parameters: tile (eseljs object),
+		// takes function >f< that takes three parameters: tile (easeljs object),
 		// terrain_lvl (int), and tile_index (int)
 		// calls this function for every tile of the terrain
 		

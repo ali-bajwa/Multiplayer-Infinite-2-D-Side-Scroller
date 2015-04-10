@@ -123,6 +123,16 @@ r_templates.ant = {
 	//mobexp++
 };
 
+r_templates.Griffin = {
+	parent: r_templates.living,
+	width: 10,
+	height: 5,
+	type: "dynamic",
+	x: 65,
+	y: 10,
+	//mobexp++
+};
+
 r_templates.test = {
 	width: 1,
 	height: 2,

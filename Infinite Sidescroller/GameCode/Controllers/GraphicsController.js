@@ -4,7 +4,6 @@ var GraphicsController = (function(){
 	*/
 	var colorTick = 0; //to slow down season changes
 	var get_asset; 
-	var hero, ant; // for quicker access
 	var type_renderer_table;
 	var Graphics;
 	var reRender = false;
@@ -20,6 +19,7 @@ var GraphicsController = (function(){
 		// type:	renderer:
 			"ant": AntRenderer,
 			"hero": HeroRenderer,
+			"Griffin":GriffinRenderer,
 			"terrain_cell": TerrainCellRenderer,
 		};
 
@@ -104,7 +104,6 @@ var GraphicsController = (function(){
 		{
 			colorTick = 0;
 			delete_all_season();
-			console.log("Captain Kirk");
 			generate_season(seasonImg[cycle], GraphicsModel.stage.canvas.width, 0);
 			cycle++;
 			if(cycle == 4)
@@ -113,7 +112,6 @@ var GraphicsController = (function(){
 			}
 		}
 		colorTick++;
-		console.log(colorTick);
 		
 		
 		
@@ -168,7 +166,6 @@ var GraphicsController = (function(){
 
 				
 			}else{
-				console.log(new_obj);
 				
 				throw "No renderer found for the type " + String(new_obj.type) +
 					" confirm that renderer exists and is added to the GraphicsController.type_renderer_table"
@@ -223,7 +220,6 @@ var GraphicsController = (function(){
 	var update_health = function(passed) {
 	
 	GraphicsModel.health.text = passed;
-	//console.log("I've been called");
 	}
 
 	var update_score = function (passed) {
@@ -428,7 +424,6 @@ var GraphicsController = (function(){
 			var type = physical_instance.type;
 
 			if(id == null || type == null){
-				console.log(physical_instance);
 				throw "Id or type is undefined for this physical instance";
 			}
 

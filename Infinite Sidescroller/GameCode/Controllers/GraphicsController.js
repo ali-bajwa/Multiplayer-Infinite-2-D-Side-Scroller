@@ -238,11 +238,21 @@ var GraphicsController = (function(){
 		center.y = Config.SCREEN_H/2 - camera.offset_from_followed.y;
 		
 		if(camera.following != null){
-		    var temp_offset = center.x - camera.following.physical_instance.body.GetWorldCenter().x * Config.B2D.SCALE;
-		    if (camera.offset.x > temp_offset) {
-		        camera.offset.x = temp_offset;
-		    }
-			camera.offset.y =  center.y - camera.following.physical_instance.body.GetWorldCenter().y * Config.B2D.SCALE;
+		    camera.offset.x = center.x - camera.following.physical_instance.body.GetWorldCenter().x * Config.B2D.SCALE;
+			camera.offset.y = center.y - camera.following.physical_instance.body.GetWorldCenter().y * Config.B2D.SCALE;
+			// now, we do not want the camera to display what is behind the movement edge. but the camera is a relative thing
+			// so we can't just limit some sort of x position or such.
+			// I'll use the following technique: 
+			//   1. calculate were the physical movement edge would be if drawn right now to the canvas
+			//   2. if it would be displayed on-screen, offset camera so that it wouldn't be anymore
+
+			var mov_edge_graphics_x = (Config.Player.movement_edge * Config.B2D.SCALE) + camera.offset.x;
+
+			// recall that left display edge is 0 for graphics, as (0, 0) is the top-left corner
+			if(mov_edge_graphics_x > 0){
+				// if movement edge would be displayed
+				camera.offset.x -= mov_edge_graphics_x;
+			}
 		}
 		if (camera.offset.y < 0) {
 		    camera.offset.y = 0;

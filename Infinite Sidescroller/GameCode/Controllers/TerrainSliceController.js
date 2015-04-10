@@ -150,9 +150,6 @@ var TerrainSliceController = (function () {
 
 		slice.origin.x = x_offset;
 		slice.origin.y = 0; //slice.id *slice.grid_rows * slice.cell_w - slice.cell_w*4;
-		console.log(slice.origin);
-		
-		
 		
 		//var random_index = getRandom(seed)%100;
 		//if (random_index < 60){

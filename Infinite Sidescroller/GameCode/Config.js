@@ -30,7 +30,10 @@ var Config = function(){
 		// is automatically incremented each time new TerrainSliceModel is instantiated:
 		next_slice_id: 0 
 	};
-	
+
+	this.Player = {
+		movement_edge: 0
+	}
 	// <<<
 };
 

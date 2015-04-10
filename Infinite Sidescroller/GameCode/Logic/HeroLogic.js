@@ -55,6 +55,12 @@ var HeroLogic = (function(){
 			entity of this type. I given entity_instance
 		*/
 
+		var hero_x = hero.body.GetWorldCenter().x;
+		var pconf = Config.Player;
+		if(pconf.movement_edge < hero_x - 20){
+			pconf.movement_edge = hero_x - 20;
+		}
+
 		var cmds = KeyboardController.movement_commands();
 
 		var MOVEMENT_EDGE = GraphicsController.get_movement_edge(); // where terrain start scrolling
@@ -89,9 +95,10 @@ var HeroLogic = (function(){
 		    EntityController.delete_entity(hero);
 			console.log("Player Is Dead");
 		}
-		if (hero.body.GetWorldCenter().x < MOVEMENT_EDGE && hero.body.GetLinearVelocity().x < 0) {
-		    stop_hero(hero);
-		    console.log("working");
+		
+		if (hero.body.GetWorldCenter().x < pconf.movement_edge + hero.body.GetUserData().def.width/2) {
+			stop_hero(hero);
+			console.log("working");
 		}
 		if (hero.body.GetWorldCenter().y > 22) {
 		    EntityController.delete_entity(hero);
@@ -133,10 +140,21 @@ var HeroLogic = (function(){
 	};
 
 	var stop_hero = function (hero) {
-	    var body = hero.body;
-	    var velocity = body.GetLinearVelocity();
-	    velocity.x = 0;
-	    body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		//var body = hero.body;
+		//var velocity = body.GetLinearVelocity();
+		//velocity.x = 0;
+		//body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		//body.SetAwake(true);
+
+		var body = hero.body;
+		var w = hero.body.GetUserData().def.width/2;
+		var pos = new B2d.b2Vec2(Config.Player.movement_edge + w, body.GetWorldCenter().y)
+		var vel = body.GetLinearVelocity();
+		if(vel.x < 0){
+			var vel = new B2d.b2Vec2(0, vel.y);
+			body.SetLinearVelocity(vel);
+		}
+
 	    body.SetAwake(true);
 	}
 

@@ -15,74 +15,155 @@ var TerrainSliceController = (function () {
 
 	var get_next_origin = function(){
 	};
+	
 
-	var generate = function(){
-
+	var spawnBlock = function(x, y, seed){
+		//spawn instance of this entity at the given coordinates
+		var block
+		block = new TerrainSliceModel.Cell(getRandomNumber(seed)%3+1);
+		IdentificationController.assign_id(block);
+		block.body = PhysicsController.get_rectangular({x: x, y: y}, block);
+		return block;
+	};
+	
+	var spawnGap = function(x,y){
+		// 0 will be the id for the "air" i.e. nothing
+		var gap;
+		gap = new TerrainSliceModel.Cell(0);
+		IdentificationController.assign_id(gap);
+		return gap;
+	};
+	
+	var getRandomNumber = function(seed){
+		return Math.floor(Math.random()*1000);
+	};
+	
+	var buildTerrainSlice = function(slice){
+	
+		var seed = Math.floor(Math.random()*1000);//placeholder for seed
+		
+		//set variables
+		var rows = slice.grid_rows;
+		var columns = slice.grid_columns;
+		var i,j;
+		var ground_lvl = rows - (getRandomNumber(seed)%3+2); //the row that is considered ground level.
+		var hgap_min = 5;				//minimum size of gaps between platforms
+		var hgap_length = 0; 		//current number of consecutive horizontal gaps
+		var pit_max = 3;				//maximum length of pits in blocks
+		var pit_length = 0; 		//current number of consecutive pits
+		var pit_frequency = 40; 		//base percentage chance of a pit being dug
+		var platform_length_max = 5;	//maximum length of a platform in blocks
+		var platform_length = 0; 		//length of currently generated platform
+		var platform_count_max = 3; //maximum number of platforms per column
+		var platform_count = []; 		//keeps track of platforms per column
+		var platform_frequency = 30;//base percentage chance of a platform to be generated
+		/*
+		var spike frequency
+		var column frequency
+		etc.
+		*/
+		for(i=0; i<columns;i++){
+			platform_count[i] = 0;
+			}
+			
+		
+		
+		//build the stage from the bottom up
+		for(i=rows;i>=0;i--){ //outer loop: generate rows bottom to top
+			slice.grid[i] = [];
+			seed+=17;//stupid thing to test without real random numbers
+			for(j=0;j<columns;j++){ //inner loop: generate from left to right within current row
+				seed+=1;//stupid thing to test without real random numbers
+				var x = slice.origin.x + j * slice.cell_w + slice.cell_w/2;
+				var y = slice.origin.y + i * slice.cell_w + slice.cell_w/2;
+				
+				if (i >= ground_lvl){	//If on or below ground level, Generate Ground
+					if (pit_length < pit_max && getRandomNumber(seed)%100 < pit_frequency){
+						slice.grid[i][j] = spawnGap(x,y); //create gap
+						pit_length++; //the pit gets wider
+					}
+					else{
+						slice.grid[i][j] = spawnBlock(x,y,seed);//create a ground block
+						pit_length = 0; //any pits being spawned have been interrupted
+						if (i == ground_lvl)
+							slice.grid[i][j].position = "surface";
+						else{
+						slice.grid[i][j].position = "underground";
+						}
+					}
+				}
+				else{ //ElSE Generate Platforms
+					if((hgap_length >= hgap_min || platform_length > 0) //if there is a large gap or a platform being built
+					&& (platform_length < platform_length_max) // and any platform being built is less than max length
+					&& (platform_count[j] < platform_count_max)){ // and the current column's platform limit has not been met
+						if (getRandomNumber(seed)%100 < platform_frequency){
+						
+							slice.grid[i][j] = spawnBlock(x,y,seed);//create platform
+							
+							//check aesthetic stuff, like platform edges
+							//put stuff like slice.grid[i][j].is_spiky here too
+							if (platform_length == 0){
+								slice.grid[i][j].position = "left";
+							}
+							else{
+								slice.grid[i][j].position = "right";
+							}
+							if (j>0){if (slice.grid[i][j-1].kind != 0){
+								if (slice.grid[i][j-1].position != "left"){
+									slice.grid[i][j-1].position = "middle";
+								}
+							}}
+							
+							platform_length++;	//platform gets longer, and 
+							platform_count[j]++;//the number of platforms in the current column increases
+							
+							platform_count[j+1]++;//get rid of annoying diagonal walls
+							platform_count[j+2]++;
+							platform_count[j+3]++;
+							
+							hgap_length = 0; 		//reset the gap counter to 0
+						}
+						else{
+							slice.grid[i][j] = spawnGap(x,y); //create a gap
+							platform_length = 0; //if there was a platform, it has been interrupted
+							hgap_length++; //the gap gets wider
+						}
+					}
+					else{
+						slice.grid[i][j] = spawnGap(x,y); //create a gap
+						platform_length = 0; //if there was a platform, it has been interrupted
+						hgap_length++; //the gap gets wider
+					}
+				}
+			}
+		}
+		return slice;
+	};
+	
+	var generate = function(x_offset){
+	
 		var slice = new TerrainSliceModel.Slice();
 
-		slice.origin.x = slice.id * slice.grid_columns * slice.cell_w;
-		slice.origin.y = 0;
+		slice.origin.x = x_offset;
+		slice.origin.y = slice.id * slice.grid_rows * slice.cell_w - slice.cell_w*4;
 
-		// TODO: id's in this function should be actually called types and registered accordingly
+		slice = buildTerrainSlice(slice);
 
-		for(var i = 0; i < slice.grid_rows; i++){
-			/* 	assigning id's
-				that is the first pass. later it may be used to layout general form of the terrain
-			   	assigning each cell in the grid some role, marked by its id.
-			 	that role may include for it to be a piece of the bigger object >>>
-			*/
-
-			slice.grid[i] = [];
-			var lvl = slice.grid_rows - i; // level from the bottom
-			var prob = TerrainSliceModel.lvl_prob[lvl];
-
-			for(var j = 0; j < slice.grid_columns; j++){
-				if(prob){
-					var random_id = GameUtility.random_choice(prob, [1, 2, 3]); // chose random terrain tile id
-					// the tile in the grid might be made to be separate object later
-					// the tile_id will determine the type of object in that tile,
-					// such as type of terrain etc. the tiles with different id's do not
-					// necessarily differ in physics representation, they might just have
-					// different appearance
-					slice.grid[i][j] = new TerrainSliceModel.Cell(random_id);
-					IdentificationController.assign_id(slice.grid[i][j]);
-				}else{
-					// 0 will be the id for the "air" i.e. nothing
-					slice.grid[i][j] = new TerrainSliceModel.Cell(0);
-					IdentificationController.assign_id(slice.grid[i][j]);
-				}
-
-			} // for end
-			// <<< assigning ids
-			
-		} // for end
-
-
-		for(var i = 0; i < slice.grid_rows; i++){
-			/*	creating physics representations
-			 *	2nd pass; this will be used to create all the objects and such
-			 *	physics-wise. It may examine id's of the adjacent tiles to find
-			 *	larger pieces of terrain to unite under the common bounding box
-			 *	if they have similar enough properties or belong together for some reason
-			 */
-
-			var lvl = slice.grid_rows - i; // level from the bottom
-
-			for(var j = 0; j < slice.grid_columns; j++){
-				var kind = slice.grid[i][j].kind;
-				if(kind != 0){ // if not air
-					var x = slice.origin.x + j * slice.cell_w + slice.cell_w/2;
-					var y = slice.origin.y + i * slice.cell_w + slice.cell_w/2;
-					var body = PhysicsController.get_rectangular({x: x, y: y}, slice.grid[i][j]);
-					slice.grid[i][j].body = body;
-				}
-
-			} // end for
-
-		}//end for
+		var slices = [];
+		for (i=1;i<4;i++)
+			{
+			slices[i] = new TerrainSliceModel.Slice();
+			slices[i].origin.x = x_offset + i*20;
+			slices[i].origin.y = slice.id * slices[i].grid_rows * slices[i].cell_w - slices[i].cell_w*4;
+			slices[i] = buildTerrainSlice(slices[i]);
+			}
 		
 		return slice;
 	};
+	
+
+
+
 
 	return {
 		// declare public

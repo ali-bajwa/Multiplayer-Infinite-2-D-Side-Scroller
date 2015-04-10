@@ -1,4 +1,4 @@
-movement_edge = require ("../Config.js").movement_edge;
+config = require ("../Config.js");
 
 var HeroLogic = (function(){
 
@@ -64,7 +64,7 @@ var HeroLogic = (function(){
 		var cmds = KeyboardController.movement_commands();
 
 		var MOVEMENT_EDGE = GraphicsController.get_movement_edge(); // where terrain start scrolling
-		movement_edge = MOVEMENT_EDGE;
+		config.movement_edge = MOVEMENT_EDGE;
 
 		if(cmds("right")){
 		    // temporary

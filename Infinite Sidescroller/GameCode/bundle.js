@@ -2018,15 +2018,17 @@ var TerrainController = (function(){
 		
 	};
 	
-	
+	monkey = 0;
 	var update = function(){
 		// check for any chunks to be unloaded/deleted will go here, for now
 		// maybe it'll check for all players to be sufficiently far to the right
 		// of it, maybe one chunk in advance, or smth like that
 		//if (config.movement_edge.x > x)
-		while(TerrainModel.terrain_slices_queue.length < 4){
+		while (monkey<4){
+		//while(TerrainModel.terrain_slices_queue.length < 4){
 			var slice = NewTerrainSlice();
 			TerrainModel.terrain_slices_queue.push(slice);
+			monkey++;
 		};
 		if(config.movement_edge > (TerrainModel.terrain_slices_queue.length-3)*(config.TerrainSlice.cell_w*config.TerrainSlice.cell_rows)){
 			console.log("Grog");
@@ -2041,9 +2043,9 @@ var TerrainController = (function(){
 		 * it calculates it's origin x and y positions and whatever other stuff,
 		 * generates slice; sets up everything
 		 */
-		
-		x_offset = TerrainModel.terrain_slices_queue.length*20;
-		console.log(TerrainModel.terrain_slices_queue.length);
+		x_offset = monkey*20;
+		//x_offset = TerrainModel.terrain_slices_queue.length*20//*config.TerrainSlice.cell_rows;
+		console.log(monkey);
 		var slice = new TerrainSliceController.generate(x_offset);
 		MarkAsNewTerrainSlice(slice); 
 
@@ -2174,28 +2176,35 @@ var TerrainSliceController = (function () {
 		var columns = slice.grid_columns;
 		var i,j;
 		var ground_lvl = rows - (getRandomNumber(seed)%3+2); //the row that is considered ground level.
-		var hgap_min = 5;				//minimum size of gaps between platforms
+		var hgap_min = 8;				//minimum size of gaps between platforms
 		var hgap_length = 0; 		//current number of consecutive horizontal gaps
 		var pit_max = 3;				//maximum length of pits in blocks
 		var pit_length = 0; 		//current number of consecutive pits
-		var pit_frequency = 40; 		//base percentage chance of a pit being dug
+		var has_pit = [];
+		var pit_frequency = 10; 		//base percentage chance of a pit being dug
 		var platform_length_max = 5;	//maximum length of a platform in blocks
 		var platform_length = 0; 		//length of currently generated platform
-		var platform_count_max = 3; //maximum number of platforms per column
+		var platform_count_max = 2; //maximum number of platforms per column
 		var platform_count = []; 		//keeps track of platforms per column
-		var platform_frequency = 30;//base percentage chance of a platform to be generated
+		var platform_frequency = 10;//base percentage chance of a platform to be generated
 		/*
 		var spike frequency
 		var column frequency
 		etc.
 		*/
-		for(i=0; i<columns;i++){
+		for(i=0; i<=columns;i++){
 			platform_count[i] = 0;
+			has_pit[i] = false;
 			}
 			
 		
 		
 		//build the stage from the bottom up
+		/*
+		Build Stage from bottom up, left to right
+		load blocks and gaps into slice.grid[i][j]
+		
+		*/
 		for(i=rows;i>=0;i--){ //outer loop: generate rows bottom to top
 			slice.grid[i] = [];
 			seed+=17;//stupid thing to test without real random numbers
@@ -2205,8 +2214,9 @@ var TerrainSliceController = (function () {
 				var y = slice.origin.y + i * slice.cell_w + slice.cell_w/2;
 				
 				if (i >= ground_lvl){	//If on or below ground level, Generate Ground
-					if (pit_length < pit_max && getRandomNumber(seed)%100 < pit_frequency){
+					if (pit_length < pit_max && (getRandomNumber(seed)%100 < pit_frequency || pit_length == 1 || has_pit[j])){
 						slice.grid[i][j] = spawnGap(x,y); //create gap
+						has_pit[j] = true;
 						pit_length++; //the pit gets wider
 					}
 					else{
@@ -2222,8 +2232,9 @@ var TerrainSliceController = (function () {
 				else{ //ElSE Generate Platforms
 					if((hgap_length >= hgap_min || platform_length > 0) //if there is a large gap or a platform being built
 					&& (platform_length < platform_length_max) // and any platform being built is less than max length
-					&& (platform_count[j] < platform_count_max)){ // and the current column's platform limit has not been met
-						if (getRandomNumber(seed)%100 < platform_frequency){
+					&& (platform_count[j] < platform_count_max) // and the current column's platform limit has not been met
+					&& (platform_length > 0 || (j<columns-1 && platform_count[j+1] < platform_count_max))){ //and the platform is not going to be a singleton
+						if (getRandomNumber(seed)%100 < platform_frequency || (platform_length > 0 && platform_length < 4)){
 						
 							slice.grid[i][j] = spawnBlock(x,y,seed);//create platform
 							
@@ -2243,11 +2254,7 @@ var TerrainSliceController = (function () {
 							
 							platform_length++;	//platform gets longer, and 
 							platform_count[j]++;//the number of platforms in the current column increases
-							
-							platform_count[j+1]++;//get rid of annoying diagonal walls
-							platform_count[j+2]++;
-							platform_count[j+3]++;
-							
+												
 							hgap_length = 0; 		//reset the gap counter to 0
 						}
 						else{
@@ -2263,6 +2270,10 @@ var TerrainSliceController = (function () {
 					}
 				}
 			}
+		//create vertical gaps
+		if (i<ground_lvl && i>1){
+			i--;
+		}
 		}
 		return slice;
 	};
@@ -2272,11 +2283,17 @@ var TerrainSliceController = (function () {
 		var slice = new TerrainSliceModel.Slice();
 
 		slice.origin.x = x_offset;
-		slice.origin.y = slice.id * slice.grid_rows * slice.cell_w - slice.cell_w*4;
-
+		slice.origin.y = slice.id*slice.grid_rows * slice.cell_w - slice.cell_w*4;
+		
+		//var random_index = getRandom(seed)%100;
+		//if (random_index < 60){
 		slice = buildTerrainSlice(slice);
+		//}
+		//if (random_index < 30){}
+		//if (random_index < 10){}
 
 		var slices = [];
+		
 		for (i=1;i<12;i++)
 			{
 			slices[i] = new TerrainSliceModel.Slice();

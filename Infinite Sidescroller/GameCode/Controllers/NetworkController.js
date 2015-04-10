@@ -10,6 +10,10 @@ var NetworkController = (function(){
 		/* is ran from the InitController once when the game is loaded */
 		include(); // satisfy requirements
 
+		// TODO: make sure that sensitive host info (like spawn request that have not been
+		// satisfied yet) are processed correctly before unloading
+		// also it may make sense to handle even situations when the page was forced to unload
+		// even before the function was called (power problem?)
 		document.onbeforeunload = on_unload; // will be executed before user leaves page
 		NetworkModel.hey = false;
 	};
@@ -25,8 +29,19 @@ var NetworkController = (function(){
 			start_multiplayer_session();
 		}
 
-		send_out_data();
+		if(Config.Remote.connected){
+			if(Config.Remote.master){
+				// if I am the master, distribute data
+				send_out_data();
+			}else{
+				// if not the master, just send data to the master
+				send_data_to_master();
+			}
+		}
 
+		// Now, delete all data that was received this tick (it was already
+		// picked up by MultiplayerSync, and stored, if it was needed)
+		NetworkModel.recieve_array = null;
 	};
 
 	var start_multiplayer_session = function(){
@@ -34,7 +49,7 @@ var NetworkController = (function(){
 		* perform procedures to start playing with all
 		* other connected people
 		*/
-		setup_my_peer(); // setup peer // also picks free id
+		setup_my_peer(); // setup peer // also picks free idr// calls >on_obtaining_id_successfully
 				
 	};
 
@@ -47,7 +62,7 @@ var NetworkController = (function(){
 		*/
 
 		NetworkModel.my_id = id;
-		NetworkModel.connected = true;
+		Config.Remote.connected = true;
 
 		if(NetworkModel.my_id != NetworkModel.my_peer.id){
 			// not a meaningful check, terrible practices are terrible
@@ -90,7 +105,7 @@ var NetworkController = (function(){
 				peer.on('open', on_obtaining_id_successfully);
 			}else{
 				console.warn("Couldn't establish multiplayer session, all 8 available slots taken");
-				NetworkModel.connected = false;
+				Config.Remote.connected = false;
 				NetworkModel.block_connections = false;
 				NetworkModel.free_ids = [
 					"player1",
@@ -294,11 +309,14 @@ var NetworkController = (function(){
 		/**
 		* is called whenever new data arrives
 		*/
-		if(data == NetworkModel.numbr_rec + 1){
-		}else{
-		}
 
-		NetworkModel.input_cell = data;
+		if(NetworkModel.recieve_array == null){
+			NetworkModel.recieve_array = data;
+		}else{
+			for(var i = 0; i < data.lenght; i++){
+				NetworkModel.recieve_array.push(data[i]);
+			}
+		}
 	};
 
 	var on_error = function(error){
@@ -365,30 +383,61 @@ var NetworkController = (function(){
 		*/
 
 		// TEMPORARYYYYYYYYYYYYYYYYYYYYYYYYYY	
-		NetworkModel.output_cell = NetworkModel.output_cell || {};
-		NetworkModel.output_cell[data.purpose] = data.content;
+		//NetworkModel.output_cell = NetworkModel.output_cell || {};
+		//NetworkModel.output_cell[data.purpose] = data.content;
+		
+		NetworkModel.send_array = NetworkModel.send_array || [];
+
+		NetworkModel.send_array.push(data);
 	};
 
 	var send_out_data = function(){
 		/**
 		* temp
 		*/
-		if(NetworkModel.output_cell != null){
-			distribute_data(NetworkModel.output_cell);
-			NetworkModel.output_cell = null;
+		
+		
+		if(NetworkModel.send_array != null){
+			
+			distribute_data(NetworkModel.send_array);
+			NetworkModel.send_array = null;
 		}
 
 	};
 
+	var send_data_to_master = function(){
+		/**
+		* send the prepared data to the master
+		*/
+		var master_conn = NetworkModel.connections[NetworkModel.master_id];
+		if(NetworkModel.send_array != null && master_conn != null){
+			master_conn.send(NetworkModel.send_array);
+			NetworkModel.send_array = null;
+		}
+
+	};
+	
+	
+
 	var get_data = function(){
+		/**
+		* get the data array
+		*/
+		
+		var data = NetworkModel.recieve_array;
+		
+		return data;
+	};
+	
+	//var get_data = function(){
 		/**
 		* temp
 		*/
-		var temp = NetworkModel.input_cell;
-		NetworkModel.input_cell = null;
+		//var temp = NetworkModel.input_cell;
+		//NetworkModel.input_cell = null;
 		
-		return temp;
-	};
+		//return temp;
+	//};
 
 	return {
 		// declare public

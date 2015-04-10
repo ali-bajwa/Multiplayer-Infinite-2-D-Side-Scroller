@@ -4,13 +4,44 @@ var MultiplayerSyncController = (function(){
 	 * or with other players
 	*/
 
+	var op_table;
+
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
 
 		include(); // satisfy requirements
 
-		patch(B2d.b2Body, function SetLinearVelocity(){
+		// maps packet op (operation code) to the function to be called for that operation
+		op_table  = {
+			"hero": update_hero,
+			"spawn_request": handle_spawn_request,
+			"spawn_notify": handle_spawn_notify,
+		};
+
+
+		patch(B2d.b2Body, function SetLinearVelocity(vec){
 			//console.log(this.GetUserData().entity_instance);
+			var entity_instance = this.GetUserData().entity_instance;
+			var old_velocity = this.GetLinearVelocity();
+			var pos = this.GetWorldCenter();
+
+			var vec_eq = function(vec1, vec2){
+				if((vec1.x == vec2.x) && (vec1.y == vec2.y)){
+					return true;
+				}else{
+					return false;
+				}
+			}
+			
+			if(Config.Remote.master && !vec_eq(vec, old_velocity) && entity_instance.type === "hero"){
+				
+				
+				NetworkController.add_to_next_update({
+					op: "hero",
+					pos: {x: pos.x, y: pos.y},
+					vel: {x: vec.x, y: vec.y}
+				});
+			}
 
 		});
 		
@@ -20,7 +51,45 @@ var MultiplayerSyncController = (function(){
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
 
+		var data = NetworkController.get_data(); // array of all packets
+
+		if(data != null){
+			for(var i = 0; i < data.length; i++){
+				var packet = data[i];
+				
+				var op_hadler = op_table[packet.op];
+				if(op_hadler){
+					op_hadler(packet);
+				}else{
+					console.log("no handler for the op", packet.op);
+				}
+			}
+		}
+
 	};
+
+	
+
+	var update_hero = function(packet){
+		/**
+		* description
+		*/
+		
+		MultiplayerSyncModel.hero = packet;
+	};
+	
+	
+
+	var get_hero = function(arguments){
+		/**
+		* description
+		*/
+		var hero = MultiplayerSyncModel.hero;
+		MultiplayerSyncModel.hero = null;
+		return hero;
+	};
+	
+	
 
 	var get_companion_data = function(){
 		/**
@@ -33,6 +102,62 @@ var MultiplayerSyncController = (function(){
 		/**
 		* get data about entities that were recently spawned
 		*/
+		
+
+	};
+
+	var handle_spawn_request = function(packet){
+		/**
+		* 
+		*/
+		console.log("recieved spawn request", packet);
+		
+		
+		
+	};
+	
+	var handle_spawn_notify = function(packet){
+		/**
+		* description
+		*/
+		
+		console.log("recieved spawn notify", packet);
+	};
+	
+	
+	var request_spawn = function(x, y, type, extras){
+		/**
+		* request the master to spawn thing
+		* >extras< are any special parameters that need to be attached
+		*/
+		
+		if(type == "hero"){
+			// special case
+			// since hero is player controlled locally, it's logic and possibly other things 
+			// should be different on remote 
+			var type = "companion";
+		}
+
+		var command = {op: "spawn_request", type: type, x: x, y: y, extras: extras};
+
+		NetworkController.add_to_next_update(command);
+
+	};
+
+	var send_spawn_notifications = function(x, y, type, id, extras){
+		/**
+		* sends notifications about entity spawned, so remote people may
+		* spawn their own representations of it
+		*/
+
+		NetworkController.add_to_next_update({
+			op: "spawn_notify",
+			x: x,
+			y: y,
+			type: type,
+			id: id,
+			extras: extras,
+		});
 		
 	};
 	
@@ -75,6 +200,10 @@ var MultiplayerSyncController = (function(){
 		// declare public
 		init: init, 
 		update: update,
+		get_hero: get_hero,
+		request_spawn: request_spawn,
+		send_spawn_notifications: send_spawn_notifications,
+		get_spawn_data: get_spawn_data,
 	};
 })();
 

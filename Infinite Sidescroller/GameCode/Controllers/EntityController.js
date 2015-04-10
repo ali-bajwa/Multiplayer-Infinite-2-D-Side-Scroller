@@ -41,28 +41,75 @@ var EntityController = (function(){
 		spawn(10, 10, "hero");
 	};
 
-	var spawn = function(x, y, type){
+	var spawn = function(x, y, type, id){
 		/**
 		* spawn entity of the given type at the given coordinates
 		* also registeres thing as awaiting graphics initialization
+		* returns true if was spawned, false if it wasn't (maybe it just sent request to the
+		* master/server to spawn the entity, and it'll be spawned eventually)
+		*
+		* TODO: rework how spawning works to be multiplayer friendly (a lot of things should be rewritten to do that)
 		*/
 		var logic = type_logic_table[type];
+		var rconf = Config.Remote;
 
-		if(logic){
-			var new_entity = logic.spawn(x, y);
-			RegisterAsController.register_as("awaiting_graphics_initialization", new_entity)
-
-			if(!EntityModel.for_logic_update[type]){
-				EntityModel.for_logic_update[type] = {};
-			}
-			var logic_upd_table = EntityModel.for_logic_update[type];
-			logic_upd_table[new_entity.id] =  new_entity;
-		}else{
+		if(logic == null){
 			throw "Logic for the type " + type + " is not defined";
 		}
-		
+
+		if(rconf.connected && !rconf.master){
+			// if part of the multiplayer session and isn't master,
+			if(id == null){
+				// if this function isn't called remotely (otherwise id would be passed)
+				// you do not want to spawn anything immediately. You want to ask master to spawn
+				// stuff on their end, and to call this function again when they are done, passing
+				// it id of the entity they spawned, so everyone spawns it with the same id synchronously
+				// alternatively, master may decide that enemy shouldn't be spawned at all
+
+				MultiplayerSyncController.request_spawn(x, y, type);
+
+				return false;
+				
+			}else{
+				// id isn't null, thus you or someone else requested spawning of thig,
+				// master spawned it, and now wants you to do same
+				
+				var new_entity = logic.spawn(x, y);
+				IdentificationController.force_id(new_entity, id);
+				RegisterAsController.register_as("awaiting_graphics_initialization", new_entity)
+				reg_for_logic_update(new_entity);
+			}
+		}else{
+			// if singleplayer or master
+			var new_entity = logic.spawn(x, y);
+			var id = IdentificationController.assign_id(new_entity);
+			RegisterAsController.register_as("awaiting_graphics_initialization", new_entity)
+			reg_for_logic_update(new_entity);
+
+			if(rconf.master){
+				// if master
+				MultiplayerSyncController.send_spawn_notifications(x, y, type, id);
+			}
+		}
+
+
 
 	};
+
+	var reg_for_logic_update = function(new_entity){
+		/**
+		* description
+		*/
+		if(!EntityModel.for_logic_update[type]){
+			EntityModel.for_logic_update[type] = {};
+		}
+		var logic_upd_table = EntityModel.for_logic_update[type];
+		logic_upd_table[new_entity.id] =  new_entity;
+	
+	};
+	
+	
+
 
 	var delete_entity = function(entity_instance){
 		/**
@@ -117,6 +164,8 @@ var EntityController = (function(){
 			var new_ant = spawn(Math.random()*50 + 10, 10, "ant");
 		}
 
+		handle_spawn_requests();
+
 		for(var type in EntityModel.for_logic_update){
 			var table = EntityModel.for_logic_update[type];
 
@@ -128,6 +177,26 @@ var EntityController = (function(){
 		} // end for in 
 
 	};
+
+	var handle_spawn_requests = function(){
+		/**
+		* find out if anyone requested spawning of entities etc.
+		* and execute any of the requests
+		*/
+
+		var data = MultiplayerSyncController.get_spawn_data();
+
+		if(Config.Remote.master){
+			// if i am master
+			// I have to spawn the entity
+			// and notify everyone about it
+		}else{
+			// I am not master and I just need 
+		}
+
+	};
+	
+	
 
 	return {
 		// declare public

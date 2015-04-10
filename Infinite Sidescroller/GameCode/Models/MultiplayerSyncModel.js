@@ -1,4 +1,5 @@
 var MultiplayerSyncModel = function(){
+	this.hero = null;
 	
 };
 

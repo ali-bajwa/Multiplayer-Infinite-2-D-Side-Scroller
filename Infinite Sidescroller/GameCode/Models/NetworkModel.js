@@ -49,6 +49,9 @@ var NetworkModel = function(){
 
 	};
 
+	this.send_array = null;
+	this.recieve_array = null;
+
 	this.one_packet = null; // used to store one packet, for one packet communication
 
 	this.input_cell = null;

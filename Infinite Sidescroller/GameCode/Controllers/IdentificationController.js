@@ -63,6 +63,48 @@ var IdentificationController = (function(){
 		return id
 	};
 
+	var force_id = function(obj, id, set_id){
+		/**
+		* Force object >obj< to have the given id >id<
+		* If id isn't free, exception is thrown
+		* This function is most likely used directly only for the multiplayer
+		* purposes 
+		* If OPTIONAL function >set_id< is given, it'll be called instead
+		* of assigning ids directly (use this if special manipulations should be done)
+		*
+		*/
+
+		var free = IdentificationModel.free_ids;
+		var idx = free.indexOf(id);
+
+		if(idx < 0){
+			// if not found, then non-free id, then exception
+			throw "The id " + String(id) + " is non-free";
+		}
+
+		if(idx == free.length - 1){
+			// if last element, pop
+			var id = free.pop();
+		}else{
+
+			// the following operation can be expensive if free_ids is too large
+			// need to keep it small (shouldn't be hard)
+			var id = free.splice(idx, 1); // extract the desired index 
+		}
+		// set id on the object. through function if provided
+		if(set_id){
+			set_id(obj, id);
+		}else{
+			obj.id = id;
+		}
+
+		// associate id with the object obj
+		IdentificationModel.id_matching[id] = obj;
+
+		return id;
+
+	};
+
 	var get_by_id = function(id){
 		/**
 		* get object associated with the given id
@@ -123,6 +165,7 @@ var IdentificationController = (function(){
 		init: init, 
 		update: update,
 		assign_id: assign_id,
+		force_id: force_id,
 		get_by_id: get_by_id,
 		remove_id: remove_id,
 		assign_type: assign_type,

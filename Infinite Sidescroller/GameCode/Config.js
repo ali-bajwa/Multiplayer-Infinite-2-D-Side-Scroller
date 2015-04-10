@@ -29,7 +29,8 @@ var Config = function(){
 	};
 
 	this.Remote = {
-		master: false, // I am one with whome other players sync? 
+		master: false, // am I the one with whome other players sync? 
+		connected: false, // am I in multiplayer mode
 	};
 	
 	// <<<

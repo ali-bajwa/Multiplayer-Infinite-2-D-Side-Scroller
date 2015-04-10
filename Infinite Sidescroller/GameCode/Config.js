@@ -9,6 +9,9 @@ var Config = function(){
 	// Warning! Frequency of the Box2D physics updates may be different
 	// (Currently not implemented)
 	this.FPS = 30; 
+	
+	//the movement edge, controls terrain generation
+	this.movement_edge;
 
 	// Box2D stuff >>>
 	this.B2D = {

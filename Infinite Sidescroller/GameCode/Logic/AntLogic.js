@@ -56,7 +56,11 @@ var AntLogic = (function(){
 			entity of this type. I given entity_instance
 		*/
 
-		//if enemy is dead, die
+	    //if enemy is dead, die
+	    if (ant.body.GetWorldCenter().y > 22 || ant.body.GetWorldCenter().x < GraphicsController.get_movement_edge() - 1) {
+	        EntityController.delete_entity(ant);
+	        console.log("drop of death");
+	    }
 		if (ant.hp == 1) {
 			
 			if (ant.hero_hurt_me){

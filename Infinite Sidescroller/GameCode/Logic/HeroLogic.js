@@ -86,12 +86,16 @@ var HeroLogic = (function(){
 		
 		if(hero.hp <= 0)
 		{
-			createjs.Ticker.paused = true;
+		    EntityController.delete_entity(hero);
 			console.log("Player Is Dead");
 		}
 		if (hero.body.GetWorldCenter().x < MOVEMENT_EDGE && hero.body.GetLinearVelocity().x < 0) {
 		    stop_hero(hero);
 		    console.log("working");
+		}
+		if (hero.body.GetWorldCenter().y > 22) {
+		    EntityController.delete_entity(hero);
+		    console.log("drop of death");
 		}
 		GraphicsController.update_score(hero.score);
 	};

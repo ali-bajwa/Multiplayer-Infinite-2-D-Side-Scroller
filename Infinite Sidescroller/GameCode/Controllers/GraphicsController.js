@@ -351,6 +351,7 @@ var GraphicsController = (function(){
 				var lvl = slice.grid_rows - i; // level from the bottom
 
 				for(var j = 0; j < slice.grid_columns; j++){
+					
 					var kind = slice.grid[i][j].kind;
 					if(kind != 0){
 						// TODO: should make proper terrain collection thing to pull from 

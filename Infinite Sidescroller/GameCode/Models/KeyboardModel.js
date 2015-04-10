@@ -118,6 +118,7 @@ var KeyboardModel = function(){
 			"a": "spawn_ant",
 			"z": "season",
 			"g":"spawn_griffin",
+			"s": "new_slice",
 		},
 
 	}

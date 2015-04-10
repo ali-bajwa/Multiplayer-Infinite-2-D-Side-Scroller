@@ -19,8 +19,7 @@ var TerrainSliceController = (function () {
 
 	var spawnBlock = function(x, y, seed){
 		//spawn instance of this entity at the given coordinates
-		var block
-		block = new TerrainSliceModel.Cell(getRandomNumber(seed)%3+1);
+		var block = new TerrainSliceModel.Cell(getRandomNumber(seed)%3+1);
 		IdentificationController.assign_id(block);
 		block.body = PhysicsController.get_rectangular({x: x, y: y}, block);
 		return block;
@@ -66,7 +65,7 @@ var TerrainSliceController = (function () {
 		for(i=0; i<=columns;i++){
 			platform_count[i] = 0;
 			has_pit[i] = false;
-			}
+		}
 			
 		
 		
@@ -76,7 +75,7 @@ var TerrainSliceController = (function () {
 		load blocks and gaps into slice.grid[i][j]
 		
 		*/
-		for(i=rows;i>=0;i--){ //outer loop: generate rows bottom to top
+		for(i=rows - 1;i>=0;i--){ //outer loop: generate rows bottom to top
 			slice.grid[i] = [];
 			seed+=17;//stupid thing to test without real random numbers
 			for(j=0;j<columns;j++){ //inner loop: generate from left to right within current row
@@ -141,10 +140,6 @@ var TerrainSliceController = (function () {
 					}
 				}
 			}
-		//create vertical gaps
-		if (i<ground_lvl && i>1){
-			i--;
-		}
 		}
 		return slice;
 	};
@@ -154,7 +149,10 @@ var TerrainSliceController = (function () {
 		var slice = new TerrainSliceModel.Slice();
 
 		slice.origin.x = x_offset;
-		slice.origin.y = slice.id*slice.grid_rows * slice.cell_w - slice.cell_w*4;
+		slice.origin.y = 0; //slice.id *slice.grid_rows * slice.cell_w - slice.cell_w*4;
+		console.log(slice.origin);
+		
+		
 		
 		//var random_index = getRandom(seed)%100;
 		//if (random_index < 60){
@@ -163,16 +161,6 @@ var TerrainSliceController = (function () {
 		//if (random_index < 30){}
 		//if (random_index < 10){}
 
-		var slices = [];
-		
-		for (i=1;i<12;i++)
-			{
-			slices[i] = new TerrainSliceModel.Slice();
-			slices[i].origin.x = x_offset + i*20;
-			slices[i].origin.y = slice.id * slices[i].grid_rows * slices[i].cell_w - slices[i].cell_w*4;
-			slices[i] = buildTerrainSlice(slices[i]);
-			}
-		
 		return slice;
 	};
 	

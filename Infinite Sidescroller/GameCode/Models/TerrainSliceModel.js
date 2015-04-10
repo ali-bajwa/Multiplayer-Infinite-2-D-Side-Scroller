@@ -13,6 +13,7 @@ var TerrainSliceModel = function(){
 		this.grid_columns = TerrainSliceConfig.grid_columns;
 		this.grid_rows = TerrainSliceConfig.grid_rows;
 		this.cell_w = TerrainSliceConfig.cell_w;
+		this.cell_h = this.cell_w;;
 		
 		// grid[i][j] is the element in the i's column and j's row
 		// the grid is maid to match the screen coordinates and the current box2d coordinates

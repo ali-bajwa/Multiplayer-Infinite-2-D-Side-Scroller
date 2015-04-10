@@ -20,11 +20,20 @@ var TerrainController = (function(){
 			var slice = NewTerrainSlice();
 			TerrainModel.terrain_slices_queue.push(slice);
 		};
-		if(config.movement_edge > (TerrainModel.terrain_slices_queue.length-3)*(config.TerrainSlice.cell_w*config.TerrainSlice.cell_rows)){
-			console.log("Grog");
+
+		var cmds = KeyboardController.debug_commands();
+
+		if(cmds("new_slice")){
+			
 			var slice = NewTerrainSlice();
 			TerrainModel.terrain_slices_queue.push(slice);
-		};
+			console.log("slice", TerrainModel.terrain_slices_queue);
+		}
+		//if(config.movement_edge > (TerrainModel.terrain_slices_queue.length-3)*(config.TerrainSlice.cell_w*config.TerrainSlice.cell_rows)){
+			//console.log("Grog");
+			//var slice = NewTerrainSlice();
+			//TerrainModel.terrain_slices_queue.push(slice);
+		//};
 	};
 
 
@@ -34,8 +43,8 @@ var TerrainController = (function(){
 		 * generates slice; sets up everything
 		 */
 		
-		x_offset = TerrainModel.terrain_slices_queue.length*20;
-		console.log(TerrainModel.terrain_slices_queue.length);
+		
+		var x_offset = TerrainModel.terrain_slices_queue.length*20;
 		var slice = new TerrainSliceController.generate(x_offset);
 		MarkAsNewTerrainSlice(slice); 
 

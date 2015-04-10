@@ -128,7 +128,7 @@ r_templates.Griffin = {
 	width: 10,
 	height: 5,
 	type: "dynamic",
-	x: 40,
+	x: 65,
 	y: 10,
 	//mobexp++
 };

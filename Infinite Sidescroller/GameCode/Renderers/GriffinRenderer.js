@@ -14,10 +14,10 @@ var GriffinRenderer = (function(){
 
 		spritesheets["Griffin"] = new createjs.SpriteSheet({
 			"framerate": 1,
-			"images": [get_asset("Griffin")],
+			"images": [get_asset("Griffin1"), get_asset("Griffin2"), get_asset("Griffin3") ],
 			"frames": { "regX": 10, "regY": 28, "height": 413, "width": 420, "count": 3},
 			"animations": {
-				"walk": [0, 1, 2, "walk"],
+				"walk": [0, 2, "walk", 0.2],
 				//"death": [4, 5, "death"]
 			}
 		})

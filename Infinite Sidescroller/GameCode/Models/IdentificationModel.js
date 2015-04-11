@@ -14,6 +14,8 @@ var IdentificationModel = function(){
 	// registry of types to make sure that no type is registerd twice
 	// and enable people to get the model by type name
 	this.types = {}
+
+	this.reserved = [];
 };
 
 module.exports = new IdentificationModel;

@@ -57,6 +57,10 @@ var HyenaLogic = (function(){
 		*/
 
 		//if enemy is dead, die
+		if (Hyena.body.GetWorldCenter().y > 22 || Hyena.body.GetWorldCenter().x < Config.Player.movement_edge - 1) {
+	        	EntityController.delete_entity(Hyena);
+	        	console.log("drop of death");
+	    	}
 		if (Hyena.hp == 1) {
 			
 			if (Hyena.hero_hurt_me){

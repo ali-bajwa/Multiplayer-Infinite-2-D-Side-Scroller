@@ -66,9 +66,8 @@ var HeroLogic = (function(){
 		if(cmds("right")){
 		    // temporary
 		    add_score(hero, 1);
-		    move_right(hero);
-			
-			GraphicsController.set_season(hero.body.GetWorldCenter());
+		    move_right(hero);	
+		    GraphicsController.set_season(hero.body.GetWorldCenter());
 		}
 		if(cmds("left")){
 		    // temporary
@@ -78,7 +77,6 @@ var HeroLogic = (function(){
 
 		if(cmds("up")){
 			jump(hero);
-			
 		}
 		if(hero.wound)
 		{

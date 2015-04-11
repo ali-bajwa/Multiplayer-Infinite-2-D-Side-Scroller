@@ -4,6 +4,10 @@ var EntityController = (function(){
 	*/
 
 	var type_logic_table;
+<<<<<<< .merge_file_a02060
+	var Count = 0;
+=======
+>>>>>>> .merge_file_a08588
 	
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -119,10 +123,18 @@ var EntityController = (function(){
 		}
 
 	    // demonstration purposes for griffin
+<<<<<<< .merge_file_a02060
+		if (debug_commands("spawn_griffin") && Count > 5) {
+		    var new_griffin = spawn(Math.random() * 50 + GraphicsController.get_movement_edge(), -20, "Griffin");
+			Count = 0;
+		}
+		Count++;
+=======
 		if (debug_commands("spawn_griffin")) {
 		    var new_griffin = spawn(Math.random() * 50 + GraphicsController.get_movement_edge(), 10, "Griffin");
 		}
 		
+>>>>>>> .merge_file_a08588
 	    // demonstration purposes for hyena
 		if (debug_commands("spawn_hyena")) {
 		    var new_hyena = spawn(Math.random() * 50 + GraphicsController.get_movement_edge(), 10, "Hyena");

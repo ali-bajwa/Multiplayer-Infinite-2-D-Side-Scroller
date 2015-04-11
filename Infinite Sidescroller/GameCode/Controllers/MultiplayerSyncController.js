@@ -11,39 +11,31 @@ var MultiplayerSyncController = (function(){
 
 		include(); // satisfy requirements
 
-		// maps packet op (operation code) to the function to be called for that operation
-		op_table  = {
-			"hero": update_hero,
-			"spawn_request": handle_spawn_request,
-			"spawn_notify": handle_spawn_notify,
-		};
+		//patch(B2d.b2Body, function SetLinearVelocity(vec){
+			////console.log(this.GetUserData().entity_instance);
+			//var entity_instance = this.GetUserData().entity_instance;
+			//var old_velocity = this.GetLinearVelocity();
+			//var pos = this.GetWorldCenter();
 
-
-		patch(B2d.b2Body, function SetLinearVelocity(vec){
-			//console.log(this.GetUserData().entity_instance);
-			var entity_instance = this.GetUserData().entity_instance;
-			var old_velocity = this.GetLinearVelocity();
-			var pos = this.GetWorldCenter();
-
-			var vec_eq = function(vec1, vec2){
-				if((vec1.x == vec2.x) && (vec1.y == vec2.y)){
-					return true;
-				}else{
-					return false;
-				}
-			}
+			//var vec_eq = function(vec1, vec2){
+				//if((vec1.x == vec2.x) && (vec1.y == vec2.y)){
+					//return true;
+				//}else{
+					//return false;
+				//}
+			//}
 			
-			if(Config.Remote.master && !vec_eq(vec, old_velocity) && entity_instance.type === "hero"){
+			//if(Config.Remote.master && !vec_eq(vec, old_velocity) && entity_instance.type === "hero"){
 				
 				
-				NetworkController.add_to_next_update({
-					op: "hero",
-					pos: {x: pos.x, y: pos.y},
-					vel: {x: vec.x, y: vec.y}
-				});
-			}
+				//NetworkController.add_to_next_update({
+					//op: "hero",
+					//pos: {x: pos.x, y: pos.y},
+					//vel: {x: vec.x, y: vec.y}
+				//});
+			//}
 
-		});
+		//});
 		
 	};
 
@@ -53,91 +45,40 @@ var MultiplayerSyncController = (function(){
 
 		var data = NetworkController.get_data(); // array of all packets
 
+		var op_packet = MultiplayerSyncModel.op_packets_table;
 		if(data != null){
 			for(var i = 0; i < data.length; i++){
 				var packet = data[i];
-				
-				var op_hadler = op_table[packet.op];
-				if(op_hadler){
-					op_hadler(packet);
+				op_packet[op] = op_packet[op] || [];
+				if(data.op != null){
+					op_packet[op].push(packet);
 				}else{
-					console.log("no handler for the op", packet.op);
+					console.log(packet);
+					throw "Error, this packet has no op property"
 				}
+
 			}
 		}
 
 	};
 
-	
-
-	var update_hero = function(packet){
+	var get_packets_by_op = function(op){
 		/**
-		* description
+		* gets all packets with the operation >op<
+		* for you
 		*/
-		
-		MultiplayerSyncModel.hero = packet;
-	};
-	
-	
 
-	var get_hero = function(arguments){
-		/**
-		* description
-		*/
-		var hero = MultiplayerSyncModel.hero;
-		MultiplayerSyncModel.hero = null;
-		return hero;
-	};
-	
-	
-
-	var get_companion_data = function(){
-		/**
-		* is used to get the data for objects that represent
-		* remote players. 
-		*/
-	};
-
-	var get_spawn_data = function(){
-		/**
-		* get data about entities that were recently spawned
-		*/
-		
-
-	};
-
-	var handle_spawn_request = function(packet){
-		/**
-		* 
-		*/
-		console.log("recieved spawn request", packet);
-		
-		
+		return MultiplayerSyncModel.op_packets_table[op];
 		
 	};
 	
-	var handle_spawn_notify = function(packet){
-		/**
-		* description
-		*/
-		
-		console.log("recieved spawn notify", packet);
-	};
-	
-	
+
 	var request_spawn = function(x, y, type, extras){
 		/**
 		* request the master to spawn thing
 		* >extras< are any special parameters that need to be attached
 		*/
 		
-		if(type == "hero"){
-			// special case
-			// since hero is player controlled locally, it's logic and possibly other things 
-			// should be different on remote 
-			var type = "companion";
-		}
-
 		var command = {op: "spawn_request", type: type, x: x, y: y, extras: extras};
 
 		NetworkController.add_to_next_update(command);
@@ -160,7 +101,6 @@ var MultiplayerSyncController = (function(){
 		});
 		
 	};
-	
 	
 
 	var patch = function(object, func){
@@ -200,10 +140,9 @@ var MultiplayerSyncController = (function(){
 		// declare public
 		init: init, 
 		update: update,
-		get_hero: get_hero,
 		request_spawn: request_spawn,
 		send_spawn_notifications: send_spawn_notifications,
-		get_spawn_data: get_spawn_data,
+		get_packets_by_op: get_packets_by_op,
 	};
 })();
 
@@ -213,5 +152,4 @@ var Includes = require("../Includes.js"); var include_data = Includes.get_includ
 	current_module: "MultiplayerSyncController", 
 	include_options: Includes.choices.DEFAULT
 }); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
-
 

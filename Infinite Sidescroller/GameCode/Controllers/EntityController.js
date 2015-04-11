@@ -100,6 +100,9 @@ var EntityController = (function(){
 		/**
 		* description
 		*/
+
+		var type = new_entity.type;
+
 		if(!EntityModel.for_logic_update[type]){
 			EntityModel.for_logic_update[type] = {};
 		}
@@ -164,7 +167,11 @@ var EntityController = (function(){
 			var new_ant = spawn(Math.random()*50 + 10, 10, "ant");
 		}
 
-		handle_spawn_requests();
+		if(Config.Remote.master){
+			handle_spawn_requests();
+		}else{
+			handle_spawn_notifications();
+		}
 
 		for(var type in EntityModel.for_logic_update){
 			var table = EntityModel.for_logic_update[type];
@@ -184,19 +191,27 @@ var EntityController = (function(){
 		* and execute any of the requests
 		*/
 
-		var data = MultiplayerSyncController.get_spawn_data();
+		var data = MultiplayerSyncController.get_packets_by_op("spawn_request") || [];
 
-		if(Config.Remote.master){
-			// if i am master
-			// I have to spawn the entity
-			// and notify everyone about it
-		}else{
-			// I am not master and I just need 
+		while(data.length > 0){
+			var packet = data.pop();
+			spawn(packet.x, packet.y, packet.type);
+		}
+		
+	};
+
+	var handle_spawn_notifications = function(){
+		/**
+		* 
+		*/
+		
+		var data = MultiplayerSyncController.get_packets_by_op("spawn_notfy") || [];
+		while(data.length > 0){
+			var packet = data.pop();
+			spawn(packet.x, packet.y, packet.type, packet.id);
 		}
 
 	};
-	
-	
 
 	return {
 		// declare public

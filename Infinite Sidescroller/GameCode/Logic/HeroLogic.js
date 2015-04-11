@@ -74,7 +74,9 @@ var HeroLogic = (function(){
 		    move_left(hero);
 		    GraphicsController.set_season(hero.body.GetWorldCenter());
 		}
-
+		if(cmds("down")){
+			drop(hero);
+		}
 		if(cmds("up")){
 			jump(hero);
 		}
@@ -97,6 +99,8 @@ var HeroLogic = (function(){
 		}
 		if (hero.body.GetWorldCenter().y > 22) {
 		    EntityController.delete_entity(hero);
+		    hero.hp = 0;
+		    GraphicsController.update_health(hero.hp);
 		    console.log("drop of death");
 		}
 		GraphicsController.update_score(hero.score);
@@ -176,6 +180,10 @@ var HeroLogic = (function(){
 
 		//hero.y = body.GetPosition().y * 30;
 	
+	};
+	var drop = function(hero){
+		var body = hero.body;
+		body.ApplyImpulse(new B2d.b2Vec2(0, 20), body.GetWorldCenter());
 	};
 
 	var set_coordinates = function(position_vector, hero){

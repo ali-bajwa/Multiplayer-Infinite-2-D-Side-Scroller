@@ -19,6 +19,8 @@ Registration:
 		add your logic to the type_logic_table in the init() function
 	- AssetModel.js
 		link your sprite ids with the image files they correspond to in the manifest object
+	-PhysicsModel.js
+		write your physics template in 
 */
 
 	GraphicsController.js:
@@ -28,3 +30,9 @@ Registration:
 		*/
 	- getAsset(string id)
 		this function should be called in MyenemyRenderer
+		
+Logic File
+	/*
+	should include the following functions
+	
+	- init()

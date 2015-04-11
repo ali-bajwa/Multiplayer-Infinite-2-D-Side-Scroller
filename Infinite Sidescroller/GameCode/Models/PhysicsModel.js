@@ -135,8 +135,8 @@ r_templates.Griffin = {
 
 r_templates.Hyena = {
 	parent: r_templates.living,
-	width: 4.5,
-	height: 3.5,
+	width: 2.25,
+	height: 1.75,
 	type: "dynamic",
 	x: 65,
 	y: 10,

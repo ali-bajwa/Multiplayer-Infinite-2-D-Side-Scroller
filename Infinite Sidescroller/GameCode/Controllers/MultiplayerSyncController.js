@@ -11,6 +11,7 @@ var MultiplayerSyncController = (function(){
 
 		include(); // satisfy requirements
 
+<<<<<<< HEAD
 		// maps packet op (operation code) to the function to be called for that operation
 		op_table  = {
 			"hero": update_hero,
@@ -21,6 +22,10 @@ var MultiplayerSyncController = (function(){
 
 		//patch(B2d.b2Body, function SetLinearVelocity(vec){
 			//console.log(this.GetUserData().entity_instance);
+=======
+		//patch(B2d.b2Body, function SetLinearVelocity(vec){
+			////console.log(this.GetUserData().entity_instance);
+>>>>>>> a4c9a71b12c0487df72cad41d4c088b16b8d86cc
 			//var entity_instance = this.GetUserData().entity_instance;
 			//var old_velocity = this.GetLinearVelocity();
 			//var pos = this.GetWorldCenter();
@@ -53,118 +58,43 @@ var MultiplayerSyncController = (function(){
 
 		var data = NetworkController.get_data(); // array of all packets
 
+		var op_packet = MultiplayerSyncModel.op_packets_table;
 		if(data != null){
 			for(var i = 0; i < data.length; i++){
 				var packet = data[i];
-				
-				var op_hadler = op_table[packet.op];
-				if(op_hadler){
-					op_hadler(packet);
+				var op = packet.op;
+				op_packet[op] = op_packet[op] || [];
+				if(op != null){
+					op_packet[op].push(packet);
 				}else{
-					console.log("no handler for the op", packet.op);
+					console.log(packet);
+					throw "Error, this packet has no op property"
 				}
+
 			}
 		}
 
+		NetworkController.clean_data();	// remove data that was processed
 	};
 
-	var new_game = function(){
+
+	var get_packets_by_op = function(op){
 		/**
-		* certain things need to be done when new multiplayer game begins
+		* gets all packets with the operation >op<
+		* for you
 		*/
 
-		//spawn my hero through the master
+		return MultiplayerSyncModel.op_packets_table[op];
 		
 	};
 	
-	
-	var new_connection = function(master){
-		/**
-		 * certain things need to be handled each time 
-		 * someone establishes a connection with you
-		*/
 
-		
-	};
-	
-		
-
-	var update_hero = function(packet){
-		/**
-		* description
-		*/
-		
-		MultiplayerSyncModel.hero = packet;
-	};
-	
-	
-
-	var get_hero = function(arguments){
-		/**
-		* description
-		*/
-		var hero = MultiplayerSyncModel.hero;
-		MultiplayerSyncModel.hero = null;
-		return hero;
-	};
-	
-	
-
-	var get_companion_data = function(){
-		/**
-		* is used to get the data for objects that represent
-		* remote players. 
-		*/
-	};
-
-	var get_spawn_notifications = function(){
-		/**
-		* get data about entities that were recently spawned
-		*/
-		
-		return  MultiplayerSyncModel.spawn_notifies;
-	};
-
-
-	var get_spawn_requests = function(){
-		/**
-		* dfsdf
-		*/
-		return MultiplayerSyncModel.spawn_requests;
-	};
-	
-	
-
-	var handle_spawn_request = function(packet){
-		/**
-		* 
-		*/
-		MultiplayerSyncModel.spawn_requests.push(packet);
-
-		
-	};
-	
-	var handle_spawn_notify = function(packet){
-		/**
-		* description
-		*/
-		MultiplayerSyncModel.spawn_notifies.push(packet);
-	};
-	
-	
 	var request_spawn = function(x, y, type, extras){
 		/**
 		* request the master to spawn thing
 		* >extras< are any special parameters that need to be attached
 		*/
 		
-		if(type == "hero"){
-			// special case
-			// since hero is player controlled locally, it's logic and possibly other things 
-			// should be different on remote 
-			var type = "companion";
-		}
-
 		var command = {op: "spawn_request", type: type, x: x, y: y, extras: extras};
 
 		NetworkController.add_to_next_update(command);
@@ -187,7 +117,6 @@ var MultiplayerSyncController = (function(){
 		});
 		
 	};
-	
 	
 
 	var patch = function(object, func){
@@ -227,11 +156,9 @@ var MultiplayerSyncController = (function(){
 		// declare public
 		init: init, 
 		update: update,
-		//get_hero: get_hero,
 		request_spawn: request_spawn,
 		send_spawn_notifications: send_spawn_notifications,
-		get_spawn_requests: get_spawn_requests,
-		get_spawn_notifications: get_spawn_notifications,
+		get_packets_by_op: get_packets_by_op,
 	};
 })();
 
@@ -241,5 +168,4 @@ var Includes = require("../Includes.js"); var include_data = Includes.get_includ
 	current_module: "MultiplayerSyncController", 
 	include_options: Includes.choices.DEFAULT
 }); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
-
 

@@ -63,6 +63,26 @@ var IdentificationController = (function(){
 		return id
 	};
 
+	var reserve_id = function(){
+		/**
+		* returns free id and promises not to overite it
+		* also allows someone to force this id
+		*/
+
+		// get free id
+		if(free.length > 0){
+			id = free.pop();
+		}else{
+			id = IdentificationModel.next_id++;
+		}
+
+		IdentificationModel.reserved.push(id);
+
+		return id;
+
+	};
+	
+
 	var force_id = function(obj, id, set_id){
 		/**
 		* Force object >obj< to have the given id >id<
@@ -75,22 +95,20 @@ var IdentificationController = (function(){
 		*/
 
 		var free = IdentificationModel.free_ids;
-		var idx = free.indexOf(id);
+		var reserved = IdentificationModel.reserved;
 
-		if(idx < 0){
+		var idx = free.indexOf(id); 
+		var idy = reserved.indexOf(id);
+
+		if(idx >= 0){
+			var id = free.splice(idx, 1); // extract the desired index 
+		}else if (idy >= 0){
+			var id = reserved.splice(idx, 1); // extract the desired index 
+		}else{
 			// if not found, then non-free id, then exception
 			throw "The id " + String(id) + " is non-free";
 		}
-
-		if(idx == free.length - 1){
-			// if last element, pop
-			var id = free.pop();
-		}else{
-
-			// the following operation can be expensive if free_ids is too large
-			// need to keep it small (shouldn't be hard)
-			var id = free.splice(idx, 1); // extract the desired index 
-		}
+	
 		// set id on the object. through function if provided
 		if(set_id){
 			set_id(obj, id);
@@ -165,6 +183,7 @@ var IdentificationController = (function(){
 		init: init, 
 		update: update,
 		assign_id: assign_id,
+		reserve_id: reserve_id,
 		force_id: force_id,
 		get_by_id: get_by_id,
 		remove_id: remove_id,

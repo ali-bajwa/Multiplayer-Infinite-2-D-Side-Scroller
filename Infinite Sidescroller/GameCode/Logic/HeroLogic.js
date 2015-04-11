@@ -32,6 +32,7 @@ var HeroLogic = (function(){
 			and finally you HAVE TO(!!!) return the instance you just created from this function
 		*/
 
+
 		var hero = new Hero();
 
 		hero.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, hero);
@@ -70,36 +71,6 @@ var HeroLogic = (function(){
 			jump(hero);
 		}
 
-
-		//var data = MultiplayerSyncController.get_hero();
-		//if(data != null){
-			//var body = hero.body;
-				
-			//var vel = data.vel;
-			//vel = new B2d.b2Vec2(vel.x, vel.y);
-
-			//var pos = data.pos
-			//pos = new B2d.b2Vec2(pos.x, pos.y);
-			
-			//body.SetLinearVelocity(vel)
-			//body.SetPosition(pos)
-		//}
-
-		// TEMPORARYYYYYYYYYYYYYYYY
-		/*if(cmds("up") || cmds("right") || cmds("left")){
-			var vel = hero.body.GetLinearVelocity();
-			vel = {x: vel.x, y: vel.y};
-			var pos = hero.body.GetWorldCenter();
-			pos = {x: pos.x, y: pos.y};
-			NetworkController.add_to_next_update({purpose: "hero", content: {pos: pos, vel: vel}});
-			
-		}else{
-			var data = NetworkController.get_data();
-			
-			if(data && data["hero"] != null){
-
-							}
-		}*/
 
 		if(hero.wound)
 		{

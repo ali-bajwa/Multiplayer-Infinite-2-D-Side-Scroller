@@ -4,7 +4,7 @@ var NetworkController = (function(){
 	*/
 
 	var peer, conn; // TEMPORARY. there will be multiple of those things
-	var MEDIATOR_SERVER_KEY = 'a7vojcpf70ysyvi';
+	var MEDIATOR_SERVER_KEY = 'l2f8f8vtbhcfecdi';//'a7vojcpf70ysyvi';
 
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -38,9 +38,6 @@ var NetworkController = (function(){
 			}
 		}
 
-		// Now, delete all data that was received this tick (it was already
-		// picked up by MultiplayerSync, and stored, if it was needed)
-		NetworkModel.recieve_array = null;
 	};
 
 	var start_multiplayer_session = function(){
@@ -324,7 +321,7 @@ var NetworkController = (function(){
 		if(NetworkModel.recieve_array == null){
 			NetworkModel.recieve_array = data;
 		}else{
-			for(var i = 0; i < data.lenght; i++){
+			for(var i = 0; i < data.length; i++){
 				NetworkModel.recieve_array.push(data[i]);
 			}
 		}
@@ -441,7 +438,14 @@ var NetworkController = (function(){
 		
 		return data;
 	};
-	
+
+	var clean_data = function(){
+		/**
+		* description
+		*/
+		delete NetworkModel.recieve_array;
+	};
+		
 	//var get_data = function(){
 		/**
 		* temp
@@ -458,6 +462,7 @@ var NetworkController = (function(){
 		update: update,
 		add_to_next_update: add_to_next_update,
 		get_data: get_data,
+		clean_data: clean_data,
 	};
 })();
 

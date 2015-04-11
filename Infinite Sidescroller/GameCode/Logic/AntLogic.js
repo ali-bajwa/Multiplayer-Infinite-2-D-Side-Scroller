@@ -43,7 +43,6 @@ var AntLogic = (function(){
 		*/
 
 		var new_ant = new Ant();
-		var id = IdentificationController.assign_id(new_ant);
 
 		new_ant.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, new_ant);	
 

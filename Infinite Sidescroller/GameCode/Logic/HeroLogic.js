@@ -71,19 +71,19 @@ var HeroLogic = (function(){
 		}
 
 
-		var data = MultiplayerSyncController.get_hero();
-		if(data != null){
-			var body = hero.body;
+		//var data = MultiplayerSyncController.get_hero();
+		//if(data != null){
+			//var body = hero.body;
 				
-			var vel = data.vel;
-			vel = new B2d.b2Vec2(vel.x, vel.y);
+			//var vel = data.vel;
+			//vel = new B2d.b2Vec2(vel.x, vel.y);
 
-			var pos = data.pos
-			pos = new B2d.b2Vec2(pos.x, pos.y);
+			//var pos = data.pos
+			//pos = new B2d.b2Vec2(pos.x, pos.y);
 			
-			body.SetLinearVelocity(vel)
-			body.SetPosition(pos)
-		}
+			//body.SetLinearVelocity(vel)
+			//body.SetPosition(pos)
+		//}
 
 		// TEMPORARYYYYYYYYYYYYYYYY
 		/*if(cmds("up") || cmds("right") || cmds("left")){
@@ -159,6 +159,16 @@ var HeroLogic = (function(){
 		//hero.x = (body.GetPosition().x + 1.5/2) * 30 ; 
 	};
 
+	var move_left = function(hero){
+		var body = hero.body;
+		var velocity = body.GetLinearVelocity();
+		velocity.x = -5;
+		body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		body.SetAwake(true);
+		//hero.x += 10; // old
+		//hero.x = (body.GetPosition().x + 1.5/2) * 30 ; 
+	};
+
 	var jump = function(hero){
 	    var body = hero.body;
 		if (hero.jumps == 0){
@@ -178,22 +188,22 @@ var HeroLogic = (function(){
 		return hero.body.GetWorldCenter();
 	};
 
-	var move_left = function(hero){
-		var velocity = hero.body.GetLinearVelocity();
-		move(hero, velocity.x - 5, velocity.y)
+	//var move_left = function(hero){
+		//var velocity = hero.body.GetLinearVelocity();
+		//move(hero, velocity.x - 5, velocity.y)
 
-	};
+	//};
 
-	var move_right = function(hero){
-		var velocity = hero.body.GetLinearVelocity();
-		move(hero, velocity.x + 5, velocity.y)
-	};
+	//var move_right = function(hero){
+		//var velocity = hero.body.GetLinearVelocity();
+		//move(hero, velocity.x + 5, velocity.y)
+	//};
 
-	var move = function(hero, x, y){
-		var velocity = new B2d.b2Vec2(x, y);
-		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-		hero.body.SetAwake(true);
-	};
+	//var move = function(hero, x, y){
+		//var velocity = new B2d.b2Vec2(x, y);
+		//hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		//hero.body.SetAwake(true);
+	//};
 
 	return {
 		// declare public

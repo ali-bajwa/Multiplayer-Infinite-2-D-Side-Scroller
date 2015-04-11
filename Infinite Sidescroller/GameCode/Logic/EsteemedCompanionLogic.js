@@ -76,30 +76,6 @@ var EsteemedCompanionLogic = (function(){
 		}
 
 		// TEMPORARYYYYYYYYYYYYYYYY
-		if(cmds("up") || cmds("right") || cmds("left")){
-			var vel = companion.body.GetLinearVelocity();
-			vel = {x: vel.x, y: vel.y};
-			var pos = companion.body.GetWorldCenter();
-			pos = {x: pos.x, y: pos.y};
-			NetworkController.add_to_next_update({purpose: "companion", content: {pos: pos, vel: vel}});
-			
-		}else{
-			var data = NetworkController.get_data();
-			
-			if(data && data["companion"] != null){
-
-				var body = companion.body;
-				
-				var vel = data["companion"].vel;
-				vel = new B2d.b2Vec2(vel.x, vel.y);
-
-				var pos = data["companion"].pos
-				pos = new B2d.b2Vec2(pos.x, pos.y);
-				
-				body.SetLinearVelocity(vel)
-				body.SetPosition(pos)
-			}
-		}
 
 		if(companion.wound)
 		{

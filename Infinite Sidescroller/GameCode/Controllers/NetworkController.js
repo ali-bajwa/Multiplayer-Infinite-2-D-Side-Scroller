@@ -24,8 +24,7 @@ var NetworkController = (function(){
 
 		var cmds = KeyboardController.debug_commands();
 
-		if(!NetworkModel.block_connections && cmds("connect")){
-			NetworkModel.block_connections = true;
+		if(!NetworkModel.block_connections && cmds("connect")){ NetworkModel.block_connections = true;
 			start_multiplayer_session();
 		}
 
@@ -79,6 +78,7 @@ var NetworkController = (function(){
 				NetworkModel.connections[id] =  connection;
 				connection.on('data', on_data_arrival);
 				connection.on('close', on_connection_closed);
+				connection.on('open', on_connection_open);
 				console.log("Successfully initiated new connection with the peer", id);
 			}
 		}
@@ -124,6 +124,17 @@ var NetworkController = (function(){
 		}
 		
 	};
+
+	var on_connection_open = function(){
+		/**
+		* on opening the connection
+		*/
+
+
+		
+	};
+	
+	
 
 	var on_connection_closed = function(){
 		/**
@@ -385,6 +396,8 @@ var NetworkController = (function(){
 		// TEMPORARYYYYYYYYYYYYYYYYYYYYYYYYYY	
 		//NetworkModel.output_cell = NetworkModel.output_cell || {};
 		//NetworkModel.output_cell[data.purpose] = data.content;
+		
+		
 		
 		NetworkModel.send_array = NetworkModel.send_array || [];
 

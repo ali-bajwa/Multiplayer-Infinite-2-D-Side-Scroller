@@ -19,31 +19,31 @@ var MultiplayerSyncController = (function(){
 		};
 
 
-		patch(B2d.b2Body, function SetLinearVelocity(vec){
+		//patch(B2d.b2Body, function SetLinearVelocity(vec){
 			//console.log(this.GetUserData().entity_instance);
-			var entity_instance = this.GetUserData().entity_instance;
-			var old_velocity = this.GetLinearVelocity();
-			var pos = this.GetWorldCenter();
+			//var entity_instance = this.GetUserData().entity_instance;
+			//var old_velocity = this.GetLinearVelocity();
+			//var pos = this.GetWorldCenter();
 
-			var vec_eq = function(vec1, vec2){
-				if((vec1.x == vec2.x) && (vec1.y == vec2.y)){
-					return true;
-				}else{
-					return false;
-				}
-			}
+			//var vec_eq = function(vec1, vec2){
+				//if((vec1.x == vec2.x) && (vec1.y == vec2.y)){
+					//return true;
+				//}else{
+					//return false;
+				//}
+			//}
 			
-			if(Config.Remote.master && !vec_eq(vec, old_velocity) && entity_instance.type === "hero"){
+			//if(Config.Remote.master && !vec_eq(vec, old_velocity) && entity_instance.type === "hero"){
 				
 				
-				NetworkController.add_to_next_update({
-					op: "hero",
-					pos: {x: pos.x, y: pos.y},
-					vel: {x: vec.x, y: vec.y}
-				});
-			}
+				//NetworkController.add_to_next_update({
+					//op: "hero",
+					//pos: {x: pos.x, y: pos.y},
+					//vel: {x: vec.x, y: vec.y}
+				//});
+			//}
 
-		});
+		//});
 		
 	};
 
@@ -68,7 +68,26 @@ var MultiplayerSyncController = (function(){
 
 	};
 
+	var new_game = function(){
+		/**
+		* certain things need to be done when new multiplayer game begins
+		*/
+
+		//spawn my hero through the master
+		
+	};
 	
+	
+	var new_connection = function(master){
+		/**
+		 * certain things need to be handled each time 
+		 * someone establishes a connection with you
+		*/
+
+		
+	};
+	
+		
 
 	var update_hero = function(packet){
 		/**
@@ -98,21 +117,30 @@ var MultiplayerSyncController = (function(){
 		*/
 	};
 
-	var get_spawn_data = function(){
+	var get_spawn_notifications = function(){
 		/**
 		* get data about entities that were recently spawned
 		*/
 		
-
+		return  MultiplayerSyncModel.spawn_notifies;
 	};
+
+
+	var get_spawn_requests = function(){
+		/**
+		* dfsdf
+		*/
+		return MultiplayerSyncModel.spawn_requests;
+	};
+	
+	
 
 	var handle_spawn_request = function(packet){
 		/**
 		* 
 		*/
-		console.log("recieved spawn request", packet);
-		
-		
+		MultiplayerSyncModel.spawn_requests.push(packet);
+
 		
 	};
 	
@@ -120,8 +148,7 @@ var MultiplayerSyncController = (function(){
 		/**
 		* description
 		*/
-		
-		console.log("recieved spawn notify", packet);
+		MultiplayerSyncModel.spawn_notifies.push(packet);
 	};
 	
 	
@@ -200,10 +227,11 @@ var MultiplayerSyncController = (function(){
 		// declare public
 		init: init, 
 		update: update,
-		get_hero: get_hero,
+		//get_hero: get_hero,
 		request_spawn: request_spawn,
 		send_spawn_notifications: send_spawn_notifications,
-		get_spawn_data: get_spawn_data,
+		get_spawn_requests: get_spawn_requests,
+		get_spawn_notifications: get_spawn_notifications,
 	};
 })();
 

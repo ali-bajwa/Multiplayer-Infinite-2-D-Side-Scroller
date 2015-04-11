@@ -74,6 +74,53 @@ var MultiplayerSyncController = (function(){
 		
 	};
 	
+	var request_spawn function(x,y,type,id){
+		request_operation({
+			op: "spawn",
+			x: x,
+			y: y,
+			type: type,
+			id: id
+		})
+	}
+	
+	var fullfill_spawn_request function(packet){
+		// take packet data and spawn thing normally
+	}
+	
+	var spawn_hero = function(){
+		var connected = Config.Remote.connected;
+		var master = Config.Remote.master;
+		
+		if(connected){
+			// handle remote spawning of hero/companions
+			if(master){
+				// spawn hero
+				
+				// send notifications for companion
+			}else{
+				// request spawn of companion
+				
+				// somehow spawn the hero when you get spawn notification for this companion
+			}
+		}else{
+			// simply spawn
+			EntityController.spawn(10, 10, "hero");
+		}
+	}
+	
+	
+	var request_spawn_hero = function(x, y, id, player_id, is_main){
+		/**
+		* request the master to spawn thing
+		* >extras< are any special parameters that need to be attached
+		*/
+		
+		var command = {op: "spawn_request", type: type, x: x, y: y, extras: extras};
+
+		NetworkController.add_to_next_update(command);
+
+	};
 
 	var request_spawn = function(x, y, type, extras){
 		/**

@@ -32,6 +32,7 @@ var HeroLogic = (function(){
 			and finally you HAVE TO(!!!) return the instance you just created from this function
 		*/
 
+
 		var hero = new Hero();
 
 		hero.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, hero);
@@ -129,6 +130,16 @@ var HeroLogic = (function(){
 		//hero.x = (body.GetPosition().x + 1.5/2) * 30 ; 
 	};
 
+	var move_left = function(hero){
+		var body = hero.body;
+		var velocity = body.GetLinearVelocity();
+		velocity.x = -5;
+		body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		body.SetAwake(true);
+		//hero.x += 10; // old
+		//hero.x = (body.GetPosition().x + 1.5/2) * 30 ; 
+	};
+
 	var jump = function(hero){
 	    var body = hero.body;
 		if (hero.jumps == 0){
@@ -148,16 +159,16 @@ var HeroLogic = (function(){
 		return hero.body.GetWorldCenter();
 	};
 
-	var move_left = function(hero){
-		var velocity = hero.body.GetLinearVelocity();
-		move(hero, velocity.x - 5, velocity.y)
+	//var move_left = function(hero){
+		//var velocity = hero.body.GetLinearVelocity();
+		//move(hero, velocity.x - 5, velocity.y)
 
-	};
+	//};
 
-	var move_right = function(hero){
-		var velocity = hero.body.GetLinearVelocity();
-		move(hero, velocity.x + 5, velocity.y)
-	};
+	//var move_right = function(hero){
+		//var velocity = hero.body.GetLinearVelocity();
+		//move(hero, velocity.x + 5, velocity.y)
+	//};
 
 	var move = function(hero, x, y){
 		var velocity = new B2d.b2Vec2(x, y);

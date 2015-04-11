@@ -54,6 +54,8 @@ var EsteemedCompanionLogic = (function(){
 		*/
 
 		
+		console.warn("ticking companion");
+
 		
 
 		var cmds = KeyboardController.movement_commands();

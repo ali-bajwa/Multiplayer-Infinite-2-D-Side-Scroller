@@ -4,7 +4,7 @@ var NetworkController = (function(){
 	*/
 
 	var peer, conn; // TEMPORARY. there will be multiple of those things
-	var MEDIATOR_SERVER_KEY = 'a7vojcpf70ysyvi';
+	var MEDIATOR_SERVER_KEY = 'l2f8f8vtbhcfecdi';//'a7vojcpf70ysyvi';
 
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -313,7 +313,7 @@ var NetworkController = (function(){
 		if(NetworkModel.recieve_array == null){
 			NetworkModel.recieve_array = data;
 		}else{
-			for(var i = 0; i < data.lenght; i++){
+			for(var i = 0; i < data.length; i++){
 				NetworkModel.recieve_array.push(data[i]);
 			}
 		}

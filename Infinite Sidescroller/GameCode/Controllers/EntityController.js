@@ -169,7 +169,7 @@ var EntityController = (function(){
 
 		if(Config.Remote.master){
 			handle_spawn_requests();
-		}else{
+		}else if(Config.Remote.connected){
 			handle_spawn_notifications();
 		}
 
@@ -194,6 +194,8 @@ var EntityController = (function(){
 		var data = MultiplayerSyncController.get_packets_by_op("spawn_request") || [];
 
 		while(data.length > 0){
+			console.log("handlspwnr");
+			
 			var packet = data.pop();
 			spawn(packet.x, packet.y, packet.type);
 		}
@@ -205,8 +207,10 @@ var EntityController = (function(){
 		* 
 		*/
 		
-		var data = MultiplayerSyncController.get_packets_by_op("spawn_notfy") || [];
+		var data = MultiplayerSyncController.get_packets_by_op("spawn_notify") || [];
 		while(data.length > 0){
+			console.log("handlespawnnot");
+			
 			var packet = data.pop();
 			spawn(packet.x, packet.y, packet.type, packet.id);
 		}

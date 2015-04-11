@@ -49,8 +49,9 @@ var MultiplayerSyncController = (function(){
 		if(data != null){
 			for(var i = 0; i < data.length; i++){
 				var packet = data[i];
+				var op = packet.op;
 				op_packet[op] = op_packet[op] || [];
-				if(data.op != null){
+				if(op != null){
 					op_packet[op].push(packet);
 				}else{
 					console.log(packet);
@@ -60,6 +61,7 @@ var MultiplayerSyncController = (function(){
 			}
 		}
 
+		NetworkController.clean_data();	// remove data that was processed
 	};
 
 	var get_packets_by_op = function(op){

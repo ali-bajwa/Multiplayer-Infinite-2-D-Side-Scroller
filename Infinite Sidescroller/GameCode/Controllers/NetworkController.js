@@ -39,9 +39,6 @@ var NetworkController = (function(){
 			}
 		}
 
-		// Now, delete all data that was received this tick (it was already
-		// picked up by MultiplayerSync, and stored, if it was needed)
-		NetworkModel.recieve_array = null;
 	};
 
 	var start_multiplayer_session = function(){
@@ -428,7 +425,14 @@ var NetworkController = (function(){
 		
 		return data;
 	};
-	
+
+	var clean_data = function(){
+		/**
+		* description
+		*/
+		delete NetworkModel.recieve_array;
+	};
+		
 	//var get_data = function(){
 		/**
 		* temp
@@ -445,6 +449,7 @@ var NetworkController = (function(){
 		update: update,
 		add_to_next_update: add_to_next_update,
 		get_data: get_data,
+		clean_data: clean_data,
 	};
 })();
 

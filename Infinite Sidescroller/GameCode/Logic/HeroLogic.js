@@ -63,9 +63,6 @@ var HeroLogic = (function(){
 
 		var cmds = KeyboardController.movement_commands();
 
-		var MOVEMENT_EDGE = GraphicsController.get_movement_edge(); // where terrain start scrolling
-		config.movement_edge = MOVEMENT_EDGE;
-
 		if(cmds("right")){
 		    // temporary
 		    add_score(hero, 1);

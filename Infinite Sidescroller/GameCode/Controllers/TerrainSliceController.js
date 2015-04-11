@@ -86,9 +86,10 @@ var TerrainSliceController = (function () {
 			for(j=0;j<columns;j++){ //inner loop: generate from left to right within current row
 				var x = slice.origin.x + j * slice.cell_w + slice.cell_w/2;
 				var y = slice.origin.y + i * slice.cell_w + slice.cell_w/2;
+				var pit_size = Math.ceil(Math.random()*9)+2;
 				
 				if (i >= ground_lvl){	//If on or below ground level, Generate Ground
-					if (pit_len < pit_max && (getRandomNumber(seed)%200 < pit_frequency || pit_len == 1 || has_pit[j])){
+					if (pit_len < pit_max && (getRandomNumber(seed)%200 < pit_frequency || pit_len < pit_size && pit_len != 0 || has_pit[j])){
 						slice.grid[i][j] = spawnGap(x,y); //create gap
 						has_pit[j] = true;
 						pit_len++; //the pit gets wider

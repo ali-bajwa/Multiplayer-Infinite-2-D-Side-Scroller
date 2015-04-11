@@ -157,15 +157,7 @@ var HeroLogic = (function(){
 	    body.SetAwake(true);
 	}
 
-	var move_right = function(hero){
-		var body = hero.body;
-		var velocity = body.GetLinearVelocity();
-		velocity.x = 5;
-		body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-		body.SetAwake(true);
-		//hero.x += 10; // old
-		//hero.x = (body.GetPosition().x + 1.5/2) * 30 ; 
-	};
+	
 
 	var jump = function(hero){
 	    var body = hero.body;
@@ -200,14 +192,14 @@ var HeroLogic = (function(){
 
 	var move_left = function(hero){
 		var velocity = hero.body.GetLinearVelocity();
-		velocity.x = -5;
+		velocity.x = -10;
 		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 		hero.body.SetAwake(true);
 	};
 
 	var move_right = function(hero){
 		var velocity = hero.body.GetLinearVelocity();
-		velocity.x = +5;
+		velocity.x = +10;
 		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 		hero.body.SetAwake(true);
 	};

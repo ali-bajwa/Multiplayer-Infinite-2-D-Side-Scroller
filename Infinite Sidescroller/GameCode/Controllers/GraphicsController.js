@@ -20,6 +20,7 @@ var GraphicsController = (function(){
 			"ant": AntRenderer,
 			"hero": HeroRenderer,
 			"Griffin":GriffinRenderer,
+			"Hyena": HyenaRenderer,
 			"terrain_cell": TerrainCellRenderer,
 		};
 
@@ -364,8 +365,35 @@ var GraphicsController = (function(){
 					
 					var kind = slice.grid[i][j].kind;
 					if(kind != 0){
-						// TODO: should make proper terrain collection thing to pull from 
+						// TODO: should make proper terrain collection thing to pull from
+						/*
 						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][kind-1];
+						var tile = request_bitmap(tile_texture);
+						*/
+						var position = slice.grid[i][j].position;
+						if (kind == 1){ //if tile is part of the ground
+							switch (position){
+								case "surface":
+									var tile_texture = "grass";
+									break;
+								case "underground":
+									var tile_texture = "bottom_terrain";
+									break;
+							}
+						}
+						if (kind == 2){ //if tile is part of a platform
+							switch (position){
+								case "left":
+									var tile_texture = "left_platform";;
+									break;
+								case "middle":
+									var tile_texture = "middle_platform";
+									break;
+								case "right":
+									var tile_texture = "right_platform";
+									break;
+							}
+						}
 						var tile = request_bitmap(tile_texture);
 						var physical_instance = slice.grid[i][j];
 						var body_position = physical_instance.body.GetWorldCenter();

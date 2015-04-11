@@ -14,6 +14,7 @@ var EntityController = (function(){
 			"ant": AntLogic,
 			"hero": HeroLogic,
             "Griffin": GriffinLogic,
+			"Hyena": HyenaLogic,
 		};
 
 		for(type in type_logic_table){
@@ -120,6 +121,11 @@ var EntityController = (function(){
 	    // demonstration purposes for griffin
 		if (debug_commands("spawn_griffin")) {
 		    var new_griffin = spawn(Math.random() * 50 + GraphicsController.get_movement_edge(), 10, "Griffin");
+		}
+		
+	    // demonstration purposes for hyena
+		if (debug_commands("spawn_hyena")) {
+		    var new_hyena = spawn(Math.random() * 50 + GraphicsController.get_movement_edge(), 10, "Hyena");
 		}
 
 		for(var type in EntityModel.for_logic_update){

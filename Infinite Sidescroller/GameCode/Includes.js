@@ -66,12 +66,14 @@ var Include = function(){
 			"HeroRenderer",
 			"TerrainCellRenderer",
 			"GriffinRenderer",
+			"HyenaRenderer",
 		],
 
 		Logic: [
 			"AntLogic",
 			"HeroLogic",
 			"GriffinLogic",
+			"HyenaLogic",
 		],
 
 	};//end module_names
@@ -129,12 +131,14 @@ var Include = function(){
 			
 			AntRenderer: require("./Renderers/AntRenderer.js"),
 			GriffinRenderer: require("./Renderers/GriffinRenderer.js"),
+			HyenaRenderer: require("./Renderers/HyenaRenderer.js"),
 			HeroRenderer: require("./Renderers/HeroRenderer.js"),
 			TerrainCellRenderer: require("./Renderers/TerrainCellRenderer.js"),
 			
 			// Logic
 			AntLogic: require("./Logic/AntLogic.js"),
 			GriffinLogic: require("./Logic/GriffinLogic.js"),
+			HyenaLogic: require("./Logic/HyenaLogic.js"),
 			HeroLogic: require("./Logic/HeroLogic.js"),
 			
 			

@@ -1,0 +1,30 @@
+Enemy Documentation
+
+/*
+Enemies consist of three files:
+	MyenemyLogic: handles AI and physics for Myenemy
+	MyenemyRenderer: handles graphics for Myenemy
+	MyenemyModel: stores data and variables for Myenemy
+
+*/
+
+/*
+Registration:
+	-Includes.js
+		register your logic and renderer names in module_names in their respective arrays
+		register your logic and renderer paths in the init() function in the modules object
+	- GraphicsController.js:
+		add your renderer to the type_renderer_table in the init() function
+	- EntityController.js:
+		add your logic to the type_logic_table in the init() function
+	- AssetModel.js
+		link your sprite ids with the image files they correspond to in the manifest object
+*/
+
+	GraphicsController.js:
+		/*
+		1. add your renderer to the type_renderer_table in GraphicsController
+		
+		*/
+	- getAsset(string id)
+		this function should be called in MyenemyRenderer

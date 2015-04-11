@@ -133,6 +133,16 @@ r_templates.Griffin = {
 	//mobexp++
 };
 
+r_templates.Hyena = {
+	parent: r_templates.living,
+	width: 4.5,
+	height: 3.5,
+	type: "dynamic",
+	x: 65,
+	y: 10,
+	//mobexp++
+};
+
 r_templates.test = {
 	width: 1,
 	height: 2,

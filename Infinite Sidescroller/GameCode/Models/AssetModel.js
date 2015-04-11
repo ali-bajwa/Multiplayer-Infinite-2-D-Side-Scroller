@@ -20,6 +20,14 @@ var AssetModel = new function(){
 			{ src: "griffinPhase1.png", id: "Griffin1" },
 			{ src: "griffinPhase2.png", id: "Griffin2" },
 			{ src: "griffinPhase3.png", id: "Griffin3" },
+			{ src: "platform_left.png", id: "left_platform" },
+			{ src: "platform_middle.png", id: "middle_platform" },
+			{ src: "platform_right.png", id: "right_platform" },
+			{ src: "HyenaSpriteSheet.png", id: "Hyena" },
+			{ src: "HyenaPhase1.png", id: "Hyena1" },
+			{ src: "HyenaPhase2.png", id: "Hyena2" },
+			{ src: "HyenaPhase3.png", id: "Hyena3" },
+
 
 			
 		]; 

@@ -28,7 +28,7 @@ var TerrainController = (function(){
 			var slice = NewTerrainSlice();
 			TerrainModel.terrain_slices_queue.push(slice);
 		}
-		if(config.movement_edge > (TerrainModel.terrain_slices_queue.length-3)*(20)){
+		if(config.Player.movement_edge > (TerrainModel.terrain_slices_queue.length-3)*(20)){
 			var slice = NewTerrainSlice();
 			TerrainModel.terrain_slices_queue.push(slice);
 		};

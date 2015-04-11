@@ -17,10 +17,10 @@ var TerrainSliceController = (function () {
 	};
 	
 
-	var spawnBlock = function(x, y, seed){
+	var spawnBlock = function(x, y, kind){
 		//spawn instance of this entity at the given coordinates
-		var block = new TerrainSliceModel.Cell(getRandomNumber(seed)%3+1);
-		IdentificationController.assign_id(block);
+		var block = new TerrainSliceModel.Cell(kind%3); //kind is an int, 1 = block, 2 = platform
+		IdentificationController.assign_id(block); //eventually we may want to remove this for the sake of efficiency
 		block.body = PhysicsController.get_rectangular({x: x, y: y}, block);
 		return block;
 	};
@@ -94,7 +94,7 @@ var TerrainSliceController = (function () {
 						pit_len++; //the pit gets wider
 					}
 					else{
-						slice.grid[i][j] = spawnBlock(x,y,seed);//create a ground block
+						slice.grid[i][j] = spawnBlock(x,y,1);//create a ground block (1 means ground)
 						pit_len = 0; //any pits being spawned have been interrupted
 						if (i == ground_lvl)
 							slice.grid[i][j].position = "surface";
@@ -111,7 +111,7 @@ var TerrainSliceController = (function () {
 					&& (platform_len > 0 || (j<columns-1 && platform_count[j+1] < platform_count_max))){ //and the platform is not going to be a singleton
 						if (getRandomNumber(seed)%100 < platform_frequency || (platform_len > 0 && platform_len <= platform_len_min)){
 						
-							slice.grid[i][j] = spawnBlock(x,y,seed);//create platform
+							slice.grid[i][j] = spawnBlock(x,y,2);//create platform (2 means platform)
 							
 							//check aesthetic stuff, like platform edges
 							//put stuff like slice.grid[i][j].is_spiky here too

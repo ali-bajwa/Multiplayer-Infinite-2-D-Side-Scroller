@@ -17,14 +17,6 @@ var WorldController = (function(){
 
 	};
 
-	var platform = function(){
-	    //define your constants here
-	    this.H = 31;//height
-	    this.W = 50;
-	    this.id;
-	    this.type = "platform";
-	};
-
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
 		PhysicsController.step(delta);

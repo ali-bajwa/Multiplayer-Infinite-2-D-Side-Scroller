@@ -16,7 +16,7 @@ var HeroLogic = (function(){
 		this.jumps = 0;
 		this.score = 0;
 		this.progress = 0;
-		this.progress_to_level = 299;
+		this.progress_to_level = 199;
 	};
 
 	var init = function(){
@@ -61,8 +61,9 @@ var HeroLogic = (function(){
 		var pconf = Config.Player;
 		var rounded_hero_x = Math.round(hero.body.GetWorldCenter().x);
 		
-		
-		if(rounted_hero_x > hero.progress_to_level)
+		console.log(rounded_hero_x);
+		console.log(hero.progress_to_level);
+		if(rounded_hero_x > hero.progress_to_level)
 		{
 			hero.progress++;
 			hero.progress_to_level += hero.progress_to_level;

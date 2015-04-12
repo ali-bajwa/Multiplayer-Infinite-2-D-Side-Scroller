@@ -14,14 +14,14 @@ var HyenaRenderer = (function(){
 
 		spritesheets["Hyena"] = new createjs.SpriteSheet({
 			"framerate": 1,
-			"images": [get_asset("Hyena1")],
+			"images": [get_asset("HyenaSprite")],
 			"frames": { "regX": 0, "regY": 8, "height": 64, "width": 64, "count": 17},
 			"animations": {
 				"run": [0,3,"run", 1],
 				"stand": [4,5,"stand", 1],
 				"walk": [8,11,"walk", 1],
-				"leap": [6,6,"leap", 1],//should be 6,6,
-				"fall": [7,7,"fall", 1],
+				"leap": [6],
+				"fall": [7],
 				"quincy": [12,14,"quincy", 1],
 				"decay": [15,16,"decay", 1],
 			}

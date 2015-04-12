@@ -17,7 +17,7 @@ var HyenaLogic = (function(){
 	var Hyena = function(){
 		this.hero_hurt_me = false;
 		this.me_hurt_hero = false;
-		this.death_tick = 0;
+		
 
 		//set your game logic parameters here
 		//this.object_id = 1; //hardcode a unique identifier for each new enemy class
@@ -25,7 +25,7 @@ var HyenaLogic = (function(){
 		this.speed = 6;
 		this.damage = 1;
 		
-
+		this.death_tick = 0;
 		this.AI_state = 0;	//0 = idle; 1 = engaged; 2 = other
 		this.direction = false;	//false=left, true=right;
 		this.can_attack = true;	//attacking enabled
@@ -37,7 +37,7 @@ var HyenaLogic = (function(){
 		this.blinking = false;	//whether hyena is blinking
 		this.blink_timer = -1;	//tracks blink time
 		this.check_timer = 20;
-		this.aliveflag = true;
+		//this.aliveflag = true;
 		this.unhurtflag = true;
 		
 		this.needs_graphics_update = false;
@@ -80,16 +80,16 @@ var HyenaLogic = (function(){
 				wound_Hyena(Hyena, 1);
 				Hyena.hero_hurt_me = false;
 				Hyena.can_attack = false;
-				//change_animation(Hyena,"quincy");
+				change_animation(Hyena,"quincy");
 			}
 		}else if (Hyena.hp <= 0){
 			Hyena.can_attack = false;
 			Hyena.death_tick++;
-			if (Hyena.death_tick == 50){
+			if (Hyena.death_tick == 5){
 				change_animation(Hyena,"decay");
 				return 
 			}
-			if(Hyena.death_tick == 100){
+			if(Hyena.death_tick == 20){
 				EntityController.delete_entity(Hyena);
 				return 
 			}
@@ -108,13 +108,15 @@ var HyenaLogic = (function(){
 							//back off
 						}
 						else if ((enemy_in_range(Hyena) || Hyena.path_blocked) && Hyena.can_leap && Hyena.leap_cooldown <= 0){
+							//TO DO: face nearest player
 							leap(Hyena);
 							Hyena.can_leap = false;
 							Hyena.leap_cooldown = 30;
-							change_animation(Hyena,"quincy");//should be leap
+							change_animation(Hyena,"leap");
 						}else{
+							//TO DO: face nearest player
 							run(Hyena);
-							change_animation(Hyena,"quincy");//should be run
+							change_animation(Hyena,"run");
 						}
 					}else{
 						//idle

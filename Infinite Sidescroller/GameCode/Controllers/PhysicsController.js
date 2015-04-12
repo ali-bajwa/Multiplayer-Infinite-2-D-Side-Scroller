@@ -644,7 +644,18 @@ var PhysicsController = (function(){
 		PhysicsModel.world.DestroyBody(body);
 	};
 	
-		
+	//a very important function that I need for the hyena
+	//returns the number of shapes in contact with a given bounding box
+	var query_aabb = function(aabb){
+		var count = 0;
+		PhysicsModel.world.QueryAABB(
+		function(max){
+			count++;
+			return true;
+		},
+		aabb);
+		return count;
+	};
 	
 	
 	return {
@@ -656,6 +667,7 @@ var PhysicsController = (function(){
 		draw_debug: draw_debug,
 		listen_for_contact_with: listen_for_contact_with,
 		remove_body: remove_body,
+		query_aabb: query_aabb,
 	};
 })();
 

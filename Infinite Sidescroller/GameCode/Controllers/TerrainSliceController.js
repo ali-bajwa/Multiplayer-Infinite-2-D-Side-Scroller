@@ -46,15 +46,15 @@ var TerrainSliceController = (function () {
 		var columns = slice.grid_columns;
 		var i,j;
 		var ground_lvl = rows - (getRandomNumber(seed)%2+2); //the row that is considered ground level.
-		var vgap_min = 4;
+		var vgap_min = 7;
 		var vgap_len = 0;
-		var hgap_min = 8;				//minimum size of gaps between platforms
+		var hgap_min = 10;				//minimum size of gaps between platforms
 		var hgap_len = 0; 		//current number of consecutive horizontal gaps
-		var pit_max = 3;				//maximum len of pits in blocks
+		var pit_max = 20;				//maximum len of pits in blocks
 		var pit_len = 0; 		//current number of consecutive pits
 		var has_pit = [];
 		var pit_frequency = 5; 		//base percentage chance of a pit being dug
-		var platform_len_max = 5;	//maximum len of a platform
+		var platform_len_max = 7;	//maximum len of a platform
 		var platform_len_min = 3; //minimum len of a platform
 		var platform_len = 0; 		//len of currently generated platform
 		var platform_count_max = 2; //maximum number of platforms per column
@@ -86,9 +86,10 @@ var TerrainSliceController = (function () {
 			for(j=0;j<columns;j++){ //inner loop: generate from left to right within current row
 				var x = slice.origin.x + j * slice.cell_w + slice.cell_w/2;
 				var y = slice.origin.y + i * slice.cell_w + slice.cell_w/2;
+				var pit_size = Math.ceil(Math.random()*9)+2;
 				
 				if (i >= ground_lvl){	//If on or below ground level, Generate Ground
-					if (pit_len < pit_max && (getRandomNumber(seed)%200 < pit_frequency || pit_len == 1 || has_pit[j])){
+					if (pit_len < pit_max && (getRandomNumber(seed)%200 < pit_frequency || pit_len < pit_size && pit_len != 0 || has_pit[j])){
 						slice.grid[i][j] = spawnGap(x,y); //create gap
 						has_pit[j] = true;
 						pit_len++; //the pit gets wider

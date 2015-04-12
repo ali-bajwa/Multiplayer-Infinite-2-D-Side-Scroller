@@ -105,7 +105,7 @@ var GraphicsController = (function(){
 		{
 			colorTick = 0;
 			delete_all_season();
-			generate_season(seasonImg[cycle], GraphicsModel.stage.canvas.width, 0);
+			generate_season(seasonImg[cycle], GraphicsModel.stage.canvas.width, Config.Player.movement_edge/30);
 			cycle++;
 			if(cycle == 4)
 			{

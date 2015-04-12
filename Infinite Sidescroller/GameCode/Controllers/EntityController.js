@@ -4,6 +4,8 @@ var EntityController = (function(){
 	*/
 
 	var type_logic_table;
+
+	var Count = 0;
 	
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -115,17 +117,25 @@ var EntityController = (function(){
 
 		// demonstration purposes for ant
 		if(debug_commands("spawn_ant")){
-		    var new_ant = spawn(GraphicsController.get_movement_edge() + Math.random() * 50, 10, "ant");
+		    var new_ant = spawn(Config.Player.movement_edge + Math.random() * 50, 10, "ant");
 		}
 
 	    // demonstration purposes for griffin
+
+		if (debug_commands("spawn_griffin") && Count > 5) {
+		    var new_griffin = spawn(Math.random() * 50 + Config.Player.movement_edge, -20, "Griffin");
+			Count = 0;
+		}
+		Count++;
+
 		if (debug_commands("spawn_griffin")) {
-		    var new_griffin = spawn(Math.random() * 50 + GraphicsController.get_movement_edge(), 10, "Griffin");
+		    var new_griffin = spawn(Math.random() * 50 + Config.Player.movement_edge, 10, "Griffin");
 		}
 		
+
 	    // demonstration purposes for hyena
 		if (debug_commands("spawn_hyena")) {
-		    var new_hyena = spawn(Math.random() * 50 + GraphicsController.get_movement_edge(), 10, "Hyena");
+		    var new_hyena = spawn(Math.random() * 50 + Config.Player.movement_edge, 10, "Hyena");
 		}
 
 		for(var type in EntityModel.for_logic_update){

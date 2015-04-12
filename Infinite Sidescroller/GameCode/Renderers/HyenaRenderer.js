@@ -15,10 +15,15 @@ var HyenaRenderer = (function(){
 		spritesheets["Hyena"] = new createjs.SpriteSheet({
 			"framerate": 1,
 			"images": [get_asset("Hyena1"), get_asset("Hyena2"), get_asset("Hyena3") ],
-			"frames": { "regX": 0, "regY": 8, "height": 64, "width": 64, "count": 4},
+			"frames": { "regX": 0, "regY": 8, "height": 64, "width": 64, "count": 16},
 			"animations": {
-				"walk": [0, 3, "walk", 0.5],
-				//"death": [4, 5, "death"]
+				"run": [0,3, "run", 0.5],
+				"stand": [4,5, "stand", 0.5],
+				"walk": [8, 11, "walk", 0.5],
+				"jump": [6, 6, "jump", 0.5],
+				"fall": [7, 7, "fall", 0.5],
+				"death": [12, 15, "death", 0.5],
+				"decay": [15,16,"decay",0.5],
 			}
 		})
 

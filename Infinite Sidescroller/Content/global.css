@@ -17,7 +17,7 @@ body {
     font-family: 'Cinzel', serif;
     color: #d4af37;
     min-width:1350px;
-    max-width:1900px;
+    max-width:2000px;
     overflow-x: hidden;
 }
 
@@ -348,14 +348,18 @@ canvas {
   transition:opacity 1s;
   -webkit-transition:opacity 1s;
   position:absolute;
+  z-index:200;
 }
+
+
 @media screen and (min-width: 1350px) and (max-width: 1450px) {#login{margin-left:63.5%;}}
 @media screen and (min-width: 1450px) and (max-width: 1550px) {#login{margin-left:62.7%;}}
 @media screen and (min-width: 1550px) and (max-width: 1650px) {#login{margin-left:61.7%;}}
 @media screen and (min-width: 1650px) and (max-width: 1750px) {#login{margin-left:61.2%;}}
 @media screen and (min-width: 1750px) and (max-width: 1850px) {#login{margin-left:60.6%;}}
 @media screen and (min-width: 1850px) and (max-width: 1950px) {#login{margin-left:59.6%;}}
-@media screen and (min-width: 1950px){#login{margin-left:1132px;}}
+@media screen and (min-width: 1950px){#login{margin-left:1132px;}} 
+
 
 #triangle{
   width:0;

@@ -7,9 +7,9 @@ using Infinite_Sidescroller.Models;
 
 namespace Infinite_Sidescroller.Controllers
 {
-	public class GameController : Controller
+ 	public class GameController : Controller
 	{
-    GameDB GameDB = new GameDB();
+     //GameDB GameDB = new GameDB();
  
 		// GET: Game
 		public ActionResult Index()
@@ -17,6 +17,7 @@ namespace Infinite_Sidescroller.Controllers
 			return View();
 		}
 
+/*  
     [AjaxOnly]
     public ActionResult setJsonInfo(int sessionid, string jsonstring, int packetid)
     {
@@ -27,10 +28,12 @@ namespace Infinite_Sidescroller.Controllers
 
       return View(result);
     }
+  
 
     public ActionResult getJsonInfo(int sessionid, int? packetid) 
     {
 
     }
-	}
+ */ 
+	} 
 }

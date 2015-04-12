@@ -17,10 +17,15 @@ var HyenaLogic = (function(){
 		this.hp = 2;
 		this.speed = 6;
 		this.damage = 1;
-		//this.attack_cooldown = 4; //use this for enemies who need
-		this.can_attack = true;//use this for enemies who alternate between 
-		//this.cooldown_timer=-1;
+		
+
 		this.AI_state = "walk";//use this to keep track of the enemy's AI state
+		this.can_attack = true;//jumping enabled
+		this.can_jump = true;//
+		this.jump_cooldown_timer=-1;
+		this.enemy_nearby = false;
+		
+		this.in_air = false;
 		this.aliveflag = true;
 		this.unhurtflag = true;
 	};
@@ -57,10 +62,6 @@ var HyenaLogic = (function(){
 		*/
 
 		//if enemy is dead, die
-		if (Hyena.body.GetWorldCenter().y > 22 || Hyena.body.GetWorldCenter().x < Config.Player.movement_edge - 1) {
-	        	EntityController.delete_entity(Hyena);
-	        	console.log("drop of death");
-	    	}
 		if (Hyena.hp == 1) {
 			
 			if (Hyena.hero_hurt_me){
@@ -73,15 +74,28 @@ var HyenaLogic = (function(){
 			change_state(Hyena, "death");
 			Hyena.can_attack = false;
 			Hyena.death_tick++;
-			
+			if (Hyena.death_tick == 10){
+				change_state(Hyena, "decay");
+				return 
+			}
 			if(Hyena.death_tick == 30){
 				EntityController.delete_entity(Hyena);
 				return 
-			}else if(Hyena.death_tick > 30){
 			}
-
+			
 		}else { // Hyena.hp >= 1
-
+			//determine state
+				//if on ground
+					//if enemy_nearby
+						//(if enemy_in_range || path_blocked) && can_jump
+							//jump
+						//else run 
+					//else idle
+				//else
+					//if leaping on his own initiative, leap
+					//else fall
+			//act on state
+			//}
 			if (Hyena.AI_state == "walk") {
 				var Hyenabody = Hyena.body;
 				var velocity = Hyenabody.GetLinearVelocity();

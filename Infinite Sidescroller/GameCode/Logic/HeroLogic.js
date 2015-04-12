@@ -15,6 +15,8 @@ var HeroLogic = (function(){
 		this.wound = false;
 		this.jumps = 0;
 		this.score = 0;
+		this.progress = 0;
+		this.progress_to_level = 299;
 	};
 
 	var init = function(){
@@ -57,6 +59,15 @@ var HeroLogic = (function(){
 
 		var hero_x = hero.body.GetWorldCenter().x;
 		var pconf = Config.Player;
+		var rounded_hero_x = Math.round(hero.body.GetWorldCenter().x);
+		
+		
+		if(rounted_hero_x > hero.progress_to_level)
+		{
+			hero.progress++;
+			hero.progress_to_level += hero.progress_to_level;
+		}
+		
 		if(pconf.movement_edge < hero_x - 20){
 			pconf.movement_edge = hero_x - 20;
 		}
@@ -66,19 +77,19 @@ var HeroLogic = (function(){
 		if(cmds("right")){
 		    // temporary
 		    add_score(hero, 1);
-		    move_right(hero);	
-		    GraphicsController.set_season(hero.body.GetWorldCenter());
+		    move_right(hero);
+			
+			GraphicsController.set_season(hero.body.GetWorldCenter(), hero.progress);
 		}
 		if(cmds("left")){
 		    // temporary
 		    move_left(hero);
-		    GraphicsController.set_season(hero.body.GetWorldCenter());
+		    GraphicsController.set_season(hero.body.GetWorldCenter(), hero.progress);
 		}
-		if(cmds("down")){
-			drop(hero);
-		}
+
 		if(cmds("up")){
 			jump(hero);
+			
 		}
 		if(hero.wound)
 		{
@@ -99,8 +110,6 @@ var HeroLogic = (function(){
 		}
 		if (hero.body.GetWorldCenter().y > 22) {
 		    EntityController.delete_entity(hero);
-		    hero.hp = 0;
-		    GraphicsController.update_health(hero.hp);
 		    console.log("drop of death");
 		}
 		GraphicsController.update_score(hero.score);
@@ -157,7 +166,15 @@ var HeroLogic = (function(){
 	    body.SetAwake(true);
 	}
 
-	
+	var move_right = function(hero){
+		var body = hero.body;
+		var velocity = body.GetLinearVelocity();
+		velocity.x = 5;
+		body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		body.SetAwake(true);
+		//hero.x += 10; // old
+		//hero.x = (body.GetPosition().x + 1.5/2) * 30 ; 
+	};
 
 	var jump = function(hero){
 	    var body = hero.body;
@@ -172,10 +189,6 @@ var HeroLogic = (function(){
 
 		//hero.y = body.GetPosition().y * 30;
 	
-	};
-	var drop = function(hero){
-		var body = hero.body;
-		body.ApplyImpulse(new B2d.b2Vec2(0, 20), body.GetWorldCenter());
 	};
 
 	var set_coordinates = function(position_vector, hero){
@@ -192,14 +205,14 @@ var HeroLogic = (function(){
 
 	var move_left = function(hero){
 		var velocity = hero.body.GetLinearVelocity();
-		velocity.x = -10;
+		velocity.x = -5;
 		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 		hero.body.SetAwake(true);
 	};
 
 	var move_right = function(hero){
 		var velocity = hero.body.GetLinearVelocity();
-		velocity.x = +10;
+		velocity.x = +5;
 		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 		hero.body.SetAwake(true);
 	};

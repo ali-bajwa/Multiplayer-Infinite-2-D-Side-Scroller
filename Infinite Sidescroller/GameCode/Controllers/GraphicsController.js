@@ -52,7 +52,7 @@ var GraphicsController = (function(){
 	var generate_season = function(season_name, canvas_width, start){
 		/*Generates tiled background for season */
 	
-		for(var i = start; i <= canvas_width + canvas_width + 1; i += season.image.width){
+		for(var i = start; i <= canvas_width + 1; i += season.image.width){
 			var season = request_scenery(season_name);
 			
 			season.x = i;
@@ -62,15 +62,17 @@ var GraphicsController = (function(){
 		}
 		
 	};
-	var set_season = function(hero){
+	var set_season = function(hero, progress){
+		console.log(progress);
 		for(var i = 0; i < seasonArray.length; i++){
 			
 			
 			//seasonArray[i].x = (i * 799) + GraphicsModel.camera.offset.x;
 			//seasonArray[i].y = GraphicsModel.camera.offset.y;
 			
-			seasonArray[i].x = (i * 799) - (hero.x * 4);
-			seasonArray[i].y = GraphicsModel.camera.offset.y;
+				seasonArray[i].x = ((i + progress) * 799) - (hero.x * 4);
+				seasonArray[i].y = GraphicsModel.camera.offset.y;
+		
 			
 		}
 	

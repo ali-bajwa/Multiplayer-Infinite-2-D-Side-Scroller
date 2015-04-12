@@ -32,7 +32,15 @@ Registration:
 		this function should be called in MyenemyRenderer
 		
 Logic File
+		/* Will be instantiated for every created entity to hold all the information 
+			about the physical (not graphical) state of the entity in question. 
+			declare the properties like this:
+			this.some_state_variable_initial_value = 0;
+			instantiate (most likely in the spawn function) like that:
+			var new_entity_instance = new MyEnemy();
+		*/
 	/*
 	should include the following functions
 	
 	- init()
+		sets initial values that will apply to all instances

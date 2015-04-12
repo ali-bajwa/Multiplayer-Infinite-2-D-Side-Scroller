@@ -102,7 +102,7 @@ var HyenaLogic = (function(){
 					}
 					Hyena.check_timer = 40;
 				}
-				if(!in_air(Hyena)){ //if on ground
+				if(!in_air(Hyena) || Hyena.body.GetLinearVelocity().y == 0){ //if on ground OR if we suspect he's stuck on a corner
 					if (enemy_nearby(Hyena)){
 						if (Hyena.recently_attacked){
 							//back off

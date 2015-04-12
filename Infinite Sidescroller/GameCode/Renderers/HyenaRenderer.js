@@ -14,25 +14,25 @@ var HyenaRenderer = (function(){
 
 		spritesheets["Hyena"] = new createjs.SpriteSheet({
 			"framerate": 1,
-			"images": [get_asset("Hyena1"), get_asset("Hyena2"), get_asset("Hyena3") ],
-			"frames": { "regX": 0, "regY": 8, "height": 64, "width": 64, "count": 16},
+			"images": [get_asset("Hyena1")],
+			"frames": { "regX": 0, "regY": 8, "height": 64, "width": 64, "count": 17},
 			"animations": {
-				"run": [0,3, "run", 0.5],
-				"stand": [4,5, "stand", 0.5],
-				"walk": [8, 11, "walk", 0.5],
-				"jump": [6, 6, "jump", 0.5],
-				"fall": [7, 7, "fall", 0.5],
-				"death": [12, 15, "death", 0.5],
-				"decay": [15,16,"decay",0.5],
+				"run": [0,3,"run", 1],
+				"stand": [4,5,"stand", 1],
+				"walk": [8,11,"walk", 1],
+				"leap": [6,6,"leap", 1],//should be 6,6,
+				"fall": [7,7,"fall", 1],
+				"quincy": [12,14,"quincy", 1],
+				"decay": [15,16,"decay", 1],
 			}
 		})
 
 	};
 
 	var register = function(entity_Hyena){
-		/* is ran for every entity of this type that was just created and should
+		/* is run for every entity of this type that was just created and should
 		get graphics representation. You are given the entity instance and is supposed
-		to crete graphics instance, and GraphicsController.reg_for_render(graphics_instance, entity_instance); it 
+		to create graphics instance, and GraphicsController.reg_for_render(graphics_instance, entity_instance); it 
 		*/
 
 		Hyena_animation = GraphicsController.request_animated(spritesheets["Hyena"], "walk");
@@ -43,33 +43,42 @@ var HyenaRenderer = (function(){
 	};
 
 	var render = function(Hyena){
-		/* 	is ran each tick from GraphicsController, for every registered object of this type
+		/* 	is run each tick from GraphicsController, for every registered object of this type
 			is given >graphics_instance< parameter, which is also supposed to contain
-			physical_instance property containing entity_instance, if it was attched correctly
+			physical_instance property containing entity_instance, if it was attached correctly
 		*/
 
-		Hyena_special_render_temp(Hyena); 
+		hyena_animate(Hyena); 
 	};
 
-	var Hyena_special_render_temp = function(Hyena){
-		/* how to handle special render? TEMPORARY */
-
-		
-		if(Hyena.physical_instance.AI_state == "death"&& Hyena.physical_instance.aliveflag){
-			Hyena.gotoAndPlay("death");
-			Hyena.physical_instance.aliveflag = false;
-			
-			
+	var hyena_animate = function(Hyena){
+		//set graphical representation based on the animation variable determined by the AI
+		if(Hyena.physical_instance.needs_graphics_update){
+		var animation = Hyena.physical_instance.animation;
+			switch (animation){
+				case "stand":
+					Hyena.gotoAndPlay("stand");
+					break;
+				case "run":
+					Hyena.gotoAndPlay("run");
+					break;
+				case "walk":
+					Hyena.gotoAndPlay("walk");
+					break;
+				case "leap":
+					Hyena.gotoAndPlay("leap");
+					break;
+				case "fall":
+					Hyena.gotoAndPlay("fall");
+					break;
+				case "quincy":
+					Hyena.gotoAndPlay("quincy");
+					break;
+				case "decay":
+					Hyena.gotoAndPlay("decay");
+					break;
+			}
 		}
-
-		//if(Hyena.physical_instance.AI_state == "upside_down" && Hyena.physical_instance.unhurtflag)
-		//{
-		//	Hyena.gotoAndPlay("upside_down");
-		//	Hyena.physical_instance.unhurtflag = false;
-			
-			
-		//}
-
 	};
 
 	return {

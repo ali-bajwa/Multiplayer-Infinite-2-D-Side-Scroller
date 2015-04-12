@@ -17,13 +17,13 @@ var HyenaRenderer = (function(){
 			"images": [get_asset("HyenaSprite")],
 			"frames": { "regX": 0, "regY": 8, "height": 64, "width": 64, "count": 17},
 			"animations": {
-				"run": [0,3,"run", 1],
-				"stand": [4,5,"stand", 1],
-				"walk": [8,11,"walk", 1],
+				"run": [0,3, "run", 0.5],
+				"stand": [4,5, "stand", 0.5],
+				"walk": [8,11, "walk", 0.5],
 				"leap": [6],
 				"fall": [7],
-				"quincy": [12,14,"quincy", 1],
-				"decay": [15,16,"decay", 1],
+				"death": [12,14, "decay", 0.25],
+				"decay": [15,16, "decay", 0.25],
 			}
 		})
 
@@ -42,43 +42,31 @@ var HyenaRenderer = (function(){
 		
 	};
 
-	var render = function(Hyena){
+	var render = function(hyena){
 		/* 	is run each tick from GraphicsController, for every registered object of this type
 			is given >graphics_instance< parameter, which is also supposed to contain
 			physical_instance property containing entity_instance, if it was attached correctly
 		*/
 
-		hyena_animate(Hyena); 
+		hyena_animate(hyena); 
 	};
 
-	var hyena_animate = function(Hyena){
+	var hyena_animate = function(hyena){
 		//set graphical representation based on the animation variable determined by the AI
-		if(Hyena.physical_instance.needs_graphics_update){
-		var animation = Hyena.physical_instance.animation;
-			switch (animation){
-				case "stand":
-					Hyena.gotoAndPlay("stand");
-					break;
-				case "run":
-					Hyena.gotoAndPlay("run");
-					break;
-				case "walk":
-					Hyena.gotoAndPlay("walk");
-					break;
-				case "leap":
-					Hyena.gotoAndPlay("leap");
-					break;
-				case "fall":
-					Hyena.gotoAndPlay("fall");
-					break;
-				case "quincy":
-					Hyena.gotoAndPlay("quincy");
-					break;
-				case "decay":
-					Hyena.gotoAndPlay("decay");
-					break;
-			}
+		if(hyena.physical_instance.needs_graphics_update){
+			var animation = hyena.physical_instance.animation;
+			play_animation(hyena,animation);
 		}
+	};
+	
+	var play_animation = function(hyena,animation){
+		if (hyena.physical_instance.direction){ //if direction == right, flip right
+			hyena.scaleX = -1;
+		}else{ //else flip left
+			hyena.scaleX = 1;
+		}
+		//play animation
+		hyena.gotoAndPlay(animation)
 	};
 
 	return {

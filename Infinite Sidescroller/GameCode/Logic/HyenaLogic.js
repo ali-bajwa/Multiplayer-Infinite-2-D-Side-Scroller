@@ -1,13 +1,20 @@
 var HyenaLogic = (function(){
 
+/* 
+	Enemy: Hyena 
+	class and functions for the hyena type enemy
+	public functions:
+		-init()
+			initializes class data for all instances of class Hyena
+		-spawn()
+			returns a new instance of class Hyena
+		-tick_AI()
+			runs hyena AI script, to be called for each instance on game tick
+*/
+
+	//Instantiated for each instance of hyena at creation
+	//call constructor through wrapper function spawn()
 	var Hyena = function(){
-		/* Will be instantiated for every created entity to hold all the information 
-			about the physical (not graphical) state of the entity in question. 
-			declare the properties like this:
-			this.some_state_variable_initial_value = 0;
-			instantiate (most likely in the spawn function) like that:
-			var new_entity_instance = new Hyena();
-		*/
 		this.hero_hurt_me = false;
 		this.me_hurt_hero = false;
 		this.death_tick = 0;
@@ -19,91 +26,110 @@ var HyenaLogic = (function(){
 		this.damage = 1;
 		
 
-		this.AI_state = "walk";//use this to keep track of the enemy's AI state
-		this.can_attack = true;//jumping enabled
-		this.can_jump = true;//
-		this.jump_cooldown_timer=-1;
-		this.enemy_nearby = false;
-		
-		this.in_air = false;
+		this.AI_state = 0;	//0 = idle; 1 = engaged; 2 = other
+		this.direction = false;	//false=left, true=right;
+		this.can_attack = true;	//attacking enabled
+		this.attack_cooldown_timer = -1; 
+		this.can_leap = true;		//leaping enabled
+		this.leap_cooldown = 30;
+		this.path_blocked = false;
+		this.recently_attacked = false; //if the hyena has recently attacked
+		this.blinking = false;	//whether hyena is blinking
+		this.blink_timer = -1;	//tracks blink time
+		this.check_timer = 20;
 		this.aliveflag = true;
 		this.unhurtflag = true;
+		
+		this.needs_graphics_update = false;
+		this.animation = "stand";
 	};
 
+	//initialize class variables, called once in EntityController.init during game load
 	var init = function(){
-		/* Is ran from the EntityController.init once during game loading 
-		 	you should assign type to your model here using the identification controller
-		 */
 		include(); // satisfy requirements, GOES FIRST
-		IdentificationController.assign_type(Hyena, "Hyena");
+		IdentificationController.assign_type(Hyena, "Hyena"); //assign class id
 	};
 
+	//instantiates class Hyena
+	//wrapper for constructor and assigns unique ID
 	var spawn = function(x, y){
-		/* spawn instance of this entity at the given coordinates
-			you will have to create new entity instance, assign it id
-			using the IdentificationController.assign_id(entity_instance),
-			assign it a body which you can get through PhysicsController
-			do any other stuff you want to do during spawning,
-			and finally you HAVE TO(!!!) return the instance you just created from this function
-		*/
-
 		var new_hyena = new Hyena();
 		var id = IdentificationController.assign_id(new_hyena);
 
 		new_hyena.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, new_hyena);	
 
 		return new_hyena;
-
 	};
-
+	
+//........................COMMENCE.........................\\
+//.......................ARTIFICIAL........................\\
+//.........................HYENA...........................\\
+//......................INTELLIGENCE.......................\\
+	
+	// Is run each tick from the EntityController.update for every registered instance
 	var tick_AI = function(Hyena){
-		/* Is ran each tick from the EntityController.update for every registered
-			entity of this type. I given entity_instance
-		*/
-
-		//if enemy is dead, die
+		
+		//if hyena is dead, die
+		if (Hyena.body.GetWorldCenter().y > 22 || Hyena.body.GetWorldCenter().x < Config.Player.movement_edge - 1){
+			EntityController.delete_entity(Hyena);
+			console.log("drop of death");
+		}
 		if (Hyena.hp == 1) {
 			
 			if (Hyena.hero_hurt_me){
 				wound_Hyena(Hyena, 1);
 				Hyena.hero_hurt_me = false;
 				Hyena.can_attack = false;
+				//change_animation(Hyena,"quincy");
 			}
-
-		}else if (Hyena.hp <= 0) {
-			change_state(Hyena, "death");
+		}else if (Hyena.hp <= 0){
 			Hyena.can_attack = false;
 			Hyena.death_tick++;
-			if (Hyena.death_tick == 10){
-				change_state(Hyena, "decay");
+			if (Hyena.death_tick == 50){
+				change_animation(Hyena,"decay");
 				return 
 			}
-			if(Hyena.death_tick == 30){
+			if(Hyena.death_tick == 100){
 				EntityController.delete_entity(Hyena);
 				return 
 			}
-			
-		}else { // Hyena.hp >= 1
-			//determine state
-				//if on ground
-					//if enemy_nearby
-						//(if enemy_in_range || path_blocked) && can_jump
-							//jump
-						//else run 
-					//else idle
-				//else
-					//if leaping on his own initiative, leap
-					//else fall
-			//act on state
-			//}
-			if (Hyena.AI_state == "walk") {
-				var Hyenabody = Hyena.body;
-				var velocity = Hyenabody.GetLinearVelocity();
-				velocity.x = -Hyena.speed;
-				Hyenabody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-				Hyenabody.SetAwake(true);
+		}else{ // Do live Hyena stuff
+				Hyena.leap_cooldown--;
+				Hyena.check_timer--;
+				if (Hyena.check_timer == 0){
+					if (path_free(Hyena)){
+						Hyena.path_blocked = false;
+					}
+					Hyena.check_timer = 40;
+				}
+				if(!in_air(Hyena)){ //if on ground
+					if (enemy_nearby(Hyena)){
+						if (Hyena.recently_attacked){
+							//back off
+						}
+						else if ((enemy_in_range(Hyena) || Hyena.path_blocked) && Hyena.can_leap && Hyena.leap_cooldown <= 0){
+							leap(Hyena);
+							Hyena.can_leap = false;
+							Hyena.leap_cooldown = 30;
+							change_animation(Hyena,"quincy");//should be leap
+						}else{
+							run(Hyena);
+							change_animation(Hyena,"quincy");//should be run
+						}
+					}else{
+						//idle
+						//tick down idle timer
+						//alternate between pacing and loitering
+					}
+				}else{//if in the air
+					if(movement_voluntary(Hyena)){		//if leaping
+						change_animation(Hyena,"leap");
+					}else{//else fall
+						change_animation(Hyena,"fall");
+					}
+				}
 			}
-			if (Hyena.can_attack && Hyena.me_hurt_hero && Hyena.AI_state == "walk"){
+			if (Hyena.can_attack && Hyena.me_hurt_hero && !in_air(Hyena)){
 				// pass
 			}
 			if (Hyena.hero_hurt_me)
@@ -111,62 +137,145 @@ var HyenaLogic = (function(){
 				wound_Hyena(Hyena, 1);
 				Hyena.hero_hurt_me = false;
 				Hyena.can_attack = false;
-				change_state(Hyena, "upside_down");
 				
 			}
-		}
-
 	};
+//...........................END............................\\
+//........................ARTIFICIAL........................\\
+//.......................INTELLIGENCE.......................\\
 
+
+//.....................HELPER FUNCTIONS......................
+	
+	//run
+	var run = function(hyena){
+		var body = hyena.body;
+		var velocity = body.GetLinearVelocity();
+		velocity.x = hyena.speed*(2*hyena.direction-1);
+		body.SetLinearVelocity(velocity);
+		body.SetAwake(true);
+	};
+	
+	//leap
+	var leap = function(hyena){
+		var body = hyena.body;
+		if (hyena.path_blocked){
+			body.ApplyImpulse(new B2d.b2Vec2(-10+(20*hyena.direction), -100), body.GetWorldCenter());
+			hyena.can_leap = false;
+		}else{
+		body.ApplyImpulse(new B2d.b2Vec2(-100+(200*hyena.direction), -50), body.GetWorldCenter());
+		}
+	};
+	
+	//decrease health
 	var wound_Hyena = function(Hyena, wound){
 		Hyena.hp -= wound;
 		Hyena.hero_hurt_me = false;
 	};
 
+	//change the state of the hyena (deprecated)
 	var change_state = function(Hyena, progress_state) {
 		Hyena.AI_state = progress_state;
-
 	};
 
-	// // //Set up Collision handler
-	
-	
+	//checks for nearby enemies
+	var enemy_nearby = function(hyena){
+		return true;
+	};
+
+	//checks for nearby enemies
+	var enemy_in_range = function(hyena){
+		return true;
+	};
+
+	var movement_voluntary = function(hyena){
+		//negative speed = moving left
+		var output = false;
+		var velocity = hyena.body.GetLinearVelocity().x;
+		if(velocity != 0){
+			output = (velocity/Math.abs(velocity) == (hyena.direction)*2-1);
+		}
+		return output;
+	};
+
+	//checks if in the air
+	var in_air = function(hyena){
+		var body = hyena.body;
+		var objects_beneath;
+		if (body.GetFixtureList() != null){//prevent bugs on destruction
+			var AABB = body.GetFixtureList().GetNext().GetNext().GetAABB();
+			objects_beneath = PhysicsController.query_aabb(AABB);
+		}else{
+			objects_beneath = 0;
+		}
+		return (objects_beneath<4);
+	};
+
+	var path_free = function(hyena){
+		var body = hyena.body;
+		var objects_before;
+		var AABB;
+		if (body.GetFixtureList() != null){//prevent bugs on destruction
+			if (hyena.direction){
+				AABB = body.GetFixtureList().GetAABB();
+				objects_before = PhysicsController.query_aabb(AABB);
+			}else{
+				AABB = body.GetFixtureList().GetNext().GetAABB();
+				objects_before = PhysicsController.query_aabb(AABB);
+			}
+		}else{
+			objects_before = 0;
+		}
+		return (objects_before<4);
+	};
+
+	var change_animation = function(hyena,animation){
+		if(hyena.animation != animation){
+			hyena.animation = animation;
+			hyena.needs_graphics_update = true;
+		}else{ 
+			hyena.needs_graphics_update = false;
+		}
+	};
+
+
+
+//......................COLLISION HANDLERS...........................
+	//handle collisions here
 	var begin_contact = function(contact, info){
-		//handle collisions here
-		
-		//console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
-			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
-		
 		var type = info.Me.type;
-
-		if(type !== "Hyena")
+		
+		//throw error if type is not hyena
+		if(type != "Hyena"){
 			console.log("Error", type, "instead of Hyena with other being", info.Them.type);
+		}
 		
+		//if colliding with the ground, enable leap
+		if (info.Me.fixture_name == "bottom"){
+			info.Me.entity.can_leap = true;
+		}
 		
-		if(info.Them.type == "hero")
-		{
-			
-			if(info.Them.fixture_name != "bottom" && info.Me.entity.can_attack)
-			{
+		//if colliding with a wall, detect blocked path
+		if ((info.Me.fixture_name == "left" && !info.Me.direction)||(info.Me.fixture_name == "left" && info.Me.direction)){
+			info.Me.entity.path_blocked = true;
+		}
+		
+		if(info.Them.type == "hero"){
+			if(info.Them.fixture_name != "bottom" && info.Me.entity.can_attack){
 				info.Me.entity.me_hurt_hero = true;
-				
-			}	
-			else
-			{
-
+			}else{
 				info.Me.entity.hero_hurt_me = true;
 			}
 		}
-
 	};
 
-	var end_contact = function(contact, info) {
+	//called upon end of collision
+	var end_contact = function(contact, info){
 	
 	};
 
-	
+//declare the following functions public
 	return {
-		// declare public
 		init: init, 
 		spawn: spawn,
 		tick_AI: tick_AI,

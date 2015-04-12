@@ -18,7 +18,7 @@ var HyenaRenderer = (function(){
 			"frames": { "regX": 0, "regY": 8, "height": 64, "width": 64, "count": 17},
 			"animations": {
 				"run": [0,3, "run", 0.5],
-				"stand": [4,5, "stand", 0.5],
+				"stand": [4,5, "stand", 0.1],
 				"walk": [8,11, "walk", 0.5],
 				"leap": [6],
 				"fall": [7],

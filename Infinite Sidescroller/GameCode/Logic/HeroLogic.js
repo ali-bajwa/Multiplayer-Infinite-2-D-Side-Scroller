@@ -1,4 +1,4 @@
-config = require ("../Config.js");
+Config = require ("../Config.js");
 
 var HeroLogic = (function(){
 
@@ -61,14 +61,19 @@ var HeroLogic = (function(){
 		var pconf = Config.Player;
 		var rounded_hero_x = Math.round(hero.body.GetWorldCenter().x);
 		
-		console.log(rounded_hero_x);
-		console.log(hero.progress_to_level);
+		//console.log(rounded_hero_x);
+		//console.log(hero.progress_to_level);
 		if(rounded_hero_x > hero.progress_to_level)
 		{
 			hero.progress++;
 			hero.progress_to_level += hero.progress_to_level;
 		}
 		
+		//make x and y coordinates available to enemy AI's that need to know them efficiently
+		//pconf.hero_x[player_id] = hero_x; //for multiplayer mode
+		//pconf.hero_y[player_id] = hero.y;
+		pconf.hero_x = hero_x; //while stuck in single player mode
+		pconf.hero_y = hero.y;
 		if(pconf.movement_edge < hero_x - 20){
 			pconf.movement_edge = hero_x - 20;
 		}

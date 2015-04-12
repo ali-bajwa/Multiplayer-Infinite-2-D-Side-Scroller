@@ -7,7 +7,7 @@ var TerrainController = (function(){
 
 	var init = function(){
 		include();
-		
+
 	};
 	
 	
@@ -19,7 +19,7 @@ var TerrainController = (function(){
 		while(TerrainModel.terrain_slices_queue.length < 4){
 			var slice = NewTerrainSlice();
 			TerrainModel.terrain_slices_queue.push(slice);
-		};
+		}
 
 		var cmds = KeyboardController.debug_commands();
 
@@ -40,10 +40,12 @@ var TerrainController = (function(){
 		 * it calculates it's origin x and y positions and whatever other stuff,
 		 * generates slice; sets up everything
 		 */
-		
-		
 		var x_offset = TerrainModel.terrain_slices_queue.length*20;
-		var slice = new TerrainSliceController.generate(x_offset);
+		if (TerrainModel.terrain_slices_queue.length < 3){
+			var slice = new TerrainSliceController.generate_initial(x_offset);
+		}else{
+			var slice = new TerrainSliceController.generate_random(x_offset);
+		}
 		MarkAsNewTerrainSlice(slice); 
 
 		return slice;

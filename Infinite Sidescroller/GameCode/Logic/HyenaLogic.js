@@ -95,7 +95,7 @@ var HyenaLogic = (function(){
 					//if leaping on his own initiative, leap
 					//else fall
 			//act on state
-			}
+			//}
 			if (Hyena.AI_state == "walk") {
 				var Hyenabody = Hyena.body;
 				var velocity = Hyenabody.GetLinearVelocity();

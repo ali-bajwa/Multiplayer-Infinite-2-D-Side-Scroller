@@ -15,6 +15,8 @@ var HeroLogic = (function(){
 		this.wound = false;
 		this.jumps = 0;
 		this.score = 0;
+		this.progress = 0;
+		this.progress_to_level = 299;
 	};
 
 	var init = function(){
@@ -57,6 +59,15 @@ var HeroLogic = (function(){
 
 		var hero_x = hero.body.GetWorldCenter().x;
 		var pconf = Config.Player;
+		var rounded_hero_x = Math.round(hero.body.GetWorldCenter().x);
+		
+		
+		if(rounted_hero_x > hero.progress_to_level)
+		{
+			hero.progress++;
+			hero.progress_to_level += hero.progress_to_level;
+		}
+		
 		if(pconf.movement_edge < hero_x - 20){
 			pconf.movement_edge = hero_x - 20;
 		}
@@ -68,12 +79,12 @@ var HeroLogic = (function(){
 		    add_score(hero, 1);
 		    move_right(hero);
 			
-			GraphicsController.set_season(hero.body.GetWorldCenter());
+			GraphicsController.set_season(hero.body.GetWorldCenter(), hero.progress);
 		}
 		if(cmds("left")){
 		    // temporary
 		    move_left(hero);
-		    GraphicsController.set_season(hero.body.GetWorldCenter());
+		    GraphicsController.set_season(hero.body.GetWorldCenter(), hero.progress);
 		}
 
 		if(cmds("up")){

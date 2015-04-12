@@ -35,7 +35,9 @@ var HyenaLogic = (function(){
 		this.can_leap = true;		//leaping enabled
 		this.leap_timer = -1; //cooldown tracker for leap
 		this.leap_cooldown = 40;
-		this.charge_timer = -1; //cooldown tracker for charge
+		this.charge_duration = 40;
+		this.charge_timer = 40;
+		this.charge_cooldown_timer = -1; //cooldown tracker for charge
 		this.charge_cooldown = 20;
 		this.path_blocked = false;
 		this.recently_attacked = false; //if the hyena has recently attacked
@@ -102,7 +104,14 @@ var HyenaLogic = (function(){
 			}
 		}else{ // Do live Hyena stuff
 				Hyena.leap_timer--;			//ensure the hyena is not eternally jumping
-				Hyena.charge_timer--;		//ensure the hyena is not eternally running
+				if (Hyena.charge_timer > 0){
+					//Hyena.charge_timer--;		//time the hyena's alternating phases of running and stopping
+				}else{
+					Hyena.charge_cooldown_timer--;
+					if (Hyena.charge_cooldown_timer <= 0){
+						Hyena.charge_timer = Hyena.charge_duration;
+					}
+				}
 				Hyena.check_timer--;		//check periodically to ensure the hyena is not stuck in a corner
 				if (Hyena.check_timer == 0){
 					if (path_free(Hyena)){
@@ -140,11 +149,12 @@ var HyenaLogic = (function(){
 							change_animation(Hyena,"leap");
 						}else{
 							//TO DO: face nearest player
-							if (charge_timer <= 0){
+							if (Hyena.charge_timer > 0){
 								run(Hyena);
 								change_animation(Hyena,"run");
-								charge_timer = charge_cooldown;
+								Hyena.charge_timer--;
 							}else{
+								
 								change_animation(Hyena,"stand");
 							}
 						}

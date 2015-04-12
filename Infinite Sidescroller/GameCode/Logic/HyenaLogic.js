@@ -206,12 +206,12 @@ var HyenaLogic = (function(){
 
 	//checks for nearby enemies
 	var enemy_nearby = function(hyena){
-		return false;
+		return true;
 	};
 
 	//checks for nearby enemies
 	var enemy_in_range = function(hyena){
-		return false;
+		return true;
 	};
 
 	var movement_voluntary = function(hyena){

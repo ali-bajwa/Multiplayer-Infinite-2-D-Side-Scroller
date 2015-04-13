@@ -40,9 +40,7 @@ var TerrainSliceModel = function(){
 		this.kind = kind;
 		this.body;
 	}
-	
 
-	
 	
 };
 

@@ -25,6 +25,16 @@ var TerrainSliceController = (function () {
 		return block;
 	};
 	
+	var spawnSpike = function(x, y){
+		//spawn instance of this entity at the given coordinates
+		var spike = new TerrainSliceModel.Cell(3); //kind = 3 means spikes
+		spike.can_attack = true;
+		spike.damage = 4;
+		IdentificationController.assign_id(spike); //eventually we may want to remove this for the sake of efficiency
+		spike.body = PhysicsController.get_rectangular({x: x, y: y}, spike);
+		return spike;
+	};
+	
 	var spawnGap = function(x,y){
 		// 0 will be the id for the "air" i.e. nothing
 		var gap;
@@ -58,6 +68,7 @@ var TerrainSliceController = (function () {
 		var platform_count_max = 2; //maximum number of platforms per column
 		var platform_count = []; 		//keeps track of platforms per column
 		var platform_frequency = 5;//base percentage chance of a platform to be generated
+		var spike_frequency = 25;//base percentage chance of a platform to have spikes
 		/*
 		var spike frequency
 		var column frequency
@@ -67,9 +78,7 @@ var TerrainSliceController = (function () {
 			platform_count[i] = 0;
 			has_pit[i] = false;
 		}
-			
-		
-		
+
 		//build the stage from the bottom up
 		/*
 		Build Stage from bottom up, left to right
@@ -101,8 +110,7 @@ var TerrainSliceController = (function () {
 						slice.grid[i][j].position = "underground";
 						}
 					}
-				}
-				else{ //ElSE Generate Platforms
+				}else{ //ElSE Generate Platforms
 					if((hgap_len >= hgap_min || platform_len > 0) //if there is a large gap or a platform being built
 					&& (platform_len < platform_len_max) // and any platform being built is less than max len
 					&& (platform_count[j] < platform_count_max) // and the current column's platform limit has not been met
@@ -112,8 +120,11 @@ var TerrainSliceController = (function () {
 						
 							slice.grid[i][j] = spawnBlock(x,y,2);//create platform (2 means platform)
 							
+							if(getRandomNumber(seed)%100 < spike_frequency){
+								slice.grid[i+1][j] = spawnSpike(x,y-slice.cell_w);
+							}
+							
 							//check aesthetic stuff, like platform edges
-							//put stuff like slice.grid[i][j].is_spiky here too
 							if (platform_len == 0){
 								slice.grid[i][j].position = "left";
 							}
@@ -129,17 +140,19 @@ var TerrainSliceController = (function () {
 							platform_len++;	//platform gets longer, and 
 							platform_count[j]++;//the number of platforms in the current column increases
 							hgap_len = 0; 		//reset the gap counter to 0
+						}else{
+							if (slice.grid[i][j] == null){
+								slice.grid[i][j] = spawnGap(x,y); //create a gap
+								platform_len = 0; //if there was a platform, it has been interrupted
+								hgap_len++; //the gap gets wider
+							}
 						}
-						else{
+					}else{
+						if (slice.grid[i][j] == null){
 							slice.grid[i][j] = spawnGap(x,y); //create a gap
 							platform_len = 0; //if there was a platform, it has been interrupted
 							hgap_len++; //the gap gets wider
 						}
-					}
-					else{
-						slice.grid[i][j] = spawnGap(x,y); //create a gap
-						platform_len = 0; //if there was a platform, it has been interrupted
-						hgap_len++; //the gap gets wider
 					}
 				}
 			}

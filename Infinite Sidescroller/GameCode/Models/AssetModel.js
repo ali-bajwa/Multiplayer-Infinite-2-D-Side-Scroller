@@ -25,6 +25,7 @@ var AssetModel = new function(){
 			{ src: "platform_right.png", id: "right_platform" },
 			{ src: "HyenaPhase1.png", id: "Hyena" },
 			{ src: "HyenaPhase1.png", id: "HyenaSprite" },
+			{ src: "platform_spikes.png", id: "platform_spikes" },
 
 
 

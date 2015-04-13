@@ -445,16 +445,16 @@ var NetworkController = (function(){
 		*/
 		delete NetworkModel.recieve_array;
 	};
+	
+	/*
+	DEPRECATED
+	var get_data = function(){
+		var temp = NetworkModel.input_cell;
+		NetworkModel.input_cell = null;
 		
-	//var get_data = function(){
-		/**
-		* temp
-		*/
-		//var temp = NetworkModel.input_cell;
-		//NetworkModel.input_cell = null;
-		
-		//return temp;
-	//};
+		return temp;
+	};
+	*/
 
 	return {
 		// declare public

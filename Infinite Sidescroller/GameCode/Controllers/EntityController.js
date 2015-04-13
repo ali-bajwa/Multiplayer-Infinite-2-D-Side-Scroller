@@ -38,63 +38,52 @@ var EntityController = (function(){
 
 		}
 		MultiplayerSyncController.send_spawn_request({x:10,y:10,type:"hero"});
+
 	};
-	/*
-	var request_spawn = function(x, y, type){
-		/**
-		* spawn entity of the given type at the given coordinates
-		* also registeres thing as awaiting graphics initialization
-		* returns true if was spawned, false if it wasn't (maybe it just sent request to the
-		* master/server to spawn the entity, and it'll be spawned eventually)
-		*
-		* TODO: rework how spawning works to be multiplayer friendly (a lot of things should be rewritten to do that)
+
+
+	var update = function(delta){
+		/* is ran each tick from the GameController.update_all */
+		var debug_commands = KeyboardController.debug_commands();
+
+		// demonstration purposes
+		if(debug_commands("spawn_ant")){
+			var new_ant = main_spawn("ant",(Math.random()*50 + 10),10);
+		}
+
+		/*
+		//This should be handled in the update of MultiplayerSync
+		if(Config.Remote.master){//if master, parse requests
+			MultiplayerSyncController.receive_spawn_request();
+		}else if(Config.Remote.connected){//if slave, parse notifications
+			MultiplayerSyncController.receive_spawn_notification();
+		}
 		*/
-	/*
-		MultiplayerSyncController.process_package({
-			op: "spawn",
-			x: x,
-			y: y,
-			type: type,
-		});
+		for(var type in EntityModel.for_logic_update){
+			var table = EntityModel.for_logic_update[type];
+
+			var logic = type_logic_table[type];
+			for(var id in table){
+				logic.tick_AI(table[id]);
+			}
+			
+		} // end for in 
+
 	};
-	*/
-	var universal_spawn = function(type){
+	
+	//takes a string type index as parameter 
+	//and returns the spawn() function associated with it
+	var get_operation = function(type){
 		var logic = type_logic_table[type].spawn;
 		return logic;
 	};
 	
-	var handle_spawn = function(packet){
-		var x = packet.x;
-		var y = packet.y;
-		var type = packet.y;
-		var id = packet.id;
-	
-		var logic = type_logic_table[type];
-		var rconf = Config.Remote;
-
-		if(logic == null){
-			throw "Logic for the type " + type + " is not defined";
-		}
-			
-		var new_entity = logic.spawn(x, y);
-		//IdentificationController.force_id(new_entity, id);
-		RegisterAsController.register_as("awaiting_graphics_initialization", new_entity)
-		reg_for_logic_update(new_entity);
-
-		//var new_entity = logic.spawn(x, y);
-		//var id = IdentificationController.assign_id(new_entity);
-		//RegisterAsController.register_as("awaiting_graphics_initialization", new_entity)
-		//reg_for_logic_update(new_entity);
-
-	};
-
+	//registers a new instance
+	//so that renderers and updaters know to update it on tick
 	var reg_for_logic_update = function(new_entity){
-		/**
-		* description
-		*/
-
 		var type = new_entity.type;
-
+		RegisterAsController.register_as("awaiting_graphics_initialization", new_entity)
+		
 		if(!EntityModel.for_logic_update[type]){
 			EntityModel.for_logic_update[type] = {};
 		}
@@ -102,12 +91,15 @@ var EntityController = (function(){
 		var logic_upd_table = EntityModel.for_logic_update[type];
 
 		logic_upd_table[new_entity.id] =  new_entity;
-	
+		
 	};
 	
+	//wrapper for universal spawn
+	//maintains the old interface
+	var main_spawn = function(type,x,y){
+		MultiplayerSyncController.universal_spawn({type:type,x:x,y:y});
+	};
 	
-
-
 	var delete_entity = function(entity_instance){
 		/**
 		* This function will remove this entity along with some other info about this entity
@@ -215,8 +207,10 @@ var EntityController = (function(){
 		// declare public
 		init: init, 
 		update: update,
+		get_operation: get_operation,
+		reg_for_logic_update: reg_for_logic_update,
+		main_spawn: main_spawn,
 		delete_entity: delete_entity,
-
 	};
 })();
 

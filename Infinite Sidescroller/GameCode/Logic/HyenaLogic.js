@@ -25,7 +25,7 @@ var HyenaLogic = (function(){
 		//this.object_id = 1; //hardcode a unique identifier for each new enemy class
 		this.hp = 2;
 		this.speed = 6;
-		this.damage = 1;
+		this.damage = 5;
 		
 		this.sight_range = 16;
 		this.attack_range = 8;

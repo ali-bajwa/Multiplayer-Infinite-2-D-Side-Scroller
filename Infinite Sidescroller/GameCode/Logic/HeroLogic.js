@@ -13,6 +13,7 @@ var HeroLogic = (function(){
 		*/
 		this.hp = 100;
 		this.wound = false;
+		this.damage_taken = 1;
 		this.jumps = 0;
 		this.score = 0;
 		this.progress = 0;
@@ -93,14 +94,17 @@ var HeroLogic = (function(){
 		    move_left(hero);
 		    GraphicsController.set_season(hero.body.GetWorldCenter(), hero.progress);
 		}
-
+		if(cmds("down")){
+			slam(hero);
+			
+		}
 		if(cmds("up")){
 			jump(hero);
 			
 		}
 		if(hero.wound)
 		{
-			hero.hp--;
+			hero.hp -= hero.damage_taken;
 			console.log("Taking damage");
 			GraphicsController.update_health(hero.hp);
 		}
@@ -116,7 +120,7 @@ var HeroLogic = (function(){
 			console.log("working");
 		}
 		if (hero.body.GetWorldCenter().y > 22) {
-		    EntityController.delete_entity(hero);
+		    hero.hp = 0;
 		    console.log("drop of death");
 		}
 		GraphicsController.update_score(hero.score);
@@ -138,6 +142,7 @@ var HeroLogic = (function(){
 		if(info.Me.fixture_name != "bottom" && info.Them.entity.can_attack)
 		{
 		    info.Me.entity.wound = true;
+		    info.Me.entity.damage_taken = info.Them.entity.damage;
 		}
 				
 	};
@@ -176,16 +181,10 @@ var HeroLogic = (function(){
 	    body.SetAwake(true);
 	}
 
-	var move_right = function(hero){
-		var body = hero.body;
-		var velocity = body.GetLinearVelocity();
-		velocity.x = 5;
-		body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-		body.SetAwake(true);
-		//hero.x += 10; // old
-		//hero.x = (body.GetPosition().x + 1.5/2) * 30 ; 
+	var slam = function(hero){
+	    var body = hero.body;
+	    body.ApplyImpulse(new B2d.b2Vec2(0, 20), body.GetWorldCenter());
 	};
-
 	var jump = function(hero){
 	    var body = hero.body;
 		if (hero.jumps == 0){
@@ -215,14 +214,14 @@ var HeroLogic = (function(){
 
 	var move_left = function(hero){
 		var velocity = hero.body.GetLinearVelocity();
-		velocity.x = -5;
+		velocity.x = -8;
 		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 		hero.body.SetAwake(true);
 	};
 
 	var move_right = function(hero){
 		var velocity = hero.body.GetLinearVelocity();
-		velocity.x = +5;
+		velocity.x = +8;
 		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 		hero.body.SetAwake(true);
 	};

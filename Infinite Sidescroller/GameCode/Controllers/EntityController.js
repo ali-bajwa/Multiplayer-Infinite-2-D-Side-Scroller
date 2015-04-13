@@ -37,10 +37,9 @@ var EntityController = (function(){
 			}
 
 		}
-
-		//spawn(10, 10, "hero");
+		MultiplayerSyncController.send_spawn_request({x:10,y:10,type:"hero"});
 	};
-
+	/*
 	var request_spawn = function(x, y, type){
 		/**
 		* spawn entity of the given type at the given coordinates
@@ -50,7 +49,7 @@ var EntityController = (function(){
 		*
 		* TODO: rework how spawning works to be multiplayer friendly (a lot of things should be rewritten to do that)
 		*/
-
+	/*
 		MultiplayerSyncController.process_package({
 			op: "spawn",
 			x: x,
@@ -58,7 +57,12 @@ var EntityController = (function(){
 			type: type,
 		});
 	};
-
+	*/
+	var universal_spawn = function(type){
+		var logic = type_logic_table[type].spawn;
+		return logic;
+	};
+	
 	var handle_spawn = function(packet){
 		var x = packet.x;
 		var y = packet.y;
@@ -154,7 +158,7 @@ var EntityController = (function(){
 
 		// demonstration purposes
 		if(debug_commands("spawn_ant")){
-			var new_ant = spawn(Math.random()*50 + 10, 10, "ant");
+			var new_ant = universal_spawn("ant")(Math.random()*50 + 10,10);
 		}
 
 		if(Config.Remote.connected){

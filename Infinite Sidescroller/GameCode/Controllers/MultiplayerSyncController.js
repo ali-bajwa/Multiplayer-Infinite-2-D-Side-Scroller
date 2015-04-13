@@ -11,21 +11,8 @@ var MultiplayerSyncController = (function(){
 
 		include(); // satisfy requirements
 
-<<<<<<< HEAD
-		// maps packet op (operation code) to the function to be called for that operation
-		op_table  = {
-			"hero": update_hero,
-			"spawn_request": handle_spawn_request,
-			"spawn_notify": handle_spawn_notify,
-		};
-
-
-		//patch(B2d.b2Body, function SetLinearVelocity(vec){
-			//console.log(this.GetUserData().entity_instance);
-=======
 		//patch(B2d.b2Body, function SetLinearVelocity(vec){
 			////console.log(this.GetUserData().entity_instance);
->>>>>>> a4c9a71b12c0487df72cad41d4c088b16b8d86cc
 			//var entity_instance = this.GetUserData().entity_instance;
 			//var old_velocity = this.GetLinearVelocity();
 			//var pos = this.GetWorldCenter();
@@ -101,21 +88,64 @@ var MultiplayerSyncController = (function(){
 
 	};
 
-	var send_spawn_notifications = function(x, y, type, id, extras){
+		var general_spawn = function(type,packet){
+			operation = EntityController.universal_spawn(type);
+			var object; 
+			if (!Config.Remote.connected){ //if singleplayer
+				object = new operation(packet);
+				IdentificationController.assign_id(object);
+			}else if (Config.Remote.master){ //if master
+				object = new operation(packet);
+				IdentificationController.assign_id(object)
+				send_spawn_notifications({packet: packet, thingamjigger: object.id})
+			}else{ //if slave
+				if (thingamajigger != null){
+					object = new operation(packet);
+					force_id(object,thingamajigger)
+				}else{
+					send_spawn_request(packet);
+				}
+			}
+		};
+	
+	var receive_spawn_request = function(packet){
+		if(master){
+			request_spawn(packet);
+		}
+	};
+	
+	var receive_spawn_notification = function(packet){
+		if(!master){
+			request_spawn(packet);
+		}
+	};
+	
+	var fullfill_spawn_request = function(packet){
+		// take packet data and spawn thing normally
+		
+	};
+	var send_spawn_request = function(packet){
+		packet.op = "spawn_request";
+		//NetworkController.add_to_next_update(packet);
+	}
+	
+	//var send_spawn_notifications = function(x, y, type, id, extras){
+	var send_spawn_notifications = function(packet){
 		/**
 		* sends notifications about entity spawned, so remote people may
 		* spawn their own representations of it
 		*/
+		
 
 		NetworkController.add_to_next_update({
 			op: "spawn_notify",
-			x: x,
-			y: y,
-			type: type,
-			id: id,
-			extras: extras,
+			x: packet.x,
+			y: packet.y,
+			type: packet.type,
+			id: packet.id,
+			extras: packet,
 		});
-		
+
 	};
 	
 
@@ -157,6 +187,11 @@ var MultiplayerSyncController = (function(){
 		init: init, 
 		update: update,
 		request_spawn: request_spawn,
+		general_spawn: general_spawn,
+		receive_spawn_request: receive_spawn_request,
+		receive_spawn_notification: receive_spawn_notification,
+		fullfill_spawn_request: fullfill_spawn_request,
+		send_spawn_request: send_spawn_request,
 		send_spawn_notifications: send_spawn_notifications,
 		get_packets_by_op: get_packets_by_op,
 	};

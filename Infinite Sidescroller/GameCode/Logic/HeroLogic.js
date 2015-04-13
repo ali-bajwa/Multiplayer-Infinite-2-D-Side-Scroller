@@ -16,7 +16,8 @@ var HeroLogic = (function(){
 		this.jumps = 0;
 		this.score = 0;
 		this.progress = 0;
-		this.progress_to_level = 199;
+		this.progress_to_level = 199;  //affects tiling
+		this.current_level = 199;
 	};
 
 	var init = function(){
@@ -61,12 +62,12 @@ var HeroLogic = (function(){
 		var pconf = Config.Player;
 		var rounded_hero_x = Math.round(hero.body.GetWorldCenter().x);
 		
-		//console.log(rounded_hero_x);
-		//console.log(hero.progress_to_level);
-		if(rounded_hero_x > hero.progress_to_level)
+		console.log(rounded_hero_x);
+		console.log(hero.current_level);
+		if(rounded_hero_x > hero.current_level)
 		{
 			hero.progress++;
-			hero.progress_to_level += hero.progress_to_level;
+			hero.current_level += hero.progress_to_level;
 		}
 		
 		//make x and y coordinates available to enemy AI's that need to know them efficiently

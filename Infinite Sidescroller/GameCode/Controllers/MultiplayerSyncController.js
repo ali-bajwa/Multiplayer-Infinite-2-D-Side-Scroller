@@ -8,35 +8,8 @@ var MultiplayerSyncController = (function(){
 
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
-
 		include(); // satisfy requirements
 
-		//patch(B2d.b2Body, function SetLinearVelocity(vec){
-			////console.log(this.GetUserData().entity_instance);
-			//var entity_instance = this.GetUserData().entity_instance;
-			//var old_velocity = this.GetLinearVelocity();
-			//var pos = this.GetWorldCenter();
-
-			//var vec_eq = function(vec1, vec2){
-				//if((vec1.x == vec2.x) && (vec1.y == vec2.y)){
-					//return true;
-				//}else{
-					//return false;
-				//}
-			//}
-			
-			//if(Config.Remote.master && !vec_eq(vec, old_velocity) && entity_instance.type === "hero"){
-				
-				
-				//NetworkController.add_to_next_update({
-					//op: "hero",
-					//pos: {x: pos.x, y: pos.y},
-					//vel: {x: vec.x, y: vec.y}
-				//});
-			//}
-
-		//});
-		
 	};
 
 
@@ -45,11 +18,11 @@ var MultiplayerSyncController = (function(){
 
 		var data = NetworkController.get_data(); // array of all packets
 
-		var op_packet = MultiplayerSyncModel.op_packets_table;
+		var op_packet = MultiplayerSyncModel.op_packets_table; //op_packet is a list of objects
 		if(data != null){
-			for(var i = 0; i < data.length; i++){
+			for(var i = 0; i < data.length; i++){ //for each packet in buffer
 				var packet = data[i];
-				var op = packet.op;
+				var op = packet.op; //get packet op
 				op_packet[op] = op_packet[op] || [];
 				if(op != null){
 					op_packet[op].push(packet);
@@ -57,34 +30,43 @@ var MultiplayerSyncController = (function(){
 					console.log(packet);
 					throw "Error, this packet has no op property"
 				}
-
 			}
 		}
+		
+		handle_packets(data);
 
 		NetworkController.clean_data();	// remove data that was processed
 	};
 
+	/*
+	iterates through packets and parses them based on op (operation)
+	*/
+	var handle_packets = function(data){
+		if(data != null){
+			for(i=0;i<data.length;i++){
+				packet = data[i];
+				switch (packet.op){
+					case null:
+						break;
+					case "spawn":
+						if (packet.is_request == Config.Remote.master){
+							universal_spawn(packet);
+						}
+						break;
+				}
+			}
+		}
+	};
+	
 	var get_packets_by_op = function(op){
 		/**
 		* gets all packets with the operation >op<
 		* for you
 		*/
-
 		return MultiplayerSyncModel.op_packets_table[op];
-		
 	};
 	
-	var request_spawn function(x,y,type,id){
-		request_operation({
-			op: "spawn",
-			x: x,
-			y: y,
-			type: type,
-			id: id
-		})
-	}
-	
-	var fullfill_spawn_request function(packet){
+	var fullfill_spawn_request = function(packet){
 		// take packet data and spawn thing normally
 	}
 	
@@ -122,34 +104,78 @@ var MultiplayerSyncController = (function(){
 
 	};
 
-	var request_spawn = function(x, y, type, extras){
-		/**
-		* request the master to spawn thing
-		* >extras< are any special parameters that need to be attached
+		/*
+		The universal_spawn() function takes an object as a parameter
+		it handles the packet based on whether the caller is a master, slave, or single player
+		and on the contents of the packet
+		the packet holds the following
+			required data fields:
+				-string type
+						string index of class to be instantiated
+				-int x
+						x coordinate of instance
+				-int y
+						y coordinate of instance
+			automatically assigned data fields:
+				-bool is_request
+						true if request from slave
+						false if notification from master
+				-string op
+						marks packet to be parsed as instance spawner
+			additionally, the packet can be assigned any number of extra variables
+			to be parsed by the class' individual spawn() function
 		*/
-		
-		var command = {op: "spawn_request", type: type, x: x, y: y, extras: extras};
-
-		NetworkController.add_to_next_update(command);
-
+		var universal_spawn = function(packet){
+			var type;
+			var object;
+			var operation;
+			if (packet.type != null){
+				type = packet.type;
+				operation = EntityController.get_operation(type); //get relevant spawn() function from EntityController
+				if (!Config.Remote.connected){ //if singleplayer
+					object = new operation(packet.x,packet.y);
+					IdentificationController.assign_id(object);
+					EntityController.reg_for_logic_update(object);
+				}else if (Config.Remote.master){ //if master
+					object = new operation(packet.x,packet.y);
+					IdentificationController.assign_id(object);
+					EntityController.reg_for_logic_update(object);
+					packet.thingamajigger = object.id;
+					send_spawn_notifications(packet);
+					console.log("master declares a spawn");
+				}else{ //if slave
+					if (typeof packet.thingamajigger !== 'undefined'){//if called in response to a notification
+						object = new operation(packet.x,packet.y);
+						IdentificationController.force_id(object,packet.thingamajigger);
+						EntityController.reg_for_logic_update(object);
+						console.log("slave got its wish");
+					}else{//if called directly from slave session
+						send_spawn_request(packet);
+						console.log("slave requests a spawn");
+					}
+				}
+			}else{
+				console.log("error: packet. type is undefined");
+			}
+		};
+	
+	//send spawn request to master
+	var send_spawn_request = function(packet){
+		packet.op = "spawn";
+		packet.is_request = true;
+		NetworkController.add_to_next_update(packet);
 	};
-
-	var send_spawn_notifications = function(x, y, type, id, extras){
-		/**
-		* sends notifications about entity spawned, so remote people may
-		* spawn their own representations of it
-		*/
-
-		NetworkController.add_to_next_update({
-			op: "spawn_notify",
-			x: x,
-			y: y,
-			type: type,
-			id: id,
-			extras: extras,
-		});
-		
+	
+	//var send_spawn_notifications = function(x, y, type, id, extras){
+	var send_spawn_notifications = function(packet){
+		//sends notifications about entity spawned, so remote people may
+		//spawn their own representations of it
+		packet.op = "spawn";
+		packet.is_request = false;
+		NetworkController.add_to_next_update(packet);
 	};
+	
+
 	
 
 	var patch = function(object, func){
@@ -189,9 +215,10 @@ var MultiplayerSyncController = (function(){
 		// declare public
 		init: init, 
 		update: update,
-		request_spawn: request_spawn,
-		send_spawn_notifications: send_spawn_notifications,
 		get_packets_by_op: get_packets_by_op,
+		universal_spawn: universal_spawn,
+		send_spawn_request: send_spawn_request,
+		send_spawn_notifications: send_spawn_notifications,
 	};
 })();
 

@@ -127,6 +127,9 @@ var HeroLogic = (function(){
 			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
 		if (info.Me.fixture_name == "bottom"){
 			info.Me.entity.jumps = 0;
+			if(info.Them.entity.kind == 3){
+				info.Me.entity.wound = true;
+			}
 		}
 		if (info.Me.fixture_name == "top"){
 			take_hit(info.Me.entity, 1);

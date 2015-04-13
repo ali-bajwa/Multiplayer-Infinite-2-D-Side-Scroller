@@ -396,6 +396,9 @@ var GraphicsController = (function(){
 									break;
 							}
 						}
+						if (kind == 3){//if tile is actually just spikes
+							var tile_texture = "platform_spikes";
+						}
 						var tile = request_bitmap(tile_texture);
 						var physical_instance = slice.grid[i][j];
 						var body_position = physical_instance.body.GetWorldCenter();

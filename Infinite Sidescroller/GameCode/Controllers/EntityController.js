@@ -37,8 +37,8 @@ var EntityController = (function(){
 			}
 
 		}
-		MultiplayerSyncController.send_spawn_request({x:10,y:10,type:"hero"});
 
+		main_spawn("hero",10,10);
 	};
 
 
@@ -87,9 +87,7 @@ var EntityController = (function(){
 		if(!EntityModel.for_logic_update[type]){
 			EntityModel.for_logic_update[type] = {};
 		}
-
 		var logic_upd_table = EntityModel.for_logic_update[type];
-
 		logic_upd_table[new_entity.id] =  new_entity;
 		
 	};
@@ -142,65 +140,6 @@ var EntityController = (function(){
 			delete EntityModel.for_logic_update[type][id];
 		// free the id
 			IdentificationController.remove_id(id);
-	};
-
-	var update = function(delta){
-		/* is ran each tick from the GameController.update_all */
-		var debug_commands = KeyboardController.debug_commands();
-
-		// demonstration purposes
-		if(debug_commands("spawn_ant")){
-			var new_ant = universal_spawn("ant")(Math.random()*50 + 10,10);
-		}
-
-		if(Config.Remote.connected){
-			if(Config.Remote.master){
-				handle_spawn_requests();
-			}else{
-				handle_spawn_notifications();
-			}
-		}
-
-		for(var type in EntityModel.for_logic_update){
-			var table = EntityModel.for_logic_update[type];
-
-			var logic = type_logic_table[type];
-			for(var id in table){
-				logic.tick_AI(table[id]);
-			}
-			
-		} // end for in 
-
-	};
-
-	var handle_spawn_requests = function(){
-		/**
-		* find out if anyone requested spawning of entities etc.
-		* and execute any of the requests
-		*/
-
-		var data = MultiplayerSyncController.get_packets_by_op("spawn_request") || [];
-
-		while(data.length > 0){
-			
-			var packet = data.pop();
-			spawn(packet.x, packet.y, packet.type);
-		}
-		
-	};
-
-	var handle_spawn_notifications = function(){
-		/**
-		* 
-		*/
-		
-		var data = MultiplayerSyncController.get_packets_by_op("spawn_notify") || [];
-		while(data.length > 0){
-			
-			var packet = data.pop();
-			spawn(packet.x, packet.y, packet.type, packet.id);
-		}
-
 	};
 
 	return {

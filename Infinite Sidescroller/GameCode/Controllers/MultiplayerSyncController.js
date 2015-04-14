@@ -66,44 +66,6 @@ var MultiplayerSyncController = (function(){
 		return MultiplayerSyncModel.op_packets_table[op];
 	};
 	
-	var fullfill_spawn_request = function(packet){
-		// take packet data and spawn thing normally
-	}
-	
-	var spawn_hero = function(){
-		var connected = Config.Remote.connected;
-		var master = Config.Remote.master;
-		
-		if(connected){
-			// handle remote spawning of hero/companions
-			if(master){
-				// spawn hero
-				
-				// send notifications for companion
-			}else{
-				// request spawn of companion
-				
-				// somehow spawn the hero when you get spawn notification for this companion
-			}
-		}else{
-			// simply spawn
-			EntityController.spawn(10, 10, "hero");
-		}
-	}
-	
-	
-	var request_spawn_hero = function(x, y, id, player_id, is_main){
-		/**
-		* request the master to spawn thing
-		* >extras< are any special parameters that need to be attached
-		*/
-		
-		var command = {op: "spawn_request", type: type, x: x, y: y, extras: extras};
-
-		NetworkController.add_to_next_update(command);
-
-	};
-
 		/*
 		The universal_spawn() function takes an object as a parameter
 		it handles the packet based on whether the caller is a master, slave, or single player
@@ -131,7 +93,16 @@ var MultiplayerSyncController = (function(){
 			var operation;
 			if (packet.type != null){
 				type = packet.type;
+				if (type != "hero"){
 				operation = EntityController.get_operation(type); //get relevant spawn() function from EntityController
+				} else {
+					if (typeof packet.controller_id === 'undefined' || packet.controller_id == NetworkController.get_network_id()){
+						packet.controller_id = NetworkController.get_network_id();
+						operation = EntityController.get_operation("hero");
+					}else{
+						operation = EntityController.get_operation("companion");
+					}
+				}
 				if (!Config.Remote.connected){ //if singleplayer
 					object = new operation(packet.x,packet.y);
 					IdentificationController.assign_id(object);
@@ -142,7 +113,6 @@ var MultiplayerSyncController = (function(){
 					EntityController.reg_for_logic_update(object);
 					packet.thingamajigger = object.id;
 					send_spawn_notifications(packet);
-					console.log("master declares a spawn");
 				}else{ //if slave
 					if (typeof packet.thingamajigger !== 'undefined'){//if called in response to a notification
 						object = new operation(packet.x,packet.y);
@@ -151,11 +121,11 @@ var MultiplayerSyncController = (function(){
 						console.log("slave got its wish");
 					}else{//if called directly from slave session
 						send_spawn_request(packet);
-						console.log("slave requests a spawn");
 					}
 				}
 			}else{
-				console.log("error: packet. type is undefined");
+				console.log(packet);
+				throw "Error, this packet has no type property"
 			}
 		};
 	

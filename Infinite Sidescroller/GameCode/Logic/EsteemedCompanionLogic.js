@@ -36,7 +36,7 @@ var EsteemedCompanionLogic = (function(){
 
 		companion.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, companion);
 
-		var id = IdentificationController.assign_id(companion);
+		//var id = IdentificationController.assign_id(companion);
 
 		companion.hp = 100;
 		companion.wound = false;
@@ -62,20 +62,6 @@ var EsteemedCompanionLogic = (function(){
 
 		var MOVEMENT_EDGE = 500; // where terrain start scrolling
 
-		if(cmds("right")){
-		    // temporary
-		    add_score(companion, 1);
-		    move_right(companion);
-		}
-		if(cmds("left")){
-			// temporary
-		    
-		    move_left(companion);
-		}
-
-		if(cmds("up")){
-			jump(companion);
-		}
 
 		// TEMPORARYYYYYYYYYYYYYYYY
 

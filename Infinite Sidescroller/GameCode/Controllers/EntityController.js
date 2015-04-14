@@ -38,7 +38,7 @@ var EntityController = (function(){
 
 		}
 
-		main_spawn("hero",10,10);
+		spawn("hero",10,10);
 	};
 
 
@@ -48,7 +48,10 @@ var EntityController = (function(){
 
 		// demonstration purposes
 		if(debug_commands("spawn_ant")){
-			var new_ant = main_spawn("ant",(Math.random()*50 + 10),10);
+			var new_ant = spawn("ant",(Math.random()*50 + 10),10);
+		}
+		if(debug_commands("request_hero")){
+			var new_hero = spawn("hero",20,10);
 		}
 
 		/*
@@ -94,7 +97,7 @@ var EntityController = (function(){
 	
 	//wrapper for universal spawn
 	//maintains the old interface
-	var main_spawn = function(type,x,y){
+	var spawn = function(type,x,y){
 		MultiplayerSyncController.universal_spawn({type:type,x:x,y:y});
 	};
 	
@@ -148,7 +151,7 @@ var EntityController = (function(){
 		update: update,
 		get_operation: get_operation,
 		reg_for_logic_update: reg_for_logic_update,
-		main_spawn: main_spawn,
+		spawn: spawn,
 		delete_entity: delete_entity,
 	};
 })();

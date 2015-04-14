@@ -113,6 +113,14 @@ r_templates.hero = {
 	//mobexp++
 };
 
+r_templates.companion = {
+	parent: r_templates.living,
+	width: 1.5,
+	height: 2.5,
+	type: "dynamic",
+	//mobexp++
+};
+
 r_templates.ant = {
 	parent: r_templates.living,
 	width: 1,

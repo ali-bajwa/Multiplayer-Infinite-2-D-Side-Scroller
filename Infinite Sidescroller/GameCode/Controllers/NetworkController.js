@@ -281,7 +281,7 @@ var NetworkController = (function(){
 		/**
 		* First, manipulate the data to properly compress it, or decide what should
 		* and what shouldn't be sent (make sure to document stuff here, because people
-		* will pull thir hair out trying to understand why their stuff doesn't get sent)
+		* will pull their hair out trying to understand why their stuff doesn't get sent)
 		* Second, send the data to all the connected players in this game
 		*/
 
@@ -446,16 +446,10 @@ var NetworkController = (function(){
 		delete NetworkModel.recieve_array;
 	};
 	
-	/*
-	DEPRECATED
-	var get_data = function(){
-		var temp = NetworkModel.input_cell;
-		NetworkModel.input_cell = null;
-		
-		return temp;
+	var get_network_id = function(){
+		return NetworkModel.my_id;
 	};
-	*/
-
+	
 	return {
 		// declare public
 		init: init, 
@@ -463,6 +457,7 @@ var NetworkController = (function(){
 		add_to_next_update: add_to_next_update,
 		get_data: get_data,
 		clean_data: clean_data,
+		get_network_id: get_network_id,
 	};
 })();
 

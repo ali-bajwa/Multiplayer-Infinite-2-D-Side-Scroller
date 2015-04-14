@@ -410,16 +410,16 @@ var GraphicsController = (function(){
 						var position = slice.grid[i][j].position;
 						if (kind == 1){ //if tile is part of the ground
 							switch (position){
-							    case "surface":
-							        if (cycle == 0) {
-							            var tile_texture = "grass_winter";
-							        }
-							        else if (cycle == 3) {
-							            var tile_texture = "grass_fall";
-							        }
-							        else {
-							            var tile_texture = "grass";
-							        }
+									case "surface":
+										if (cycle == 0){
+										var tile_texture = "grass_winter";
+										}else if (cycle == 1){
+										var tile_texture = "grass_spring";
+										}else if(cycle == 2){
+											var tile_texture = "grass_summer";
+										}else{
+											var tile_texture = "grass_fall";
+										}
 									break;
 								case "underground":
 									var tile_texture = "bottom_terrain";

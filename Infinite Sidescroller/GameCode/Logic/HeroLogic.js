@@ -2,7 +2,6 @@ Config = require ("../Config.js");
 
 var HeroLogic = (function(){
 
-		
 	var Hero = function(){
 		/* Will be instantiated for every created entity to hold all the information 
 			about the physical (not graphical) state of the entity in question. 
@@ -63,14 +62,18 @@ var HeroLogic = (function(){
 		var pconf = Config.Player;
 		var rounded_hero_x = Math.round(hero.body.GetWorldCenter().x);
 		
-		console.log(rounded_hero_x);
-		console.log(hero.current_level);
+		//console.log(rounded_hero_x);
+		//console.log(hero.current_level);
 		if(rounded_hero_x > hero.current_level)
 		{
 			hero.progress++;
 			hero.current_level += hero.progress_to_level;
+			console.log(hero.progress);
+			hero.score += (hero.progress * 500);
 		}
 		
+		GraphicsController.change_seasons(hero.progress);
+
 		//make x and y coordinates available to enemy AI's that need to know them efficiently
 		//pconf.hero_x[player_id] = hero_x; //for multiplayer mode
 		//pconf.hero_y[player_id] = hero.y;
@@ -82,17 +85,19 @@ var HeroLogic = (function(){
 
 		var cmds = KeyboardController.movement_commands();
 
+       
+        //End Score Tracking
+
 		if(cmds("right")){
 		    // temporary
-		    add_score(hero, 1);
 		    move_right(hero);
-			
-			GraphicsController.set_season(hero.body.GetWorldCenter(), hero.progress);
+		    //console.log("Movement Edge: " + parseInt(pconf.movement_edge) + " of type: " + typeof (pconf.movement_edge));
+			GraphicsController.background_loop(hero.body.GetWorldCenter(), hero.progress);
 		}
 		if(cmds("left")){
 		    // temporary
 		    move_left(hero);
-		    GraphicsController.set_season(hero.body.GetWorldCenter(), hero.progress);
+		    GraphicsController.background_loop(hero.body.GetWorldCenter(), hero.progress);
 		}
 		if(cmds("down")){
 			slam(hero);
@@ -146,11 +151,6 @@ var HeroLogic = (function(){
 		}
 				
 	};
-	
-	var add_score = function (hero, amount) {
-	    hero.score += amount;
-	}
-	
 
 	var take_hit = function(hero, amount){
 	    hero.hp -= amount;

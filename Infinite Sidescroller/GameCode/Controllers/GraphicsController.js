@@ -10,6 +10,7 @@ var GraphicsController = (function(){
 	var seasonArray = [];
 	var seasonImg = ["Winter", "Spring", "Summer", "Fall" ];
 	var cycle = 0;
+	var season_threshold = 2; //So seasons only update once
 	
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -32,13 +33,17 @@ var GraphicsController = (function(){
 		GraphicsModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
 		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
-		generate_season("Fall", GraphicsModel.stage.canvas.width, 0);
+		generate_season("Winter", GraphicsModel.stage.canvas.width, 0);
 	
 		//PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 		GraphicsModel.score = new createjs.Text();
 		reg_for_render(GraphicsModel.score);
 		GraphicsModel.health = new createjs.Text();
 		reg_for_render(GraphicsModel.health);
+		GraphicsModel.score_title = new createjs.Text();
+		reg_for_render(GraphicsModel.score_title);
+		GraphicsModel.health_title = new createjs.Text();
+		reg_for_render(GraphicsModel.health_title);
 		hud_temp();
 
 		GraphicsModel.camera.offset_from_followed.x -= (1614 - GraphicsModel.stage.canvas.width) / 3;
@@ -62,8 +67,27 @@ var GraphicsController = (function(){
 		}
 		
 	};
-	var set_season = function(hero, progress){
-		console.log(progress);
+
+	var change_seasons = function(progress) {
+	    var flag = false;
+	    if (progress == season_threshold) { //seasons will change every even progress number
+	        season_threshold += 2;
+	        flag = true;
+	    }
+	    if (flag) {
+	        //colorTick = 0;
+	        delete_all_season();
+	        cycle++;
+	        generate_season(seasonImg[cycle], GraphicsModel.stage.canvas.width, Config.Player.movement_edge / 30);
+	        if (cycle == 4) {
+	            cycle = 0;
+	        }
+	    }
+	    //colorTick++;
+	};
+
+	var background_loop = function(hero, progress){
+		//console.log(progress);
 		for(var i = 0; i < seasonArray.length; i++){
 			
 			
@@ -78,7 +102,7 @@ var GraphicsController = (function(){
 	
 	};
 	
-	var set_seasonY = function(y){
+	var background_loopY = function(y){
 		for(var i = 0; i < seasonArray.length; i++){
 			
 			
@@ -100,22 +124,22 @@ var GraphicsController = (function(){
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
 		
-		//Temporary Keyboard Call for Season Change
+		/*Debugging Code: Change Seasons With Z button
 		var cmds = KeyboardController.debug_commands();
 		
 		if(cmds("season") && colorTick > 10)
 		{
 			colorTick = 0;
 			delete_all_season();
-			generate_season(seasonImg[cycle], GraphicsModel.stage.canvas.width, Config.Player.movement_edge/30);
 			cycle++;
+			generate_season(seasonImg[cycle], GraphicsModel.stage.canvas.width, Config.Player.movement_edge/30);
 			if(cycle == 4)
 			{
 				cycle = 0;
 			}
 		}
 		colorTick++;
-		
+		//*/
 		
 		
 	    update_camera(); // needs to be updated first
@@ -129,7 +153,7 @@ var GraphicsController = (function(){
 		
 		
 		//NEED to know when to reRender background
-		set_seasonY(GraphicsModel.camera.offset.y);
+		background_loopY(GraphicsModel.camera.offset.y);
 		
 		
 		
@@ -204,15 +228,26 @@ var GraphicsController = (function(){
 
     //DELETE ME PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 	var hud_temp = function () {
+	    GraphicsModel.health_title.text = "Health: ";
+	    GraphicsModel.health_title.x = 10;
+	    GraphicsModel.health_title.y = 30;
 	    GraphicsModel.health.text = "100";
-	    GraphicsModel.health.x = 10;
+	    GraphicsModel.health.x = 80;
 	    GraphicsModel.health.y = 30;
 	    GraphicsModel.health.font = "20px Arial";
+	    GraphicsModel.health_title.font = "20px Arial";
 	    GraphicsModel.health.color = "#ff0000";
-	    GraphicsModel.score.text = "10";
-	    GraphicsModel.score.x = 10;
+	    GraphicsModel.health_title.color = "#ff0000";
+
+	    GraphicsModel.score_title.text = "Score: ";
+	    GraphicsModel.score_title.x = 10;
+	    GraphicsModel.score_title.y = 10;
+	    GraphicsModel.score.text = "0";
+	    GraphicsModel.score.x = 80;
 	    GraphicsModel.score.y = 10;
 	    GraphicsModel.score.font = "20px Arial";
+	    GraphicsModel.score_title.font = "20px Arial";
+	    
 	}
 
     //DELETE ME PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
@@ -227,7 +262,7 @@ var GraphicsController = (function(){
 
 	var update_score = function (passed) {
 	    GraphicsModel.score.text = passed;
-	}
+	};
 
 	var get_health = function () {
 	    return GraphicsModel.health.text;
@@ -375,8 +410,16 @@ var GraphicsController = (function(){
 						var position = slice.grid[i][j].position;
 						if (kind == 1){ //if tile is part of the ground
 							switch (position){
-								case "surface":
-									var tile_texture = "grass";
+							    case "surface":
+							        if (cycle == 0) {
+							            var tile_texture = "grass_winter";
+							        }
+							        else if (cycle == 3) {
+							            var tile_texture = "grass_fall";
+							        }
+							        else {
+							            var tile_texture = "grass";
+							        }
 									break;
 								case "underground":
 									var tile_texture = "bottom_terrain";
@@ -556,7 +599,8 @@ var GraphicsController = (function(){
 		destroy_graphics_for: destroy_graphics_for,
 		follow: follow,
         get_movement_edge: get_movement_edge,
-		set_season: set_season,
+        background_loop: background_loop,
+        change_seasons: change_seasons,
 	};
 })();
 

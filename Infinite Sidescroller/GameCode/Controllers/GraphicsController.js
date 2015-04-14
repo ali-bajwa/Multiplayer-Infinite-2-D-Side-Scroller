@@ -142,7 +142,7 @@ var GraphicsController = (function(){
 		//*/
 		
 		
-	    update_camera(); // needs to be updated first
+			update_camera(); // needs to be updated first
 
 		register_new_stuff();
 
@@ -273,7 +273,8 @@ var GraphicsController = (function(){
 		var center = camera.center;
 		
 		center.x = Config.SCREEN_W/2 - camera.offset_from_followed.x;
-		center.y = Config.SCREEN_H/2 - camera.offset_from_followed.y;
+		//CAMERA SHOULD NOT MOVE VERTICALLY
+		//center.y = Config.SCREEN_H/2 - camera.offset_from_followed.y;
 		
 		if(camera.following != null){
 		    camera.offset.x = center.x - camera.following.physical_instance.body.GetWorldCenter().x * Config.B2D.SCALE;

@@ -21,7 +21,7 @@ var PhysicsController = (function(){
 		PhysicsModel.scale = B2dConfig.SCALE;
 		PhysicsModel.step_amount = 1/(B2dConfig.SPS);
 
-		PhysicsModel.gravity = new B2d.b2Vec2(0,20); // earth gravity
+		PhysicsModel.gravity = new B2d.b2Vec2(0,30); // earth gravity
 		PhysicsModel.world = new B2d.b2World(PhysicsModel.gravity, true);
 
 		init_collision_listener();

@@ -188,11 +188,11 @@ var HeroLogic = (function(){
 	var jump = function(hero){
 	    var body = hero.body;
 		if (hero.jumps == 0){
-		    body.ApplyImpulse(new B2d.b2Vec2(0, -100), body.GetWorldCenter());
+		    body.ApplyImpulse(new B2d.b2Vec2(0, -125), body.GetWorldCenter());
 		    hero.jumps += 1;
 		}
 		else if (hero.jumps == 1 && body.GetLinearVelocity().y > -1) {
-		    body.ApplyImpulse(new B2d.b2Vec2(0, -100), body.GetWorldCenter());
+		    body.ApplyImpulse(new B2d.b2Vec2(0, -125), body.GetWorldCenter());
 		    hero.jumps += 1;
 		}
 

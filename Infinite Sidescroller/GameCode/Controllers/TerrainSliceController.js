@@ -163,7 +163,6 @@ var TerrainSliceController = (function () {
 	
 	//pregenerated slice
 	var buildTerrainSlice_01 = function(slice,seed){
-		
 		//set variables
 		var rows = slice.grid_rows;
 		var columns = slice.grid_columns;
@@ -183,91 +182,26 @@ var TerrainSliceController = (function () {
 		var platform_count_max = 2; //maximum number of platforms per column
 		var platform_count = []; 		//keeps track of platforms per column
 		var platform_frequency = 5;//base percentage chance of a platform to be generated
-		/*
-		var spike frequency
-		var column frequency
-		etc.
-		*/
 		for(i=0; i<=columns;i++){
 			platform_count[i] = 0;
 			has_pit[i] = false;
 		}
-			
-		
-		
-		//build the stage from the bottom up
-		/*
-		Build Stage from bottom up, left to right
-		load blocks and gaps into slice.grid[i][j]
-		
-		*/
 		for(i=rows - 1;i>=0;i--){ //outer loop: generate rows bottom to top
 			slice.grid[i] = [];
-			if (vgap_len < vgap_min){
-				vgap_len++;
-			}
 			for(j=0;j<columns;j++){ //inner loop: generate from left to right within current row
 				var x = slice.origin.x + j * slice.cell_w + slice.cell_w/2;
 				var y = slice.origin.y + i * slice.cell_w + slice.cell_w/2;
-				
 				if (i >= ground_lvl){	//If on or below ground level, Generate Ground
-					if (pit_len < pit_max && (200 < pit_frequency || pit_len < 0 && pit_len != 0 || has_pit[j])){
-						slice.grid[i][j] = spawnGap(x,y); //create gap
-						has_pit[j] = true;
-						pit_len++; //the pit gets wider
-					}
+					slice.grid[i][j] = spawnBlock(x,y,1);//create a ground block (1 means ground)
+					if (i == ground_lvl)
+						slice.grid[i][j].position = "surface";
 					else{
-						slice.grid[i][j] = spawnBlock(x,y,1);//create a ground block (1 means ground)
-						pit_len = 0; //any pits being spawned have been interrupted
-						if (i == ground_lvl)
-							slice.grid[i][j].position = "surface";
-						else{
-						slice.grid[i][j].position = "underground";
-						}
+					slice.grid[i][j].position = "underground";
 					}
-				}
-				else{ //ElSE Generate Platforms
-					if((hgap_len >= hgap_min || platform_len > 0) //if there is a large gap or a platform being built
-					&& (platform_len < platform_len_max) // and any platform being built is less than max len
-					&& (platform_count[j] < platform_count_max) // and the current column's platform limit has not been met
-					&& (vgap_len >= vgap_min) //if the vertical gap minimum has been met
-					&& (platform_len > 0 || (j<columns-1 && platform_count[j+1] < platform_count_max))){ //and the platform is not going to be a singleton
-						if (200 < platform_frequency || (platform_len > 0 && platform_len <= platform_len_min)){
-						
-							slice.grid[i][j] = spawnBlock(x,y,2);//create platform (2 means platform)
-							
-							//check aesthetic stuff, like platform edges
-							//put stuff like slice.grid[i][j].is_spiky here too
-							if (platform_len == 0){
-								slice.grid[i][j].position = "left";
-							}
-							else{
-								slice.grid[i][j].position = "right";
-							}
-							if (j>0){if (slice.grid[i][j-1].kind != 0){
-								if (slice.grid[i][j-1].position != "left"){
-									slice.grid[i][j-1].position = "middle";
-								}
-							}}
-							
-							platform_len++;	//platform gets longer, and 
-							platform_count[j]++;//the number of platforms in the current column increases
-							hgap_len = 0; 		//reset the gap counter to 0
-						}
-						else{
-							slice.grid[i][j] = spawnGap(x,y); //create a gap
-							platform_len = 0; //if there was a platform, it has been interrupted
-							hgap_len++; //the gap gets wider
-						}
-					}
-					else{
-						slice.grid[i][j] = spawnGap(x,y); //create a gap
-						platform_len = 0; //if there was a platform, it has been interrupted
-						hgap_len++; //the gap gets wider
-					}
+				}else{
+					slice.grid[i][j] = spawnGap(x,y);
 				}
 			}
-			vgap_len = vgap_len%vgap_min;
 		}
 		return slice;
 	};

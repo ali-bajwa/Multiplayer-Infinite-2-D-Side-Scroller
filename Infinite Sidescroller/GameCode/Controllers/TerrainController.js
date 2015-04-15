@@ -6,7 +6,8 @@ var TerrainController = (function(){
 	 */
 
 	var init = function(){
-		include();
+	    include();
+	    TerrainModel.seed = Math.floor(Math.random()*2000) + 1000;//placeholder for seed
 
 	};
 	
@@ -29,13 +30,14 @@ var TerrainController = (function(){
 			TerrainModel.terrain_slices_queue.push(slice);
 		}
 		if(config.Player.movement_edge > (TerrainModel.terrain_slices_queue.length-3)*(20)){
-			var slice = NewTerrainSlice();
+			var slice = NewTerrainSlice(TerrainModel.seed);
 			TerrainModel.terrain_slices_queue.push(slice);
+			TerrainModel.seed = ((TerrainModel.seed * TerrainModel.seed - TerrainModel.seed / 2)) % 3000;
 		};
 	};
 
 
-	var NewTerrainSlice = function(){
+	var NewTerrainSlice = function(seed){
 		/* this takes care of appending new terrain slice to the generated terrain
 		 * it calculates it's origin x and y positions and whatever other stuff,
 		 * generates slice; sets up everything
@@ -44,7 +46,7 @@ var TerrainController = (function(){
 		if (TerrainModel.terrain_slices_queue.length < 3){
 			var slice = new TerrainSliceController.generate_initial(x_offset);
 		}else{
-			var slice = new TerrainSliceController.generate_random(x_offset);
+			var slice = new TerrainSliceController.generate_random(x_offset, seed);
 		}
 		MarkAsNewTerrainSlice(slice); 
 

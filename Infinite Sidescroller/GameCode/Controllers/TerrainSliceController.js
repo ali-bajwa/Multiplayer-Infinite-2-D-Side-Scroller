@@ -17,6 +17,7 @@ var TerrainSliceController = (function () {
 	};
 	
 
+	
 	var spawnBlock = function(x, y, kind){
 		//spawn instance of this entity at the given coordinates
 		var block = new TerrainSliceModel.Cell(kind%3); //kind is an int, 1 = block, 2 = platform

@@ -138,19 +138,22 @@ var HeroLogic = (function(){
 			info.Me.entity.jumps = 0;
 			if(info.Them.entity.kind == 3){
 				info.Me.entity.wound = true;
+				info.Me.entity.damage_taken = info.Them.entity.damage;
 			}
 		}
-		if(info.Me.fixture_name != "bottom" && info.Them.entity.can_attack)
-		{
-			//stupid chain of box2d functions returns {x:half_height,y:half_width}
-			var my_extents = info.Me.entity.body.GetFixtureList().GetNext().GetNext().GetNext().GetNext().GetAABB().GetExtents();
-			var my_coordinates = info.Me.entity.body.GetWorldCenter();
-			var other_extents = info.Them.entity.body.GetFixtureList().GetNext().GetNext().GetNext().GetNext().GetAABB().GetExtents();
-			var other_coordinates = info.Them.entity.body.GetWorldCenter();
-			//try to prevent taking damage while on top of enemies
-			console.log(my_coordinates.y);
-			console.log(other_coordinates.y - (my_extents.y + other_extents.y - 0.3));
-			if (!(my_coordinates.y <= other_coordinates.y - (my_extents.y + other_extents.y - 0.5))){
+		if(info.Me.fixture_name != "bottom" && info.Them.entity.can_attack){
+			if(typeof info.Them.entity.kind === 'undefined'){
+				//stupid chain of box2d functions returns {x:half_height,y:half_width}
+				var my_extents = info.Me.entity.body.GetFixtureList().GetNext().GetNext().GetNext().GetNext().GetAABB().GetExtents();
+				var my_coordinates = info.Me.entity.body.GetWorldCenter();
+				var other_extents = info.Them.entity.body.GetFixtureList().GetNext().GetNext().GetNext().GetNext().GetAABB().GetExtents();
+				var other_coordinates = info.Them.entity.body.GetWorldCenter();
+				//try to prevent taking damage while on top of enemies
+				if (!(my_coordinates.y <= other_coordinates.y - (my_extents.y + other_extents.y - 0.5))){
+					info.Me.entity.wound = true;
+					info.Me.entity.damage_taken = info.Them.entity.damage;
+				}
+			}else{
 				info.Me.entity.wound = true;
 				info.Me.entity.damage_taken = info.Them.entity.damage;
 			}

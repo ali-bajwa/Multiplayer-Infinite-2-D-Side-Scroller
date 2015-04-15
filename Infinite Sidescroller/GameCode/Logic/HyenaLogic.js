@@ -376,8 +376,8 @@ var HyenaLogic = (function(){
 	var begin_contact = function(contact, info){
 		var type = info.Me.type;
 		var hyena = info.Me.entity;
-		//if colliding with the ground, enable leap
-		if (info.Me.fixture_name == "bottom"){
+		//if bottom colliding with the ground or top of another object, enable leap
+		if (info.Me.fixture_name == "bottom" && (info.Them.fixture_name == "top" || info.Them.entity.kind == 1 || info.Them.entity.kind == 2)){
 			hyena.can_leap = true;
 		}
 		

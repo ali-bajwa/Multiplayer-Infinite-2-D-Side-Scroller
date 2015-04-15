@@ -137,7 +137,9 @@ var HeroLogic = (function(){
 		//console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
 			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
 		if (info.Me.fixture_name == "bottom"){
-			info.Me.entity.jumps = 0;
+			if(info.Them.fixture_name == "top" || info.Them.entity.kind == 1 || info.Them.entity.kind == 2){
+				info.Me.entity.jumps = 0;
+			}
 			if(info.Them.entity.kind == 3){
 				info.Me.entity.wound = true;
 				info.Me.entity.damage_taken = info.Them.entity.damage;

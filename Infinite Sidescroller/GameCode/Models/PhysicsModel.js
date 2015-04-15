@@ -102,7 +102,7 @@ r_templates.terrain_cell = {
 	type: "static",
 	width: 1,
 	height: 1,
-	friction: .4,
+	friction: 2,
 	//mobexp++
 };
 

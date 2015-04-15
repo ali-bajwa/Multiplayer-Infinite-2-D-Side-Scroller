@@ -18,8 +18,8 @@ var HyenaRenderer = (function(){
 			"frames": { "regX": 0, "regY": 8, "height": 64, "width": 64, "count": 17},
 			"animations": {
 				"run": [0,3, "run", 0.5],
-				"stand": [4,5, "stand", 0.1],
-				"walk": [8,11, "walk", 0.5],
+				"stand": [4,5, "stand", 0.25],
+				"walk": [8,11, "walk", 0.2],
 				"leap": [6],
 				"fall": [7],
 				"death": [12,14, "decay", 0.25],
@@ -29,16 +29,21 @@ var HyenaRenderer = (function(){
 
 	};
 
-	var register = function(entity_Hyena){
+	var register = function(entity_hyena){
 		/* is run for every entity of this type that was just created and should
 		get graphics representation. You are given the entity instance and is supposed
 		to create graphics instance, and GraphicsController.reg_for_render(graphics_instance, entity_instance); it 
 		*/
 
-		Hyena_animation = GraphicsController.request_animated(spritesheets["Hyena"], "walk");
-		GraphicsController.set_reg_position(Hyena_animation, 0, 0); // change that to adjust sprite position relative to the body
-		GraphicsController.reg_for_render(Hyena_animation, entity_Hyena); // sets hyena_animation's position to track the hyena's position (updates each tick)
-
+		hyena_animation = GraphicsController.request_animated(spritesheets["Hyena"], "walk");
+		GraphicsController.set_reg_position(hyena_animation, 0, 0); // change that to adjust sprite position relative to the body
+		GraphicsController.reg_for_render(hyena_animation, entity_hyena); // sets hyena_animation's position to track the hyena's position (updates each tick)
+		/*
+		hyena_animation is the easeljs_obj passed through graphicsController
+		entity_hyena is the physical object spawned in HyenaLogic
+		request_animated returns an easeljs object of type Sprite
+		this Sprite is the object passed to render
+		*/
 		
 	};
 
@@ -53,22 +58,27 @@ var HyenaRenderer = (function(){
 
 	var hyena_animate = function(hyena){
 		//set graphical representation based on the animation variable determined by the AI
+		//set animation
 		if(hyena.physical_instance.needs_graphics_update){
 			var animation = hyena.physical_instance.animation;
-			play_animation(hyena,animation);
+			hyena.gotoAndPlay(animation)
 		}
-	};
-	
-	var play_animation = function(hyena,animation){
+		
+		//set direction
 		if (hyena.physical_instance.direction){ //if direction == right, flip right
 			hyena.scaleX = -1;
 		}else{ //else flip left
 			hyena.scaleX = 1;
 		}
-		//play animation
-		hyena.gotoAndPlay(animation)
-	};
 
+		//set alpha if blinking
+		if(hyena.physical_instance.blinking && hyena.physical_instance.blink_timer%2 == 1){
+			hyena.alpha = 0;
+		}else{
+			hyena.alpha = 1;
+		}
+	};
+	
 	return {
 		// declare public
 		init: init, 

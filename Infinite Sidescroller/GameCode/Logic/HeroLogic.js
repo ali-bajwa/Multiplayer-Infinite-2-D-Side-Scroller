@@ -77,8 +77,8 @@ var HeroLogic = (function(){
 		//make x and y coordinates available to enemy AI's that need to know them efficiently
 		//pconf.hero_x[player_id] = hero_x; //for multiplayer mode
 		//pconf.hero_y[player_id] = hero.y;
-		pconf.hero_x = hero_x; //while stuck in single player mode
-		pconf.hero_y = hero.y;
+		pconf.hero_x = hero.body.GetWorldCenter().x; //while stuck in single player mode
+		pconf.hero_y = hero.body.GetWorldCenter().y;
 		if(pconf.movement_edge < hero_x - 20){
 			pconf.movement_edge = hero_x - 20;
 		}
@@ -140,14 +140,18 @@ var HeroLogic = (function(){
 				info.Me.entity.wound = true;
 			}
 		}
-		if (info.Me.fixture_name == "top"){
-			take_hit(info.Me.entity, 1);
-		}
-		
 		if(info.Me.fixture_name != "bottom" && info.Them.entity.can_attack)
 		{
-		    info.Me.entity.wound = true;
-		    info.Me.entity.damage_taken = info.Them.entity.damage;
+			//stupid chain of box2d functions returns {x:half_height,y:half_width}
+			var my_extents = info.Me.entity.body.GetFixtureList().GetNext().GetNext().GetNext().GetNext().GetAABB().GetExtents();
+			var my_coordinates = info.Me.entity.body.GetWorldCenter();
+			var other_extents = info.Them.entity.body.GetFixtureList().GetNext().GetNext().GetNext().GetNext().GetAABB().GetExtents();
+			var other_coordinates = info.Them.entity.body.GetWorldCenter();
+			//try to prevent taking damage while on top of enemies
+			if (!(my_coordinates.y <= other_coordinates.y - (my_extents.y + other_extents.y - 0.3))){
+				info.Me.entity.wound = true;
+				info.Me.entity.damage_taken = info.Them.entity.damage;
+			}
 		}
 				
 	};

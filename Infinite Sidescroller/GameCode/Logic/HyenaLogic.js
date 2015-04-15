@@ -24,16 +24,17 @@ var HyenaLogic = (function(){
 
 		//Declare initial variables for the Hyena
 		this.hp = 2;
-		this.speed = 8;
+		this.speed = 7;
+		this.jump_force = 125;
 		this.damage = 5;
 		this.sight_range = 16;
 		this.attack_range = 8;
 		
-		this.hero_hurt_me = false;
+		this.hit_taken = false;
 		this.damage_taken = 0;
 		
 		this.direction = false;	//false=left, true=right;
-		this.direction_previous
+		this.direction_previous = false;//store direction from end of previous tick
 		this.x_previous = 0;		//store x value from end of previous tick
 		
 		this.is_idle = true; //determines whether hyena is aggressive or idle
@@ -58,7 +59,7 @@ var HyenaLogic = (function(){
 		this.charge_cooldown = 20;//minimum time between charges
 		this.charge_cooldown_timer = -1;
 		this.blinking = false;	//whether hyena is blinking
-		this.blink_duration = 10;//how long the hyena blinks after taking damage
+		this.blink_duration = 20;//how long the hyena blinks after taking damage
 		this.blink_timer = -1;
 		this.maintenance_frequency = 20;//ticks between routine maintenance checks
 		this.maintenance_timer = this.maintenance_frequency;
@@ -104,7 +105,7 @@ var HyenaLogic = (function(){
 			if (Hyena.is_alive){//if alive, kill it
 				Hyena.death_timer = Hyena.death_duration;
 				Hyena.is_alive = false;
-				Hyena.hero_hurt_me = false;
+				Hyena.hit_taken = false;
 				Hyena.can_attack = false;
 				change_animation(Hyena,"death");
 				return ;
@@ -115,20 +116,20 @@ var HyenaLogic = (function(){
 				} else if (Hyena.death_timer <= Hyena.decay_duration && Hyena.death_timer > 0){
 					change_animation(Hyena,"decay");
 				} else {
-					EntityController.delete_entity(Hyena);
+					EntityController.delete_entity(Hyena);//remove instance from memory
 				}
 				return ;
 			}
 		}else{ // Do Live Hyena Stuff
 			//Maintenance....
-			Hyena.direction_previous = Hyena.direction;
+			Hyena.direction_previous = Hyena.direction;				//remember what hyena's direction was at start of tick
 			Hyena.x_previous = Hyena.body.GetWorldCenter().x; //remember what hyena's x was at start of tick
 			Hyena.leap_cooldown_timer--;			//ensure the hyena is not eternally jumping
 			//maintain blinking
-			if(Hyena.blinking){ 
+			if(Hyena.blinking){
 				Hyena.blink_timer--;
 				if(Hyena.blink_timer == 0){
-					Hyena.blinking == false;
+					Hyena.blinking = false;
 				}
 			}
 			//maintain attack cooldown
@@ -158,10 +159,12 @@ var HyenaLogic = (function(){
 				if (path_free(Hyena)){
 					Hyena.path_blocked = false;
 				}
-				if (Hyena.blocked_count > Hyena.obstruction_tolerance){	//you know he's in a rut
-					Hyena.running_away = true;	//time to turn around
-					Hyena.run_away_timer = Hyena.run_away_duration;
-					Hyena.direction = !(Hyena.direction);
+				if (Hyena.blocked_count > Hyena.obstruction_tolerance){	//you know he's stuck now
+					if (Hyena.can_leap){
+						Hyena.path_blocked = true;
+						leap(Hyena);	//time to jump for it
+						Hyena.path_blocked = false;
+					}
 				}
 				Hyena.blocked_count = 0;
 				Hyena.maintenance_timer = Hyena.maintenance_frequency; //reset check timer
@@ -170,7 +173,7 @@ var HyenaLogic = (function(){
 			if(!in_air(Hyena) || Hyena.body.GetLinearVelocity().y == 0){ //if on ground OR if we suspect he's stuck on a corner
 				if (enemy_in_range(Hyena,Hyena.sight_range)){ //if enemy nearby
 					Hyena.idle = false;
-					if (Hyena.hero_hurt_me){	//if hyena was attacked,
+					if (Hyena.hit_taken){	//if hyena was attacked,
 						Hyena.running_away = true;	//back off
 						Hyena.run_away_timer = Hyena.run_away_duration;
 						Hyena.direction = !(Hyena.direction);
@@ -181,12 +184,12 @@ var HyenaLogic = (function(){
 						Hyena.leap_cooldown_timer = Hyena.leap_cooldown;
 						change_animation(Hyena,"leap");
 					}else{
-						if(!Hyena.running_away){
+						if(!Hyena.running_away && !in_air(Hyena)){ //if hyena isn't cowering or in the air, face the enemy
 							Hyena.direction = direction_nearest_enemy(Hyena);
 						}
 						if (Hyena.charge_timer > 0){ //if charge duration > 0
 							run(Hyena);
-							change_animation(Hyena,"run");
+							change_animation(Hyena,"run"); //charge the enemy
 							Hyena.charge_timer--;
 							if(Hyena.charge_timer == 0){
 								Hyena.charge_cooldown_timer = Hyena.charge_cooldown;
@@ -199,10 +202,24 @@ var HyenaLogic = (function(){
 						}
 					}
 				}else{
-					Hyena.idle = true;
-					change_animation(Hyena,"stand");
-					//tick down idle timer
-					//alternate between pacing and loitering
+					Hyena.idle = true; //idle mode
+					Hyena.idle_timer--;
+					if (Hyena.idle_timer == 0){
+						Hyena.idle_timer = Hyena.idle_duration;
+						Hyena.idle_counter = (Hyena.idle_counter+1)%27;
+						if (Hyena.idle_counter%4 == 0 && Hyena.idle_counter%5 != 0){
+							Hyena.direction = !(Hyena.direction);//use weird modulos to get random looking idle behavior
+						}
+					}
+					if (Hyena.idle_counter%2 == 0 || Hyena.idle_counter%3 == 0){ //use weird modulos to get random looking idle behavior
+						walk(Hyena);
+						change_animation(Hyena,"walk");//pace
+						if(Hyena.x_previous == Hyena.body.GetWorldCenter().x){ //check if hyena has wandered successfully
+							Hyena.blocked_count++; //else check for being stuck
+						}
+					}else{
+						change_animation(Hyena,"stand");//loiter
+					}
 				}
 			}else{//if in the air
 				if(movement_voluntary(Hyena)){
@@ -211,9 +228,9 @@ var HyenaLogic = (function(){
 					change_animation(Hyena,"fall");//else, fall
 				}
 			}
-		}
-		if (Hyena.hero_hurt_me){
-			take_damage(Hyena); //
+			if (Hyena.hit_taken){
+				take_damage(Hyena); //if hit, take damage
+			}
 		}
 	};
 //...........................END............................\\
@@ -227,7 +244,16 @@ var HyenaLogic = (function(){
 	var run = function(hyena){
 		var body = hyena.body;
 		var velocity = body.GetLinearVelocity();
-		velocity.x = hyena.speed*(2*hyena.direction-1);
+		velocity.x = hyena.speed*(2*hyena.direction-1); //move speed in current direction
+		body.SetLinearVelocity(velocity);
+		body.SetAwake(true);
+	};
+	
+	//walk
+	var walk = function(hyena){
+		var body = hyena.body;
+		var velocity = body.GetLinearVelocity();
+		velocity.x = hyena.speed*(2*hyena.direction-1)/3;
 		body.SetLinearVelocity(velocity);
 		body.SetAwake(true);
 	};
@@ -236,18 +262,21 @@ var HyenaLogic = (function(){
 	var leap = function(hyena){
 		var body = hyena.body;
 		if (hyena.path_blocked){//jump out of a hole or over a wall
-			body.ApplyImpulse(new B2d.b2Vec2(-10+(20*hyena.direction), -150), body.GetWorldCenter());
-			hyena.can_leap = false;
+			body.ApplyImpulse(new B2d.b2Vec2(-10+(20*hyena.direction), -1*hyena.jump_force), body.GetWorldCenter());
+			//var a = (100 - (hyena.direction*20))*Math.PI/180;
 		}else{ //leap viciously at hero
-		body.ApplyImpulse(new B2d.b2Vec2(-130+(260*hyena.direction), -75), body.GetWorldCenter());
+			body.ApplyImpulse(new B2d.b2Vec2((2*hyena.jump_force*hyena.direction) - hyena.jump_force, -1*hyena.jump_force/2), body.GetWorldCenter());
+			//var a = Math.atan(body.GetWorldCenter().y - pconf.hero_y, body.GetWorldCenter().x - pconf.hero_x);
 		}
+		//body.ApplyImpulse(new B2d.b2Vec2(hyena.jump_force*Math.sin(a), hyena.jump_force*Math.cos(a)), body.GetWorldCenter());
+		hyena.can_leap = false;
 	};
 	
 	//decrease health
 	var take_damage = function(hyena){
 		hyena.hp -= hyena.damage_taken;
 		hyena.damage_taken = 0;
-		hyena.hero_hurt_me = false;
+		hyena.hit_taken = false;
 		hyena.blinking = true;
 		hyena.blink_timer = hyena.blink_duration;
 		//knockback here
@@ -308,7 +337,7 @@ var HyenaLogic = (function(){
 		}else{
 			objects_beneath = 0;
 		}
-		return (objects_beneath < 5);//assumes contact with left sensor, right sensor, and main shape
+		return (objects_beneath < 5);//for some mysterious reason, it counts 4 collisions even in mid air
 	};
 
 	//checks if there is a collision in current direction
@@ -332,7 +361,7 @@ var HyenaLogic = (function(){
 
 	//setter for animation variable, ensures the animation is only reset on actual change
 	var change_animation = function(hyena,new_animation){
-		if(hyena.animation != new_animation || hyena.direction != hyena.direction_previous){
+		if(hyena.animation != new_animation){
 			hyena.animation = new_animation;
 			hyena.needs_graphics_update = true;
 		}else{ 
@@ -346,27 +375,27 @@ var HyenaLogic = (function(){
 	//called at the beginning of the collision
 	var begin_contact = function(contact, info){
 		var type = info.Me.type;
-		
+		var hyena = info.Me.entity;
 		//if colliding with the ground, enable leap
 		if (info.Me.fixture_name == "bottom"){
-			info.Me.entity.can_leap = true;
+			hyena.can_leap = true;
 		}
 		
 		//if colliding with a wall, detect blocked path
-		if ((info.Me.fixture_name == "left" && !info.Me.direction)||(info.Me.fixture_name == "right" && info.Me.direction)){
-			info.Me.entity.path_blocked = true;
-			info.Me.entity.blocked_count++;
+		if ((info.Me.fixture_name == "left" && !hyena.direction)||(info.Me.fixture_name == "right" && hyena.direction)){
+			hyena.path_blocked = true;
+			hyena.blocked_count++;
 		}
 		
 		//if colliding with a player, check for damage
 		if(info.Them.type == "hero"){
 			if(info.Them.fixture_name != "bottom"){ //if can_attack and colliding with a fixture other than "bottom"
-				if(info.Me.entity.can_attack){
-					info.Me.entity.attack_cooldown_timer = info.Me.entity.attack_cooldown;//set cooldown timer
+				if(hyena.can_attack){
+					hyena.attack_cooldown_timer = hyena.attack_cooldown;//set cooldown timer
 				}
-			}else if(Math.abs(info.Them.entity.body.GetWorldCenter().x - info.Me.entity.body.GetWorldCenter().x) < info.Me.entity.vulnerability_radius){
-				info.Me.entity.hero_hurt_me = true;//take damage if enemy collides from above and distance < vulnerability radius
-				info.Me.entity.damage_taken = 1;//when hero gets a damage variable, change this
+			}else if(Math.abs(info.Them.entity.body.GetWorldCenter().x - hyena.body.GetWorldCenter().x) < hyena.vulnerability_radius && !hyena.blinking){
+				hyena.hit_taken = true;//take damage if enemy collides from above and distance < vulnerability radius
+				hyena.damage_taken = 1;//when hero gets a damage variable, change this
 			}
 		}
 	};

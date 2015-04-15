@@ -4,68 +4,82 @@ var HyenaLogic = (function(){
 
 /* 
 	Enemy: Hyena 
-	class and functions for the hyena type enemy
+	class and functions for the Hyena type enemy
 	public functions:
 		-init()
-			initializes class data for all instances of class Hyena
+			initializes default class data for all instances of class Hyena
 		-spawn()
-			returns a new instance of class Hyena
+			returns a new instance of class Hyena with unique instance ID
 		-tick_AI()
 			runs hyena AI script, to be called for each instance on game tick
+		-begin_contact()
+			handles collisions, called on collision with any object
+		-end_contact()
+			callback function for box2d
 */
 
 	//Instantiated for each instance of hyena at creation
 	//call constructor through wrapper function spawn()
 	var Hyena = function(){
-		this.hero_hurt_me = false;
-		this.me_hurt_hero = false;
-		
 
-		//set your game logic parameters here
-		//this.object_id = 1; //hardcode a unique identifier for each new enemy class
+		//Declare initial variables for the Hyena
 		this.hp = 2;
-		this.speed = 6;
+		this.speed = 8;
 		this.damage = 5;
-		
 		this.sight_range = 16;
 		this.attack_range = 8;
-		this.is_idle = true; //determines whether hyena is aggressive or idle
-		this.is_alive = true; //disables attacking and palys death animation while false
-		this.death_tick = -1;
+		
+		this.hero_hurt_me = false;
+		this.damage_taken = 0;
+		
 		this.direction = false;	//false=left, true=right;
-		this.can_attack = true;	//attacking enabled
-		this.attack_cooldown_timer = -1; 
-		this.can_leap = true;		//leaping enabled
-		this.leap_timer = -1; //cooldown tracker for leap
-		this.leap_cooldown = 80;
-		this.charge_duration = 80;
-		this.charge_timer = 80;
-		this.charge_cooldown_timer = -1; //cooldown tracker for charge
-		this.charge_cooldown = 20;
-		this.idle_timer = 40;
-		this.idle_counter = 0;
-		this.path_blocked = false;
-		this.recently_attacked = false; //if the hyena has recently attacked
-		this.blinking = false;	//whether hyena is blinking
-		this.blink_timer = -1;	//tracks blink time
-		this.check_timer = 20;
+		this.direction_previous
+		this.x_previous = 0;		//store x value from end of previous tick
 		
-		this.blocked_count = 0;
-		this.running_away = false;
+		this.is_idle = true; //determines whether hyena is aggressive or idle
+		this.idle_duration = 40; // time buffer between changing idle states
+		this.idle_timer = this.idle_duration;
+		this.idle_counter = 0; //used to manage the number of times the hyena has changed state while idle
+		this.is_alive = true; //disables attacking and plays death animation while false
+		this.death_duration = 30;//time between death and deletion
+		this.decay_duration = 20;//time between decay animation and deletion
+		this.death_timer = -1;
+		this.running_away = false; //whether the hyena is running away
+		this.run_away_duration = 30; //set cowardice level
 		this.run_away_timer = -1;
+		this.can_attack = true;	//whether attacking is enabled
+		this.attack_cooldown = 10; //attack cooldown
+		this.attack_cooldown_timer = -1;
+		this.can_leap = true;		//leaping enabled
+		this.leap_cooldown = 40;//minimum time between leaps
+		this.leap_cooldown_timer = -1; 
+		this.charge_duration = 80;//maximum length of a charge
+		this.charge_timer = this.charge_duration;
+		this.charge_cooldown = 20;//minimum time between charges
+		this.charge_cooldown_timer = -1;
+		this.blinking = false;	//whether hyena is blinking
+		this.blink_duration = 10;//how long the hyena blinks after taking damage
+		this.blink_timer = -1;
+		this.maintenance_frequency = 20;//ticks between routine maintenance checks
+		this.maintenance_timer = this.maintenance_frequency;
 		
-		this.needs_graphics_update = false;
-		this.animation = "stand";
+		this.path_blocked = false;//is this deprecated? set during collision
+		this.obstruction_tolerance = 4;//how many times the hyena can be blocked before he takes action
+		this.blocked_count = 0;//tracks number of times blocked between maintenance checks
+		this.vulnerability_radius = (1.125 + 0.75 - 0.3);// hyena_width/2 + hero_width/2 - buffer, in meters
+		
+		this.needs_graphics_update = false; //accessed by renderer for animation purposes
+		this.animation = "stand"; //accessed by renderer for animation purposes
 	};
 
-	//initialize class variables, called once in EntityController.init during game load
+	//Initialize class variables, called once in EntityController.init() during game load
 	var init = function(){
 		include(); // satisfy requirements, GOES FIRST
 		IdentificationController.assign_type(Hyena, "Hyena"); //assign class id
 	};
 
-	//instantiates class Hyena
-	//wrapper for constructor and assigns unique ID
+	//Instantiates class Hyena
+	//Wrapper for constructor, assigns unique ID
 	var spawn = function(x, y){
 		var new_hyena = new Hyena();
 		var id = IdentificationController.assign_id(new_hyena);
@@ -81,114 +95,126 @@ var HyenaLogic = (function(){
 //......................INTELLIGENCE.......................\\
 	
 	// Is run each tick from the EntityController.update for every registered instance
-	
 	var tick_AI = function(Hyena){
 		//Check if Dead........
 		//If Hyena is off the screen, delete
 		if (Hyena.body.GetWorldCenter().y > 22 || Hyena.body.GetWorldCenter().x < Config.Player.movement_edge - 1){
 			EntityController.delete_entity(Hyena);
-			console.log("drop of death");
-		}else if (Hyena.hp <= 0){
-			if (Hyena.is_alive){
-				Hyena.death_tick = 30;
+		}else if (Hyena.hp <= 0){//if mortally wounded
+			if (Hyena.is_alive){//if alive, kill it
+				Hyena.death_timer = Hyena.death_duration;
 				Hyena.is_alive = false;
 				Hyena.hero_hurt_me = false;
 				Hyena.can_attack = false;
 				change_animation(Hyena,"death");
 				return ;
-			}else{
-				Hyena.can_attack = false;
-				Hyena.death_tick--;
-				if (Hyena.death_tick <= 30 && Hyena.death_tick > 20){
+			}else{//else decay
+				Hyena.death_timer--;
+				if (Hyena.death_timer <= Hyena.death_duration && Hyena.death_timer > Hyena.decay_duration){
 					change_animation(Hyena,"death");
-				} else if (Hyena.death_tick <= 20 && Hyena.death_tick > 0){
+				} else if (Hyena.death_timer <= Hyena.decay_duration && Hyena.death_timer > 0){
 					change_animation(Hyena,"decay");
 				} else {
 					EntityController.delete_entity(Hyena);
 				}
 				return ;
 			}
-		}else{ // Do live Hyena stuff
-				//Do Maintenance....
-				Hyena.leap_timer--;			//ensure the hyena is not eternally jumping
-				if (Hyena.charge_timer <= 0){//time the hyena's alternating phases of running and stopping
-					Hyena.charge_cooldown_timer--;
-					if (Hyena.charge_cooldown_timer <= 0){
-						Hyena.charge_timer = Hyena.charge_duration;
-					}
+		}else{ // Do Live Hyena Stuff
+			//Maintenance....
+			Hyena.direction_previous = Hyena.direction;
+			Hyena.x_previous = Hyena.body.GetWorldCenter().x; //remember what hyena's x was at start of tick
+			Hyena.leap_cooldown_timer--;			//ensure the hyena is not eternally jumping
+			//maintain blinking
+			if(Hyena.blinking){ 
+				Hyena.blink_timer--;
+				if(Hyena.blink_timer == 0){
+					Hyena.blinking == false;
 				}
-				Hyena.check_timer--;		//check periodically to ensure the hyena is not stuck in a corner
-				if (Hyena.check_timer == 0){
-					if (path_free(Hyena)){
-						Hyena.path_blocked = false;
-					}
-					if (Hyena.blocked_count > 2){	//you know he's in a rut
-						Hyena.running_away = true;	//time to turn around
-						Hyena.run_away_timer = 50;
+			}
+			//maintain attack cooldown
+			if(Hyena.attack_cooldown_timer > 0){ 
+				Hyena.attack_cooldown_timer--;
+				Hyena.can_attack = (Hyena.attack_cooldown_timer == 0);
+			}
+			//maintain the hyena's alternating phases of running and stopping
+			if(Hyena.charge_timer <= 0){
+				Hyena.charge_cooldown_timer--;
+				if (Hyena.charge_cooldown_timer <= 0){
+					Hyena.charge_timer = Hyena.charge_duration;
+				}
+			}
+			//maintain the hyena's cowardly tactics
+			if (Hyena.running_away){	//if hyena is deliberately running away
+				Hyena.run_away_timer--;	//tickdown run_away timer
+				if (Hyena.run_away_timer == 0){ //maybe stop running away
+					Hyena.run_away_timer = -1;
+					Hyena.direction = direction_nearest_enemy(Hyena);
+					Hyena.running_away = false;
+				}
+			}
+			//check periodically to ensure the hyena is not stuck in a corner and other routine maintenance
+			Hyena.maintenance_timer--;		
+			if (Hyena.maintenance_timer == 0){
+				if (path_free(Hyena)){
+					Hyena.path_blocked = false;
+				}
+				if (Hyena.blocked_count > Hyena.obstruction_tolerance){	//you know he's in a rut
+					Hyena.running_away = true;	//time to turn around
+					Hyena.run_away_timer = Hyena.run_away_duration;
+					Hyena.direction = !(Hyena.direction);
+				}
+				Hyena.blocked_count = 0;
+				Hyena.maintenance_timer = Hyena.maintenance_frequency; //reset check timer
+			}
+			//Run Main AI Script.....
+			if(!in_air(Hyena) || Hyena.body.GetLinearVelocity().y == 0){ //if on ground OR if we suspect he's stuck on a corner
+				if (enemy_in_range(Hyena,Hyena.sight_range)){ //if enemy nearby
+					Hyena.idle = false;
+					if (Hyena.hero_hurt_me){	//if hyena was attacked,
+						Hyena.running_away = true;	//back off
+						Hyena.run_away_timer = Hyena.run_away_duration;
 						Hyena.direction = !(Hyena.direction);
-					}
-					Hyena.blocked_count = 0;
-					Hyena.check_timer = 40; //reset check timer
-				}
-				if (Hyena.running_away){	//if hyena is deliberately running away
-					Hyena.run_away_timer--;	//tickdown run_away timer
-					if (Hyena.run_away_timer == 0){ //maybe stop running away
-						Hyena.run_away_timer = -1;
-						Hyena.direction = !(Hyena.direction);
-						Hyena.running_away = false;
-					}
-				}
-				//Run AI Script.....
-				if(!in_air(Hyena) || Hyena.body.GetLinearVelocity().y == 0){ //if on ground OR if we suspect he's stuck on a corner
-					if (enemy_nearby(Hyena)){
-						Hyena.idle = false;
-						if (Hyena.recently_attacked){	//if hyena was attacked,
-							Hyena.running_away = true;	//back off
-							Hyena.run_away_timer = 50;
-							Hyena.direction = !(Hyena.direction);
-						}
-						else if ((enemy_in_range(Hyena) || Hyena.path_blocked) && Hyena.can_leap && Hyena.leap_timer <= 0){
-							Hyena.direction = direction_nearest_enemy(Hyena);
-							leap(Hyena);
-							Hyena.can_leap = false;
-							Hyena.leap_timer = 40;
-							change_animation(Hyena,"leap");
-						}else{
-							Hyena.direction = direction_nearest_enemy(Hyena);
-							if (Hyena.charge_timer > 0){ //if charge duration > 0
-								run(Hyena);
-								change_animation(Hyena,"run");
-								Hyena.charge_timer--;
-								if(Hyena.charge_timer == 0){
-									Hyena.charge_cooldown_timer = Hyena.charge_cooldown;
-								}
-							}else{//else stand aggressively
-								change_animation(Hyena,"stand");
-							}
-						}
-					}else{
-						Hyena.idle = true;
-						change_animation(Hyena,"stand");
-						//tick down idle timer
-						//alternate between pacing and loitering
-					}
-				}else{//if in the air
-					if(movement_voluntary(Hyena)){		//if leaping
+					}else if ((enemy_in_range(Hyena,Hyena.attack_range) || Hyena.path_blocked) && Hyena.can_leap && Hyena.leap_cooldown_timer <= 0){ //if enemy in range or path is blocked, and leaping is enabled, leap
+						Hyena.direction = direction_nearest_enemy(Hyena);
+						leap(Hyena);
+						Hyena.can_leap = false;
+						Hyena.leap_cooldown_timer = Hyena.leap_cooldown;
 						change_animation(Hyena,"leap");
-					}else{//else fall
-						change_animation(Hyena,"fall");
+					}else{
+						if(!Hyena.running_away){
+							Hyena.direction = direction_nearest_enemy(Hyena);
+						}
+						if (Hyena.charge_timer > 0){ //if charge duration > 0
+							run(Hyena);
+							change_animation(Hyena,"run");
+							Hyena.charge_timer--;
+							if(Hyena.charge_timer == 0){
+								Hyena.charge_cooldown_timer = Hyena.charge_cooldown;
+							}
+							if(Hyena.x_previous == Hyena.body.GetWorldCenter().x){ //check if hyena has moved successfully
+								Hyena.blocked_count++;
+							}
+						}else{//else stand aggressively
+							change_animation(Hyena,"stand");
+						}
 					}
+				}else{
+					Hyena.idle = true;
+					change_animation(Hyena,"stand");
+					//tick down idle timer
+					//alternate between pacing and loitering
+				}
+			}else{//if in the air
+				if(movement_voluntary(Hyena)){
+					change_animation(Hyena,"leap");//if voluntary, leap
+				}else{
+					change_animation(Hyena,"fall");//else, fall
 				}
 			}
-			if (Hyena.can_attack && Hyena.me_hurt_hero && !in_air(Hyena)){
-				// pass
-			}
-			if (Hyena.hero_hurt_me)
-			{
-				wound_Hyena(Hyena, 1);
-				Hyena.hero_hurt_me = false;
-				Hyena.can_attack = false;
-			}
+		}
+		if (Hyena.hero_hurt_me){
+			take_damage(Hyena); //
+		}
 	};
 //...........................END............................\\
 //........................ARTIFICIAL........................\\
@@ -209,42 +235,56 @@ var HyenaLogic = (function(){
 	//leap
 	var leap = function(hyena){
 		var body = hyena.body;
-		if (hyena.path_blocked){
-			body.ApplyImpulse(new B2d.b2Vec2(-10+(20*hyena.direction), -100), body.GetWorldCenter());
+		if (hyena.path_blocked){//jump out of a hole or over a wall
+			body.ApplyImpulse(new B2d.b2Vec2(-10+(20*hyena.direction), -150), body.GetWorldCenter());
 			hyena.can_leap = false;
-		}else{
-		body.ApplyImpulse(new B2d.b2Vec2(-100+(200*hyena.direction), -50), body.GetWorldCenter());
+		}else{ //leap viciously at hero
+		body.ApplyImpulse(new B2d.b2Vec2(-130+(260*hyena.direction), -75), body.GetWorldCenter());
 		}
 	};
 	
 	//decrease health
-	var wound_Hyena = function(Hyena, wound){
-		Hyena.hp -= wound;
-		Hyena.hero_hurt_me = false;
+	var take_damage = function(hyena){
+		hyena.hp -= hyena.damage_taken;
+		hyena.damage_taken = 0;
+		hyena.hero_hurt_me = false;
+		hyena.blinking = true;
+		hyena.blink_timer = hyena.blink_duration;
+		//knockback here
 	};
-
-	//checks for nearby enemies
-	var enemy_nearby = function(hyena){
+	
+	
+	//check for enemies in range (vision or jump)
+	var enemy_in_range = function(hyena,range){
 		/*
 		//multiplayer implementation
 		var hero_list = [];
-		for (i=0;i<hero_list.length;i++)
+		var output = false;
+		for (i=0;i<hero_list.length;i++){
+			if(in range){
+			output = true;
+			break;
+			}
+		}
+		return output;
 		*/
-		return (Math.abs(pconf.hero_x - hyena.body.GetWorldCenter().x) < hyena.sight_range);
-	};
-
-	//checks for nearby enemies
-	var enemy_in_range = function(hyena){
-		return (Math.abs(pconf.hero_x - hyena.body.GetWorldCenter().x) < hyena.attack_range);
+		return (Math.abs(pconf.hero_x - hyena.body.GetWorldCenter().x) < range);
 	};
 	
 	//returns the direction of nearest enemy
 	var direction_nearest_enemy = function(hyena){
-		//in multiplayer, first find nearest enemy
-		//for(i in enemy_count){compare distance_formula}
+		/*//in multiplayer, first find nearest enemy
+		var nearest = hero[0];
+		for(i < 8){
+			if(typeof hero[i] !== 'undefined'){
+				if(distance_formula(hero[i],hyena) < distance_formula(nearest,hyena)){
+					nearest = hero[i];
+				}
+			}
+		}*/
 		var nearest;
 		var distance = (pconf.hero_x - hyena.body.GetWorldCenter().x);
-		return (distance > 0);
+		return (distance > 0);//return true/right of distance is positive, return false/left if distance is negative
 	};
 	
 	//checks if movement is voluntary or forced
@@ -268,9 +308,10 @@ var HyenaLogic = (function(){
 		}else{
 			objects_beneath = 0;
 		}
-		return (objects_beneath<5);
+		return (objects_beneath < 5);//assumes contact with left sensor, right sensor, and main shape
 	};
 
+	//checks if there is a collision in current direction
 	var path_free = function(hyena){
 		var body = hyena.body;
 		var objects_before;
@@ -286,12 +327,12 @@ var HyenaLogic = (function(){
 		}else{
 			objects_before = 0;
 		}
-		return (objects_before<4);
+		return (objects_before < 4);//assumes contact with bottom sensor, top sensor, and main shape 
 	};
 
 	//setter for animation variable, ensures the animation is only reset on actual change
 	var change_animation = function(hyena,new_animation){
-		if(hyena.animation != new_animation){
+		if(hyena.animation != new_animation || hyena.direction != hyena.direction_previous){
 			hyena.animation = new_animation;
 			hyena.needs_graphics_update = true;
 		}else{ 
@@ -302,14 +343,9 @@ var HyenaLogic = (function(){
 
 
 //......................COLLISION HANDLERS...........................
-	//handle collisions here
+	//called at the beginning of the collision
 	var begin_contact = function(contact, info){
 		var type = info.Me.type;
-		
-		//throw error if type is not hyena
-		if(type != "Hyena"){
-			console.log("Error", type, "instead of Hyena with other being", info.Them.type);
-		}
 		
 		//if colliding with the ground, enable leap
 		if (info.Me.fixture_name == "bottom"){
@@ -322,21 +358,26 @@ var HyenaLogic = (function(){
 			info.Me.entity.blocked_count++;
 		}
 		
+		//if colliding with a player, check for damage
 		if(info.Them.type == "hero"){
-			if(info.Them.fixture_name != "bottom" && info.Me.entity.can_attack){
-				info.Me.entity.me_hurt_hero = true;
-			}else{
-				info.Me.entity.hero_hurt_me = true;
+			if(info.Them.fixture_name != "bottom"){ //if can_attack and colliding with a fixture other than "bottom"
+				if(info.Me.entity.can_attack){
+					info.Me.entity.attack_cooldown_timer = info.Me.entity.attack_cooldown;//set cooldown timer
+				}
+			}else if(Math.abs(info.Them.entity.body.GetWorldCenter().x - info.Me.entity.body.GetWorldCenter().x) < info.Me.entity.vulnerability_radius){
+				info.Me.entity.hero_hurt_me = true;//take damage if enemy collides from above and distance < vulnerability radius
+				info.Me.entity.damage_taken = 1;//when hero gets a damage variable, change this
 			}
 		}
 	};
 
 	//called upon end of collision
 	var end_contact = function(contact, info){
-	
+		
 	};
 
-//declare the following functions public
+
+//...............DECLARE PUBLIC FUNCTIONS.....................
 	return {
 		init: init, 
 		spawn: spawn,

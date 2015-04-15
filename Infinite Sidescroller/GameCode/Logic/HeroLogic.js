@@ -74,6 +74,8 @@ var HeroLogic = (function(){
 		
 		GraphicsController.change_seasons(hero.progress);
 
+		GraphicsController.background_loop(hero.body.GetWorldCenter(), hero.progress);
+
 		//make x and y coordinates available to enemy AI's that need to know them efficiently
 		//pconf.hero_x[player_id] = hero_x; //for multiplayer mode
 		//pconf.hero_y[player_id] = hero.y;
@@ -92,12 +94,12 @@ var HeroLogic = (function(){
 		    // temporary
 		    move_right(hero);
 		    //console.log("Movement Edge: " + parseInt(pconf.movement_edge) + " of type: " + typeof (pconf.movement_edge));
-			GraphicsController.background_loop(hero.body.GetWorldCenter(), hero.progress);
+			//GraphicsController.background_loop(hero.body.GetWorldCenter(), hero.progress);
 		}
 		if(cmds("left")){
 		    // temporary
 		    move_left(hero);
-		    GraphicsController.background_loop(hero.body.GetWorldCenter(), hero.progress);
+		    //GraphicsController.background_loop(hero.body.GetWorldCenter(), hero.progress);
 		}
 		if(cmds("down")){
 			slam(hero);

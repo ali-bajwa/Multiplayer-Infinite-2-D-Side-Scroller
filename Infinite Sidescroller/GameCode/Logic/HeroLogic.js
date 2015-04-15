@@ -148,7 +148,9 @@ var HeroLogic = (function(){
 			var other_extents = info.Them.entity.body.GetFixtureList().GetNext().GetNext().GetNext().GetNext().GetAABB().GetExtents();
 			var other_coordinates = info.Them.entity.body.GetWorldCenter();
 			//try to prevent taking damage while on top of enemies
-			if (!(my_coordinates.y <= other_coordinates.y - (my_extents.y + other_extents.y - 0.3))){
+			console.log(my_coordinates.y);
+			console.log(other_coordinates.y - (my_extents.y + other_extents.y - 0.3));
+			if (!(my_coordinates.y <= other_coordinates.y - (my_extents.y + other_extents.y - 0.5))){
 				info.Me.entity.wound = true;
 				info.Me.entity.damage_taken = info.Them.entity.damage;
 			}

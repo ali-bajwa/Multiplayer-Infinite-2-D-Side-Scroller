@@ -238,7 +238,6 @@ var GraphicsController = (function(){
 	    GraphicsModel.health_title.font = "20px Arial";
 	    GraphicsModel.health.color = "#ff0000";
 	    GraphicsModel.health_title.color = "#ff0000";
-
 	    GraphicsModel.score_title.text = "Score: ";
 	    GraphicsModel.score_title.x = 10;
 	    GraphicsModel.score_title.y = 10;
@@ -247,7 +246,6 @@ var GraphicsController = (function(){
 	    GraphicsModel.score.y = 10;
 	    GraphicsModel.score.font = "20px Arial";
 	    GraphicsModel.score_title.font = "20px Arial";
-	    
 	}
 
     //DELETE ME PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA

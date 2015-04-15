@@ -545,7 +545,9 @@
     <Content Include="Content\Images\garden.jpg" />
     <Content Include="Content\Images\greek_borderC.png" />
     <Content Include="Content\Images\logo1.png" />
+    <Content Include="Content\Images\pause.png" />
     <Content Include="Content\Images\pillar_background.png" />
+    <Content Include="Content\Images\play.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="GameCode\.gitignore" />

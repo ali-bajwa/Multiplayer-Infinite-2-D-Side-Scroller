@@ -17,19 +17,24 @@
         window.onload = start;
 
         //Music Controls
+        /*Play and Pause Button
         $(document).ready(function () {
             $(document).on("click", '#play_btn', function () { $("#music")[0].play();  });
             $(document).on('click', '#pause_btn', function () { $("#music")[0].pause(); });
         });
-
+        */
     </script>
         </head>
     
 <body>
 <audio id="music" src="~/GameCode/assets/art/TheTimes.mp3" preload="auto" autoplay="autoplay"></audio>
 <div class="game_canvas">
-    <a href="javascript:void(0);"><img src="~/Content/Images/play.png" id="play_btn" style="z-index:300;" /></a>&nbsp;<a href="javascript:void(0);"><img src="~/Content/Images/pause.png" id="pause_btn" style="z-index:300;" /></a>
     <div id="canvas_container"> 
+        <div class="playPause_button">
+            <!--<a href="javascript:void(0);"><img src="~/Content/Images/play.png" id="play_btn"/></a>
+            <a href="javascript:void(0);"><img src="~/Content/Images/pause.png" id="pause_btn"/></a>-->
+            <a href="javascript:void(0);" onclick="document.getElementById('music').muted = !document.getElementById('music').muted; return false"><img src="~/Content/Images/sound.png" id="mute_btn" /></a>
+        </div>
         <canvas id="display_canvas" style="border:2px solid #d4af37;"></canvas>
     </div>
 </div>

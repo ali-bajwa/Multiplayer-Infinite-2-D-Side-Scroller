@@ -348,7 +348,7 @@ canvas {
   transition:opacity 1s;
   -webkit-transition:opacity 1s;
   position:absolute;
-  z-index:200;
+  z-index:400;
 }
 
 

@@ -50,7 +50,12 @@ var MultiplayerSyncController = (function(){
 						break;
 					case "spawn":
 						if (packet.is_request == Config.Remote.master){
-							universal_spawn(packet);
+							handle_spawn(packet);
+						}
+						break;
+					case "delete":
+						if (packet.is_request == Config.Remote.master){
+							handle_delete(packet);
 						}
 						break;
 				}
@@ -67,7 +72,7 @@ var MultiplayerSyncController = (function(){
 	};
 	
 		/*
-		The universal_spawn() function takes an object as a parameter
+		The handle_spawn() function takes an object as a parameter
 		it handles the packet based on whether the caller is a master, slave, or single player
 		and on the contents of the packet
 		the packet holds the following
@@ -87,45 +92,79 @@ var MultiplayerSyncController = (function(){
 			additionally, the packet can be assigned any number of extra variables
 			to be parsed by the class' individual spawn() function
 		*/
-		var universal_spawn = function(packet){
+		var handle_spawn = function(packet){
 			var type;
 			var object;
 			var operation;
-			if (packet.type != null){
-				type = packet.type;
-				if (type != "hero"){
-				operation = EntityController.get_operation(type); //get relevant spawn() function from EntityController
-				} else {
-					if (typeof packet.controller_id === 'undefined' || packet.controller_id == NetworkController.get_network_id()){
-						packet.controller_id = NetworkController.get_network_id();
-						operation = EntityController.get_operation("hero");
-					}else{
-						operation = EntityController.get_operation("companion");
-					}
-				}
-				if (!Config.Remote.connected){ //if singleplayer
-					object = new operation(packet.x,packet.y);
-					IdentificationController.assign_id(object);
-					EntityController.reg_for_logic_update(object);
-				}else if (Config.Remote.master){ //if master
-					object = new operation(packet.x,packet.y);
-					IdentificationController.assign_id(object);
-					EntityController.reg_for_logic_update(object);
-					packet.thingamajigger = object.id;
-					send_spawn_notifications(packet);
-				}else{ //if slave
-					if (typeof packet.thingamajigger !== 'undefined'){//if called in response to a notification
-						object = new operation(packet.x,packet.y);
-						IdentificationController.force_id(object,packet.thingamajigger);
-						EntityController.reg_for_logic_update(object);
-						console.log("slave got its wish");
-					}else{//if called directly from slave session
-						send_spawn_request(packet);
-					}
-				}
-			}else{
+			if (packet.type == null){
 				console.log(packet);
 				throw "Error, this packet has no type property"
+			}
+			if (!Config.Remote.connected){ //if singleplayer
+				packet.assign = true;
+				fulfill_spawn_request(packet);
+			}else if (Config.Remote.master){ //if master
+				packet.assign = true;
+				packet = fulfill_spawn_request(packet);
+				send_spawn_notifications(packet);
+			}else{ //if slave
+				if (packet.entity_id != null){//if called in response to a notification
+					packet.assign = false;
+					fulfill_spawn_request(packet);
+				}else{//if called directly from slave session
+					send_spawn_request(packet);
+				}
+			}
+		};
+		
+	var fulfill_spawn_request = function(packet){
+			var operation;
+			var object;
+			var type = packet.type;
+			if (type != "hero"){
+				operation = EntityController.get_operation(type); //get relevant spawn() function from EntityController
+			}else{
+				if (typeof packet.controller_id === 'undefined' || packet.controller_id == NetworkController.get_network_id()){
+					packet.controller_id = NetworkController.get_network_id();
+					operation = EntityController.get_operation("hero");
+				}else{
+					operation = EntityController.get_operation("companion");
+				}
+			}
+		object = new operation(packet.x,packet.y);
+		if (packet.assign){
+			IdentificationController.assign_id(object);
+			packet.entity_id = object.id;
+		}else{
+			IdentificationController.force_id(object,packet.entity_id);
+		}
+		EntityController.reg_for_logic_update(object);
+		return packet;
+	}
+		
+	var handle_delete = function(packet){
+		if (packet.id == null){
+			console.log(packet);
+			throw "Error, this packet has no id property"
+			}
+			var id = packet.id;
+			var object;
+			object = IdentificationController.get_by_id(id);
+			if (!Config.Remote.connected){ //if singleplayer
+				EntityController.fulfill_delete_request(object);
+			}else if (Config.Remote.master){ //if master
+				console.log("master issues death sentence");
+				EntityController.fulfill_delete_request(object); 
+				packet.entity_id = object.id;
+				send_delete_notifications(packet);
+			}else{ //if slave
+				if (typeof packet.entity_id !== 'undefined'){//if called in response to a notification
+					EntityController.fulfill_delete_request(object); 
+					console.log("slave got its wish");
+				}else{//if called directly from slave session
+					send_delete_request(packet);
+					console.log("slave requests death sentence");
+				}
 			}
 		};
 	
@@ -145,6 +184,20 @@ var MultiplayerSyncController = (function(){
 		NetworkController.add_to_next_update(packet);
 	};
 	
+	var send_delete_request = function(packet){
+		packet.op = "delete";
+		packet.is_request = true;
+		NetworkController.add_to_next_update(packet);
+	};
+	
+	//var send_spawn_notifications = function(x, y, type, id, extras){
+	var send_delete_notifications = function(packet){
+		//sends notifications about entity spawned, so remote people may
+		//spawn their own representations of it
+		packet.op = "delete";
+		packet.is_request = false;
+		NetworkController.add_to_next_update(packet);
+	};
 
 	
 
@@ -186,9 +239,12 @@ var MultiplayerSyncController = (function(){
 		init: init, 
 		update: update,
 		get_packets_by_op: get_packets_by_op,
-		universal_spawn: universal_spawn,
+		handle_spawn: handle_spawn,
+		handle_delete: handle_delete,
 		send_spawn_request: send_spawn_request,
 		send_spawn_notifications: send_spawn_notifications,
+		send_delete_request: send_delete_request,
+		send_delete_notifications: send_delete_notifications,
 	};
 })();
 

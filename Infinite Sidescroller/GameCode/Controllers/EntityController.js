@@ -98,10 +98,14 @@ var EntityController = (function(){
 	//wrapper for universal spawn
 	//maintains the old interface
 	var spawn = function(type,x,y){
-		MultiplayerSyncController.universal_spawn({type:type,x:x,y:y});
+		MultiplayerSyncController.handle_spawn({type:type,x:x,y:y});
 	};
 	
 	var delete_entity = function(entity_instance){
+		MultiplayerSyncController.handle_delete({id:entity_instance.id});
+	};
+	
+	var fulfill_delete_request = function(entity_instance){
 		/**
 		* This function will remove this entity along with some other info about this entity
 		* from the world, it'll also free the id of this entity. The physical body will be deleted
@@ -153,6 +157,7 @@ var EntityController = (function(){
 		reg_for_logic_update: reg_for_logic_update,
 		spawn: spawn,
 		delete_entity: delete_entity,
+		fulfill_delete_request: fulfill_delete_request,
 	};
 })();
 

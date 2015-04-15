@@ -68,7 +68,7 @@ var IdentificationController = (function(){
 		* returns free id and promises not to overite it
 		* also allows someone to force this id
 		*/
-
+		var free = IdentificationModel.free_ids;
 		// get free id
 		if(free.length > 0){
 			id = free.pop();

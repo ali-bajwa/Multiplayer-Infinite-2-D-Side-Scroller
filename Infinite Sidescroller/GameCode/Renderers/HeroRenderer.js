@@ -29,7 +29,6 @@ var HeroRenderer = (function(){
 			is given >graphics_instance< parameter, which is also supposed to contain
 			physical_instance property containing entity_instance, if it was attched correctly
 		*/
-		GraphicsController.update_health(hero.physical_instance.hp);
 	};
 
 	return {

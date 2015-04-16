@@ -3258,6 +3258,7 @@ var GriffinLogic = (function(){
 		this.AI_state = "walk";//use this to keep track of the enemy's AI state
 		this.aliveflag = true;
 		this.unhurtflag = true;
+		this.needs_graphics_update = false;
 	};
 
 	var init = function(){
@@ -3308,6 +3309,9 @@ var GriffinLogic = (function(){
 			change_state(Griffin, "death");
 			Griffin.can_attack = false;
 			Griffin.death_tick++;
+			Griffin.is_alive = false;
+			Griffin.hit_taken = false;
+
 			
 			if(Griffin.death_tick == 30){
 				EntityController.delete_entity(Griffin);
@@ -3332,7 +3336,7 @@ var GriffinLogic = (function(){
 				wound_Griffin(Griffin, 1);
 				Griffin.hero_hurt_me = false;
 				Griffin.can_attack = false;
-				change_state(Griffin, "upside_down");
+				change_state(Griffin, "death");
 				
 			}
 		}
@@ -3379,6 +3383,15 @@ var GriffinLogic = (function(){
 			}
 		}
 
+	};
+	
+	var change_animation = function (Griffin, new_animation) {
+	    if (Griffin.animation != new_animation) {
+	        Griffin.animation = new_animation;
+	        Griffin.needs_graphics_update = true;
+	    } else {
+	        Griffin.needs_graphics_update = false;
+	    }
 	};
 
 	var end_contact = function(contact, info) {
@@ -4135,6 +4148,7 @@ var AssetModel = new function(){
 			{ src: "griffinPhase1.png", id: "Griffin1" },
 			{ src: "griffinPhase2.png", id: "Griffin2" },
 			{ src: "griffinPhase3.png", id: "Griffin3" },
+			{ src: "griffinDeath.png", id: "GriffinDeath" },
 			{ src: "platform_left.png", id: "left_platform" },
 			{ src: "platform_middle.png", id: "middle_platform" },
 			{ src: "platform_right.png", id: "right_platform" },
@@ -4758,11 +4772,11 @@ var GriffinRenderer = (function(){
 
 		spritesheets["Griffin"] = new createjs.SpriteSheet({
 			"framerate": 1,
-			"images": [get_asset("Griffin1"), get_asset("Griffin2"), get_asset("Griffin3") ],
-			"frames": { "regX": 10, "regY": 28, "height": 413, "width": 420, "count": 3},
+			"images": [get_asset("Griffin1"), get_asset("Griffin2"), get_asset("Griffin3"), get_asset("GriffinDeath"), ],
+			"frames": { "regX": 10, "regY": 28, "height": 413, "width": 420, "count": 4},
 			"animations": {
 				"walk": [0, 2, "walk", 0.2],
-				//"death": [4, 5, "death"]
+				"death": [2, 3, "death", 0.4],
 			}
 		})
 
@@ -4795,8 +4809,9 @@ var GriffinRenderer = (function(){
 
 		
 		if(Griffin.physical_instance.AI_state == "death"&& Griffin.physical_instance.aliveflag){
-			Griffin.gotoAndPlay("death");
-			Griffin.physical_instance.aliveflag = false;
+ 			Griffin.gotoAndPlay("death");
+			console.log("I've been squashed!");
+ 			Griffin.physical_instance.aliveflag = false;
 			
 			
 		}

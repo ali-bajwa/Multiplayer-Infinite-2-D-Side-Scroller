@@ -35,6 +35,8 @@ var GameController = (function(){
 			EntityController.update();
 
 			// Should be called after all movement of objects is done:
+			HUDController.update();
+			BackgroundController.update();
 			GraphicsController.update();
 		}
 	};

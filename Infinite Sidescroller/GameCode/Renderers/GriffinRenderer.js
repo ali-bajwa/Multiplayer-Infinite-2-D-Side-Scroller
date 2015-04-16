@@ -52,6 +52,7 @@ var GriffinRenderer = (function(){
 		
 		if(Griffin.physical_instance.AI_state == "death"&& Griffin.physical_instance.aliveflag){
 			Griffin.gotoAndPlay("death");
+			console.log("I've been squashed!");
 			Griffin.physical_instance.aliveflag = false;
 			
 			

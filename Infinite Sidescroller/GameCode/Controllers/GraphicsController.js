@@ -1,21 +1,50 @@
-
+/*
+GraphicsController
+	Public Functions:
+	-init()
+		sets up the GraphicsController for the rest of the game, called once during initialization
+	-update(int delta)
+		common function, called each tick. performs routine graphics maintenance
+		registers all instances that were marked for registration since the last tick
+		renders all registered instances
+	-get_stage()
+		returns the stage object, an easeljs object that stores information about the game
+	-get_camera()
+		returns the camera object, which controls the view offset
+	-get_asset(string id)
+		retrieves the asset with id; an alias for the same function in AssetController
+	-reg_for_render(Easeljs_obj sprite, Object entity_instance)
+		links an entity with a sprite and registers it to be rendered each tick
+	-set_reg_position(easeljs_obj,int offset_x,int offset_y)
+		adjusts a sprites x and y offsets to conform to the box2d system
+	-request_bitmap(string? id)
+		retrieves a previously loaded asset as a sprite
+	-request_animated(string id, string||int start_animation/start_frame)
+		returns a new sprite object generated from the image id and the start frame
+	-destroy_graphics_for(int id)
+		destroys the graphics objects associated with the instance of the passed id
+	-follow(int id)
+		sets the camera to follow the object of the passed id
+	-get_movement_edge()
+		returns left camera bound, a.k.a, the movement edge. used for lots of things
+		
+*/
 var GraphicsController = (function(){
-	/* all the graphics stuff. and what did you expect?
+	/* 
+	Controls all graphics and provides an interface for common easel.js functions
 	*/
-	var colorTick = 0; //to slow down season changes
+	
 	var get_asset; 
 	var type_renderer_table;
-	var Graphics;
+	var Graphics; 
 	var reRender = false;
-	var seasonArray = [];
-	var seasonImg = ["Winter", "Spring", "Summer", "Fall" ];
-	var cycle = 0;
-	var season_threshold = 2; //So seasons only update once
-	
+
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
 		include(); // satisfy requirements
 
+		//All renderers must be registered here
+		//Links each renderer with its object id
 		type_renderer_table = {
 		// type:	renderer:
 			"ant": AntRenderer,
@@ -29,23 +58,10 @@ var GraphicsController = (function(){
 
 		init_animations();
 
-
 		GraphicsModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
 		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
-		generate_season("Winter", GraphicsModel.stage.canvas.width, 0);
-	
-		//PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-		GraphicsModel.score = new createjs.Text();
-		reg_for_render(GraphicsModel.score);
-		GraphicsModel.health = new createjs.Text();
-		reg_for_render(GraphicsModel.health);
-		GraphicsModel.score_title = new createjs.Text();
-		reg_for_render(GraphicsModel.score_title);
-		GraphicsModel.health_title = new createjs.Text();
-		reg_for_render(GraphicsModel.health_title);
-		hud_temp();
-
+		
 		GraphicsModel.camera.offset_from_followed.x -= (1614 - GraphicsModel.stage.canvas.width) / 3;
 
 		// init all renderers
@@ -54,132 +70,33 @@ var GraphicsController = (function(){
 		}
 	};
 
-	var generate_season = function(season_name, canvas_width, start){
-		/*Generates tiled background for season */
-	
-		for(var i = start; i <= canvas_width + canvas_width + 1; i += season.image.width){
-			var season = request_scenery(season_name);
-			
-			season.x = i;
-			GraphicsModel.stage.addChildAt(season, 0);
-			seasonArray.push(season);
-			
-		}
-		
-	};
-
-	var change_seasons = function(progress) {
-	    var flag = false;
-	    if (progress == season_threshold) { //seasons will change every even progress number
-	        season_threshold += 2;
-	        flag = true;
-	    }
-	    if (flag) {
-	        //colorTick = 0;
-	        delete_all_season();
-	        cycle++;
-	        generate_season(seasonImg[cycle], GraphicsModel.stage.canvas.width, Config.Player.movement_edge / 30);
-	        if (cycle == 4) {
-	            cycle = 0;
-	        }
-	    }
-	    //colorTick++;
-	};
-
-	var background_loop = function(hero, progress){
-		//console.log(progress);
-		for(var i = 0; i < seasonArray.length; i++){
-			
-			
-			//seasonArray[i].x = (i * 799) + GraphicsModel.camera.offset.x;
-			//seasonArray[i].y = GraphicsModel.camera.offset.y;
-			
-				seasonArray[i].x = ((i + progress) * 799) - (hero.x * 4);
-				seasonArray[i].y = GraphicsModel.camera.offset.y;
-		
-			
-		}
-	
-	};
-	
-	var background_loopY = function(y){
-		for(var i = 0; i < seasonArray.length; i++){
-			
-			
-			seasonArray[i].y = y;
-			
-		}
-	
-	};
-	var delete_all_season = function(){
-		for(var i = 0; i < seasonArray.length; i++){
-			
-			
-			GraphicsModel.stage.removeChild(seasonArray[i]);
-			
-		}
-		seasonArray.length = 0;
-	};
     
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
 		
-		/*Debugging Code: Change Seasons With Z button
-		var cmds = KeyboardController.debug_commands();
-		
-		if(cmds("season") && colorTick > 10)
-		{
-			colorTick = 0;
-			delete_all_season();
-			cycle++;
-			generate_season(seasonImg[cycle], GraphicsModel.stage.canvas.width, Config.Player.movement_edge/30);
-			if(cycle == 4)
-			{
-				cycle = 0;
-			}
-		}
-		colorTick++;
-		//*/
-		
-		
-			update_camera(); // needs to be updated first
+		update_camera(); // needs to be updated first
 
 		register_new_stuff();
 
 		check_for_new_terrain();
 
 		render_things();
+		
 		synchronize_to_physical_bodies();
 		
-		
-		//NEED to know when to reRender background
-		background_loopY(GraphicsModel.camera.offset.y);
-		
-		
-		
-	    //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-		hud_temp_update();
-
-		// <<<<
-		//update_health(hero.hp);
 		GraphicsModel.stage.update();
 	};
 
 	var follow = function(id){
-		/**
-		* order camera to follow the graphical representation
-		* of an object with the given id, if it exists
-		*/
-
+		//order camera to follow the graphical representation
+		//of an object with the given id, if it exists
 		GraphicsModel.camera.following = GraphicsModel.all_physical[id];
 	};
 	
 	
-
 	var register_new_stuff = function(){
-		/**
-		* description
-		*/
+		//search through all instances in the queue 
+		//and register them for graphics updates.
 
 		// retrieve instances of physical things that do not have graphics yet
 		var new_stuff = RegisterAsController.retrieve_registered_as("awaiting_graphics_initialization");
@@ -190,15 +107,11 @@ var GraphicsController = (function(){
 			if(type_renderer_table[new_obj.type]){
 				// if renderer exists for this type, register through it
 				type_renderer_table[new_obj.type].register(new_obj, Graphics);	
-
-				
 			}else{
-				
 				throw "No renderer found for the type " + String(new_obj.type) +
 					" confirm that renderer exists and is added to the GraphicsController.type_renderer_table"
 			}
 		}
-
 	};
 	
 	var render_things = function(){
@@ -209,63 +122,21 @@ var GraphicsController = (function(){
 		var to_render = GraphicsModel.special_render;
 
 		for(var type in to_render){
-
 			var table = to_render[type];
 			var renderer = type_renderer_table[type];
 
 			for(var id in table){
 				renderer.render(table[id]);
 			}
-
 		}
 		
 	};
 
 	var get_movement_edge = function () {
-	    return (GraphicsModel.camera.offset.x - 20)/(-30);
+			return (GraphicsModel.camera.offset.x - 20)/(-30);
 	}
 	
-
-    //DELETE ME PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-	var hud_temp = function () {
-	    GraphicsModel.health_title.text = "Health: ";
-	    GraphicsModel.health_title.x = 10;
-	    GraphicsModel.health_title.y = 30;
-	    GraphicsModel.health.text = "100";
-	    GraphicsModel.health.x = 80;
-	    GraphicsModel.health.y = 30;
-	    GraphicsModel.health.font = "20px Arial";
-	    GraphicsModel.health_title.font = "20px Arial";
-	    GraphicsModel.health.color = "#ff0000";
-	    GraphicsModel.health_title.color = "#ff0000";
-	    GraphicsModel.score_title.text = "Score: ";
-	    GraphicsModel.score_title.x = 10;
-	    GraphicsModel.score_title.y = 10;
-	    GraphicsModel.score.text = "0";
-	    GraphicsModel.score.x = 80;
-	    GraphicsModel.score.y = 10;
-	    GraphicsModel.score.font = "20px Arial";
-	    GraphicsModel.score_title.font = "20px Arial";
-	}
-
-    //DELETE ME PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-	var hud_temp_update = function () {
-
-	}
-	
-	var update_health = function(passed) {
-	
-	GraphicsModel.health.text = passed;
-	}
-
-	var update_score = function (passed) {
-	    GraphicsModel.score.text = passed;
-	};
-
-	var get_health = function () {
-	    return GraphicsModel.health.text;
-	}
-
+	//called from update(), maintains camera position
 	var update_camera = function(){
 		var camera = GraphicsModel.camera;
 		var center = camera.center;
@@ -309,7 +180,6 @@ var GraphicsController = (function(){
 
 	var init_animations = function(){
 		
-		
 	};
 	
 	var request_bitmap = function(id){
@@ -326,23 +196,8 @@ var GraphicsController = (function(){
 		return bitmap;
 		// TODO research DisplayObject's caching. and maybe incorporate
 	};
-	var request_scenery = function(id, offset){
-		// if id is invalid, throw meaningful exception?
-		var bitmap = new createjs.Bitmap(get_asset(id));
-		// more complicated setting for registration position may be needed, depending on the body attached
-		if (!(bitmap.image)){
-			throw "Error: image wasn't correctly loaded for this bitmap";
-		}
-		
-		//offset for tiling
-		bitmap.x = offset;
-		
-		
-		
-		return bitmap;
-		// TODO research DisplayObject's caching. and maybe incorporate
-	};
-
+	
+	
 	var request_animated = function(id, start_frame){
 		// this implementation is temporary
 		// until I setup efficient facility for defining spritesheets
@@ -362,7 +217,7 @@ var GraphicsController = (function(){
 	};
 
 	
-	
+	//converts easeljs origins to box2d origins
 	var synchronize_to_physical_bodies = function(){
 
 		var tiles = GraphicsModel.all_physical;
@@ -370,35 +225,23 @@ var GraphicsController = (function(){
 		for(var id in tiles){
 			var tile = tiles[id];
 			var body = tile.physical_instance.body;
-
 			var tile_pos = trans_xy(body.GetWorldCenter());
 
 			tile.x = tile_pos.x;
 			tile.y = tile_pos.y;
 		}
-
 	};
 	
 
 	var check_for_new_terrain = function(){
-		/* If new terrain has been generated, render it
-		 */
-
+		// If new terrain has been generated, render it
 		var new_slices = TerrainController.GetNewTerrainSlices();
 		while(new_slices.length > 0){
 
 			var slice = new_slices.pop();
 
 			for(var i = 0; i < slice.grid_rows; i++){
-				/* graphics pass. should be probably moved to the graphics controller
-				 * didn't decide on it yet
-				 */
-
-
-				var lvl = slice.grid_rows - i; // level from the bottom
-
 				for(var j = 0; j < slice.grid_columns; j++){
-					
 					var kind = slice.grid[i][j].kind;
 					if(kind != 0){
 						// TODO: should make proper terrain collection thing to pull from
@@ -406,19 +249,12 @@ var GraphicsController = (function(){
 						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][kind-1];
 						var tile = request_bitmap(tile_texture);
 						*/
+						var surface_textures = ["grass_winter","grass_spring","grass_summer","grass_fall"];
 						var position = slice.grid[i][j].position;
 						if (kind == 1){ //if tile is part of the ground
 							switch (position){
 									case "surface":
-										if (cycle == 0){
-										var tile_texture = "grass_winter";
-										}else if (cycle == 1){
-										var tile_texture = "grass_spring";
-										}else if(cycle == 2){
-											var tile_texture = "grass_summer";
-										}else{
-											var tile_texture = "grass_fall";
-										}
+										var tile_texture = surface_textures[BackgroundController.get_season()];
 									break;
 								case "underground":
 									var tile_texture = "bottom_terrain";
@@ -448,15 +284,10 @@ var GraphicsController = (function(){
 						tile.x = trans_pos.x;
 						tile.y = trans_pos.y;
 						reg_for_render(tile, physical_instance);
-					} // fi
-
-
+					} // end tile_texture assignment
 				} // end for
-
 			}//end for
-
 		} // end while
-
 	}; // end check_for_new_terrain
 
 	var trans_xy = function(position_vector_unscaled){
@@ -537,6 +368,10 @@ var GraphicsController = (function(){
 		return GraphicsModel.stage;
 	};
 	
+	var get_camera = function(){
+		return GraphicsModel.camera;
+	};
+	
 	var destroy_graphics_for = function(id){
 		/**
 		* remove from the stage and destroy graphics instances for the object with the given id
@@ -587,9 +422,7 @@ var GraphicsController = (function(){
 		init: init, 
 		update: update,
 		get_stage: get_stage,
-		update_health: update_health,
-		get_health: get_health,
-		update_score: update_score,
+		get_camera: get_camera,
 		get_asset: get_asset,
 		reg_for_render: reg_for_render,
 		set_reg_position: set_reg_position,
@@ -597,9 +430,7 @@ var GraphicsController = (function(){
 		request_animated: request_animated,
 		destroy_graphics_for: destroy_graphics_for,
 		follow: follow,
-        get_movement_edge: get_movement_edge,
-        background_loop: background_loop,
-        change_seasons: change_seasons,
+		get_movement_edge: get_movement_edge,
 	};
 })();
 

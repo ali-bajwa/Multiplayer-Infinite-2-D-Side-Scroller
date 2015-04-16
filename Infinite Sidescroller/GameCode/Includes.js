@@ -26,14 +26,14 @@ var Include = function(){
 			"InitController",
 			"KeyboardController",
 			"PhysicsController",
-			//"PlayerController",
 			"TerrainController",
 			"TerrainSliceController",
 			"TestController",
 			"WorldController",
-			//"AntController",
 			"IdentificationController",
 			"RegisterAsController",
+			"HUDController",
+			"BackgroundController",
 		],
 
 		Models: [
@@ -43,14 +43,14 @@ var Include = function(){
 			"GraphicsModel",
 			"KeyboardModel",
 			"PhysicsModel",
-			//"PlayerModel",
 			"TerrainModel",
 			"TerrainSliceModel",
 			"TestModel",
 			"WorldModel",
-			//"AntModel",
 			"EntityModel",
 			"RegisterAsModel",
+			"HUDModel",
+			"BackgroundModel",
 		],
 
 		Other: [
@@ -86,7 +86,6 @@ var Include = function(){
 			GraphicsController: require("./Controllers/GraphicsController.js"),
 			KeyboardController: require("./Controllers/KeyboardController.js"),
 			PhysicsController: require("./Controllers/PhysicsController.js"),
-			//PlayerController: require("./Controllers/PlayerController.js"),
 			TerrainController: require("./Controllers/TerrainController.js"),
 			TerrainSliceController: require("./Controllers/TerrainSliceController.js"),
 			WorldController: require("./Controllers/WorldController.js"),
@@ -94,10 +93,10 @@ var Include = function(){
 			TestController: require("./Controllers/TestController.js"),
 			GameController: require("./Controllers/GameController.js"),
 			EntityController: require("./Controllers/EntityController.js"),
-			//AntController: require("./Controllers/AntController.js"),
 			IdentificationController: require("./Controllers/IdentificationController.js"),
 			RegisterAsController: require("./Controllers/RegisterAsController.js"),
-			
+			HUDController: require("./Controllers/HUDController.js"),
+			BackgroundController: require("./Controllers/BackgroundController.js"),
 			
 			
 			// Models
@@ -110,14 +109,12 @@ var Include = function(){
 			TerrainModel: require("./Models/TerrainModel.js"),
 			WorldModel: require("./Models/WorldModel.js"),
 			KeyboardModel: require("./Models/KeyboardModel.js"),
-			//PlayerModel: require("./Models/PlayerModel.js"),
 			TestModel: require("./Models/TestModel.js"),
-			//AntModel: require("./Models/AntModel.js"),
 			IdentificationModel: require("./Models/IdentificationModel.js"),
 			EntityModel: require("./Models/EntityModel.js"),
 			RegisterAsModel: require("./Models/RegisterAsModel.js"),
-			
-			
+			HUDModel: require("./Models/HUDModel.js"),
+			BackgroundModel: require("./Models/BackgroundModel.js"),
 			
 				
 			// Other stuff

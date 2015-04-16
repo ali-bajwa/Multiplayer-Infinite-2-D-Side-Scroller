@@ -1,15 +1,11 @@
-pconf = require ("../Config.js").Player;
-
-var HyenaLogic = (function(){
-
 /* 
 	Enemy: Hyena 
 	class and functions for the Hyena type enemy
 	public functions:
 		-init()
 			initializes default class data for all instances of class Hyena
-		-spawn()
-			returns a new instance of class Hyena with unique instance ID
+		-spawn(int x, int y)
+			returns a new instance of class Hyena with unique instance ID at global coordinates(x,y)
 		-tick_AI()
 			runs hyena AI script, to be called for each instance on game tick
 		-begin_contact()
@@ -18,6 +14,7 @@ var HyenaLogic = (function(){
 			callback function for box2d
 */
 
+var HyenaLogic = (function(){
 	//Instantiated for each instance of hyena at creation
 	//call constructor through wrapper function spawn()
 	var Hyena = function(){
@@ -27,11 +24,11 @@ var HyenaLogic = (function(){
 		this.speed = 7;
 		this.jump_force = 125;
 		this.damage = 5;
-		this.sight_range = 16;
-		this.attack_range = 8;
+		this.sight_range = 16; //distance at which hyena detects heroes
+		this.attack_range = 8; //distance at which hyena leaps at the hero
 		
-		this.hit_taken = false;
-		this.damage_taken = 0;
+		this.hit_taken = false; //whether a hit has been taken since the last tick
+		this.damage_taken = 0; //the amount of damage inflicted by hits since the last tick
 		
 		this.direction = false;	//false=left, true=right;
 		this.direction_previous = false;//store direction from end of previous tick
@@ -154,7 +151,7 @@ var HyenaLogic = (function(){
 				}
 			}
 			//check periodically to ensure the hyena is not stuck in a corner and other routine maintenance
-			Hyena.maintenance_timer--;		
+			Hyena.maintenance_timer--;
 			if (Hyena.maintenance_timer == 0){
 				if (path_free(Hyena)){
 					Hyena.path_blocked = false;
@@ -297,7 +294,8 @@ var HyenaLogic = (function(){
 		}
 		return output;
 		*/
-		return (Math.abs(pconf.hero_x - hyena.body.GetWorldCenter().x) < range);
+		var hero_x = IdentificationController.get_hero().body.GetWorldCenter().x;
+		return (Math.abs(hero_x - hyena.body.GetWorldCenter().x) < range);
 	};
 	
 	//returns the direction of nearest enemy
@@ -312,7 +310,8 @@ var HyenaLogic = (function(){
 			}
 		}*/
 		var nearest;
-		var distance = (pconf.hero_x - hyena.body.GetWorldCenter().x);
+		var hero_x = IdentificationController.get_hero().body.GetWorldCenter().x;
+		var distance = (hero_x - hyena.body.GetWorldCenter().x);
 		return (distance > 0);//return true/right of distance is positive, return false/left if distance is negative
 	};
 	
@@ -395,7 +394,7 @@ var HyenaLogic = (function(){
 				}
 			}else if(Math.abs(info.Them.entity.body.GetWorldCenter().x - hyena.body.GetWorldCenter().x) < hyena.vulnerability_radius && !hyena.blinking){
 				hyena.hit_taken = true;//take damage if enemy collides from above and distance < vulnerability radius
-				hyena.damage_taken = 1;//when hero gets a damage variable, change this
+				hyena.damage_taken = info.Them.entity.damage;
 			}
 		}
 	};

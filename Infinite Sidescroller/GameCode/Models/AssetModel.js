@@ -19,10 +19,10 @@ var AssetModel = new function(){
 			{src: "Greek Landscape spring.png", id: "Spring"},
 			{src: "Greek Landscape winter.png", id: "Winter"},
 			{src: "Greek Landscape summer.png", id: "Summer"},
-			{ src: "GriffinSpriteSheet.png", id: "Griffin" },
 			{ src: "griffinPhase1.png", id: "Griffin1" },
 			{ src: "griffinPhase2.png", id: "Griffin2" },
 			{ src: "griffinPhase3.png", id: "Griffin3" },
+            { src: "griffinDeath.png", id: "GriffinDeath" },
 			{ src: "platform_left.png", id: "left_platform" },
 			{ src: "platform_middle.png", id: "middle_platform" },
 			{ src: "platform_right.png", id: "right_platform" },
@@ -30,9 +30,6 @@ var AssetModel = new function(){
 			{ src: "HyenaPhase1.png", id: "HyenaSprite" },
 			{ src: "platform_spikes.png", id: "platform_spikes" },
 
-
-
-			
 		]; 
 		// TODO make adding resources easier? Automatic loading 
 		// of everything from assets, automatic names etc.?

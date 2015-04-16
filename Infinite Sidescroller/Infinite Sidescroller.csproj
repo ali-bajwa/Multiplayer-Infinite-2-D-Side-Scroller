@@ -562,6 +562,11 @@
     <Content Include="GameCode\assets\art\grass.png" />
     <Content Include="GameCode\assets\art\Greek Landscape fall.png" />
     <Content Include="GameCode\assets\art\greek_warrior.png" />
+    <Content Include="GameCode\assets\art\griffinDeath.png" />
+    <Content Include="GameCode\assets\art\griffinPhase1.png" />
+    <Content Include="GameCode\assets\art\griffinPhase2.png" />
+    <Content Include="GameCode\assets\art\griffinPhase3.png" />
+    <Content Include="GameCode\assets\art\HyenaPhase1.png" />
     <Content Include="GameCode\assets\art\middle_terrain.png" />
     <Content Include="GameCode\assets\art\Silverware.mp3" />
     <Content Include="GameCode\assets\art\warrior.png" />

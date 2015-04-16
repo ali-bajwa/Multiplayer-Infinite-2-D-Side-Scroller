@@ -13,11 +13,10 @@ var HeroLogic = (function(){
 		this.hp = 100;
 		this.wound = false;
 		this.damage_taken = 1;
+		this.damage = 1;
 		this.jumps = 0;
+		
 		this.score = 0;
-		this.progress = 0;
-		this.progress_to_level = 199;  //affects tiling
-		this.current_level = 199;
 	};
 
 	var init = function(){
@@ -42,7 +41,8 @@ var HeroLogic = (function(){
 		hero.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, hero);
 
 		var id = IdentificationController.assign_id(hero);
-
+		IdentificationController.load_hero(hero.id);
+		
 		hero.hp = 100;
 		hero.wound = false;
 		hero.jumps = 0;
@@ -58,31 +58,14 @@ var HeroLogic = (function(){
 			entity of this type. I given entity_instance
 		*/
 
-		var hero_x = hero.body.GetWorldCenter().x;
 		var pconf = Config.Player;
-		var rounded_hero_x = Math.round(hero.body.GetWorldCenter().x);
-		
-		//console.log(rounded_hero_x);
-		//console.log(hero.current_level);
-		if(rounded_hero_x > hero.current_level)
-		{
-			hero.progress++;
-			hero.current_level += hero.progress_to_level;
-			console.log(hero.progress);
-			hero.score += (hero.progress * 500);
-		}
-		
-		GraphicsController.change_seasons(hero.progress);
-
-		GraphicsController.background_loop(hero.body.GetWorldCenter(), hero.progress);
-
 		//make x and y coordinates available to enemy AI's that need to know them efficiently
 		//pconf.hero_x[player_id] = hero_x; //for multiplayer mode
 		//pconf.hero_y[player_id] = hero.y;
 		pconf.hero_x = hero.body.GetWorldCenter().x; //while stuck in single player mode
 		pconf.hero_y = hero.body.GetWorldCenter().y;
-		if(pconf.movement_edge < hero_x - 20){
-			pconf.movement_edge = hero_x - 20;
+		if(pconf.movement_edge < pconf.hero_x - 20){
+			pconf.movement_edge = pconf.hero_x - 20;
 		}
 
 		var cmds = KeyboardController.movement_commands();
@@ -91,15 +74,12 @@ var HeroLogic = (function(){
         //End Score Tracking
 
 		if(cmds("right")){
-		    // temporary
-		    move_right(hero);
-		    //console.log("Movement Edge: " + parseInt(pconf.movement_edge) + " of type: " + typeof (pconf.movement_edge));
-			//GraphicsController.background_loop(hero.body.GetWorldCenter(), hero.progress);
+			// temporary
+			move_right(hero);
 		}
 		if(cmds("left")){
-		    // temporary
-		    move_left(hero);
-		    //GraphicsController.background_loop(hero.body.GetWorldCenter(), hero.progress);
+			// temporary
+			move_left(hero);
 		}
 		if(cmds("down")){
 			slam(hero);
@@ -113,12 +93,11 @@ var HeroLogic = (function(){
 		{
 			hero.hp -= hero.damage_taken;
 			console.log("Taking damage");
-			GraphicsController.update_health(hero.hp);
 		}
 		
 		if(hero.hp <= 0)
 		{
-		    EntityController.delete_entity(hero);
+			EntityController.delete_entity(hero);
 			console.log("Player Is Dead");
 		}
 		
@@ -127,15 +106,12 @@ var HeroLogic = (function(){
 			console.log("working");
 		}
 		if (hero.body.GetWorldCenter().y > 22) {
-		    hero.hp = 0;
-		    console.log("drop of death");
+			hero.hp = 0;
+			console.log("drop of death");
 		}
-		GraphicsController.update_score(hero.score);
 	};
 
 	var begin_contact = function(contact, info){
-		//console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
-			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
 		if (info.Me.fixture_name == "bottom"){
 			if(info.Them.fixture_name == "top" || info.Them.entity.kind == 1 || info.Them.entity.kind == 2){
 				info.Me.entity.jumps = 0;
@@ -152,7 +128,7 @@ var HeroLogic = (function(){
 				var my_coordinates = info.Me.entity.body.GetWorldCenter();
 				var other_extents = info.Them.entity.body.GetFixtureList().GetNext().GetNext().GetNext().GetNext().GetAABB().GetExtents();
 				var other_coordinates = info.Them.entity.body.GetWorldCenter();
-				//try to prevent taking damage while on top of enemies
+				//prevents taking damage while on top of enemies
 				if (!(my_coordinates.y <= other_coordinates.y - (my_extents.y + other_extents.y - 0.5))){
 					info.Me.entity.wound = true;
 					info.Me.entity.damage_taken = info.Them.entity.damage;
@@ -167,7 +143,6 @@ var HeroLogic = (function(){
 
 	var take_hit = function(hero, amount){
 	    hero.hp -= amount;
-		//GraphicsController.update_health(hero.hp);
 	}
 
 	var end_contact = function(contact, info){

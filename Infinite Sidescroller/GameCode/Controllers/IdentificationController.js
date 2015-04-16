@@ -102,6 +102,14 @@ var IdentificationController = (function(){
 		}
 		
 	};
+	
+	var get_hero = function(){
+		return IdentificationModel.hero
+	};
+	
+	var load_hero = function(id){
+		IdentificationModel.hero = get_by_id(id);
+	}
 
 	var get_by_type = function(type){
 		/**
@@ -127,6 +135,8 @@ var IdentificationController = (function(){
 		remove_id: remove_id,
 		assign_type: assign_type,
 		get_by_type: get_by_type,
+		get_hero: get_hero,
+		load_hero: load_hero,
 	};
 })();
 

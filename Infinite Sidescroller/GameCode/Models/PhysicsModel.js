@@ -102,14 +102,15 @@ r_templates.terrain_cell = {
 	type: "static",
 	width: 1,
 	height: 1,
-	friction: .4,
+	friction: 2,
 	//mobexp++
 };
 
 r_templates.hero = {
 	parent: r_templates.living,
-	width: 1.5,
-	height: 2.5,
+	width: 0.9,
+	height: 1.7,
+	density: 4.5,
 	type: "dynamic",
 	//mobexp++
 };

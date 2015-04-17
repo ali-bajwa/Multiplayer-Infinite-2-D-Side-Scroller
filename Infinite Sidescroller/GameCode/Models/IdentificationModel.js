@@ -14,6 +14,10 @@ var IdentificationModel = function(){
 	// registry of types to make sure that no type is registerd twice
 	// and enable people to get the model by type name
 	this.types = {}
+	
+	//list of heroes and companions spawned
+	this.hero;
+	this.companions = [];
 };
 
 module.exports = new IdentificationModel;

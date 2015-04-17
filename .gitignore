@@ -154,3 +154,7 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+Infinite Sidescroller/node_modules/
+Infinite Sidescroller/packages/
+Infinite Sidescroller/GameCode/bundle.js
+packages/

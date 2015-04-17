@@ -17,6 +17,7 @@ var AntLogic = (function(){
 		this.hp = 2;
 		this.speed = 3;
 		this.damage = 1;
+		this.point_value = 25;
 		//this.attack_cooldown = 4; //use this for enemies who need
 		this.can_attack = true;//use this for enemies who alternate between 
 		//this.cooldown_timer=-1;
@@ -65,6 +66,7 @@ var AntLogic = (function(){
 			
 			if (ant.hero_hurt_me){
 				wound_ant(ant, 1);
+				IdentificationController.get_hero().score += ant.point_value;
 				ant.hero_hurt_me = false;
 				ant.can_attack = false;
 			}

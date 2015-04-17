@@ -17,6 +17,7 @@ var GriffinLogic = (function(){
 		this.hp = 2;
 		this.speed = 6;
 		this.damage = 10;
+		this.point_value = 100;
 		//this.attack_cooldown = 4; //use this for enemies who need
 		this.can_attack = true;//use this for enemies who alternate between 
 		//this.cooldown_timer=-1;
@@ -66,6 +67,7 @@ var GriffinLogic = (function(){
 			
 			if (Griffin.hero_hurt_me){
 				wound_Griffin(Griffin, 1);
+				IdentificationController.get_hero().score += Griffin.point_value;
 				Griffin.hero_hurt_me = false;
 				Griffin.can_attack = false;
 			}

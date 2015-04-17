@@ -71,7 +71,7 @@ var TerrainSliceController = (function () {
 		var platform_count_max = 2; //maximum number of platforms per column
 		var platform_count = []; 		//keeps track of platforms per column
 		var platform_frequency = 10;//base percentage chance of a platform to be generated
-		var spike_frequency = 20;//base percentage chance of a platform to have spikes
+		var spike_frequency = 5;//base percentage chance of a platform to have spikes
 		/*
 		var spike frequency
 		var column frequency
@@ -230,7 +230,7 @@ var TerrainSliceController = (function () {
 		slice.origin.x = x_offset;
 		slice.origin.y = 0;
 		//get a random kind of slice
-		if (seed > 95){
+		if (seed%100 > 95){
 			slice = buildTerrainSlice_00(slice,seed);
 		}else{
 			slice = buildTerrainSlice_01(slice,seed);

@@ -134,10 +134,10 @@ var HeroLogic = (function(){
 			stop_hero(hero);
 			console.log("working");
 		}
-		if (hero.body.GetWorldCenter().y > 22) {
-			hero.hp = 0;
-			console.log("drop of death");
-		}
+		//if (hero.body.GetWorldCenter().y > 22) {
+			//hero.hp = 0;
+			//console.log("drop of death");
+		//}
 	};
 	var change_state = function(hero, new_state){
 		hero.state = new_state;

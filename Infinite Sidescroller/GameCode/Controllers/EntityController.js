@@ -143,7 +143,17 @@ var EntityController = (function(){
 
 			var logic = type_logic_table[type];
 			for(var id in table){
-				logic.tick_AI(table[id]);
+				var entity = table[id];
+				var body = entity.body;
+
+				if(body.GetWorldCenter().x < Config.Player.movement_edge ||
+					body.GetWorldCenter().y > Config.World.maxy){
+					// if outside boundaries of the world, delete
+					delete_entity(entity);
+					console.log("entity of type", type, "deleted due to the world boundary");
+				}else{
+					logic.tick_AI(entity);
+				}
 			}
 			
 		} // end for in 

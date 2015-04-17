@@ -58,10 +58,10 @@ var AntLogic = (function(){
 		*/
 
 	    //if enemy is dead, die
-	    if (ant.body.GetWorldCenter().y > 22 || ant.body.GetWorldCenter().x < Config.Player.movement_edge - 1) {
-	        EntityController.delete_entity(ant);
-	        console.log("drop of death");
-	    }
+		//if (ant.body.GetWorldCenter().y > 22 || ant.body.GetWorldCenter().x < Config.Player.movement_edge - 1) {
+			//EntityController.delete_entity(ant);
+			//console.log("drop of death");
+		//}
 		if (ant.hp == 1) {
 			
 			if (ant.hero_hurt_me){

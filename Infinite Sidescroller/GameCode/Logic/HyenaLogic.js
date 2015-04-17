@@ -97,9 +97,10 @@ var HyenaLogic = (function(){
 	var tick_AI = function(Hyena){
 		//Check if Dead........
 		//If Hyena is off the screen, delete
-		if (Hyena.body.GetWorldCenter().y > 22 || Hyena.body.GetWorldCenter().x < Config.Player.movement_edge - 1){
-			EntityController.delete_entity(Hyena);
-		}else if (Hyena.hp <= 0){//if mortally wounded
+		//if (Hyena.body.GetWorldCenter().y > 22 || Hyena.body.GetWorldCenter().x < Config.Player.movement_edge - 1){
+			//EntityController.delete_entity(Hyena);
+		//}else 
+		if (Hyena.hp <= 0){//if mortally wounded
 			if (Hyena.is_alive){//if alive, kill it
 				Hyena.death_timer = Hyena.death_duration;
 				Hyena.is_alive = false;

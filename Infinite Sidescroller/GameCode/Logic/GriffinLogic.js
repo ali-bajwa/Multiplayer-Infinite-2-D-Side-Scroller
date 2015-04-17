@@ -59,10 +59,10 @@ var GriffinLogic = (function(){
 		*/
 
 		//if enemy is dead, die
-		if (Griffin.body.GetWorldCenter().y > 22 || Griffin.body.GetWorldCenter().x < Config.Player.movement_edge - 1) {
-	        	EntityController.delete_entity(Griffin);
-	        	console.log("drop of death");
-	    	}
+		//if (Griffin.body.GetWorldCenter().y > 22 || Griffin.body.GetWorldCenter().x < Config.Player.movement_edge - 1) {
+				//EntityController.delete_entity(Griffin);
+				//console.log("drop of death");
+			//}
 		if (Griffin.hp == 1) {
 			
 			if (Griffin.hero_hurt_me){

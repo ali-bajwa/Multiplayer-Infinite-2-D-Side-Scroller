@@ -31,9 +31,16 @@ var Config = function(){
 		next_slice_id: 0 
 	};
 
+	this.World = {
+		maxy: 22,
+
+	};
+
 	this.Player = {
-		movement_edge: 0
-	}
+		movement_edge: 0,
+
+
+	};
 	// <<<
 };
 

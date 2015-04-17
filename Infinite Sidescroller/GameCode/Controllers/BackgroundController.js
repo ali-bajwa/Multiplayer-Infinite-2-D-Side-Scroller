@@ -4,7 +4,7 @@ var BackgroundController = (function(){
 	//Controls the background and score
 
 		var season_array;
-		var season_name;
+		var season_image;
 		var cycle;
 		var season_threshold;
 		
@@ -16,7 +16,7 @@ var BackgroundController = (function(){
 		include(); //sets up dependencies MUST GO FIRST
 		
 		season_array = [];//stores season sprites
-		season_name = ["Winter", "Spring", "Summer", "Fall" ];
+		season_image = ["Winter", "Spring", "Summer", "Fall"];
 		cycle = 0; //season cycle
 		season_threshold = 2; //So seasons only update once
 		
@@ -46,12 +46,12 @@ var BackgroundController = (function(){
 	};
 	
 	//Generates tiled background for season
-	var generate_season = function(season_name, canvas_width, start){
-		for(var i = start; i <= canvas_width + canvas_width + 1; i += season.image.width){
-			var season = GraphicsController.request_bitmap(season_name);
+	var generate_season = function(season_image, canvas_width, start){
+		for(i=0; i<3; i++){
+			var season = GraphicsController.request_bitmap(season_image);
 			season.regY -= season.image.height/2;
-			
-			season.x = i;
+			console.log("generating season");
+			season.x = start + i*season.image.width;
 			GraphicsController.get_stage().addChildAt(season, 0);
 			season_array.push(season);
 		}
@@ -65,15 +65,16 @@ var BackgroundController = (function(){
 			flag = true;
 		}
 		if(flag){
+			console.log("generating season");
 			delete_all_season();
 			cycle = (cycle+1)%4;
-			generate_season(season_name[cycle], GraphicsController.get_stage().canvas.width, Config.Player.movement_edge / 30);
+			generate_season(season_image[cycle], GraphicsController.get_stage().canvas.width, pconfig.movement_edge / 30);
 		}
 	};
 	
 	//scrolls the background along with the player
 	var background_loop = function(hero_x, progress){
-		for(var i = 0; i < season_array.length; i++){
+		for(i=0; i<season_array.length; i++){
 			//season_array[i].x = (i * 799) + GraphicsModel.camera.offset.x;
 			//season_array[i].y = GraphicsModel.camera.offset.y;
 			season_array[i].x = ((i + progress) * 799) - (hero_x * 4);

@@ -17,6 +17,28 @@ var HeroLogic = (function(){
 		this.jumps = 0;
 		
 		this.score = 0;
+		this.state = "walk";
+		this.an_frame =0;
+		this.death_tick=0;
+		this.jump_tick=0;
+		this.walk_tick=0;
+		this.is_walk = false;
+		this.is_jump = false;
+		this.last_pos=0;
+		this.current_pos =0;
+		this.pos_count =0; //counts the number of times player sits at a position
+		/*
+			whenever the up,right,left buttons are pressed the 
+			corosponding value is set to 0 and the other are increased by1
+			the value of the boolean corospoding to the button pressed is set to true
+		*/
+		this.up =false;
+		this.right=false;
+		this.left=false;
+		this.right_count = 0;
+		this.left_count = 0;
+		this.up_count=0;
+		this.facing = "right"; //or will be left
 	};
 
 	var init = function(){
@@ -74,11 +96,17 @@ var HeroLogic = (function(){
         //End Score Tracking
 
 		if(cmds("right")){
-			// temporary
+			 if(hero.jumps==0&&hero.is_walk == false){
+				change_state(hero,"walk");
+				hero.is_walk = true;
+			}
 			move_right(hero);
 		}
 		if(cmds("left")){
-			// temporary
+			if(hero.jumps==0&&hero.is_walk == false){
+				change_state(hero,"walk");
+				hero.is_walk = true;
+			}
 			move_left(hero);
 		}
 		if(cmds("down")){
@@ -86,6 +114,7 @@ var HeroLogic = (function(){
 			
 		}
 		if(cmds("up")){
+			hero.is_walk=false;
 			jump(hero);
 			
 		}
@@ -110,7 +139,12 @@ var HeroLogic = (function(){
 			console.log("drop of death");
 		}
 	};
-
+	var change_state = function(hero, new_state){
+		hero.state = new_state;
+		hero.walk_tick = 0;
+		hero.death_tick = 0;
+		hero.jump_tick = 0;
+	};
 	var begin_contact = function(contact, info){
 		if (info.Me.fixture_name == "bottom"){
 			if(info.Them.fixture_name == "top" || info.Them.entity.kind == 1 || info.Them.entity.kind == 2){
@@ -176,10 +210,12 @@ var HeroLogic = (function(){
 	var jump = function(hero){
 	    var body = hero.body;
 		if (hero.jumps == 0){
+			change_state(hero,"jump");
 		    body.ApplyImpulse(new B2d.b2Vec2(0, -125), body.GetWorldCenter());
 		    hero.jumps += 1;
 		}
 		else if (hero.jumps == 1 && body.GetLinearVelocity().y > -1) {
+			change_state(hero,"jump");
 		    body.ApplyImpulse(new B2d.b2Vec2(0, -125), body.GetWorldCenter());
 		    hero.jumps += 1;
 		}

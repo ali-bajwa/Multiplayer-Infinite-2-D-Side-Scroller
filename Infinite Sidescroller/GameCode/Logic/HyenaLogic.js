@@ -64,7 +64,7 @@ var HyenaLogic = (function(){
 		this.path_blocked = false;//is this deprecated? set during collision
 		this.obstruction_tolerance = 4;//how many times the hyena can be blocked before he takes action
 		this.blocked_count = 0;//tracks number of times blocked between maintenance checks
-		this.vulnerability_radius = (1.125 + 0.75 - 0.3);// hyena_width/2 + hero_width/2 - buffer, in meters
+		this.vulnerability_radius = (1.125 + 0.45 - 0.3);// hyena_width/2 + hero_width/2 - buffer, in meters
 		
 		this.needs_graphics_update = false; //accessed by renderer for animation purposes
 		this.animation = "stand"; //accessed by renderer for animation purposes

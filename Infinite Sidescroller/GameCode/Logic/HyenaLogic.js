@@ -24,6 +24,7 @@ var HyenaLogic = (function(){
 		this.speed = 7;
 		this.jump_force = 125;
 		this.damage = 5;
+		this.point_value = 50;
 		this.sight_range = 16; //distance at which hyena detects heroes
 		this.attack_range = 8; //distance at which hyena leaps at the hero
 		
@@ -102,6 +103,7 @@ var HyenaLogic = (function(){
 			if (Hyena.is_alive){//if alive, kill it
 				Hyena.death_timer = Hyena.death_duration;
 				Hyena.is_alive = false;
+				IdentificationController.get_hero().score += Hyena.point_value;
 				Hyena.hit_taken = false;
 				Hyena.can_attack = false;
 				change_animation(Hyena,"death");

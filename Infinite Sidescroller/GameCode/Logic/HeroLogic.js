@@ -126,8 +126,7 @@ var HeroLogic = (function(){
 		
 		if(hero.hp <= 0)
 		{
-			EntityController.delete_entity(hero);
-			console.log("Player Is Dead");
+			despawn(hero);	
 		}
 		
 		if (hero.body.GetWorldCenter().x < pconf.movement_edge + hero.body.GetUserData().def.width/2) {
@@ -139,6 +138,17 @@ var HeroLogic = (function(){
 			//console.log("drop of death");
 		//}
 	};
+
+	var despawn = function(hero){
+		/**
+		* called when hero should despawn (die);
+		*/
+
+		EntityController.delete_entity(hero);
+		console.log("Player Is Dead");
+	};
+	
+	
 	var change_state = function(hero, new_state){
 		hero.state = new_state;
 		hero.walk_tick = 0;
@@ -264,6 +274,7 @@ var HeroLogic = (function(){
 		// declare public
 		init: init, 
 		spawn: spawn,
+		despawn: despawn,
 		tick_AI: tick_AI,
 		begin_contact: begin_contact,
 		end_contact: end_contact,

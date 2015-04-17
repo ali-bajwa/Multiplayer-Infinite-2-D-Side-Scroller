@@ -230,7 +230,7 @@ var TerrainSliceController = (function () {
 		slice.origin.x = x_offset;
 		slice.origin.y = 0;
 		//get a random kind of slice
-		if (seed%100 > 95){
+		if (getRandomNumber(seed)%100 < 95){
 			slice = buildTerrainSlice_00(slice,seed);
 		}else{
 			slice = buildTerrainSlice_01(slice,seed);

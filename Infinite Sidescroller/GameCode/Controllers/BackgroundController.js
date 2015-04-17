@@ -18,7 +18,7 @@ var BackgroundController = (function(){
 		season_array = [];//stores season sprites
 		season_image = ["Winter", "Spring", "Summer", "Fall"];
 		cycle = 0; //season cycle
-		season_threshold = 1; //So seasons only update once
+		season_threshold = 2; //So seasons only update once
 		
 		hero_progress = 0;
 		hero_progress_to_level = 199;//season_image[cycle].width*2 + Config.SCREEN_W/2;
@@ -61,7 +61,7 @@ var BackgroundController = (function(){
 	var change_seasons = function(progress){
 		var flag = false;
 		if(progress == season_threshold){ //seasons will change every even progress number
-			season_threshold += 1;
+			season_threshold += 2;
 			flag = true;
 		}
 		if(flag){

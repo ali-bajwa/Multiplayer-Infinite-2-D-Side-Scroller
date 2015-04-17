@@ -29,6 +29,7 @@ var TerrainController = (function(){
 			var slice = NewTerrainSlice();
 			TerrainModel.terrain_slices_queue.push(slice);
 		}
+
 		if(config.Player.movement_edge > (TerrainModel.terrain_slices_queue.length-3)*(20)){
 			var slice = NewTerrainSlice(TerrainModel.seed);
 			TerrainModel.terrain_slices_queue.push(slice);
@@ -54,7 +55,6 @@ var TerrainController = (function(){
 
 	};
 
-	var retrieve_world_parameters = function(){};
 	
 	var for_each_tile = function(f){
 		// takes function >f< that takes three parameters: tile (easeljs object),
@@ -71,30 +71,7 @@ var TerrainController = (function(){
 
 	};
 
-	var move_left = function(pixels){
-		// Should I scrap this function and just use >move<, or is this a helpful shortcut?
-		
-		move((-1)*pixels, 0);
-
-	}; // end move_left
 	
-	var move = function(offset_x, offset_y){
-		if(offset_x != 0){
-			for_each_tile(function(tile, terrain_lvl, tile_index){
-				tile.x += offset_x;
-			});
-
-		}// fi
-
-		if(offset_y != 0){
-			for_each_tile(function(tile, terrain_lvl, tile_index){
-				tile.y += offset_y;
-			});
-
-		}
-
-	};
-
 	var MarkAsNewTerrainSlice = function(slice){
 		TerrainModel.new_slices.push(slice);
 	};
@@ -108,8 +85,6 @@ var TerrainController = (function(){
 	};
 
 	return {
-		move_left: move_left,
-		move: move,
 		update: update,
 		init: init,
 		NewTerrainSlice: NewTerrainSlice,

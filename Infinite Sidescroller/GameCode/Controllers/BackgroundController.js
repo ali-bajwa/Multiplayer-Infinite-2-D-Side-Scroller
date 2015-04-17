@@ -1,4 +1,4 @@
-pconfig = require ("../Config.js").Player;
+Config = require ("../Config.js").Player;
 
 var BackgroundController = (function(){
 	//Controls the background and score
@@ -18,11 +18,11 @@ var BackgroundController = (function(){
 		season_array = [];//stores season sprites
 		season_image = ["Winter", "Spring", "Summer", "Fall"];
 		cycle = 0; //season cycle
-		season_threshold = 2; //So seasons only update once
+		season_threshold = 1; //So seasons only update once
 		
 		hero_progress = 0;
-		hero_progress_to_level = 199;
-		hero_current_level = 199;
+		hero_progress_to_level = 199;//season_image[cycle].width*2 + Config.SCREEN_W/2;
+		hero_current_level = hero_progress_to_level;
 		
 		generate_season("Winter", GraphicsController.get_stage().canvas.width, 0);
 	};
@@ -47,10 +47,10 @@ var BackgroundController = (function(){
 	
 	//Generates tiled background for season
 	var generate_season = function(season_image, canvas_width, start){
-		for(i=0; i<3; i++){
+		for(i=0; i<3; i++){//create tiles 3 at a time
 			var season = GraphicsController.request_bitmap(season_image);
 			season.regY -= season.image.height/2;
-			console.log("generating season");
+			//create a new tile with offset
 			season.x = start + i*season.image.width;
 			GraphicsController.get_stage().addChildAt(season, 0);
 			season_array.push(season);
@@ -61,14 +61,14 @@ var BackgroundController = (function(){
 	var change_seasons = function(progress){
 		var flag = false;
 		if(progress == season_threshold){ //seasons will change every even progress number
-			season_threshold += 2;
+			season_threshold += 1;
 			flag = true;
 		}
 		if(flag){
 			console.log("generating season");
 			delete_all_season();
 			cycle = (cycle+1)%4;
-			generate_season(season_image[cycle], GraphicsController.get_stage().canvas.width, pconfig.movement_edge / 30);
+			generate_season(season_image[cycle], GraphicsController.get_stage().canvas.width, Config.Player.movement_edge / 30);
 		}
 	};
 	

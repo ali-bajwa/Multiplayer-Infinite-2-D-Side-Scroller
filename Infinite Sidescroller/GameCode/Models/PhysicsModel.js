@@ -127,8 +127,8 @@ r_templates.ant = {
 
 r_templates.Griffin = {
 	parent: r_templates.living,
-	width: 10,
-	height: 5,
+	width: 4,
+	height: 2.5,
 	type: "dynamic",
 	x: 65,
 	y: 10,

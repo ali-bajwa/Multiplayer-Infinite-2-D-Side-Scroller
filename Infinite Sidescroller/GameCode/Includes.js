@@ -33,7 +33,6 @@ var Include = function(){
 			"IdentificationController",
 			"RegisterAsController",
 			"HUDController",
-			//"BackgroundController",
 		],
 
 		Models: [
@@ -50,7 +49,6 @@ var Include = function(){
 			"EntityModel",
 			"RegisterAsModel",
 			"HUDModel",
-			//"BackgroundModel",
 		],
 
 		Other: [
@@ -99,7 +97,6 @@ var Include = function(){
 			IdentificationController: require("./Controllers/IdentificationController.js"),
 			RegisterAsController: require("./Controllers/RegisterAsController.js"),
 			HUDController: require("./Controllers/HUDController.js"),
-			//BackgroundController: require("./Controllers/BackgroundController.js"),
 			
 			
 			// Models
@@ -117,7 +114,6 @@ var Include = function(){
 			EntityModel: require("./Models/EntityModel.js"),
 			RegisterAsModel: require("./Models/RegisterAsModel.js"),
 			HUDModel: require("./Models/HUDModel.js"),
-			//BackgroundModel: require("./Models/BackgroundModel.js"),
 			
 				
 			// Other stuff

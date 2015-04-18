@@ -67,6 +67,8 @@ var Include = function(){
 			"TerrainCellRenderer",
 			"GriffinRenderer",
 			"HyenaRenderer",
+			"TerrainSliceRenderer",
+
 		],
 
 		Logic: [
@@ -131,6 +133,9 @@ var Include = function(){
 			HyenaRenderer: require("./Renderers/HyenaRenderer.js"),
 			HeroRenderer: require("./Renderers/HeroRenderer.js"),
 			TerrainCellRenderer: require("./Renderers/TerrainCellRenderer.js"),
+			TerrainSliceRenderer: require("./Renderers/TerrainSliceRenderer.js"),
+			
+			
 			
 			// Logic
 			AntLogic: require("./Logic/AntLogic.js"),

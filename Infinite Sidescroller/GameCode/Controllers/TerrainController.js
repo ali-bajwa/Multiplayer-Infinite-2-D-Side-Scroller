@@ -35,6 +35,8 @@ var TerrainController = (function(){
 			TerrainModel.terrain_slices_queue.push(slice);
 			TerrainModel.seed = (((TerrainModel.seed%4) * (TerrainModel.seed+1) - TerrainModel.seed / 2)) % 3000;
 		};
+
+		//check_for_old_slices();
 	};
 
 
@@ -43,17 +45,66 @@ var TerrainController = (function(){
 		 * it calculates it's origin x and y positions and whatever other stuff,
 		 * generates slice; sets up everything
 		 */
-		var x_offset = TerrainModel.terrain_slices_queue.length*20;
-		if (TerrainModel.terrain_slices_queue.length < 3){
+		var x_offset = TerrainModel.slice_counter * Config.TerrainSlice.grid_columns;
+
+		TerrainModel.slice_counter++; // TODO: change how it works when truly infinite
+
+		if(TerrainModel.initial_generated < 3){
+			TerrainModel.initial_generated++;
 			var slice = new TerrainSliceController.generate_initial(x_offset);
 		}else{
 			var slice = new TerrainSliceController.generate_random(x_offset, seed);
 		}
+
+		IdentificationController.assign_id(slice);
+
 		MarkAsNewTerrainSlice(slice); 
 
 		return slice;
 
 	};
+
+	var check_for_old_slices = function(){
+		/**
+		* check for slices that are too far behind and should be removed
+		*/
+
+		var tqueue = TerrainModel.terrain_slices_queue;
+		var cut_off_index = 0; // what amnt of slices should go off the queue
+
+		// find the old slices and handle their deletion
+		for(var i = 0; i < tqueue.length; i++){
+			var slice = tqueue[i];
+			var slice_end_x = slice.origin.x + slice.grid_columns * slice.cell_w;
+
+			if(slice_end_x < Config.Player.movement_edge){
+				// if slice is unreachable, delete it 
+				cut_off_index++;
+				delete_slice(slice);
+			}
+		}
+
+		// now remove all found old slices from the queue
+		if(cut_off_index > 0){
+			tqueue.slice(cut_off_index)
+		}
+	};
+	
+	
+
+	var delete_slice = function(slice){
+		/**
+		* assumes that slice will be popped from the terrain slice queue elsewhere
+		* (or was already)
+		* otherwise the slice won't be properly deleted
+		*/
+			
+		// TODO: comment in update back
+
+		// free the id (yes, terrain slice has id id
+	};
+	
+	
 
 	
 	var for_each_tile = function(f){
@@ -74,6 +125,7 @@ var TerrainController = (function(){
 	
 	var MarkAsNewTerrainSlice = function(slice){
 		TerrainModel.new_slices.push(slice);
+		RegisterAsController.register_as("awaiting_graphics_initialization", slice);
 	};
 
 	var NewSlicesAvailable = function(){

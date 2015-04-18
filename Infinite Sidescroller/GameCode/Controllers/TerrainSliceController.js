@@ -5,6 +5,7 @@ var TerrainSliceController = (function () {
 		/* is ran from the InitController once when the game is loaded */
 		include(); // satisfy requirements
 		IdentificationController.assign_type(TerrainSliceModel.Cell, "terrain_cell");
+		IdentificationController.assign_type(TerrainSliceModel.Slice, "terrain_slice");
 
 	};
 

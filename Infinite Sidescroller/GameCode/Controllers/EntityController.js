@@ -38,7 +38,7 @@ var EntityController = (function(){
 
 		}
 
-		spawn("hero",10,10);
+		//spawn("hero",10,10);
 	};
 
 
@@ -48,10 +48,10 @@ var EntityController = (function(){
 
 		// demonstration purposes
 		if(debug_commands("spawn_ant")){
-			var new_ant = spawn("ant",(Math.random()*50 + 10),10);
+			var new_ant = spawn((Math.random()*50 + 10),10, "ant");
 		}
 		if(debug_commands("request_hero")){
-			var new_hero = spawn("hero",20,10);
+			var new_hero = spawn(20,10, "hero");
 		}
 
 		/*
@@ -73,13 +73,51 @@ var EntityController = (function(){
 		} // end for in 
 
 	};
+
+	var spawn = function(x, y, type){
+		/**
+		* spawn entity of type >type<
+		* at position (x, y)
+		*/
+		MultiplayerSyncController.route_outcoming_packet({
+			op: "spawn",
+			type: type,
+			x: x,
+			y: y
+		});
+	};
+
+	var handle_spawn = function(packet){
+		/**
+		* takes the packet with >op< "spawn"
+		* containing properties >x<, >y<, >type<, and possibly more
+		* handles creation of the entity, id assignment, etc.
+		*/
+		var x = packet.x,
+			y = packet.y,
+			type = packet.type;
+
+		if(type_logic_table[type] == null){
+			throw "No logic found for the type" + String(type);
+		}
+
+		var logic = type_logic_table[type];
+		var entity = logic.spawn(x, y);
+
+		IdentificationController.assign_id(entity);
+
+		reg_for_logic_update(entity);
+		RegisterAsController.register_as("awaiting_graphics_initialization", entity)
+	};
 	
+	
+
 	//takes a string type index as parameter 
 	//and returns the spawn() function associated with it
-	var get_operation = function(type){
-		var logic = type_logic_table[type].spawn;
-		return logic;
-	};
+	//var get_operation = function(type){
+		//var spawn = type_logic_table[type].spawn;
+		//return spawn;
+	//};
 	
 	//registers a new instance
 	//so that renderers and updaters know to update it on tick
@@ -97,15 +135,19 @@ var EntityController = (function(){
 	
 	//wrapper for universal spawn
 	//maintains the old interface
-	var spawn = function(type,x,y){
-		MultiplayerSyncController.handle_spawn({type:type,x:x,y:y});
-	};
+	//var spawn = function(type,x,y){
+		//MultiplayerSyncController.handle_spawn({type:type,x:x,y:y});
+	//};
 	
 	var delete_entity = function(entity_instance){
-		MultiplayerSyncController.handle_delete({id:entity_instance.id});
+		MultiplayerSyncController.route_outcoming_packet({
+			op: "delete_entity",
+			id: entity_instance.id,
+			type: entity_instance.type,
+		});
 	};
 	
-	var fulfill_delete_request = function(entity_instance){
+	var handle_delete = function(packet){
 		/**
 		* This function will remove this entity along with some other info about this entity
 		* from the world, it'll also free the id of this entity. The physical body will be deleted
@@ -113,6 +155,8 @@ var EntityController = (function(){
 		* This function is supposed to be called by the individual logic modules, when the are finished
 		* animating deat/destruction of something and want to get rid of it
 		*/
+
+		var entity_instance = EntityModel.for_logic_update[packet.type][packet.id];
 
 		// TODO: finish this function and then update it regularly;
 		// This one is very sensitive, as even one reference left may prevent 
@@ -153,11 +197,13 @@ var EntityController = (function(){
 		// declare public
 		init: init, 
 		update: update,
-		get_operation: get_operation,
+		//get_operation: get_operation,
 		reg_for_logic_update: reg_for_logic_update,
 		spawn: spawn,
 		delete_entity: delete_entity,
-		fulfill_delete_request: fulfill_delete_request,
+		//fulfill_delete_request: fulfill_delete_request,
+		handle_spawn: handle_spawn,
+		handle_delete: handle_delete,
 	};
 })();
 

@@ -10,6 +10,12 @@ var MultiplayerSyncController = (function(){
 		/* is ran from the InitController once when the game is loaded */
 		include(); // satisfy requirements
 
+		// table that associates >op< (operation) with the specific handler
+		// at some (likely external) module
+		op_table = {
+			spawn: EntityController.handle_spawn,
+			delete_entity: EntityController.handle_delete,
+		}
 	};
 
 
@@ -19,7 +25,9 @@ var MultiplayerSyncController = (function(){
 		var data = NetworkController.get_data(); // array of all packets
 
 		var op_packet = MultiplayerSyncModel.op_packets_table; //op_packet is a list of objects
-		if(data != null){
+
+		// the following loop will store packets based on their op
+		/*if(data != null){
 			for(var i = 0; i < data.length; i++){ //for each packet in buffer
 				var packet = data[i];
 				var op = packet.op; //get packet op
@@ -31,19 +39,125 @@ var MultiplayerSyncController = (function(){
 					throw "Error, this packet has no op property"
 				}
 			}
-		}
+		}*/
 		
-		handle_packets(data);
+		//handle_packets(data); // Seans
+
+		if(data != null){
+			for(var i = 0; i < data.length; i++){
+				// for each packet in incoming packets,
+				// rout it
+				var packet = data[i];
+				route_incoming_packet(packet);
+			}
+		}
 
 		NetworkController.clean_data();	// remove data that was processed
 	};
 
+	var route_outcoming_packet = function(packet){
+		/**
+		* route packet appropriately
+		*/
+
+		var op = packet.op;
+		var handler = op_table[op];
+
+		if(handler == null){
+			// if no handler assigned
+			console.warn("No handler for op", op);
+			return -1;
+		}
+
+		if(Config.Remote.connected){
+			// if multiplayer
+			if(Config.Remote.master){
+				// if master of the network
+				// route back to specific handler
+				// echo to all clients
+
+				handler(packet);
+
+				var response = packet; // do we want to allow overriding the response?
+
+				NetworkController.add_to_next_update(response);
+			}else{
+				// if one of the clients
+				// route to the master
+				NetworkController.add_to_next_update(packet);
+			}
+		}else{
+			// if singlplayer
+			// route back to the specific handler
+			handler(packet);
+		}
+	};
+
+	var route_incoming_packet = function(packet){
+		/**
+		* handle packet that arrived over the network
+		* ! this function is called only when packets arrive remotely
+		* ! so you may safely assume that you are connected to the network
+		* ! and the packet didn't originate on your side (this last one is
+		* ! especially important)
+		*/
+
+		apply_transforms(packet); // apply any necessary transformations before beginning
+
+		var op = packet.op;
+		var handler = op_table[op];
+
+		if(handler == null){
+			// if no handler assigned
+			console.warn("No handler for op", op);
+			return -1;
+		}
+
+		if(Config.Remote.master){
+			// if master
+			// route to specific handler
+			// echo to the clients
+			handler(packet);
+			NetworkController.add_to_next_update(packet);
+		}else{
+			// if one of the clients
+			// route to the handler
+			handler(packet);
+		}
+		
+	};
+
+	var apply_transforms = function(packet){
+		/**
+		* if some specific transformation is supposed to be applied to the packet
+		* (op should change somehow, new properties added etc.)
+		* apply this transformation
+		* ! notice that transforms are applied to incoming packets only
+		* ! if you are confident you need something else, contact me (AK)
+		*/
+
+		switch(packet.op){
+			case null:
+				console.log(packet);
+				throw "op for this packet is undefined";
+				break;
+			case "hero":
+				packet.op = "companion";
+				break;
+			//default:
+		}
+
+		return packet;
+	};
+	
+	
+	
 	/*
 	iterates through packets and parses them based on op (operation)
 	*/
-	var handle_packets = function(data){
+	/*var handle_packets = function(data){
 		if(data != null){
-			for(i=0;i<data.length;i++){
+			for(i = 0;i < data.length; i++){
 				packet = data[i];
 				switch (packet.op){
 					case null:
@@ -64,14 +178,14 @@ var MultiplayerSyncController = (function(){
 	};
 	
 	var get_packets_by_op = function(op){
-		/**
+		[>*
 		* gets all packets with the operation >op<
 		* for you
-		*/
+		<]
 		return MultiplayerSyncModel.op_packets_table[op];
 	};
 	
-		/*
+		[>
 		The handle_spawn() function takes an object as a parameter
 		it handles the packet based on whether the caller is a master, slave, or single player
 		and on the contents of the packet
@@ -91,8 +205,8 @@ var MultiplayerSyncController = (function(){
 						marks packet to be parsed as instance spawner
 			additionally, the packet can be assigned any number of extra variables
 			to be parsed by the class' individual spawn() function
-		*/
-		var handle_spawn = function(packet){
+		<]
+	var handle_spawn = function(packet){
 			var type;
 			var object;
 			var operation;
@@ -115,7 +229,7 @@ var MultiplayerSyncController = (function(){
 					send_spawn_request(packet);
 				}
 			}
-		};
+	};
 		
 	var fulfill_spawn_request = function(packet){
 			var operation;
@@ -197,7 +311,7 @@ var MultiplayerSyncController = (function(){
 		packet.op = "delete";
 		packet.is_request = false;
 		NetworkController.add_to_next_update(packet);
-	};
+	};*/
 
 	
 
@@ -238,13 +352,15 @@ var MultiplayerSyncController = (function(){
 		// declare public
 		init: init, 
 		update: update,
-		get_packets_by_op: get_packets_by_op,
-		handle_spawn: handle_spawn,
-		handle_delete: handle_delete,
-		send_spawn_request: send_spawn_request,
-		send_spawn_notifications: send_spawn_notifications,
-		send_delete_request: send_delete_request,
-		send_delete_notifications: send_delete_notifications,
+		//get_packets_by_op: get_packets_by_op,
+		//handle_spawn: handle_spawn,
+		//handle_delete: handle_delete,
+		//send_spawn_request: send_spawn_request,
+		//send_spawn_notifications: send_spawn_notifications,
+		//send_delete_request: send_delete_request,
+		//send_delete_notifications: send_delete_notifications,
+		route_outcoming_packet: route_outcoming_packet,
+		route_incoming_packet: route_incoming_packet,
 	};
 })();
 

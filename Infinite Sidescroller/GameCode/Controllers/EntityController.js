@@ -38,7 +38,6 @@ var EntityController = (function(){
 
 		}
 
-		//spawn("hero",10,10);
 	};
 
 
@@ -50,7 +49,10 @@ var EntityController = (function(){
 		if(debug_commands("spawn_ant")){
 			var new_ant = spawn((Math.random()*50 + 10),10, "ant");
 		}
-		if(debug_commands("request_hero")){
+		if(debug_commands("request_hero") && !EntityModel.hero_spawned){
+			// if hero is requested, and not spawned yet,
+			// spawn hero
+			EntityModel.hero_spawned = true;
 			var new_hero = spawn(20,10, "hero");
 		}
 
@@ -107,6 +109,7 @@ var EntityController = (function(){
 		IdentificationController.assign_id(entity);
 
 		reg_for_logic_update(entity);
+
 		RegisterAsController.register_as("awaiting_graphics_initialization", entity)
 	};
 	
@@ -123,8 +126,6 @@ var EntityController = (function(){
 	//so that renderers and updaters know to update it on tick
 	var reg_for_logic_update = function(new_entity){
 		var type = new_entity.type;
-		RegisterAsController.register_as("awaiting_graphics_initialization", new_entity)
-		
 		if(!EntityModel.for_logic_update[type]){
 			EntityModel.for_logic_update[type] = {};
 		}

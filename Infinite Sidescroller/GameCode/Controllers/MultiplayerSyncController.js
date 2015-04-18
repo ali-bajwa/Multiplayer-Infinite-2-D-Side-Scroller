@@ -72,8 +72,11 @@ var MultiplayerSyncController = (function(){
 		if(Config.Remote.connected){
 			// if multiplayer
 			
-			// identify the packet as mine
-			packet.player_id = NetworkController.get_network_id();
+			if(packet.player_id == null){
+				// if packet wasn't identified before
+				// identify the packet as mine
+				packet.player_id = NetworkController.get_network_id();
+			}
 
 			if(Config.Remote.master){
 				// if master of the network
@@ -145,16 +148,17 @@ var MultiplayerSyncController = (function(){
 				console.log(packet);
 				throw "op for this packet is undefined";
 				break;
-			case "hero":
-				// someone requested hero spawn,
-				// but I should spawn companion
-				packet.op = "companion";
-				break;
-			case "companion":
-				if(packet.palyer_id == NetworkController.get_network_id()){
-					// if I am receiving notification about my own hero spawned
-					// spawn hero instead of companion
-					packet.op = "hero";
+			case "spawn":
+				if(packet.type == "companion"){
+					if(packet.player_id == NetworkController.get_network_id()){
+						// if I am receiving notification about my own hero spawned
+						// spawn hero instead of companion
+						packet.type = "hero";
+					}
+				}else if(packet.type == "hero"){
+					// someone requested hero spawn,
+					// but I should spawn companion
+					packet.type = "companion";
 				}
 				break;
 			//default:

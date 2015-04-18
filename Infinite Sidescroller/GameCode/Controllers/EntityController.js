@@ -47,13 +47,13 @@ var EntityController = (function(){
 
 		// demonstration purposes
 		if(debug_commands("spawn_ant")){
-			var new_ant = spawn((Math.random()*50 + 10),10, "ant");
+			spawn((Math.random()*50 + 10),10, "ant");
 		}
 		if(debug_commands("request_hero") && !EntityModel.hero_spawned){
 			// if hero is requested, and not spawned yet,
 			// spawn hero
 			EntityModel.hero_spawned = true;
-			var new_hero = spawn(20,10, "hero");
+			spawn(20,10, "hero");
 		}
 
 		/*
@@ -99,6 +99,10 @@ var EntityController = (function(){
 			y = packet.y,
 			type = packet.type;
 
+		if(type == "companion" || type == "hero"){
+			// TEMPPP
+			console.log("spawned", type);
+		}
 		if(type_logic_table[type] == null){
 			throw "No logic found for the type" + String(type);
 		}

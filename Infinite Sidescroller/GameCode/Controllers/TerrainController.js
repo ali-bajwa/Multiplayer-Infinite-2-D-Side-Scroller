@@ -36,7 +36,7 @@ var TerrainController = (function(){
 			TerrainModel.seed = (((TerrainModel.seed%4) * (TerrainModel.seed+1) - TerrainModel.seed / 2)) % 3000;
 		};
 
-		//check_for_old_slices();
+		check_for_old_slices();
 	};
 
 
@@ -86,7 +86,7 @@ var TerrainController = (function(){
 
 		// now remove all found old slices from the queue
 		if(cut_off_index > 0){
-			tqueue.slice(cut_off_index)
+			TerrainModel.terrain_slices_queue = tqueue.slice(cut_off_index);
 		}
 	};
 	
@@ -99,9 +99,27 @@ var TerrainController = (function(){
 		* otherwise the slice won't be properly deleted
 		*/
 			
-		// TODO: comment in update back
+		console.log("deleting slice with origin", slice.origin);
+		
+		var grid = slice.grid;
+		
+		for(var i = 0; i < grid.length; i++){
+			var row = grid[i];
+			for(var j = 0; j < row.length; j++){
+				var cell = row[j];
+				if(cell.kind != 0){
+					PhysicsController.remove_body(cell.body);
+					IdentificationController.remove_id(cell.id);
+				}
+			}
+		}
+
+		
+		// For graphics to pick up and delete unneeded graphics
+		RegisterAsController.register_as("removed_slice", slice);
 
 		// free the id (yes, terrain slice has id id
+		IdentificationController.remove_id(slice.id);
 	};
 	
 	
@@ -124,25 +142,25 @@ var TerrainController = (function(){
 
 	
 	var MarkAsNewTerrainSlice = function(slice){
-		TerrainModel.new_slices.push(slice);
+		//TerrainModel.new_slices.push(slice);
 		RegisterAsController.register_as("awaiting_graphics_initialization", slice);
 	};
 
-	var NewSlicesAvailable = function(){
-		return (TerrainModel.new_slices.length > 0);
-	};
+	//var NewSlicesAvailable = function(){
+		//return (TerrainModel.new_slices.length > 0);
+	//};
 
-	var GetNewTerrainSlices = function(){
-		return TerrainModel.new_slices;
-	};
+	//var GetNewTerrainSlices = function(){
+		//return TerrainModel.new_slices;
+	//};
 
 	return {
 		update: update,
 		init: init,
 		NewTerrainSlice: NewTerrainSlice,
 		MarkAsNewTerrainSlice: MarkAsNewTerrainSlice,
-		NewSlicesAvailable: NewSlicesAvailable,
-		GetNewTerrainSlices: GetNewTerrainSlices,
+		//NewSlicesAvailable: NewSlicesAvailable,
+		//GetNewTerrainSlices: GetNewTerrainSlices,
 	}
 })();
 

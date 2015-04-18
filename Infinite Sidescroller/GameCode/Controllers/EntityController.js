@@ -126,7 +126,8 @@ var EntityController = (function(){
 		}
 
 		// remove graphics
-			GraphicsController.destroy_graphics_for(id);
+			//GraphicsController.destroy_graphics_for(id);
+			RegisterAsController.register_as("removed_entity", entity);
 		// remove physics
 			PhysicsController.remove_body(body);
 		// remove stored references within EntityController/Model

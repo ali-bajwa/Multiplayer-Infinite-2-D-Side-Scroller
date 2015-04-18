@@ -87,9 +87,9 @@ var GraphicsController = (function(){
 		
 		update_camera(); // needs to be updated first
 
-		register_new_stuff();
+		destroy_unneeded(); // goes second, do not update any stuff before unneeded stuff is removed
 
-		check_for_new_terrain();
+		register_new_stuff();
 
 		render_things();
 		
@@ -97,6 +97,41 @@ var GraphicsController = (function(){
 		
 		GraphicsModel.stage.update();
 	};
+
+	var destroy_unneeded = function(){
+		/**
+		* destroy graphics for everything that was marked
+		* for destruction
+		*/
+
+		var slices = RegisterAsController.retrieve_registered_as("removed_slice");
+
+		var entities = RegisterAsController.retrieve_registered_as("removed_entity");
+
+		while(slices.length > 0){
+			var slice = slices.pop();
+			var grid = slice.grid;
+
+			for(var i = 0; i < grid.length; i++){
+				var row = grid[i]; // or is it a column?
+
+				for(var j = 0; j < row.length; j++){
+					var cell = row[j];
+					if(cell.kind != 0){
+						destroy_graphics_for(cell.id);
+					}
+				}
+			}
+			
+		}
+		
+		while(entities.length > 0){
+			var entity = entities.pop();
+			destroy_graphics_for(entity.id);
+		}
+	};
+	
+	
 
 	var follow = function(id){
 		//order camera to follow the graphical representation
@@ -236,16 +271,6 @@ var GraphicsController = (function(){
 	};
 	
 
-	var check_for_new_terrain = function(){
-		// If new terrain has been generated, render it
-		//var new_slices = TerrainController.GetNewTerrainSlices();
-		//while(new_slices.length > 0){
-
-			//var slice = new_slices.pop();
-
-					//} // end while
-	}; // end check_for_new_terrain
-
 	var trans_xy = function(position_vector_unscaled){
 		// takes position vector with values in meters, translates
 		// it to pixel position taking the camera position into account
@@ -293,6 +318,12 @@ var GraphicsController = (function(){
 			
 		
 		if(physical_instance){
+
+			if(physical_instance.body == null){
+				// are you trying to do something terrible? such as registering
+				// some object that doesn't need graphical representation?
+				throw "Physical instance is provided, but it has no body";
+			}
 			var id = physical_instance.id;
 			var type = physical_instance.type;
 
@@ -336,6 +367,7 @@ var GraphicsController = (function(){
 		* references to some graphics instances, UPDATE this function to reflect changes
 		* even a single reference to the object may cause it to stay in memory
 		*/
+		
 
 		if(GraphicsModel.all_physical[id] != null){
 			var graphics_instance = GraphicsModel.all_physical[id];
@@ -354,8 +386,6 @@ var GraphicsController = (function(){
 			// it may mean that implementation changed and this function needs an update
 			throw "Physical instance with id " + String(id) + " doesn't seem to have a type";
 		}
-
-		
 		
 		// remove from the stage 
 		

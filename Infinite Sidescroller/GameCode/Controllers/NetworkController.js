@@ -447,7 +447,13 @@ var NetworkController = (function(){
 	};
 	
 	var get_network_id = function(){
-		return NetworkModel.my_id;
+		// returns my network id if I am connected,
+		// or "local" if not
+		if(Config.Remote.connected){
+			return NetworkModel.my_id;
+		}else{
+			return "local";
+		}
 	};
 	
 	return {

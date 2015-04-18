@@ -33,6 +33,7 @@ var Config = function(){
 
 	this.World = {
 		maxy: 22,
+		season: 0,
 
 	};
 

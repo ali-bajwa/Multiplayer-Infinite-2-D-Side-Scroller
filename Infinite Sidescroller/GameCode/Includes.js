@@ -33,7 +33,7 @@ var Include = function(){
 			"IdentificationController",
 			"RegisterAsController",
 			"HUDController",
-			"BackgroundController",
+			//"BackgroundController",
 		],
 
 		Models: [
@@ -50,7 +50,7 @@ var Include = function(){
 			"EntityModel",
 			"RegisterAsModel",
 			"HUDModel",
-			"BackgroundModel",
+			//"BackgroundModel",
 		],
 
 		Other: [
@@ -68,6 +68,7 @@ var Include = function(){
 			"GriffinRenderer",
 			"HyenaRenderer",
 			"TerrainSliceRenderer",
+			"BackgroundRenderer",
 
 		],
 
@@ -98,7 +99,7 @@ var Include = function(){
 			IdentificationController: require("./Controllers/IdentificationController.js"),
 			RegisterAsController: require("./Controllers/RegisterAsController.js"),
 			HUDController: require("./Controllers/HUDController.js"),
-			BackgroundController: require("./Controllers/BackgroundController.js"),
+			//BackgroundController: require("./Controllers/BackgroundController.js"),
 			
 			
 			// Models
@@ -116,7 +117,7 @@ var Include = function(){
 			EntityModel: require("./Models/EntityModel.js"),
 			RegisterAsModel: require("./Models/RegisterAsModel.js"),
 			HUDModel: require("./Models/HUDModel.js"),
-			BackgroundModel: require("./Models/BackgroundModel.js"),
+			//BackgroundModel: require("./Models/BackgroundModel.js"),
 			
 				
 			// Other stuff
@@ -134,6 +135,9 @@ var Include = function(){
 			HeroRenderer: require("./Renderers/HeroRenderer.js"),
 			TerrainCellRenderer: require("./Renderers/TerrainCellRenderer.js"),
 			TerrainSliceRenderer: require("./Renderers/TerrainSliceRenderer.js"),
+			BackgroundRenderer: require("./Renderers/BackgroundRenderer.js"),
+			
+			
 			
 			
 			

@@ -70,7 +70,6 @@ var HeroLogic = (function(){
 		hero.jumps = 0;
 		hero.score = 0;
 
-
 		return hero;
 	
 	};

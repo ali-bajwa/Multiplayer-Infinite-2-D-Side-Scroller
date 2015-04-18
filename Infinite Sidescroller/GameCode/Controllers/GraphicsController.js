@@ -79,6 +79,8 @@ var GraphicsController = (function(){
 			reg_for_render: reg_for_render,
 		};
 
+		BackgroundRenderer.init();
+
 	};
 
     
@@ -94,6 +96,8 @@ var GraphicsController = (function(){
 		render_things();
 		
 		synchronize_to_physical_bodies();
+
+		BackgroundRenderer.render();
 		
 		GraphicsModel.stage.update();
 	};

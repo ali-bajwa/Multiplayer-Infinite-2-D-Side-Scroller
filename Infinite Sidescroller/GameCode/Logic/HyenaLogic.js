@@ -231,6 +231,9 @@ var HyenaLogic = (function(){
 			if (Hyena.hit_taken){
 				take_damage(Hyena); //if hit, take damage
 			}
+			if (Hyena.body.GetWorldCenter().x <= WorldController.get_movement_edge() + 1.125){
+				Hyena.body.ApplyImpulse(new B2d.b2Vec2(Hyena.jump_force, 0), Hyena.body.GetWorldCenter());
+			}
 		}
 	};
 //...........................END............................\\

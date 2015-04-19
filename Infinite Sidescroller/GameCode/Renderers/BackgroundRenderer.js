@@ -45,7 +45,7 @@ var BackgroundRenderer = (function(){
 	
 	//Generates tiled background for season
 	var generate_season = function(season_image, canvas_width, start){
-		for(i=0; i<2; i++){//create tiles 3 at a time
+		for(i=0; i<3; i++){//create tiles 3 at a time
 			var season = GraphicsController.request_bitmap(season_image);
 			season.regY -= season.image.height/2;
 			//create a new tile with offset

@@ -173,6 +173,9 @@ var EntityController = (function(){
 				if(beyond_world_boundary(entity)){
 					// if outside boundaries of the world, despawn
 					despawn(entity);
+					if (entity.type == "hero"){
+						entity.hp = 0;
+					}
 					console.log("entity of type", type, "deleted due to the world boundary");
 				}else{
 					// else tick its AI

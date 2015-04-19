@@ -97,9 +97,9 @@ var HyenaLogic = (function(){
 	var tick_AI = function(Hyena){
 		//Check if Dead........
 		//If Hyena is off the screen, delete
-		//if (Hyena.body.GetWorldCenter().y > 22 || Hyena.body.GetWorldCenter().x < Config.Player.movement_edge - 1){
-			//EntityController.delete_entity(Hyena);
-		//}else 
+		if (Hyena.body.GetWorldCenter().x <= WorldController.get_movement_edge() + 1.125){
+			Hyena.body.ApplyImpulse(new B2d.b2Vec2(Hyena.jump_force, 0), Hyena.body.GetWorldCenter());
+		}
 		if (Hyena.hp <= 0){//if mortally wounded
 			if (Hyena.is_alive){//if alive, kill it
 				Hyena.death_timer = Hyena.death_duration;
@@ -230,9 +230,6 @@ var HyenaLogic = (function(){
 			}
 			if (Hyena.hit_taken){
 				take_damage(Hyena); //if hit, take damage
-			}
-			if (Hyena.body.GetWorldCenter().x <= WorldController.get_movement_edge() + 1.125){
-				Hyena.body.ApplyImpulse(new B2d.b2Vec2(Hyena.jump_force, 0), Hyena.body.GetWorldCenter());
 			}
 		}
 	};

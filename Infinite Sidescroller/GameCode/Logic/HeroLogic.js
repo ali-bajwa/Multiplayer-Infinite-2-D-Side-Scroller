@@ -116,7 +116,7 @@ var HeroLogic = (function(){
 			despawn(hero);	
 		}
 		
-		if (hero.body.GetWorldCenter().x < WorldController.get_movement_edge + hero.body.GetUserData().def.width/2) {
+		if (hero.body.GetWorldCenter().x < WorldController.get_movement_edge() + hero.body.GetUserData().def.width/2) {
 			stop_hero(hero);
 			console.log("working");
 		}

@@ -36,7 +36,7 @@ var GameController = (function(){
 
 			// Should be called after all movement of objects is done:
 			HUDController.update();
-			BackgroundController.update();
+			//BackgroundController.update();
 			GraphicsController.update();
 		}
 	};

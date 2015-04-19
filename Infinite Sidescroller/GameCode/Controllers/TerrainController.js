@@ -29,11 +29,14 @@ var TerrainController = (function(){
 			var slice = NewTerrainSlice();
 			TerrainModel.terrain_slices_queue.push(slice);
 		}
+
 		if(config.Player.movement_edge > (TerrainModel.terrain_slices_queue.length-3)*(20)){
 			var slice = NewTerrainSlice(TerrainModel.seed);
 			TerrainModel.terrain_slices_queue.push(slice);
 			TerrainModel.seed = (((TerrainModel.seed%4) * (TerrainModel.seed+1) - TerrainModel.seed / 2)) % 3000;
 		};
+
+		check_for_old_slices();
 	};
 
 
@@ -42,19 +45,85 @@ var TerrainController = (function(){
 		 * it calculates it's origin x and y positions and whatever other stuff,
 		 * generates slice; sets up everything
 		 */
-		var x_offset = TerrainModel.terrain_slices_queue.length*20;
-		if (TerrainModel.terrain_slices_queue.length < 3){
+		var x_offset = TerrainModel.slice_counter * Config.TerrainSlice.grid_columns;
+
+		TerrainModel.slice_counter++; // TODO: change how it works when truly infinite
+
+		if(TerrainModel.initial_generated < 3){
+			TerrainModel.initial_generated++;
 			var slice = new TerrainSliceController.generate_initial(x_offset);
 		}else{
 			var slice = new TerrainSliceController.generate_random(x_offset, seed);
 		}
+
+		IdentificationController.assign_id(slice);
+
 		MarkAsNewTerrainSlice(slice); 
 
 		return slice;
 
 	};
 
-	var retrieve_world_parameters = function(){};
+	var check_for_old_slices = function(){
+		/**
+		* check for slices that are too far behind and should be removed
+		*/
+
+		var tqueue = TerrainModel.terrain_slices_queue;
+		var cut_off_index = 0; // what amnt of slices should go off the queue
+
+		// find the old slices and handle their deletion
+		for(var i = 0; i < tqueue.length; i++){
+			var slice = tqueue[i];
+			var slice_end_x = slice.origin.x + slice.grid_columns * slice.cell_w;
+
+			if(slice_end_x < Config.Player.movement_edge){
+				// if slice is unreachable, delete it 
+				cut_off_index++;
+				delete_slice(slice);
+			}
+		}
+
+		// now remove all found old slices from the queue
+		if(cut_off_index > 0){
+			TerrainModel.terrain_slices_queue = tqueue.slice(cut_off_index);
+		}
+	};
+	
+	
+
+	var delete_slice = function(slice){
+		/**
+		* assumes that slice will be popped from the terrain slice queue elsewhere
+		* (or was already)
+		* otherwise the slice won't be properly deleted
+		*/
+			
+		console.log("deleting slice with origin", slice.origin);
+		
+		var grid = slice.grid;
+		
+		for(var i = 0; i < grid.length; i++){
+			var row = grid[i];
+			for(var j = 0; j < row.length; j++){
+				var cell = row[j];
+				if(cell.kind != 0){
+					PhysicsController.remove_body(cell.body);
+					IdentificationController.remove_id(cell.id);
+				}
+			}
+		}
+
+		
+		// For graphics to pick up and delete unneeded graphics
+		RegisterAsController.register_as("removed_slice", slice);
+
+		// free the id (yes, terrain slice has id id
+		IdentificationController.remove_id(slice.id);
+	};
+	
+	
+
 	
 	var for_each_tile = function(f){
 		// takes function >f< that takes three parameters: tile (easeljs object),
@@ -71,51 +140,27 @@ var TerrainController = (function(){
 
 	};
 
-	var move_left = function(pixels){
-		// Should I scrap this function and just use >move<, or is this a helpful shortcut?
-		
-		move((-1)*pixels, 0);
-
-	}; // end move_left
 	
-	var move = function(offset_x, offset_y){
-		if(offset_x != 0){
-			for_each_tile(function(tile, terrain_lvl, tile_index){
-				tile.x += offset_x;
-			});
-
-		}// fi
-
-		if(offset_y != 0){
-			for_each_tile(function(tile, terrain_lvl, tile_index){
-				tile.y += offset_y;
-			});
-
-		}
-
-	};
-
 	var MarkAsNewTerrainSlice = function(slice){
-		TerrainModel.new_slices.push(slice);
+		//TerrainModel.new_slices.push(slice);
+		RegisterAsController.register_as("awaiting_graphics_initialization", slice);
 	};
 
-	var NewSlicesAvailable = function(){
-		return (TerrainModel.new_slices.length > 0);
-	};
+	//var NewSlicesAvailable = function(){
+		//return (TerrainModel.new_slices.length > 0);
+	//};
 
-	var GetNewTerrainSlices = function(){
-		return TerrainModel.new_slices;
-	};
+	//var GetNewTerrainSlices = function(){
+		//return TerrainModel.new_slices;
+	//};
 
 	return {
-		move_left: move_left,
-		move: move,
 		update: update,
 		init: init,
 		NewTerrainSlice: NewTerrainSlice,
 		MarkAsNewTerrainSlice: MarkAsNewTerrainSlice,
-		NewSlicesAvailable: NewSlicesAvailable,
-		GetNewTerrainSlices: GetNewTerrainSlices,
+		//NewSlicesAvailable: NewSlicesAvailable,
+		//GetNewTerrainSlices: GetNewTerrainSlices,
 	}
 })();
 

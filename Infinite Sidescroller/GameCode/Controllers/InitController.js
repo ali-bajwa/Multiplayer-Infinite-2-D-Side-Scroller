@@ -130,7 +130,7 @@ var InitController = (function(){
 		EntityController.init();
 		GraphicsController.init();
 		HUDController.init();
-		BackgroundController.init();
+		//BackgroundController.init();
 
 
 		setup_ticker();

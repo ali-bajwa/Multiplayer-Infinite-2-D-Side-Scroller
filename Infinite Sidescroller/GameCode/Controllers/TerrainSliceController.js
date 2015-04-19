@@ -5,6 +5,7 @@ var TerrainSliceController = (function () {
 		/* is ran from the InitController once when the game is loaded */
 		include(); // satisfy requirements
 		IdentificationController.assign_type(TerrainSliceModel.Cell, "terrain_cell");
+		IdentificationController.assign_type(TerrainSliceModel.Slice, "terrain_slice");
 
 	};
 
@@ -40,7 +41,7 @@ var TerrainSliceController = (function () {
 		// 0 will be the id for the "air" i.e. nothing
 		var gap;
 		gap = new TerrainSliceModel.Cell(0);
-		IdentificationController.assign_id(gap);
+		//IdentificationController.assign_id(gap); // DO NOT ASSIGN IDS TO EMPTY SPACES
 		return gap;
 	};
 	

@@ -36,7 +36,7 @@ var GraphicsController = (function(){
 	
 	var get_asset; 
 	var type_renderer_table;
-	var Graphics; 
+	var PrivateGraphics; 
 	var reRender = false;
 
 	var init = function(){
@@ -52,11 +52,10 @@ var GraphicsController = (function(){
 			"Griffin":GriffinRenderer,
 			"Hyena": HyenaRenderer,
 			"terrain_cell": TerrainCellRenderer,
+			"terrain_slice": TerrainSliceRenderer,
 		};
 
 		get_asset = AssetController.get_asset; // for quicker access
-
-		init_animations();
 
 		GraphicsModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
 		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
@@ -68,6 +67,20 @@ var GraphicsController = (function(){
 		for(type in type_renderer_table){
 			type_renderer_table[type].init();
 		}
+
+		// this object is passed to all renderers to give them access to functions
+		// that no one else is supposed to be able to access
+		PrivateGraphics = {
+			stage: GraphicsModel.stage,
+			request_bitmap: request_bitmap,
+			request_animated: request_animated,
+			get_asset: get_asset,
+			trans_xy: trans_xy,
+			reg_for_render: reg_for_render,
+		};
+
+		BackgroundRenderer.init();
+
 	};
 
     
@@ -76,16 +89,53 @@ var GraphicsController = (function(){
 		
 		update_camera(); // needs to be updated first
 
-		register_new_stuff();
+		destroy_unneeded(); // goes second, do not update any stuff before unneeded stuff is removed
 
-		check_for_new_terrain();
+		register_new_stuff();
 
 		render_things();
 		
 		synchronize_to_physical_bodies();
+
+		BackgroundRenderer.render();
 		
 		GraphicsModel.stage.update();
 	};
+
+	var destroy_unneeded = function(){
+		/**
+		* destroy graphics for everything that was marked
+		* for destruction
+		*/
+
+		var slices = RegisterAsController.retrieve_registered_as("removed_slice");
+
+		var entities = RegisterAsController.retrieve_registered_as("removed_entity");
+
+		while(slices.length > 0){
+			var slice = slices.pop();
+			var grid = slice.grid;
+
+			for(var i = 0; i < grid.length; i++){
+				var row = grid[i]; // or is it a column?
+
+				for(var j = 0; j < row.length; j++){
+					var cell = row[j];
+					if(cell.kind != 0){
+						destroy_graphics_for(cell.id);
+					}
+				}
+			}
+			
+		}
+		
+		while(entities.length > 0){
+			var entity = entities.pop();
+			destroy_graphics_for(entity.id);
+		}
+	};
+	
+	
 
 	var follow = function(id){
 		//order camera to follow the graphical representation
@@ -106,7 +156,7 @@ var GraphicsController = (function(){
 			var new_obj = new_stuff.pop();
 			if(type_renderer_table[new_obj.type]){
 				// if renderer exists for this type, register through it
-				type_renderer_table[new_obj.type].register(new_obj, Graphics);	
+				type_renderer_table[new_obj.type].register(new_obj, PrivateGraphics);	
 			}else{
 				throw "No renderer found for the type " + String(new_obj.type) +
 					" confirm that renderer exists and is added to the GraphicsController.type_renderer_table"
@@ -126,16 +176,12 @@ var GraphicsController = (function(){
 			var renderer = type_renderer_table[type];
 
 			for(var id in table){
-				renderer.render(table[id]);
+				renderer.render(table[id], PrivateGraphics);
 			}
 		}
 		
 	};
 
-	var get_movement_edge = function () {
-			return (GraphicsModel.camera.offset.x - 20)/(-30);
-	}
-	
 	//called from update(), maintains camera position
 	var update_camera = function(){
 		var camera = GraphicsModel.camera;
@@ -178,10 +224,6 @@ var GraphicsController = (function(){
 		TestController.set_debug_offset(camera.offset.x, camera.offset.y);
 	};
 
-	var init_animations = function(){
-		
-	};
-	
 	var request_bitmap = function(id){
 		// if id is invalid, throw meaningful exception?
 		var bitmap = new createjs.Bitmap(get_asset(id));
@@ -233,63 +275,6 @@ var GraphicsController = (function(){
 	};
 	
 
-	var check_for_new_terrain = function(){
-		// If new terrain has been generated, render it
-		var new_slices = TerrainController.GetNewTerrainSlices();
-		while(new_slices.length > 0){
-
-			var slice = new_slices.pop();
-
-			for(var i = 0; i < slice.grid_rows; i++){
-				for(var j = 0; j < slice.grid_columns; j++){
-					var kind = slice.grid[i][j].kind;
-					if(kind != 0){
-						// TODO: should make proper terrain collection thing to pull from
-						/*
-						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][kind-1];
-						var tile = request_bitmap(tile_texture);
-						*/
-						var surface_textures = ["grass_winter","grass_spring","grass_summer","grass_fall"];
-						var position = slice.grid[i][j].position;
-						if (kind == 1){ //if tile is part of the ground
-							switch (position){
-									case "surface":
-										var tile_texture = surface_textures[BackgroundController.get_season()];
-									break;
-								case "underground":
-									var tile_texture = "bottom_terrain";
-									break;
-							}
-						}
-						if (kind == 2){ //if tile is part of a platform
-							switch (position){
-								case "left":
-									var tile_texture = "left_platform";;
-									break;
-								case "middle":
-									var tile_texture = "middle_platform";
-									break;
-								case "right":
-									var tile_texture = "right_platform";
-									break;
-							}
-						}
-						if (kind == 3){//if tile is actually just spikes
-							var tile_texture = "platform_spikes";
-						}
-						var tile = request_bitmap(tile_texture);
-						var physical_instance = slice.grid[i][j];
-						var body_position = physical_instance.body.GetWorldCenter();
-						var trans_pos = trans_xy(body_position);
-						tile.x = trans_pos.x;
-						tile.y = trans_pos.y;
-						reg_for_render(tile, physical_instance);
-					} // end tile_texture assignment
-				} // end for
-			}//end for
-		} // end while
-	}; // end check_for_new_terrain
-
 	var trans_xy = function(position_vector_unscaled){
 		// takes position vector with values in meters, translates
 		// it to pixel position taking the camera position into account
@@ -337,6 +322,12 @@ var GraphicsController = (function(){
 			
 		
 		if(physical_instance){
+
+			if(physical_instance.body == null){
+				// are you trying to do something terrible? such as registering
+				// some object that doesn't need graphical representation?
+				throw "Physical instance is provided, but it has no body";
+			}
 			var id = physical_instance.id;
 			var type = physical_instance.type;
 
@@ -380,6 +371,7 @@ var GraphicsController = (function(){
 		* references to some graphics instances, UPDATE this function to reflect changes
 		* even a single reference to the object may cause it to stay in memory
 		*/
+		
 
 		if(GraphicsModel.all_physical[id] != null){
 			var graphics_instance = GraphicsModel.all_physical[id];
@@ -398,8 +390,6 @@ var GraphicsController = (function(){
 			// it may mean that implementation changed and this function needs an update
 			throw "Physical instance with id " + String(id) + " doesn't seem to have a type";
 		}
-
-		
 		
 		// remove from the stage 
 		
@@ -430,7 +420,6 @@ var GraphicsController = (function(){
 		request_animated: request_animated,
 		destroy_graphics_for: destroy_graphics_for,
 		follow: follow,
-		get_movement_edge: get_movement_edge,
 	};
 })();
 

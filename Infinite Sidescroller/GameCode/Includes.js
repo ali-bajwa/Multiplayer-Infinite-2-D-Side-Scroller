@@ -33,7 +33,6 @@ var Include = function(){
 			"IdentificationController",
 			"RegisterAsController",
 			"HUDController",
-			"BackgroundController",
 		],
 
 		Models: [
@@ -50,7 +49,6 @@ var Include = function(){
 			"EntityModel",
 			"RegisterAsModel",
 			"HUDModel",
-			"BackgroundModel",
 		],
 
 		Other: [
@@ -67,6 +65,9 @@ var Include = function(){
 			"TerrainCellRenderer",
 			"GriffinRenderer",
 			"HyenaRenderer",
+			"TerrainSliceRenderer",
+			"BackgroundRenderer",
+
 		],
 
 		Logic: [
@@ -96,7 +97,6 @@ var Include = function(){
 			IdentificationController: require("./Controllers/IdentificationController.js"),
 			RegisterAsController: require("./Controllers/RegisterAsController.js"),
 			HUDController: require("./Controllers/HUDController.js"),
-			BackgroundController: require("./Controllers/BackgroundController.js"),
 			
 			
 			// Models
@@ -114,7 +114,6 @@ var Include = function(){
 			EntityModel: require("./Models/EntityModel.js"),
 			RegisterAsModel: require("./Models/RegisterAsModel.js"),
 			HUDModel: require("./Models/HUDModel.js"),
-			BackgroundModel: require("./Models/BackgroundModel.js"),
 			
 				
 			// Other stuff
@@ -131,6 +130,12 @@ var Include = function(){
 			HyenaRenderer: require("./Renderers/HyenaRenderer.js"),
 			HeroRenderer: require("./Renderers/HeroRenderer.js"),
 			TerrainCellRenderer: require("./Renderers/TerrainCellRenderer.js"),
+			TerrainSliceRenderer: require("./Renderers/TerrainSliceRenderer.js"),
+			BackgroundRenderer: require("./Renderers/BackgroundRenderer.js"),
+			
+			
+			
+			
 			
 			// Logic
 			AntLogic: require("./Logic/AntLogic.js"),

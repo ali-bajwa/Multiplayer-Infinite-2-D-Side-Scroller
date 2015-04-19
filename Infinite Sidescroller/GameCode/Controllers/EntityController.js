@@ -74,13 +74,20 @@ var EntityController = (function(){
 			
 		} // end for in 
 
+		sync_hero();
+
 	};
 
 	var spawn = function(x, y, type){
 		/**
 		* spawn entity of type >type<
 		* at position (x, y)
+		* ! notice that it doesn't spawn entity directly, but instead sends the request
+		* ! for the entity deletion, so undeterminate amount of time may pass from the
+		* ! moment this function returned, until the entity is actually spawned
+		* this time will usually be relatively small, probably 2-20 ticks or so for multiplayer
 		*/
+
 		MultiplayerSyncController.route_outcoming_packet({
 			op: "spawn",
 			type: type,
@@ -95,20 +102,29 @@ var EntityController = (function(){
 		* containing properties >x<, >y<, >type<, and possibly more
 		* handles creation of the entity, id assignment, etc.
 		*/
+
 		var x = packet.x,
 			y = packet.y,
 			type = packet.type;
 
-		if(type == "companion" || type == "hero"){
-			// TEMPPP
-			console.log("spawned", type);
-		}
 		if(type_logic_table[type] == null){
 			throw "No logic found for the type" + String(type);
 		}
 
 		var logic = type_logic_table[type];
 		var entity = logic.spawn(x, y);
+
+		if(type == "hero"){
+			// TODO: move this whole thing into the HeroLogic.spawn?
+			var player_id = packet.player_id;
+			if(player_id == null){
+				throw "player_id is undefined";
+			}
+			// identify the hero
+			entity.player_id = player_id;
+			// store it for EntityController purposes
+			EntityModel.heroes[player_id] = entity;
+		}
 
 		IdentificationController.assign_id(entity);
 
@@ -130,6 +146,12 @@ var EntityController = (function(){
 	//so that renderers and updaters know to update it on tick
 	var reg_for_logic_update = function(new_entity){
 		var type = new_entity.type;
+
+		if(type == null){
+			console.log(new_entity);
+			throw "Type is undefined for this entity";
+		}
+
 		if(!EntityModel.for_logic_update[type]){
 			EntityModel.for_logic_update[type] = {};
 		}
@@ -145,6 +167,16 @@ var EntityController = (function(){
 	//};
 	
 	var delete_entity = function(entity_instance){
+		/**
+		* This function is supposed to be called by the individual logic modules, when the are finished
+		* animating deat/destruction of something and want to get rid of it, or in other circumstances,
+		* when entity should be immediately deleted from the world
+		* ! notice that it doesn't delete entity directly, but instead sends the request
+		* ! for the entity deletion, so undeterminate amount of time may pass from the
+		* ! moment this function returned, until the entity is actually deleted
+		* this time will usually be relatively small, probably 2-20 ticks or so for multiplayer
+		*/
+
 		MultiplayerSyncController.route_outcoming_packet({
 			op: "delete_entity",
 			id: entity_instance.id,
@@ -157,9 +189,8 @@ var EntityController = (function(){
 		* This function will remove this entity along with some other info about this entity
 		* from the world, it'll also free the id of this entity. The physical body will be deleted
 		* too; 
-		* This function is supposed to be called by the individual logic modules, when the are finished
-		* animating deat/destruction of something and want to get rid of it
 		*/
+
 
 		var entity_instance = EntityModel.for_logic_update[packet.type][packet.id];
 
@@ -194,9 +225,35 @@ var EntityController = (function(){
 			PhysicsController.remove_body(body);
 		// remove stored references within EntityController/Model
 			delete EntityModel.for_logic_update[type][id];
+			if(type == "hero"){
+				delete EntityModel.heroes[entity_instance.player_id];
+			}
 		// free the id
 			IdentificationController.remove_id(id);
 	};
+
+	var sync_hero = function(){
+		/**
+		* send synchronization information for the hero,
+		* if needed (if something important changed)
+		*/
+
+		// check velocity change
+		
+		// send if needed
+		
+	};
+	
+	var handle_hero_sync = function(packet){
+		/**
+		* handle the sync request for the hero
+		* synchronize velocity and the position
+		*/
+		
+		// update velocity and position
+	};
+	
+	
 
 	return {
 		// declare public
@@ -209,6 +266,7 @@ var EntityController = (function(){
 		//fulfill_delete_request: fulfill_delete_request,
 		handle_spawn: handle_spawn,
 		handle_delete: handle_delete,
+		handle_hero_sync: handle_hero_sync,
 	};
 })();
 

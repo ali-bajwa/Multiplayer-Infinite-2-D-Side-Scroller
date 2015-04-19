@@ -12,6 +12,8 @@ var GameController = (function(){
 		 * main function pretty much
 		 * everyghing else is called from here every tick
 		 */
+		KeyboardController.update(delta);
+
 	    var cmds = KeyboardController.pause_commands();
 	    if (cmds("pause") && GameModel.pauseCounter > 10 && GraphicsController.get_health() > 0) {
 	        createjs.Ticker.paused = !createjs.Ticker.paused;

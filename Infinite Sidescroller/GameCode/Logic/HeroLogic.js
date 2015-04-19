@@ -52,7 +52,13 @@ var HeroLogic = (function(){
 			entity of this type. I given entity_instance
 		*/
 
-		var cmds = KeyboardController.movement_commands();
+		if(hero.player_id == NetworkController.get_network_id()){
+			// if local hero
+			var cmds = KeyboardController.movement_commands();
+		}else{
+			// accept remote commands
+			var cmds = KeyboardController.get_remote_movement(hero.player_id);
+		}
 
 		var MOVEMENT_EDGE = 500; // where terrain start scrolling
 

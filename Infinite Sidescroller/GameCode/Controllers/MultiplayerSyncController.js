@@ -15,6 +15,8 @@ var MultiplayerSyncController = (function(){
 		op_table = {
 			spawn: EntityController.handle_spawn,
 			delete_entity: EntityController.handle_delete,
+			keyboard_state: KeyboardController.handle_keyboard_change,
+			hero_sync: EntityController.handle_hero_sync,
 		}
 	};
 
@@ -59,6 +61,11 @@ var MultiplayerSyncController = (function(){
 		/**
 		* route packet appropriately
 		*/
+		if(packet.player_id == null){
+				// if packet wasn't identified before
+				// identify the packet as mine
+				packet.player_id = NetworkController.get_network_id();
+		}
 
 		var op = packet.op;
 		var handler = op_table[op];
@@ -72,12 +79,7 @@ var MultiplayerSyncController = (function(){
 		if(Config.Remote.connected){
 			// if multiplayer
 			
-			if(packet.player_id == null){
-				// if packet wasn't identified before
-				// identify the packet as mine
-				packet.player_id = NetworkController.get_network_id();
-			}
-
+			
 			if(Config.Remote.master){
 				// if master of the network
 				// route back to specific handler
@@ -149,17 +151,17 @@ var MultiplayerSyncController = (function(){
 				throw "op for this packet is undefined";
 				break;
 			case "spawn":
-				if(packet.type == "companion"){
-					if(packet.player_id == NetworkController.get_network_id()){
-						// if I am receiving notification about my own hero spawned
-						// spawn hero instead of companion
-						packet.type = "hero";
-					}
-				}else if(packet.type == "hero"){
-					// someone requested hero spawn,
-					// but I should spawn companion
-					packet.type = "companion";
-				}
+				//if(packet.type == "companion"){
+					//if(packet.player_id == NetworkController.get_network_id()){
+						//// if I am receiving notification about my own hero spawned
+						//// spawn hero instead of companion
+						//packet.type = "hero";
+					//}
+				//}else if(packet.type == "hero"){
+					//// someone requested hero spawn,
+					//// but I should spawn companion
+					//packet.type = "companion";
+				//}
 				break;
 			//default:
 		}

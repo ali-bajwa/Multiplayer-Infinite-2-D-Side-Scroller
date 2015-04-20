@@ -3,6 +3,7 @@ var WorldController = (function(){
 	/* all the physics control of the whole world
 	*/
 	var movement_edge;
+	var season;
 	var movement_edge_buffer;
 	var body_test;
 	//var temp = 0;
@@ -13,6 +14,7 @@ var WorldController = (function(){
 		include(); // satisfy requirements
 		movement_edge_buffer = 20;
 		movement_edge = 0;
+		season = 0;
 		//body_test = new platform();
 		//var id = IdentificationController.assign_id(body_test);
 		//var body_test = PhysicsController.get_rectangular({}, body_test);
@@ -39,7 +41,15 @@ var WorldController = (function(){
 	var get_movement_edge = function(){
 		return movement_edge;
 	}
-
+	
+	var get_season = function(){
+		return season;
+	}
+	
+	var set_season = function(index){
+		season = index;
+	}
+	
 	var MarkAsNewTerrainSlice = function(slice){
 		
 	};
@@ -49,6 +59,8 @@ var WorldController = (function(){
 		init: init, 
 		update: update,
 		get_movement_edge: get_movement_edge,
+		get_season: get_season,
+		set_season: set_season,
 	};
 })();
 

@@ -148,19 +148,19 @@ var EntityController = (function(){
 	    // demonstration purposes for griffin
 
 		if (debug_commands("spawn_griffin") && Count > 5) {
-		    var new_griffin = spawn(Math.random() * 50 + Config.Player.movement_edge, -20, "Griffin");
+		    var new_griffin = spawn(Math.random() * 50 + WorldController.get_movement_edge(), -20, "Griffin");
 			Count = 0;
 		}
 		Count++;
 
 		if (debug_commands("spawn_griffin")) {
-		    var new_griffin = spawn(Math.random() * 50 + Config.Player.movement_edge, 10, "Griffin");
+		    var new_griffin = spawn(Math.random() * 50 + WorldController.get_movement_edge(), 10, "Griffin");
 		}
 		
 
 	    // demonstration purposes for hyena
 		if (debug_commands("spawn_hyena")) {
-		    var new_hyena = spawn(Math.random() * 50 + Config.Player.movement_edge, 10, "Hyena");
+		    var new_hyena = spawn(Math.random() * 50 + WorldController.get_movement_edge(), 10, "Hyena");
 		}
 
 		for(var type in EntityModel.for_logic_update){
@@ -192,7 +192,7 @@ var EntityController = (function(){
 		* checks if the entity is beyond one of the world boundaries,
 		*/
 		var body = entity.body;
-		return (body.GetWorldCenter().x < Config.Player.movement_edge ||
+		return (body.GetWorldCenter().x < WorldController.get_movement_edge() ||
 			body.GetWorldCenter().y > Config.World.maxy);
 
 	};

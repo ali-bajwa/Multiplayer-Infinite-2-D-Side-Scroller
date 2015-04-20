@@ -238,6 +238,29 @@ var EntityController = (function(){
 		* if needed (if something important changed)
 		*/
 
+		var my_hero = EntityModel.heroes[NetworkController.get_network_id()];
+
+		if(my_hero){
+			var velocity = my_hero.body.GetLinearVelocity();
+			var old_velocity = EntityModel.hero_last_velocity;
+
+			var difference = Math.sqrt(Math.pow(velocity.x - old_velocity.x, 2) + Math.pow(velocity.y - old_velocity.y, 2))
+
+			if(difference != 0){
+				// if different
+				var position = my_hero.body.GetWorldCenter();
+		
+				MultiplayerSyncController.route_outcoming_packet({
+					op: "hero_sync",
+					velocity: {x: velocity.x, y: velocity.y},
+					position: {x: position.x, y: position.y}
+				});
+			}
+
+			EntityModel.hero_last_velocity = {x: velocity.x, y: velocity.y};
+		}
+
+
 		// check velocity change
 		
 		// send if needed
@@ -250,7 +273,24 @@ var EntityController = (function(){
 		* synchronize velocity and the position
 		*/
 		
-		// update velocity and position
+		if(packet.player_id == NetworkController.get_network_id()){
+			return;
+		}
+		
+		var player_id = packet.player_id;
+
+		var hero = EntityModel.heroes[player_id];
+
+		if(hero == null){
+			throw "hero is not defined for the player_id " + String(player_id);
+		}
+
+		var vel = new B2d.b2Vec2(packet.velocity.x, packet.velocity.y);
+		var pos = new B2d.b2Vec2(packet.position.x, packet.position.y);
+		
+		hero.body.SetLinearVelocity(vel);
+		hero.body.SetPosition(pos);
+		
 	};
 	
 	

@@ -141,6 +141,7 @@ var KeyboardModel = function(){
 			"a": "spawn_ant",
 			"c": "connect",
 			"v": "request_hero",
+			"i": "show_ids",
 		},
 
 	}

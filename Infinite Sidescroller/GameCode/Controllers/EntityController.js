@@ -194,6 +194,13 @@ var EntityController = (function(){
 
 		var entity_instance = EntityModel.for_logic_update[packet.type][packet.id];
 
+		if(entity_instance == null){
+			// if no such entity,
+			// probably it was already deleted through other means,
+			// thus abort
+			return;
+		}
+
 		// TODO: finish this function and then update it regularly;
 		// This one is very sensitive, as even one reference left may prevent 
 		// object from being deleted and cause memory leaks. Testing is required

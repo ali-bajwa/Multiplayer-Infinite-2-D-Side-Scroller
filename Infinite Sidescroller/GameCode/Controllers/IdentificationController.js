@@ -25,6 +25,11 @@ var IdentificationController = (function(){
 		//TODO: make function to actually be called from the GameController.update_all
 		// TODO: loop through all non-free id's, and if any of them reference null,
 		// remove (unregister) them;
+		var cmds = KeyboardController.debug_commands();
+		
+		if(cmds("show_ids")){
+			console.log(IdentificationModel.free_ids, IdentificationModel.next_id);
+		}
 
 	};
 
@@ -196,6 +201,6 @@ module.exports = IdentificationController;
 
 var Includes = require("../Includes.js"); var include_data = Includes.get_include_data({
 	current_module: "IdentificationController", 
-	include_options: Includes.choices.OWN_MODEL
+	include_options: Includes.choices.DEFAULT
 }); eval(include_data.name_statements); var include = function(){eval(include_data.module_statements);}
 

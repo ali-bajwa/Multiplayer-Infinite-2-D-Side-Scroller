@@ -31,6 +31,7 @@ var GameController = (function(){
 			//TerrainController.generate_terrain(); 
 			//PlayerController.update();
 		
+			IdentificationController.update(delta);
 			WorldController.update(delta);
 
 			TerrainController.update(delta);

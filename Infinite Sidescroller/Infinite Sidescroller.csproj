@@ -174,9 +174,6 @@
     <Compile Include="Models\PlayerSessionDBContext.cs" />
     <Compile Include="Models\ScoreModels.cs" />
     <Compile Include="Models\SessionModels.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_036C0B5B-1481-4323-8D20-8F5ADCB23D92.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_5937a670-0e60-4077-877b-f7221da3dda1.cs" />
-    <Compile Include="obj\Debug\TemporaryGeneratedFile_E7A71F73-0F8D-4B9B-B56E-8E70B10BC5D3.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -185,50 +182,6 @@
     <Content Include="App_Data\aspnet-Infinite Sidescroller-20150212041059_log.ldf">
       <DependentUpon>aspnet-Infinite Sidescroller-20150212041059.mdf</DependentUpon>
     </Content>
-    <Content Include="bin\Antlr3.Runtime.dll" />
-    <Content Include="bin\EntityFramework.dll" />
-    <Content Include="bin\EntityFramework.SqlServer.dll" />
-    <Content Include="bin\EntityFramework.SqlServer.xml" />
-    <Content Include="bin\EntityFramework.xml" />
-    <Content Include="bin\Infinite Sidescroller.dll" />
-    <Content Include="bin\Infinite Sidescroller.pdb" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Core.dll" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Core.xml" />
-    <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.dll" />
-    <Content Include="bin\Microsoft.AspNet.Identity.EntityFramework.xml" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Owin.dll" />
-    <Content Include="bin\Microsoft.AspNet.Identity.Owin.xml" />
-    <Content Include="bin\Microsoft.Owin.dll" />
-    <Content Include="bin\Microsoft.Owin.Host.SystemWeb.dll" />
-    <Content Include="bin\Microsoft.Owin.Host.SystemWeb.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.Cookies.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.Cookies.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.MicrosoftAccount.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.MicrosoftAccount.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.OAuth.dll" />
-    <Content Include="bin\Microsoft.Owin.Security.OAuth.xml" />
-    <Content Include="bin\Microsoft.Owin.Security.xml" />
-    <Content Include="bin\Microsoft.Owin.xml" />
-    <Content Include="bin\Microsoft.Web.Infrastructure.dll" />
-    <Content Include="bin\Newtonsoft.Json.dll" />
-    <Content Include="bin\Newtonsoft.Json.xml" />
-    <Content Include="bin\Owin.dll" />
-    <Content Include="bin\System.Web.Helpers.dll" />
-    <Content Include="bin\System.Web.Helpers.xml" />
-    <Content Include="bin\System.Web.Mvc.dll" />
-    <Content Include="bin\System.Web.Mvc.xml" />
-    <Content Include="bin\System.Web.Optimization.dll" />
-    <Content Include="bin\System.Web.Optimization.xml" />
-    <Content Include="bin\System.Web.Razor.dll" />
-    <Content Include="bin\System.Web.Razor.xml" />
-    <Content Include="bin\System.Web.WebPages.Deployment.dll" />
-    <Content Include="bin\System.Web.WebPages.Deployment.xml" />
-    <Content Include="bin\System.Web.WebPages.dll" />
-    <Content Include="bin\System.Web.WebPages.Razor.dll" />
-    <Content Include="bin\System.Web.WebPages.Razor.xml" />
-    <Content Include="bin\System.Web.WebPages.xml" />
-    <Content Include="bin\WebGrease.dll" />
     <Content Include="Content\gamedemo\node_modules\grunt\internal-tasks\bump.js" />
     <Content Include="Content\gamedemo\node_modules\grunt\internal-tasks\subgrunt.js" />
     <Content Include="Content\gamedemo\node_modules\grunt\lib\grunt.js" />
@@ -567,9 +520,6 @@
     <Content Include="GameCode\bundle.js" />
     <Content Include="GameCode\Config.js" />
     <Content Include="GameCode\Controllers\AssetController.js" />
-    <Content Include="GameCode\Controllers\CameraController.js" />
-    <Content Include="GameCode\Controllers\ChunkController.js" />
-    <Content Include="GameCode\Controllers\EnemyController.js" />
     <Content Include="GameCode\Controllers\EntityController.js" />
     <Content Include="GameCode\Controllers\GameController.js" />
     <Content Include="GameCode\Controllers\GraphicsController.js" />
@@ -577,7 +527,6 @@
     <Content Include="GameCode\Controllers\InitController.js" />
     <Content Include="GameCode\Controllers\KeyboardController.js" />
     <Content Include="GameCode\Controllers\PhysicsController.js" />
-    <Content Include="GameCode\Controllers\PlayerController.js" />
     <Content Include="GameCode\Controllers\RegisterAsController.js" />
     <Content Include="GameCode\Controllers\TerrainController.js" />
     <Content Include="GameCode\Controllers\TerrainSliceController.js" />
@@ -596,8 +545,6 @@
     <Content Include="GameCode\main.js" />
     <Content Include="GameCode\Models\AntModel.js" />
     <Content Include="GameCode\Models\AssetModel.js" />
-    <Content Include="GameCode\Models\CameraModel.js" />
-    <Content Include="GameCode\Models\ChunkModel.js" />
     <Content Include="GameCode\Models\EntityModel.js" />
     <Content Include="GameCode\Models\GameModel.js" />
     <Content Include="GameCode\Models\GraphicsModel.js" />
@@ -625,7 +572,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="GameCode\node_modules\box2dweb\package.json" />
     <Content Include="GameCode\node_modules\box2dweb\README.md" />
-    <Content Include="bin\Infinite Sidescroller.dll.config" />
     <Content Include="Content\gamedemo\node_modules\grunt\.npmignore" />
     <Content Include="Content\gamedemo\node_modules\grunt\appveyor.yml" />
     <Content Include="Content\gamedemo\node_modules\grunt\CONTRIBUTING.md" />
@@ -814,13 +760,8 @@
     <Content Include="GameCode\Controllers\GraphicsController.js.rej" />
     <Content Include="GameCode\Documentation\javascript.custom.snippets" />
     <Content Include="GameCode\Logic\HeroLogic.js.rej" />
-    <Content Include="obj\Debug\DesignTimeResolveAssemblyReferencesInput.cache" />
-    <Content Include="obj\Debug\Infinite Sidescroller.csprojResolveAssemblyReference.cache" />
     <None Include="Properties\PublishProfiles\Sidescroller.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
-    <Content Include="obj\Debug\Infinite Sidescroller.csproj.FileListAbsolute.txt" />
-    <Content Include="obj\Debug\Infinite Sidescroller.dll" />
-    <Content Include="obj\Debug\Infinite Sidescroller.pdb" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
     <Content Include="Scripts\jquery-2.1.3.min.map" />
@@ -855,9 +796,7 @@
     <Content Include="Views\Home\Tutorial.cshtml" />
     <Content Include="Views\Game\Index.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="obj\Debug\TempPE\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />

@@ -9,14 +9,14 @@ namespace Infinite_Sidescroller.Controllers
 {
 	public class GameController : Controller
 	{
-    GameDB GameDB = new GameDB();
+    //GameDB GameDB = new GameDB();
  
 		// GET: Game
 		public ActionResult Index()
 		{
 			return View();
 		}
-
+    /*
     [AjaxOnly]
     public ActionResult setJsonInfo(int sessionid, string jsonstring, int packetid)
     {
@@ -31,6 +31,6 @@ namespace Infinite_Sidescroller.Controllers
     public ActionResult getJsonInfo(int sessionid, int? packetid) 
     {
 
-    }
+    }*/
 	}
 }

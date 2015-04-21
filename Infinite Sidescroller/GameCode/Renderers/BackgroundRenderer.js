@@ -63,7 +63,7 @@ var BackgroundRenderer = (function(){
 			console.log("generating season");
 			delete_all_season();
 			WorldController.set_season((WorldController.get_season()+1)%4);
-			generate_season(season_image[WorldController.get_season()], GraphicsController.get_stage().canvas.width, Config.Player.movement_edge / 30);
+			generate_season(season_image[WorldController.get_season()], GraphicsController.get_stage().canvas.width, WorldController.get_movement_edge() / 30);
 		}
 	};
 	

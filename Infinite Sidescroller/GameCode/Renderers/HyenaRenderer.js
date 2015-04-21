@@ -14,59 +14,71 @@ var HyenaRenderer = (function(){
 
 		spritesheets["Hyena"] = new createjs.SpriteSheet({
 			"framerate": 1,
-			"images": [get_asset("Hyena1"), get_asset("Hyena2"), get_asset("Hyena3") ],
-			"frames": { "regX": 0, "regY": 8, "height": 64, "width": 64, "count": 4},
+			"images": [get_asset("HyenaSprite")],
+			"frames": { "regX": 0, "regY": 8, "height": 64, "width": 64, "count": 17},
 			"animations": {
-				"walk": [0, 3, "walk", 0.5],
-				//"death": [4, 5, "death"]
+				"run": [0,3, "run", 0.5],
+				"stand": [4,5, "stand", 0.25],
+				"walk": [8,11, "walk", 0.2],
+				"leap": [6],
+				"fall": [7],
+				"death": [12,14, "decay", 0.25],
+				"decay": [15,16, "decay", 0.25],
 			}
 		})
 
 	};
 
-	var register = function(entity_Hyena){
-		/* is ran for every entity of this type that was just created and should
+	var register = function(entity_hyena){
+		/* is run for every entity of this type that was just created and should
 		get graphics representation. You are given the entity instance and is supposed
-		to crete graphics instance, and GraphicsController.reg_for_render(graphics_instance, entity_instance); it 
+		to create graphics instance, and GraphicsController.reg_for_render(graphics_instance, entity_instance); it 
 		*/
 
-		Hyena_animation = GraphicsController.request_animated(spritesheets["Hyena"], "walk");
-		GraphicsController.set_reg_position(Hyena_animation, 0, 0); // change that to adjust sprite position relative to the body
-		GraphicsController.reg_for_render(Hyena_animation, entity_Hyena); // sets hyena_animation's position to track the hyena's position (updates each tick)
-
+		hyena_animation = GraphicsController.request_animated(spritesheets["Hyena"], "walk");
+		GraphicsController.set_reg_position(hyena_animation, 0, 0); // change that to adjust sprite position relative to the body
+		GraphicsController.reg_for_render(hyena_animation, entity_hyena); // sets hyena_animation's position to track the hyena's position (updates each tick)
+		/*
+		hyena_animation is the easeljs_obj passed through graphicsController
+		entity_hyena is the physical object spawned in HyenaLogic
+		request_animated returns an easeljs object of type Sprite
+		this Sprite is the object passed to render
+		*/
 		
 	};
 
-	var render = function(Hyena){
-		/* 	is ran each tick from GraphicsController, for every registered object of this type
+	var render = function(hyena){
+		/* 	is run each tick from GraphicsController, for every registered object of this type
 			is given >graphics_instance< parameter, which is also supposed to contain
-			physical_instance property containing entity_instance, if it was attched correctly
+			physical_instance property containing entity_instance, if it was attached correctly
 		*/
 
-		Hyena_special_render_temp(Hyena); 
+		hyena_animate(hyena); 
 	};
 
-	var Hyena_special_render_temp = function(Hyena){
-		/* how to handle special render? TEMPORARY */
-
+	var hyena_animate = function(hyena){
+		//set graphical representation based on the animation variable determined by the AI
+		//set animation
+		if(hyena.physical_instance.needs_graphics_update){
+			var animation = hyena.physical_instance.animation;
+			hyena.gotoAndPlay(animation)
+		}
 		
-		if(Hyena.physical_instance.AI_state == "death"&& Hyena.physical_instance.aliveflag){
-			Hyena.gotoAndPlay("death");
-			Hyena.physical_instance.aliveflag = false;
-			
-			
+		//set direction
+		if (hyena.physical_instance.direction){ //if direction == right, flip right
+			hyena.scaleX = -1;
+		}else{ //else flip left
+			hyena.scaleX = 1;
 		}
 
-		//if(Hyena.physical_instance.AI_state == "upside_down" && Hyena.physical_instance.unhurtflag)
-		//{
-		//	Hyena.gotoAndPlay("upside_down");
-		//	Hyena.physical_instance.unhurtflag = false;
-			
-			
-		//}
-
+		//set alpha if blinking
+		if(hyena.physical_instance.blinking && hyena.physical_instance.blink_timer%2 == 1){
+			hyena.alpha = 0;
+		}else{
+			hyena.alpha = 1;
+		}
 	};
-
+	
 	return {
 		// declare public
 		init: init, 

@@ -1,20 +1,50 @@
-
+/*
+GraphicsController
+	Public Functions:
+	-init()
+		sets up the GraphicsController for the rest of the game, called once during initialization
+	-update(int delta)
+		common function, called each tick. performs routine graphics maintenance
+		registers all instances that were marked for registration since the last tick
+		renders all registered instances
+	-get_stage()
+		returns the stage object, an easeljs object that stores information about the game
+	-get_camera()
+		returns the camera object, which controls the view offset
+	-get_asset(string id)
+		retrieves the asset with id; an alias for the same function in AssetController
+	-reg_for_render(Easeljs_obj sprite, Object entity_instance)
+		links an entity with a sprite and registers it to be rendered each tick
+	-set_reg_position(easeljs_obj,int offset_x,int offset_y)
+		adjusts a sprites x and y offsets to conform to the box2d system
+	-request_bitmap(string? id)
+		retrieves a previously loaded asset as a sprite
+	-request_animated(string id, string||int start_animation/start_frame)
+		returns a new sprite object generated from the image id and the start frame
+	-destroy_graphics_for(int id)
+		destroys the graphics objects associated with the instance of the passed id
+	-follow(int id)
+		sets the camera to follow the object of the passed id
+	-get_movement_edge()
+		returns left camera bound, a.k.a, the movement edge. used for lots of things
+		
+*/
 var GraphicsController = (function(){
-	/* all the graphics stuff. and what did you expect?
+	/* 
+	Controls all graphics and provides an interface for common easel.js functions
 	*/
-	var colorTick = 0; //to slow down season changes
+	
 	var get_asset; 
 	var type_renderer_table;
-	var Graphics;
+	var PrivateGraphics; 
 	var reRender = false;
-	var seasonArray = [];
-	var seasonImg = ["Winter", "Spring", "Summer", "Fall" ];
-	var cycle = 0;
-	
+
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
 		include(); // satisfy requirements
 
+		//All renderers must be registered here
+		//Links each renderer with its object id
 		type_renderer_table = {
 		// type:	renderer:
 			"ant": AntRenderer,
@@ -22,138 +52,101 @@ var GraphicsController = (function(){
 			"Griffin":GriffinRenderer,
 			"Hyena": HyenaRenderer,
 			"terrain_cell": TerrainCellRenderer,
+			"terrain_slice": TerrainSliceRenderer,
 		};
 
 		get_asset = AssetController.get_asset; // for quicker access
 
-		init_animations();
-
-
 		GraphicsModel.stage = new createjs.Stage(Config.MAIN_CANVAS_NAME);
 		GraphicsModel.stage.canvas.width = Config.SCREEN_W;
 		GraphicsModel.stage.canvas.height = Config.SCREEN_H;
-		generate_season("Fall", GraphicsModel.stage.canvas.width, 0);
-	
-		//PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-		GraphicsModel.score = new createjs.Text();
-		reg_for_render(GraphicsModel.score);
-		GraphicsModel.health = new createjs.Text();
-		reg_for_render(GraphicsModel.health);
-		hud_temp();
-
+		
 		GraphicsModel.camera.offset_from_followed.x -= (1614 - GraphicsModel.stage.canvas.width) / 3;
 
 		// init all renderers
 		for(type in type_renderer_table){
 			type_renderer_table[type].init();
 		}
+
+		// this object is passed to all renderers to give them access to functions
+		// that no one else is supposed to be able to access
+		PrivateGraphics = {
+			stage: GraphicsModel.stage,
+			request_bitmap: request_bitmap,
+			request_animated: request_animated,
+			get_asset: get_asset,
+			trans_xy: trans_xy,
+			reg_for_render: reg_for_render,
+		};
+
+		BackgroundRenderer.init();
+
 	};
 
-	var generate_season = function(season_name, canvas_width, start){
-		/*Generates tiled background for season */
-	
-		for(var i = start; i <= canvas_width + canvas_width + 1; i += season.image.width){
-			var season = request_scenery(season_name);
-			
-			season.x = i;
-			GraphicsModel.stage.addChildAt(season, 0);
-			seasonArray.push(season);
-			
-		}
-		
-	};
-	var set_season = function(hero){
-		for(var i = 0; i < seasonArray.length; i++){
-			
-			
-			//seasonArray[i].x = (i * 799) + GraphicsModel.camera.offset.x;
-			//seasonArray[i].y = GraphicsModel.camera.offset.y;
-			
-			seasonArray[i].x = (i * 799) - (hero.x * 4);
-			seasonArray[i].y = GraphicsModel.camera.offset.y;
-			
-		}
-	
-	};
-	
-	var set_seasonY = function(y){
-		for(var i = 0; i < seasonArray.length; i++){
-			
-			
-			seasonArray[i].y = y;
-			
-		}
-	
-	};
-	var delete_all_season = function(){
-		for(var i = 0; i < seasonArray.length; i++){
-			
-			
-			GraphicsModel.stage.removeChild(seasonArray[i]);
-			
-		}
-		seasonArray.length = 0;
-	};
     
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
 		
-		//Temporary Keyboard Call for Season Change
-		var cmds = KeyboardController.debug_commands();
-		
-		if(cmds("season") && colorTick > 10)
-		{
-			colorTick = 0;
-			delete_all_season();
-			generate_season(seasonImg[cycle], GraphicsModel.stage.canvas.width, 0);
-			cycle++;
-			if(cycle == 4)
-			{
-				cycle = 0;
-			}
-		}
-		colorTick++;
-		
-		
-		
-	    update_camera(); // needs to be updated first
+		update_camera(); // needs to be updated first
+
+		destroy_unneeded(); // goes second, do not update any stuff before unneeded stuff is removed
 
 		register_new_stuff();
 
-		check_for_new_terrain();
-
 		render_things();
+		
 		synchronize_to_physical_bodies();
-		
-		
-		//NEED to know when to reRender background
-		set_seasonY(GraphicsModel.camera.offset.y);
-		
-		
-		
-	    //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-		hud_temp_update();
 
-		// <<<<
-		//update_health(hero.hp);
+		BackgroundRenderer.render();
+		
 		GraphicsModel.stage.update();
 	};
 
-	var follow = function(id){
+	var destroy_unneeded = function(){
 		/**
-		* order camera to follow the graphical representation
-		* of an object with the given id, if it exists
+		* destroy graphics for everything that was marked
+		* for destruction
 		*/
 
+		var slices = RegisterAsController.retrieve_registered_as("removed_slice");
+
+		var entities = RegisterAsController.retrieve_registered_as("removed_entity");
+
+		while(slices.length > 0){
+			var slice = slices.pop();
+			var grid = slice.grid;
+
+			for(var i = 0; i < grid.length; i++){
+				var row = grid[i]; // or is it a column?
+
+				for(var j = 0; j < row.length; j++){
+					var cell = row[j];
+					if(cell.kind != 0){
+						destroy_graphics_for(cell.id);
+					}
+				}
+			}
+			
+		}
+		
+		while(entities.length > 0){
+			var entity = entities.pop();
+			destroy_graphics_for(entity.id);
+		}
+	};
+	
+	
+
+	var follow = function(id){
+		//order camera to follow the graphical representation
+		//of an object with the given id, if it exists
 		GraphicsModel.camera.following = GraphicsModel.all_physical[id];
 	};
 	
 	
-
 	var register_new_stuff = function(){
-		/**
-		* description
-		*/
+		//search through all instances in the queue 
+		//and register them for graphics updates.
 
 		// retrieve instances of physical things that do not have graphics yet
 		var new_stuff = RegisterAsController.retrieve_registered_as("awaiting_graphics_initialization");
@@ -163,16 +156,12 @@ var GraphicsController = (function(){
 			var new_obj = new_stuff.pop();
 			if(type_renderer_table[new_obj.type]){
 				// if renderer exists for this type, register through it
-				type_renderer_table[new_obj.type].register(new_obj, Graphics);	
-
-				
+				type_renderer_table[new_obj.type].register(new_obj, PrivateGraphics);	
 			}else{
-				
 				throw "No renderer found for the type " + String(new_obj.type) +
 					" confirm that renderer exists and is added to the GraphicsController.type_renderer_table"
 			}
 		}
-
 	};
 	
 	var render_things = function(){
@@ -183,60 +172,24 @@ var GraphicsController = (function(){
 		var to_render = GraphicsModel.special_render;
 
 		for(var type in to_render){
-
 			var table = to_render[type];
 			var renderer = type_renderer_table[type];
 
 			for(var id in table){
-				renderer.render(table[id]);
+				renderer.render(table[id], PrivateGraphics);
 			}
-
 		}
 		
 	};
 
-	var get_movement_edge = function () {
-	    return (GraphicsModel.camera.offset.x - 20)/(-30);
-	}
-	
-
-    //DELETE ME PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-	var hud_temp = function () {
-	    GraphicsModel.health.text = "100";
-	    GraphicsModel.health.x = 10;
-	    GraphicsModel.health.y = 30;
-	    GraphicsModel.health.font = "20px Arial";
-	    GraphicsModel.health.color = "#ff0000";
-	    GraphicsModel.score.text = "10";
-	    GraphicsModel.score.x = 10;
-	    GraphicsModel.score.y = 10;
-	    GraphicsModel.score.font = "20px Arial";
-	}
-
-    //DELETE ME PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-	var hud_temp_update = function () {
-
-	}
-	
-	var update_health = function(passed) {
-	
-	GraphicsModel.health.text = passed;
-	}
-
-	var update_score = function (passed) {
-	    GraphicsModel.score.text = passed;
-	}
-
-	var get_health = function () {
-	    return GraphicsModel.health.text;
-	}
-
+	//called from update(), maintains camera position
 	var update_camera = function(){
 		var camera = GraphicsModel.camera;
 		var center = camera.center;
 		
 		center.x = Config.SCREEN_W/2 - camera.offset_from_followed.x;
-		center.y = Config.SCREEN_H/2 - camera.offset_from_followed.y;
+		//CAMERA SHOULD NOT MOVE VERTICALLY
+		//center.y = Config.SCREEN_H/2 - camera.offset_from_followed.y;
 		
 		if(camera.following != null){
 		    camera.offset.x = center.x - camera.following.physical_instance.body.GetWorldCenter().x * Config.B2D.SCALE;
@@ -247,7 +200,7 @@ var GraphicsController = (function(){
 			//   1. calculate were the physical movement edge would be if drawn right now to the canvas
 			//   2. if it would be displayed on-screen, offset camera so that it wouldn't be anymore
 
-			var mov_edge_graphics_x = (Config.Player.movement_edge * Config.B2D.SCALE) + camera.offset.x;
+			var mov_edge_graphics_x = (WorldController.get_movement_edge() * Config.B2D.SCALE) + camera.offset.x;
 
 			// recall that left display edge is 0 for graphics, as (0, 0) is the top-left corner
 			if(mov_edge_graphics_x > 0){
@@ -271,11 +224,6 @@ var GraphicsController = (function(){
 		TestController.set_debug_offset(camera.offset.x, camera.offset.y);
 	};
 
-	var init_animations = function(){
-		
-		
-	};
-	
 	var request_bitmap = function(id){
 		// if id is invalid, throw meaningful exception?
 		var bitmap = new createjs.Bitmap(get_asset(id));
@@ -290,23 +238,8 @@ var GraphicsController = (function(){
 		return bitmap;
 		// TODO research DisplayObject's caching. and maybe incorporate
 	};
-	var request_scenery = function(id, offset){
-		// if id is invalid, throw meaningful exception?
-		var bitmap = new createjs.Bitmap(get_asset(id));
-		// more complicated setting for registration position may be needed, depending on the body attached
-		if (!(bitmap.image)){
-			throw "Error: image wasn't correctly loaded for this bitmap";
-		}
-		
-		//offset for tiling
-		bitmap.x = offset;
-		
-		
-		
-		return bitmap;
-		// TODO research DisplayObject's caching. and maybe incorporate
-	};
-
+	
+	
 	var request_animated = function(id, start_frame){
 		// this implementation is temporary
 		// until I setup efficient facility for defining spritesheets
@@ -326,7 +259,7 @@ var GraphicsController = (function(){
 	};
 
 	
-	
+	//converts easeljs origins to box2d origins
 	var synchronize_to_physical_bodies = function(){
 
 		var tiles = GraphicsModel.all_physical;
@@ -334,83 +267,13 @@ var GraphicsController = (function(){
 		for(var id in tiles){
 			var tile = tiles[id];
 			var body = tile.physical_instance.body;
-
 			var tile_pos = trans_xy(body.GetWorldCenter());
 
 			tile.x = tile_pos.x;
 			tile.y = tile_pos.y;
 		}
-
 	};
 	
-
-	var check_for_new_terrain = function(){
-		/* If new terrain has been generated, render it
-		 */
-
-		var new_slices = TerrainController.GetNewTerrainSlices();
-		while(new_slices.length > 0){
-
-			var slice = new_slices.pop();
-
-			for(var i = 0; i < slice.grid_rows; i++){
-				/* graphics pass. should be probably moved to the graphics controller
-				 * didn't decide on it yet
-				 */
-
-
-				var lvl = slice.grid_rows - i; // level from the bottom
-
-				for(var j = 0; j < slice.grid_columns; j++){
-					
-					var kind = slice.grid[i][j].kind;
-					if(kind != 0){
-						// TODO: should make proper terrain collection thing to pull from
-						/*
-						var tile_texture = ["grass", "middle_terrain", "bottom_terrain"][kind-1];
-						var tile = request_bitmap(tile_texture);
-						*/
-						var position = slice.grid[i][j].position;
-						if (kind == 1){ //if tile is part of the ground
-							switch (position){
-								case "surface":
-									var tile_texture = "grass";
-									break;
-								case "underground":
-									var tile_texture = "bottom_terrain";
-									break;
-							}
-						}
-						if (kind == 2){ //if tile is part of a platform
-							switch (position){
-								case "left":
-									var tile_texture = "left_platform";;
-									break;
-								case "middle":
-									var tile_texture = "middle_platform";
-									break;
-								case "right":
-									var tile_texture = "right_platform";
-									break;
-							}
-						}
-						var tile = request_bitmap(tile_texture);
-						var physical_instance = slice.grid[i][j];
-						var body_position = physical_instance.body.GetWorldCenter();
-						var trans_pos = trans_xy(body_position);
-						tile.x = trans_pos.x;
-						tile.y = trans_pos.y;
-						reg_for_render(tile, physical_instance);
-					} // fi
-
-
-				} // end for
-
-			}//end for
-
-		} // end while
-
-	}; // end check_for_new_terrain
 
 	var trans_xy = function(position_vector_unscaled){
 		// takes position vector with values in meters, translates
@@ -459,6 +322,12 @@ var GraphicsController = (function(){
 			
 		
 		if(physical_instance){
+
+			if(physical_instance.body == null){
+				// are you trying to do something terrible? such as registering
+				// some object that doesn't need graphical representation?
+				throw "Physical instance is provided, but it has no body";
+			}
 			var id = physical_instance.id;
 			var type = physical_instance.type;
 
@@ -490,6 +359,10 @@ var GraphicsController = (function(){
 		return GraphicsModel.stage;
 	};
 	
+	var get_camera = function(){
+		return GraphicsModel.camera;
+	};
+	
 	var destroy_graphics_for = function(id){
 		/**
 		* remove from the stage and destroy graphics instances for the object with the given id
@@ -498,6 +371,7 @@ var GraphicsController = (function(){
 		* references to some graphics instances, UPDATE this function to reflect changes
 		* even a single reference to the object may cause it to stay in memory
 		*/
+		
 
 		if(GraphicsModel.all_physical[id] != null){
 			var graphics_instance = GraphicsModel.all_physical[id];
@@ -516,8 +390,6 @@ var GraphicsController = (function(){
 			// it may mean that implementation changed and this function needs an update
 			throw "Physical instance with id " + String(id) + " doesn't seem to have a type";
 		}
-
-		
 		
 		// remove from the stage 
 		
@@ -540,9 +412,7 @@ var GraphicsController = (function(){
 		init: init, 
 		update: update,
 		get_stage: get_stage,
-		update_health: update_health,
-		get_health: get_health,
-		update_score: update_score,
+		get_camera: get_camera,
 		get_asset: get_asset,
 		reg_for_render: reg_for_render,
 		set_reg_position: set_reg_position,
@@ -550,8 +420,6 @@ var GraphicsController = (function(){
 		request_animated: request_animated,
 		destroy_graphics_for: destroy_graphics_for,
 		follow: follow,
-        get_movement_edge: get_movement_edge,
-		set_season: set_season,
 	};
 })();
 

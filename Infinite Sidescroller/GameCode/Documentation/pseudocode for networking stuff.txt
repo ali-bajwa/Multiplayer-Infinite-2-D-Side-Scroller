@@ -1,0 +1,142 @@
+/* PSEUDOCODE FOR NETWORKING
+//session empty
+1. host requests join session
+2. if session_empty: create session, get id, host = true
+
+//session !empty
+1. client requests join session
+2. if !session_empty: server accepts join session; get id, host = false. 
+3. host issues spawn_hero command (sends id, main = true)
+4. client receives spawn hero_command; hero = create_hero(); hero.main = true
+5. for i in currently_joined_players
+	{if i != player_id, host issues spawn_hero command (sends id, main = false)}
+6. client receives spawn hero_command; for each hero, hero = create_hero(); hero.main = false
+
+//called from host
+- NotificationSpawnHero function(player_id,is_main){
+		writeBuffer("spawn_hero");
+		writeBuffer(player_id);
+		writeBuffer(is_main);
+	}
+
+//called from client
+- parse Notification(Notification){
+		packet_id = readBuffer;
+		switch(packet_id){
+			case "spawn_hero":
+					player_id = readPacket();
+					hero_id = readPacket();
+					is_main = readPacket();
+					if (is_main){
+						hero = spawnHero();
+					}
+					else{
+						hero = spawnCompanion();
+					}
+					hero.id = hero_id;
+					hero.player_id = player_id;
+
+				break;
+		}
+	}
+	
+-host_connected(){
+		//if host is connected, return true, else false
+	}
+	
+-client_drop(player_id){
+		currently_joined_players--;
+		if (currently_joined_players < 1){
+			
+			
+		}
+	}
+	
+-host_drop(player_id){
+		player_list[player_id] = null
+		currently_joined_players--;
+		if currently_joined_players < 1
+			//reassign ids
+			//reassign host
+			
+			for i in player_list
+				if player[i] != null
+					player[i].host = true;
+					break;
+	}
+	
+-initiate_heroes(player_id){
+		if(connected){
+		}else{
+			//single_player_mode stuff
+			spawn_immediate_hero()
+		}
+		if(master){
+			//master_mode stuff
+			spawn_immediate_hero()
+			for each player{
+				if i != master's id
+					spawn_companion_notifications(player_id)
+				}
+		}else{
+			//slave_mode stuff
+			request_hero(player_id)
+		}
+
+-receive_hero_request(requester's_id){
+		spawn_immediate_companion(requester's_id)
+		spawn_hero_notification(requester's_id)
+		for all other players
+		if i != player_id && i!= requester's_id
+		spawn_companion_notification(requester's_id)
+	}
+	
+	request_spawn(type,packet){
+		operation = EntityController.universal_spawn(type);
+		var object; 
+		if singleplayer{
+			object = new operation(packet);
+			assign_id(object)
+		}
+		if master{
+			object = new operation(packet);
+			assign_id(object)
+			send_spawn_notification({packet: packet, thingamjigger: object.id})
+		}
+		if client{
+			if (thingamajigger != null){
+				object = new operation(packet);
+				force_id(object,thingamajigger)
+			}else{
+				send_spawn_request(packet);
+			}
+		}
+	}
+	
+	
+	receive_spawn_request(packet){
+		if(master)
+		request_spawn(packet)
+	}
+	
+	receive_spawn_notification(packet){
+		if(!master){
+			request_spawn(packet)
+		}
+	}
+	
+	fullfill_spawn_request(packet){
+		// take packet data and spawn thing normally
+	}
+	}
+	
+	
+	}
+*/
+
+Entity_controller has this function:
+
+universal_spawn(type){
+	var logic = Entity_Model.logic_tables.type.spawn
+	return logic;
+}

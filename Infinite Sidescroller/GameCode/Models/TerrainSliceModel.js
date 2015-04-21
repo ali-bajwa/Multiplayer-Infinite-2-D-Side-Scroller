@@ -8,7 +8,7 @@ var TerrainSliceModel = function(){
 		*/
 		
 		
-		this.id = TerrainSliceConfig.next_slice_id++; // automaticall assign id and increment 
+		this.num = TerrainSliceConfig.next_slice_id++; // automaticall assign id and increment 
 
 		this.grid_columns = TerrainSliceConfig.grid_columns;
 		this.grid_rows = TerrainSliceConfig.grid_rows;
@@ -40,9 +40,7 @@ var TerrainSliceModel = function(){
 		this.kind = kind;
 		this.body;
 	}
-	
 
-	
 	
 };
 

@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\MSBuild.Npm.0.4.4\build\MSBuild.Npm.props" Condition="Exists('..\packages\MSBuild.Npm.0.4.4\build\MSBuild.Npm.props')" />
+  <Import Project="..\packages\MSBuild.Node.0.4.4\build\MSBuild.Node.props" Condition="Exists('..\packages\MSBuild.Node.0.4.4\build\MSBuild.Node.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -20,6 +22,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <NuGetPackageImportStamp>3b3a028e</NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -498,7 +501,9 @@
     <Content Include="Content\Images\garden.jpg" />
     <Content Include="Content\Images\greek_borderC.png" />
     <Content Include="Content\Images\logo1.png" />
+    <Content Include="Content\Images\pause.png" />
     <Content Include="Content\Images\pillar_background.png" />
+    <Content Include="Content\Images\play.png" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="GameCode\.gitignore" />
@@ -829,10 +834,22 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\MSBuild.Node.0.4.4\build\MSBuild.Node.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSBuild.Node.0.4.4\build\MSBuild.Node.props'))" />
+    <Error Condition="!Exists('..\packages\MSBuild.Node.0.4.4\build\MSBuild.Node.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSBuild.Node.0.4.4\build\MSBuild.Node.targets'))" />
+    <Error Condition="!Exists('..\packages\MSBuild.Npm.0.4.4\build\MSBuild.Npm.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSBuild.Npm.0.4.4\build\MSBuild.Npm.props'))" />
+    <Error Condition="!Exists('..\packages\MSBuild.Npm.0.4.4\build\MSBuild.Npm.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\MSBuild.Npm.0.4.4\build\MSBuild.Npm.targets'))" />
+  </Target>
+  <Import Project="..\packages\MSBuild.Node.0.4.4\build\MSBuild.Node.targets" Condition="Exists('..\packages\MSBuild.Node.0.4.4\build\MSBuild.Node.targets')" />
+  <Import Project="..\packages\MSBuild.Npm.0.4.4\build\MSBuild.Npm.targets" Condition="Exists('..\packages\MSBuild.Npm.0.4.4\build\MSBuild.Npm.targets')" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
-  </Target>
+  </Target>-->
   <Target Name="AfterBuild">
-  </Target> -->
+    <Exec Command="node_modules\.bin\browserify -d GameCode\main.js -o GameCode\bundle.js"/>
+  </Target>
 </Project>

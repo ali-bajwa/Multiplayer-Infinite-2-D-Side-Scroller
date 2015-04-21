@@ -21,7 +21,7 @@ var PhysicsController = (function(){
 		PhysicsModel.scale = B2dConfig.SCALE;
 		PhysicsModel.step_amount = 1/(B2dConfig.SPS);
 
-		PhysicsModel.gravity = new B2d.b2Vec2(0,20); // earth gravity
+		PhysicsModel.gravity = new B2d.b2Vec2(0,30); // earth gravity
 		PhysicsModel.world = new B2d.b2World(PhysicsModel.gravity, true);
 
 		init_collision_listener();
@@ -333,6 +333,7 @@ var PhysicsController = (function(){
 		
 		//attach bottom fixture
 		var bottom_sensor = top_sensor;
+		bottom_sensor.width += 0.4;
 		bottom_sensor.offset = {x:0, y: h - SENSOR_THICKNESS/2};
 		attach_fixture(body,bottom_sensor,"bottom");
 		
@@ -644,7 +645,18 @@ var PhysicsController = (function(){
 		PhysicsModel.world.DestroyBody(body);
 	};
 	
-		
+	//a very important function that I need for the hyena
+	//returns the number of shapes in contact with a given bounding box
+	var query_aabb = function(aabb){
+		var count = 0;
+		PhysicsModel.world.QueryAABB(
+		function(max){
+			count++;
+			return true;
+		},
+		aabb);
+		return count;
+	};
 	
 	
 	return {
@@ -656,6 +668,7 @@ var PhysicsController = (function(){
 		draw_debug: draw_debug,
 		listen_for_contact_with: listen_for_contact_with,
 		remove_body: remove_body,
+		query_aabb: query_aabb,
 	};
 })();
 

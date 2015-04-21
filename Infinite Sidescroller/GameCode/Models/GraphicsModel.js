@@ -3,9 +3,7 @@ var GraphicsModel = function(){
 	// note that every graphics object must be augmented with
 	// the reference to the corresponding physics object, if any
 	this.other_players = []; // array of players other then hero for multiplayer
-    //PIZZAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
-	this.health;
-	this.score;
+
 	// all object registered for continious update to match their physical body
 	// position 
 	this.all_physical = {}; 

@@ -15,14 +15,16 @@ var GriffinLogic = (function(){
 		//set your game logic parameters here
 		//this.object_id = 1; //hardcode a unique identifier for each new enemy class
 		this.hp = 2;
-		this.speed = 3;
-		this.damage = 1;
+		this.speed = 6;
+		this.damage = 10;
+		this.point_value = 100;
 		//this.attack_cooldown = 4; //use this for enemies who need
 		this.can_attack = true;//use this for enemies who alternate between 
 		//this.cooldown_timer=-1;
 		this.AI_state = "walk";//use this to keep track of the enemy's AI state
 		this.aliveflag = true;
 		this.unhurtflag = true;
+		this.needs_graphics_update = false;
 	};
 
 	var init = function(){
@@ -57,10 +59,15 @@ var GriffinLogic = (function(){
 		*/
 
 		//if enemy is dead, die
+		//if (Griffin.body.GetWorldCenter().y > 22 || Griffin.body.GetWorldCenter().x < Config.Player.movement_edge - 1) {
+				//EntityController.delete_entity(Griffin);
+				//console.log("drop of death");
+			//}
 		if (Griffin.hp == 1) {
 			
 			if (Griffin.hero_hurt_me){
 				wound_Griffin(Griffin, 1);
+				IdentificationController.get_hero().score += Griffin.point_value;
 				Griffin.hero_hurt_me = false;
 				Griffin.can_attack = false;
 			}
@@ -69,6 +76,9 @@ var GriffinLogic = (function(){
 			change_state(Griffin, "death");
 			Griffin.can_attack = false;
 			Griffin.death_tick++;
+			Griffin.is_alive = false;
+			Griffin.hit_taken = false;
+
 			
 			if(Griffin.death_tick == 30){
 				EntityController.delete_entity(Griffin);
@@ -93,7 +103,7 @@ var GriffinLogic = (function(){
 				wound_Griffin(Griffin, 1);
 				Griffin.hero_hurt_me = false;
 				Griffin.can_attack = false;
-				change_state(Griffin, "upside_down");
+				change_state(Griffin, "death");
 				
 			}
 		}
@@ -140,6 +150,15 @@ var GriffinLogic = (function(){
 			}
 		}
 
+	};
+	
+	var change_animation = function (Griffin, new_animation) {
+			if (Griffin.animation != new_animation) {
+				Griffin.animation = new_animation;
+				Griffin.needs_graphics_update = true;
+		} else {
+			Griffin.needs_graphics_update = false;
+		}
 	};
 
 	var end_contact = function(contact, info) {

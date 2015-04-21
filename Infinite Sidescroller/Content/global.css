@@ -17,7 +17,7 @@ body {
     font-family: 'Cinzel', serif;
     color: #d4af37;
     min-width:1350px;
-    max-width:1900px;
+    max-width:2000px;
     overflow-x: hidden;
 }
 
@@ -229,6 +229,35 @@ nav ul li:hover #b {
     }
 }
 
+#canvas_container {
+    position: relative;
+    height: 600px;
+    width: 800px;
+    padding-top: 100px;
+    padding-bottom: 100px;
+    margin: 0 auto;
+}
+
+.playPause_button {
+    position: absolute;
+    right: 0;
+    bottom: 100px;
+    z-index: 300;
+    width: 64px; 
+}
+
+#play_btn {
+    width:42px;
+}
+
+#pause_btn {
+    width:35px;
+}
+
+#mute_btn {
+    width: 100%;
+}
+
 canvas {
     background: 
         url("../Content/Images/clouds.gif"),
@@ -236,7 +265,7 @@ canvas {
     -webkit-animation: slide 120s linear infinite;
 }
 
-@-webkit-keyframes slide {
+@-webkit-keyframes slide { /*for clouds*/
     from{
         background-position:0px;
     }
@@ -245,56 +274,26 @@ canvas {
     }
 }
 
-#canvas_container {
-    height: 600px;
-    width: 800px;
-    padding-top: 100px;
-    padding-bottom: 100px;
-    margin: 0 auto;
-}
+/*
+@media screen and (min-width: 1400px) and (max-width: 1410px) {#play_btn{left:1019px;}}
+@media screen and (min-width: 1400px) and (max-width: 1410px) {#pause_btn{left:1058px;}}
+
+@media screen and (min-width: 1430px) and (max-width: 1550px) {#play_btn{left:1039px;}}
+@media screen and (min-width: 1430px) and (max-width: 1550px) {#pause_btn{left:1078px;}}
+
+@media screen and (min-width: 1550px) and (max-width: 1650px) {#play_btn{left:999px;}}
+@media screen and (min-width: 1550px) and (max-width: 1650px) {#pause_btn{left:1038px;}}
+
+@media screen and (min-width: 1650px) and (max-width: 1850px) {#play_btn{left:999px;}}
+@media screen and (min-width: 1650px) and (max-width: 1850px) {#pause_btn{left:1038px;}}
+
+@media screen and (min-width: 1750px) and (max-width: 1850px) {#play_btn{left:999px;}}
+@media screen and (min-width: 1750px) and (max-width: 1850px) {#pause_btn{left:1038px;}}
+*/
+
 /*END GAME PAGE*/
 
-/* PLAY BUTTON */
-.play_button {
-    background-color: #d4af37;
-    position: absolute;
-    top: 478px;
-    left: 30%;
-    right: 30%;
-    font-family: 'Fontdiner Swanky', serif;
-    border: 1px solid transparent;
-    transition: .5s;
-}
-
-.play_button a {
-    font-size: 26px;
-    color: #880000;
-    text-decoration: none;
-}
-
-.play_button a:hover {
-    color: white;
-}
-
-.play_button:hover {
-    text-decoration-color: white;
-    transition: .5s;
-    -webkit-box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.9);
-    -moz-box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.9);
-    box-shadow: 0px 0px 15px 3px rgba(255, 255, 255, 0.9);
-}
-
-.button_style {
-  cursor: pointer;
-  display: inline-block;
-  padding: 6px 12px;
-  text-align: center;
-}
-
-
 /*LOGIN*/
-*{margin:0;padding:0;}
-
 #logindiv {
     border-style:solid;
     border-color:#222222;
@@ -348,14 +347,18 @@ canvas {
   transition:opacity 1s;
   -webkit-transition:opacity 1s;
   position:absolute;
+  z-index:400;
 }
+
+
 @media screen and (min-width: 1350px) and (max-width: 1450px) {#login{margin-left:63.5%;}}
 @media screen and (min-width: 1450px) and (max-width: 1550px) {#login{margin-left:62.7%;}}
 @media screen and (min-width: 1550px) and (max-width: 1650px) {#login{margin-left:61.7%;}}
 @media screen and (min-width: 1650px) and (max-width: 1750px) {#login{margin-left:61.2%;}}
 @media screen and (min-width: 1750px) and (max-width: 1850px) {#login{margin-left:60.6%;}}
 @media screen and (min-width: 1850px) and (max-width: 1950px) {#login{margin-left:59.6%;}}
-@media screen and (min-width: 1950px){#login{margin-left:1132px;}}
+@media screen and (min-width: 1950px){#login{margin-left:1132px;}} 
+
 
 #triangle{
   width:0;
@@ -558,57 +561,6 @@ form h4 {
     font-family: "Cinzel", serif;
     font-size: 25px;
 }
-
-/*input[type="text"],input[type="password"]{
-  width:92%;
-  background:rgba(191, 187, 151, 0.8);
-  margin-bottom:4%;
-  padding:4%;
-  font-size:95%;
-  color:#fff;
-}*/
-
-
-/*input[type="submit"]{
-  width:100%;
-  background:#222222;
-  border:0;
-  padding:4%;
-  font-size:100%;
-  cursor:pointer;
-  transition:background .3s;
-  -webkit-transition:background .3s;
-  color: #d4af37;
-}*/
-
-/*input[type="submit"]:hover{
-  background:#d4af37;
-  color:#880000;
-}*/
-
-/*.RD_button{
-  width:250px;
-  height:30px;
-  align-content:center;
-  background:#222222;
-  display:block;
-  margin:auto auto;
-  margin-top:1%;
-  padding: 15px;
-  font-size:26px;
-  text-align:center;
-  text-decoration:none;
-  cursor:pointer;
-  transition:background .3s;
-  -webkit-transition:background .3s;
-  color: #d4af37;
-}
-
-.RD_button:hover{
-  background:#d4af37;
-  color:#880000;
-}*/
-
 /*END REGISTER*/
 
 

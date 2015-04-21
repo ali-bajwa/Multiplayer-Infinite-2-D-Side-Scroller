@@ -14,11 +14,11 @@ var GriffinRenderer = (function(){
 
 		spritesheets["Griffin"] = new createjs.SpriteSheet({
 			"framerate": 1,
-			"images": [get_asset("Griffin1"), get_asset("Griffin2"), get_asset("Griffin3") ],
-			"frames": { "regX": 10, "regY": 28, "height": 413, "width": 420, "count": 3},
-			"animations": {
+			"images": [get_asset("Griffin1"), get_asset("Griffin2"), get_asset("Griffin3"), get_asset("GriffinDeath")],
+				"frames": { "regX": 5, "regY": 14, "height": 207, "width": 210, "count": 4},
+				"animations": {
 				"walk": [0, 2, "walk", 0.2],
-				//"death": [4, 5, "death"]
+				"death": [2, 3, "death", 0.4],
 			}
 		})
 
@@ -51,8 +51,9 @@ var GriffinRenderer = (function(){
 
 		
 		if(Griffin.physical_instance.AI_state == "death"&& Griffin.physical_instance.aliveflag){
-			Griffin.gotoAndPlay("death");
-			Griffin.physical_instance.aliveflag = false;
+ 			Griffin.gotoAndPlay("death");
+			console.log("I've been squashed!");
+ 			Griffin.physical_instance.aliveflag = false;
 			
 			
 		}

@@ -1,8 +1,5 @@
-config = require ("../Config.js");
-
 var HeroLogic = (function(){
 
-		
 	var Hero = function(){
 		/* Will be instantiated for every created entity to hold all the information 
 			about the physical (not graphical) state of the entity in question. 
@@ -13,8 +10,33 @@ var HeroLogic = (function(){
 		*/
 		this.hp = 100;
 		this.wound = false;
+		this.damage_taken = 1;
+		this.damage = 1;
 		this.jumps = 0;
+		
 		this.score = 0;
+		this.state = "walk";
+		this.an_frame =0;
+		this.death_tick=0;
+		this.jump_tick=0;
+		this.walk_tick=0;
+		this.is_walk = false;
+		this.is_jump = false;
+		this.last_pos=0;
+		this.current_pos =0;
+		this.pos_count =0; //counts the number of times player sits at a position
+		/*
+			whenever the up,right,left buttons are pressed the 
+			corosponding value is set to 0 and the other are increased by1
+			the value of the boolean corospoding to the button pressed is set to true
+		*/
+		this.up =false;
+		this.right=false;
+		this.left=false;
+		this.right_count = 0;
+		this.left_count = 0;
+		this.up_count=0;
+		this.facing = "right"; //or will be left
 	};
 
 	var init = function(){
@@ -39,12 +61,12 @@ var HeroLogic = (function(){
 		hero.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, hero);
 
 		var id = IdentificationController.assign_id(hero);
-
+		IdentificationController.load_hero(hero.id);
+		
 		hero.hp = 100;
 		hero.wound = false;
 		hero.jumps = 0;
 		hero.score = 0;
-
 
 		return hero;
 	
@@ -55,80 +77,103 @@ var HeroLogic = (function(){
 			entity of this type. I given entity_instance
 		*/
 
-		var hero_x = hero.body.GetWorldCenter().x;
-		var pconf = Config.Player;
-		if(pconf.movement_edge < hero_x - 20){
-			pconf.movement_edge = hero_x - 20;
-		}
-
 		var cmds = KeyboardController.movement_commands();
 
+       
+        //End Score Tracking
+
 		if(cmds("right")){
-		    // temporary
-		    add_score(hero, 1);
-		    move_right(hero);
-			
-			GraphicsController.set_season(hero.body.GetWorldCenter());
+			 if(hero.jumps==0&&hero.is_walk == false){
+				change_state(hero,"walk");
+				hero.is_walk = true;
+			}
+			move_right(hero);
 		}
 		if(cmds("left")){
-		    // temporary
-		    move_left(hero);
-		    GraphicsController.set_season(hero.body.GetWorldCenter());
+			if(hero.jumps==0&&hero.is_walk == false){
+				change_state(hero,"walk");
+				hero.is_walk = true;
+			}
+			move_left(hero);
 		}
-
+		if(cmds("down")){
+			slam(hero);
+			
+		}
 		if(cmds("up")){
+			hero.is_walk=false;
 			jump(hero);
 			
 		}
 		if(hero.wound)
 		{
-			hero.hp--;
+			hero.hp -= hero.damage_taken;
 			console.log("Taking damage");
-			GraphicsController.update_health(hero.hp);
 		}
 		
 		if(hero.hp <= 0)
 		{
-		    EntityController.delete_entity(hero);
-			console.log("Player Is Dead");
+			despawn(hero);	
 		}
 		
-		if (hero.body.GetWorldCenter().x < pconf.movement_edge + hero.body.GetUserData().def.width/2) {
+		if (hero.body.GetWorldCenter().x < WorldController.get_movement_edge() + hero.body.GetUserData().def.width/2) {
 			stop_hero(hero);
 			console.log("working");
 		}
-		if (hero.body.GetWorldCenter().y > 22) {
-		    EntityController.delete_entity(hero);
-		    console.log("drop of death");
-		}
-		GraphicsController.update_score(hero.score);
+		//if (hero.body.GetWorldCenter().y > 22) {
+			//hero.hp = 0;
+			//console.log("drop of death");
+		//}
 	};
 
+	var despawn = function(hero){
+		/**
+		* called when hero should despawn (die);
+		*/
+
+		EntityController.delete_entity(hero);
+		console.log("Player Is Dead");
+	};
+	
+	
+	var change_state = function(hero, new_state){
+		hero.state = new_state;
+		hero.walk_tick = 0;
+		hero.death_tick = 0;
+		hero.jump_tick = 0;
+	};
 	var begin_contact = function(contact, info){
-		//console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
-			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
 		if (info.Me.fixture_name == "bottom"){
-			info.Me.entity.jumps = 0;
+			if(info.Them.fixture_name == "top" || info.Them.entity.kind == 1 || info.Them.entity.kind == 2){
+				info.Me.entity.jumps = 0;
+			}
+			if(info.Them.entity.kind == 3){
+				info.Me.entity.wound = true;
+				info.Me.entity.damage_taken = info.Them.entity.damage;
+			}
 		}
-		if (info.Me.fixture_name == "top"){
-			take_hit(info.Me.entity, 1);
-		}
-		
-		if(info.Me.fixture_name != "bottom" && info.Them.entity.can_attack)
-		{
-		    info.Me.entity.wound = true;
+		if(info.Me.fixture_name != "bottom" && info.Them.entity.can_attack){
+			if(typeof info.Them.entity.kind === 'undefined'){
+				//stupid chain of box2d functions returns {x:half_height,y:half_width}
+				var my_extents = info.Me.entity.body.GetFixtureList().GetNext().GetNext().GetNext().GetNext().GetAABB().GetExtents();
+				var my_coordinates = info.Me.entity.body.GetWorldCenter();
+				var other_extents = info.Them.entity.body.GetFixtureList().GetNext().GetNext().GetNext().GetNext().GetAABB().GetExtents();
+				var other_coordinates = info.Them.entity.body.GetWorldCenter();
+				//prevents taking damage while on top of enemies
+				if (!(my_coordinates.y <= other_coordinates.y - (my_extents.y + other_extents.y - 0.5))){
+					info.Me.entity.wound = true;
+					info.Me.entity.damage_taken = info.Them.entity.damage;
+				}
+			}else{
+				info.Me.entity.wound = true;
+				info.Me.entity.damage_taken = info.Them.entity.damage;
+			}
 		}
 				
 	};
-	
-	var add_score = function (hero, amount) {
-	    hero.score += amount;
-	}
-	
 
 	var take_hit = function(hero, amount){
 	    hero.hp -= amount;
-		//GraphicsController.update_health(hero.hp);
 	}
 
 	var end_contact = function(contact, info){
@@ -145,7 +190,7 @@ var HeroLogic = (function(){
 
 		var body = hero.body;
 		var w = hero.body.GetUserData().def.width/2;
-		var pos = new B2d.b2Vec2(Config.Player.movement_edge + w, body.GetWorldCenter().y)
+		var pos = new B2d.b2Vec2(WorldController.get_movement_edge() + w, body.GetWorldCenter().y)
 		var vel = body.GetLinearVelocity();
 		if(vel.x < 0){
 			var vel = new B2d.b2Vec2(0, vel.y);
@@ -155,24 +200,20 @@ var HeroLogic = (function(){
 	    body.SetAwake(true);
 	}
 
-	var move_right = function(hero){
-		var body = hero.body;
-		var velocity = body.GetLinearVelocity();
-		velocity.x = 5;
-		body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-		body.SetAwake(true);
-		//hero.x += 10; // old
-		//hero.x = (body.GetPosition().x + 1.5/2) * 30 ; 
+	var slam = function(hero){
+	    var body = hero.body;
+	    body.ApplyImpulse(new B2d.b2Vec2(0, 20), body.GetWorldCenter());
 	};
-
 	var jump = function(hero){
 	    var body = hero.body;
 		if (hero.jumps == 0){
-		    body.ApplyImpulse(new B2d.b2Vec2(0, -100), body.GetWorldCenter());
+			change_state(hero,"jump");
+		    body.ApplyImpulse(new B2d.b2Vec2(0, -125), body.GetWorldCenter());
 		    hero.jumps += 1;
 		}
 		else if (hero.jumps == 1 && body.GetLinearVelocity().y > -1) {
-		    body.ApplyImpulse(new B2d.b2Vec2(0, -100), body.GetWorldCenter());
+			change_state(hero,"jump");
+		    body.ApplyImpulse(new B2d.b2Vec2(0, -125), body.GetWorldCenter());
 		    hero.jumps += 1;
 		}
 
@@ -194,14 +235,14 @@ var HeroLogic = (function(){
 
 	var move_left = function(hero){
 		var velocity = hero.body.GetLinearVelocity();
-		velocity.x = -5;
+		velocity.x = -8;
 		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 		hero.body.SetAwake(true);
 	};
 
 	var move_right = function(hero){
 		var velocity = hero.body.GetLinearVelocity();
-		velocity.x = +5;
+		velocity.x = +8;
 		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 		hero.body.SetAwake(true);
 	};
@@ -220,6 +261,7 @@ var HeroLogic = (function(){
 		// declare public
 		init: init, 
 		spawn: spawn,
+		despawn: despawn,
 		tick_AI: tick_AI,
 		begin_contact: begin_contact,
 		end_contact: end_contact,

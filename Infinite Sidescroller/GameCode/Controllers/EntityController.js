@@ -142,7 +142,7 @@ var EntityController = (function(){
 
 		// demonstration purposes for ant
 		if(debug_commands("spawn_ant")){
-		    var new_ant = spawn(Config.Player.movement_edge + Math.random() * 50, 10, "ant");
+		    var new_ant = spawn(WorldController.get_movement_edge() + Math.random() * 50, 10, "ant");
 		}
 
 	    // demonstration purposes for griffin

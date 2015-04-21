@@ -65,6 +65,14 @@ var AntRenderer = (function(){
 			
 			
 		}
+		if(ant.physical_instance.AI_state == "walk" && ant.physical_instance.start_walking)
+		{
+			ant.gotoAndPlay("walk");
+			//ant.physical_instance.hp += 1;
+			ant.physical_instance.start_walking = false;
+			
+			
+		}
 
 	};
 

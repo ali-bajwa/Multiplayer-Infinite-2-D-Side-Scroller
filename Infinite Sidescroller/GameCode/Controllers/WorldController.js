@@ -50,8 +50,8 @@ var WorldController = (function(){
 
 	    var spawn_num;
 	    if (spawn_enemy) {
-	        spawn_num = Math.floor(Math.random() * 1000);
 	        for (i = 0; i < Math.floor(Math.random() * 4) ; i++) {
+	            spawn_num = Math.floor(Math.random() * 1000);
 	            // demonstration purposes for hyena
 	            if (spawn_num <= 5 * difficulty) {
 	                var new_hyena = EntityController.spawn(60 + get_movement_edge(), 10, "Hyena");

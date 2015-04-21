@@ -34,6 +34,7 @@ var TerrainController = (function(){
 			var slice = NewTerrainSlice(TerrainModel.seed);
 			TerrainModel.terrain_slices_queue.push(slice);
 			TerrainModel.seed = (((TerrainModel.seed) * (TerrainModel.seed) - TerrainModel.seed / 2)) % 2000 + 1000;
+			WorldController.set_spawn();
 		};
 
 		check_for_old_slices();

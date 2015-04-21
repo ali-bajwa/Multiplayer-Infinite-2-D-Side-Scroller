@@ -35,12 +35,6 @@ var Config = function(){
 		maxy: 22,
 
 	};
-
-	this.Player = {
-		movement_edge: 0,
-
-
-	};
 	// <<<
 };
 

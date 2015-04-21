@@ -1,7 +1,7 @@
 var TerrainModel = function(){
 	//This is physics, for graphics look into the GraphicsController/Model
 	this.terrain_slices_queue = [];
-	this.new_slices = [];
+	//this.new_slices = [];
 	this.seed;
 
 	// how many initial (non-random) terrain slices

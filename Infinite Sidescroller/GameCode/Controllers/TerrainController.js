@@ -30,13 +30,14 @@ var TerrainController = (function(){
 			TerrainModel.terrain_slices_queue.push(slice);
 		}
 
-		if(config.Player.movement_edge > (TerrainModel.terrain_slices_queue.length-3)*(20)){
+		if(WorldController.get_movement_edge() > (TerrainModel.terrain_slices_queue.length-3)*(20)){
 			var slice = NewTerrainSlice(TerrainModel.seed);
 			TerrainModel.terrain_slices_queue.push(slice);
-			TerrainModel.seed = (((TerrainModel.seed%4) * (TerrainModel.seed+1) - TerrainModel.seed / 2)) % 3000;
+			TerrainModel.seed = (((TerrainModel.seed) * (TerrainModel.seed) - TerrainModel.seed / 2)) % 2000 + 1000;
+			WorldController.set_spawn();
 		};
 
-		//check_for_old_slices();
+		check_for_old_slices();
 	};
 
 
@@ -77,7 +78,7 @@ var TerrainController = (function(){
 			var slice = tqueue[i];
 			var slice_end_x = slice.origin.x + slice.grid_columns * slice.cell_w;
 
-			if(slice_end_x < Config.Player.movement_edge){
+			if(slice_end_x < WorldController.get_movement_edge){
 				// if slice is unreachable, delete it 
 				cut_off_index++;
 				delete_slice(slice);
@@ -86,7 +87,7 @@ var TerrainController = (function(){
 
 		// now remove all found old slices from the queue
 		if(cut_off_index > 0){
-			tqueue.slice(cut_off_index)
+			TerrainModel.terrain_slices_queue = tqueue.slice(cut_off_index);
 		}
 	};
 	
@@ -99,9 +100,27 @@ var TerrainController = (function(){
 		* otherwise the slice won't be properly deleted
 		*/
 			
-		// TODO: comment in update back
+		console.log("deleting slice with origin", slice.origin);
+		
+		var grid = slice.grid;
+		
+		for(var i = 0; i < grid.length; i++){
+			var row = grid[i];
+			for(var j = 0; j < row.length; j++){
+				var cell = row[j];
+				if(cell.kind != 0){
+					PhysicsController.remove_body(cell.body);
+					IdentificationController.remove_id(cell.id);
+				}
+			}
+		}
+
+		
+		// For graphics to pick up and delete unneeded graphics
+		RegisterAsController.register_as("removed_slice", slice);
 
 		// free the id (yes, terrain slice has id id
+		IdentificationController.remove_id(slice.id);
 	};
 	
 	
@@ -124,25 +143,25 @@ var TerrainController = (function(){
 
 	
 	var MarkAsNewTerrainSlice = function(slice){
-		TerrainModel.new_slices.push(slice);
+		//TerrainModel.new_slices.push(slice);
 		RegisterAsController.register_as("awaiting_graphics_initialization", slice);
 	};
 
-	var NewSlicesAvailable = function(){
-		return (TerrainModel.new_slices.length > 0);
-	};
+	//var NewSlicesAvailable = function(){
+		//return (TerrainModel.new_slices.length > 0);
+	//};
 
-	var GetNewTerrainSlices = function(){
-		return TerrainModel.new_slices;
-	};
+	//var GetNewTerrainSlices = function(){
+		//return TerrainModel.new_slices;
+	//};
 
 	return {
 		update: update,
 		init: init,
 		NewTerrainSlice: NewTerrainSlice,
 		MarkAsNewTerrainSlice: MarkAsNewTerrainSlice,
-		NewSlicesAvailable: NewSlicesAvailable,
-		GetNewTerrainSlices: GetNewTerrainSlices,
+		//NewSlicesAvailable: NewSlicesAvailable,
+		//GetNewTerrainSlices: GetNewTerrainSlices,
 	}
 })();
 

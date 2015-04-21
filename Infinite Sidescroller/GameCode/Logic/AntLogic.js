@@ -14,7 +14,7 @@ var AntLogic = (function(){
 
 		//set your game logic parameters here
 		//this.object_id = 1; //hardcode a unique identifier for each new enemy class
-		this.hp = 2;
+		this.hp = 3;
 		this.speed = 3;
 		this.damage = 1;
 		this.point_value = 25;
@@ -24,6 +24,9 @@ var AntLogic = (function(){
 		this.AI_state = "walk";//use this to keep track of the enemy's AI state
 		this.aliveflag = true;
 		this.unhurtflag = true;
+		this.start_walking = true;
+		this.pop = 40;
+		this.popup = 0;
 	};
 
 	var init = function(){
@@ -70,7 +73,20 @@ var AntLogic = (function(){
 				ant.hero_hurt_me = false;
 				ant.can_attack = false;
 			}
-
+		ant.popup++;
+			if(ant.pop == ant.popup && ant.AI_state == "upside_down")
+			{
+				var Antbody = ant.body;
+				Antbody.ApplyImpulse(new B2d.b2Vec2(10, -20), Antbody.GetWorldCenter());
+				ant.popup = 0;
+				ant.can_attack = true;
+				ant.unhurtflag = true;
+				ant.start_walking = true;
+				change_state(ant, "walk");
+				ant.hp++ 
+			}	
+			
+			
 		}else if (ant.hp <= 0) {
 			change_state(ant, "death");
 			ant.can_attack = false;
@@ -86,11 +102,16 @@ var AntLogic = (function(){
 
 			if (ant.AI_state == "walk") {
 				var Antbody = ant.body;
+				//Antbody.ApplyImpulse(new B2d.b2Vec2(-5,0), Antbody.GetWorldCenter());
 				var velocity = Antbody.GetLinearVelocity();
 				velocity.x = -ant.speed;
 				Antbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 				Antbody.SetAwake(true);
+				ant.start_walking = false;
+				ant.popup = 0;
 			}
+			
+			
 			if (ant.can_attack && ant.me_hurt_hero && ant.AI_state == "walk"){
 				// pass
 			}

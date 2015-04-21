@@ -41,12 +41,12 @@ var TerrainSliceController = (function () {
 		// 0 will be the id for the "air" i.e. nothing
 		var gap;
 		gap = new TerrainSliceModel.Cell(0);
-		IdentificationController.assign_id(gap);
+		//IdentificationController.assign_id(gap); // DO NOT ASSIGN IDS TO EMPTY SPACES
 		return gap;
 	};
 	
 	var getRandomNumber = function (seed) {
-		return (seed*seed)%2000;
+		return (seed*seed)%2000 + 1000;
 	};
 	
 	var buildTerrainSlice_00 = function(slice,seed){
@@ -164,7 +164,7 @@ var TerrainSliceController = (function () {
 						}
 					}
 
-					seed = getRandomNumber(seed) - seed/100;
+					seed = getRandomNumber(seed);
 				}
 			}
 			vgap_len = vgap_len%vgap_min;

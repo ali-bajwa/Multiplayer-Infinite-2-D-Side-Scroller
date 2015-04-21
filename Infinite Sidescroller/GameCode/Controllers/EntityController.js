@@ -4,8 +4,6 @@ var EntityController = (function(){
 	*/
 
 	var type_logic_table;
-
-	var Count = 0;
 	
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -126,7 +124,8 @@ var EntityController = (function(){
 		}
 
 		// remove graphics
-			GraphicsController.destroy_graphics_for(id);
+			//GraphicsController.destroy_graphics_for(id);
+			RegisterAsController.register_as("removed_entity", entity);
 		// remove physics
 			PhysicsController.remove_body(body);
 		// remove stored references within EntityController/Model
@@ -137,31 +136,8 @@ var EntityController = (function(){
 
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
-		var debug_commands = KeyboardController.debug_commands();
-
-		// demonstration purposes for ant
-		if(debug_commands("spawn_ant")){
-		    var new_ant = spawn(Config.Player.movement_edge + Math.random() * 50, 10, "ant");
-		}
-
-	    // demonstration purposes for griffin
-
-		if (debug_commands("spawn_griffin") && Count > 5) {
-		    var new_griffin = spawn(Math.random() * 50 + Config.Player.movement_edge, -20, "Griffin");
-			Count = 0;
-		}
-		Count++;
-
-		if (debug_commands("spawn_griffin")) {
-		    var new_griffin = spawn(Math.random() * 50 + Config.Player.movement_edge, 10, "Griffin");
-		}
-		
-
-	    // demonstration purposes for hyena
-		if (debug_commands("spawn_hyena")) {
-		    var new_hyena = spawn(Math.random() * 50 + Config.Player.movement_edge, 10, "Hyena");
-		}
-
+	    var debug_commands = KeyboardController.debug_commands();
+        
 		for(var type in EntityModel.for_logic_update){
 			var table = EntityModel.for_logic_update[type];
 
@@ -172,6 +148,9 @@ var EntityController = (function(){
 				if(beyond_world_boundary(entity)){
 					// if outside boundaries of the world, despawn
 					despawn(entity);
+					if (entity.type == "hero"){
+						entity.hp = 0;
+					}
 					console.log("entity of type", type, "deleted due to the world boundary");
 				}else{
 					// else tick its AI
@@ -188,7 +167,7 @@ var EntityController = (function(){
 		* checks if the entity is beyond one of the world boundaries,
 		*/
 		var body = entity.body;
-		return (body.GetWorldCenter().x < Config.Player.movement_edge ||
+		return (body.GetWorldCenter().x < WorldController.get_movement_edge() ||
 			body.GetWorldCenter().y > Config.World.maxy);
 
 	};
@@ -200,7 +179,7 @@ var EntityController = (function(){
 		init: init, 
 		update: update,
 		delete_entity: delete_entity,
-
+        spawn: spawn,
 	};
 })();
 

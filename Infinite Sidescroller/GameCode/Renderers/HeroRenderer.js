@@ -31,7 +31,10 @@ var HeroRenderer = (function(){
                 death: {
 					frames: [9, 10, 11, 12, 13, 14, 15],
 					speed: 0.3
-				}
+				},
+				deathFinal: {
+					frames: [15]
+				},
 			}
 		})
 		//SpriteSheetUtils.addFlippedFrames(spriteSheets["Hero"], true, false, false);
@@ -84,9 +87,26 @@ var HeroRenderer = (function(){
 		if(hero.physical_instance.state=="finish"){
 			hero.gotoAndPlay("finish");
 		}
-		
+		if(hero.physical_instance.state=="deathFinal"){
+			hero.gotoAndPlay("deathFinal");
+		}
 		if(hero.physical_instance.state=="stand"){
 			hero.gotoAndPlay("stand");
+		}
+		if(hero.physical_instance.state == "death"){
+			if(hero.physical_instance.death_tick ==1){
+				hero.gotoAndPlay("death");
+			}
+			else if(hero.physical_instance.death_tick >=60){
+				hero.physical_instance.state="deathFinal";
+			}
+		}
+		
+		//set direction
+		if (hero.physical_instance.left){ //if direction == right, flip right
+			hero.scaleX = -1;
+		}else{ //else flip left
+			hero.scaleX = 1;
 		}
 	};
 

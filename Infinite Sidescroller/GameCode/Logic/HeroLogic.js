@@ -22,9 +22,6 @@ var HeroLogic = (function(){
 		this.walk_tick=0;
 		this.is_walk = false;
 		this.is_jump = false;
-		this.last_pos=0;
-		this.current_pos =0;
-		this.pos_count =0; //counts the number of times player sits at a position
 		/*
 			whenever the up,right,left buttons are pressed the 
 			corosponding value is set to 0 and the other are increased by1
@@ -33,9 +30,6 @@ var HeroLogic = (function(){
 		this.up =false;
 		this.right=false;
 		this.left=false;
-		this.right_count = 0;
-		this.left_count = 0;
-		this.up_count=0;
 		this.facing = "right"; //or will be left
 	};
 
@@ -82,38 +76,58 @@ var HeroLogic = (function(){
        
         //End Score Tracking
 
-		if(cmds("right")){
-			 if(hero.jumps==0&&hero.is_walk == false){
-				change_state(hero,"walk");
-				hero.is_walk = true;
+		if(hero.hp <= 0)
+		{
+			hero.hp=0;
+			if(hero.death == false){
+				change_state(hero,"death");
+				hero.death = true;
 			}
-			move_right(hero);
-		}
-		if(cmds("left")){
-			if(hero.jumps==0&&hero.is_walk == false){
-				change_state(hero,"walk");
-				hero.is_walk = true;
+			hero.death_tick++;
+			if(hero.death_tick == 100){
+				despawn(hero);	
 			}
-			move_left(hero);
-		}
-		if(cmds("down")){
-			slam(hero);
 			
 		}
-		if(cmds("up")){
-			hero.is_walk=false;
-			jump(hero);
-			
+		else{
+			if(cmds("right")){
+				 if(hero.jumps==0&&hero.is_walk == false){
+					change_state(hero,"walk");
+					hero.is_walk = true;
+				}
+				if(hero.right == false){
+					hero.right = true;
+					hero.left = false;
+				}
+				
+				move_right(hero);
+			}
+			if(cmds("left")){
+				if(hero.jumps==0&&hero.is_walk == false){
+					change_state(hero,"walk");
+					hero.is_walk = true;
+				}
+				
+				if(hero.left == false){
+					hero.left = true;
+					hero.right = false;
+				}
+				move_left(hero);
+			}
+			if(cmds("down")){
+				slam(hero);
+				
+			}
+			if(cmds("up")){
+				hero.is_walk=false;
+				jump(hero);
+				
+			}
 		}
 		if(hero.wound)
 		{
 			hero.hp -= hero.damage_taken;
 			console.log("Taking damage");
-		}
-		
-		if(hero.hp <= 0)
-		{
-			despawn(hero);	
 		}
 		
 		if (hero.body.GetWorldCenter().x < WorldController.get_movement_edge() + hero.body.GetUserData().def.width/2) {

@@ -156,5 +156,5 @@ $RECYCLE.BIN/
 .DS_Store
 Infinite Sidescroller/node_modules/
 Infinite Sidescroller/packages/
-Infinite Sidescroller/GameCode/bundle.js
+#Infinite Sidescroller/GameCode/bundle.js
 packages/

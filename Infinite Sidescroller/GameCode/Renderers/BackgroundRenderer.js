@@ -2,7 +2,6 @@ var BackgroundRenderer = (function(){
 
 	var season_array;
 	var season_image;
-	var cycle;
 	var season_threshold;
 	
 	var hero_progress;
@@ -14,7 +13,6 @@ var BackgroundRenderer = (function(){
 		
 		season_array = [];//stores season sprites
 		season_image = ["Winter", "Spring", "Summer", "Fall"];
-		cycle = 0; //season cycle
 		season_threshold = 2; //So seasons only update once
 		
 		hero_progress = 0;
@@ -37,7 +35,6 @@ var BackgroundRenderer = (function(){
 		
 		//Potentially change seasons based on hero progress
 		change_seasons(hero_progress);
-		Config.World.season = cycle;
 		
 		//perform parallax effect with background
 		background_loop(hero_x,hero_progress);
@@ -65,8 +62,8 @@ var BackgroundRenderer = (function(){
 		if(flag){
 			console.log("generating season");
 			delete_all_season();
-			cycle = (cycle+1)%4;
-			generate_season(season_image[cycle], GraphicsController.get_stage().canvas.width, Config.Player.movement_edge / 30);
+			WorldController.set_season((WorldController.get_season()+1)%4);
+			generate_season(season_image[WorldController.get_season()], GraphicsController.get_stage().canvas.width, WorldController.get_movement_edge() / 30);
 		}
 	};
 	
@@ -88,11 +85,6 @@ var BackgroundRenderer = (function(){
 		season_array = [];
 	};
 	
-	//returns the current season
-	var get_season = function(){
-		return cycle;
-	};
-
 	var register = function(background){
 		/* is ran for every entity of this type that was just created and should
 		get graphics representation. You are given the entity instance and is supposed

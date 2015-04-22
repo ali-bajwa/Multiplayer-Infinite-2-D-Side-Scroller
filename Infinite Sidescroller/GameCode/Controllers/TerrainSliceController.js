@@ -46,13 +46,13 @@ var TerrainSliceController = (function () {
 	};
 	
 	var getRandomNumber = function (seed) {
-		return (seed*seed)%2000;
+		return (seed*seed)%2000 + 1000;
 	};
 	
 	var buildTerrainSlice_00 = function(slice,seed){
 	
 	    //set variables
-	    console.log(seed);
+	    //console.log(seed);
 	    var seed = seed;
 		var rows = slice.grid_rows;
 		var columns = slice.grid_columns;
@@ -164,7 +164,7 @@ var TerrainSliceController = (function () {
 						}
 					}
 
-					seed = getRandomNumber(seed) - seed/100;
+					seed = getRandomNumber(seed);
 				}
 			}
 			vgap_len = vgap_len%vgap_min;

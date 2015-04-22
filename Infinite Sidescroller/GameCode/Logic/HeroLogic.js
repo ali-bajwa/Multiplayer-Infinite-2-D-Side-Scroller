@@ -1,5 +1,3 @@
-Config = require ("../Config.js");
-
 var HeroLogic = (function(){
 
 	var Hero = function(){
@@ -79,16 +77,6 @@ var HeroLogic = (function(){
 			entity of this type. I given entity_instance
 		*/
 
-		var pconf = Config.Player;
-		//make x and y coordinates available to enemy AI's that need to know them efficiently
-		//pconf.hero_x[player_id] = hero_x; //for multiplayer mode
-		//pconf.hero_y[player_id] = hero.y;
-		pconf.hero_x = hero.body.GetWorldCenter().x; //while stuck in single player mode
-		pconf.hero_y = hero.body.GetWorldCenter().y;
-		if(pconf.movement_edge < pconf.hero_x - 20){
-			pconf.movement_edge = pconf.hero_x - 20;
-		}
-
 		var cmds = KeyboardController.movement_commands();
 
        
@@ -128,7 +116,7 @@ var HeroLogic = (function(){
 			despawn(hero);	
 		}
 		
-		if (hero.body.GetWorldCenter().x < pconf.movement_edge + hero.body.GetUserData().def.width/2) {
+		if (hero.body.GetWorldCenter().x < WorldController.get_movement_edge() + hero.body.GetUserData().def.width/2) {
 			stop_hero(hero);
 			console.log("working");
 		}
@@ -202,7 +190,7 @@ var HeroLogic = (function(){
 
 		var body = hero.body;
 		var w = hero.body.GetUserData().def.width/2;
-		var pos = new B2d.b2Vec2(Config.Player.movement_edge + w, body.GetWorldCenter().y)
+		var pos = new B2d.b2Vec2(WorldController.get_movement_edge() + w, body.GetWorldCenter().y)
 		var vel = body.GetLinearVelocity();
 		if(vel.x < 0){
 			var vel = new B2d.b2Vec2(0, vel.y);
@@ -218,14 +206,26 @@ var HeroLogic = (function(){
 	};
 	var jump = function(hero){
 	    var body = hero.body;
+	    var w = hero.body.GetUserData().def.width / 2;
+	    var pos = new B2d.b2Vec2(WorldController.get_movement_edge() + w, body.GetWorldCenter().y)
+	    var vel = body.GetLinearVelocity();
+	    console.log(hero.jumps);
 		if (hero.jumps == 0){
-			change_state(hero,"jump");
-		    body.ApplyImpulse(new B2d.b2Vec2(0, -125), body.GetWorldCenter());
+		    change_state(hero, "jump");
+			var vel = new B2d.b2Vec2(vel.x, -18);
+			body.SetLinearVelocity(vel);
+			hero.body.SetAwake(true);
 		    hero.jumps += 1;
 		}
 		else if (hero.jumps == 1 && body.GetLinearVelocity().y > -1) {
-			change_state(hero,"jump");
-		    body.ApplyImpulse(new B2d.b2Vec2(0, -125), body.GetWorldCenter());
+		    change_state(hero, "jump");
+		    var min_check = vel.y - 18;
+		    if (min_check > -9) {
+		        min_check = -9;
+		    }
+		    var vel = new B2d.b2Vec2(vel.x, min_check);
+		    body.SetLinearVelocity(vel);
+		    hero.body.SetAwake(true);
 		    hero.jumps += 1;
 		}
 

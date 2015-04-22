@@ -30,10 +30,11 @@ var TerrainController = (function(){
 			TerrainModel.terrain_slices_queue.push(slice);
 		}
 
-		if(config.Player.movement_edge > (TerrainModel.terrain_slices_queue.length-3)*(20)){
+		if(WorldController.get_movement_edge() > (TerrainModel.terrain_slices_queue.length-3)*(20)){
 			var slice = NewTerrainSlice(TerrainModel.seed);
 			TerrainModel.terrain_slices_queue.push(slice);
-			TerrainModel.seed = (((TerrainModel.seed%4) * (TerrainModel.seed+1) - TerrainModel.seed / 2)) % 3000;
+			TerrainModel.seed = (((TerrainModel.seed) * (TerrainModel.seed) - TerrainModel.seed / 2)) % 2000 + 1001;
+			WorldController.set_spawn();
 		};
 
 		check_for_old_slices();
@@ -77,7 +78,7 @@ var TerrainController = (function(){
 			var slice = tqueue[i];
 			var slice_end_x = slice.origin.x + slice.grid_columns * slice.cell_w;
 
-			if(slice_end_x < Config.Player.movement_edge){
+			if(slice_end_x < WorldController.get_movement_edge){
 				// if slice is unreachable, delete it 
 				cut_off_index++;
 				delete_slice(slice);

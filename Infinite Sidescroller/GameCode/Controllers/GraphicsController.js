@@ -200,7 +200,7 @@ var GraphicsController = (function(){
 			//   1. calculate were the physical movement edge would be if drawn right now to the canvas
 			//   2. if it would be displayed on-screen, offset camera so that it wouldn't be anymore
 
-			var mov_edge_graphics_x = (Config.Player.movement_edge * Config.B2D.SCALE) + camera.offset.x;
+			var mov_edge_graphics_x = (WorldController.get_movement_edge() * Config.B2D.SCALE) + camera.offset.x;
 
 			// recall that left display edge is 0 for graphics, as (0, 0) is the top-left corner
 			if(mov_edge_graphics_x > 0){

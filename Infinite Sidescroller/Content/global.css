@@ -16,8 +16,6 @@ body {
     background-size: cover;
     font-family: 'Cinzel', serif;
     color: #d4af37;
-    min-width:1350px;
-    max-width:2000px;
     overflow-x: hidden;
 }
 
@@ -94,7 +92,6 @@ body {
 nav {
   background: rgb(34, 34, 34);
   text-align: center;
-  
 }
 
 nav ul {
@@ -105,7 +102,6 @@ nav ul {
   display: inline-block;
   zoom: 1;
   text-align: center;
-  
 }
 
 nav ul li {
@@ -572,6 +568,74 @@ form h4 {
 }
 /*END REGISTER*/
 
+/*LEADERBOARDS PAGE*/
+#leaderboard_wrapper {
+    margin: 0 auto;
+    width: 960px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    -webkit-box-shadow: 0px 0px 37px 7px rgba(0,0,0,1);
+    -moz-box-shadow: 0px 0px 37px 7px rgba(0,0,0,1);
+    box-shadow: 0px 0px 37px 7px rgba(0,0,0,1);
+}
+
+#leaderboard_header {
+    background:
+        url("../content/images/harbor.jpg") no-repeat center center;
+    background-size: cover;
+    width: 100%;
+    height: 350px;
+    line-height: 350px;
+    text-align: center;
+    -webkit-box-shadow: inset 4px 0px 126px -8px rgba(0,0,0,1);
+    -moz-box-shadow: inset 4px 0px 126px -8px rgba(0,0,0,1);
+    box-shadow: inset 4px 0px 126px -8px rgba(0,0,0,1);
+}
+
+#leaderboard_header h1 {
+    font-size: 3.5em;
+    text-shadow: 4px 4px rgb(60, 0, 0);
+}
+
+#leaderboard_table {
+    border-collapse: collapse;
+    width: 100%;
+    font-family: "Gentium Book Basic", serif;
+    font-size: 20px;
+}
+
+th {
+    background-color: rgb(34, 34, 34);
+    color: #d4af37;
+}
+
+th, td {
+    padding: 10px;
+}
+
+td {
+    padding-left: 20px;
+    font-style: italic;
+}
+
+tr {
+    background-color: rgb(85, 0, 0);
+    color: #d4af37;
+}
+
+tr.alt_color {
+    background-color: rgb(60, 0, 0);
+    color: #d4af37;
+    -moz-box-shadow:    inset  0  8px 8px -8px rgb(95, 0, 0), 
+                        inset  0 -8px 8px -8px rgb(95, 0, 0);
+    -webkit-box-shadow: inset  0  8px 8px -8px rgb(95, 0, 0), 
+                        inset  0 -8px 8px -8px rgb(95, 0, 0);
+     box-shadow:        inset  0  8px 8px -8px rgb(95, 0, 0), 
+                        inset  0 -8px 8px -8px rgb(95, 0, 0);
+}
+
+
+/*END LEADERBOARDS PAGE*/
 
 /*FOOTER*/
 footer {

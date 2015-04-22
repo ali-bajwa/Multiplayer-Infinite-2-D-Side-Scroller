@@ -33,7 +33,7 @@ var TerrainController = (function(){
 		if(WorldController.get_movement_edge() > (TerrainModel.terrain_slices_queue.length-3)*(20)){
 			var slice = NewTerrainSlice(TerrainModel.seed);
 			TerrainModel.terrain_slices_queue.push(slice);
-			TerrainModel.seed = (((TerrainModel.seed) * (TerrainModel.seed) - TerrainModel.seed / 2)) % 2000 + 1000;
+			TerrainModel.seed = (((TerrainModel.seed) * (TerrainModel.seed) - TerrainModel.seed / 2)) % 2000 + 1001;
 			WorldController.set_spawn();
 		};
 

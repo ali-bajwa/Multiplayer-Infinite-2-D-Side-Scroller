@@ -206,14 +206,26 @@ var HeroLogic = (function(){
 	};
 	var jump = function(hero){
 	    var body = hero.body;
+	    var w = hero.body.GetUserData().def.width / 2;
+	    var pos = new B2d.b2Vec2(WorldController.get_movement_edge() + w, body.GetWorldCenter().y)
+	    var vel = body.GetLinearVelocity();
+	    console.log(hero.jumps);
 		if (hero.jumps == 0){
-			change_state(hero,"jump");
-		    body.ApplyImpulse(new B2d.b2Vec2(0, -125), body.GetWorldCenter());
+		    change_state(hero, "jump");
+			var vel = new B2d.b2Vec2(vel.x, -18);
+			body.SetLinearVelocity(vel);
+			hero.body.SetAwake(true);
 		    hero.jumps += 1;
 		}
 		else if (hero.jumps == 1 && body.GetLinearVelocity().y > -1) {
-			change_state(hero,"jump");
-		    body.ApplyImpulse(new B2d.b2Vec2(0, -125), body.GetWorldCenter());
+		    change_state(hero, "jump");
+		    var min_check = vel.y - 18;
+		    if (min_check > -9) {
+		        min_check = -9;
+		    }
+		    var vel = new B2d.b2Vec2(vel.x, min_check);
+		    body.SetLinearVelocity(vel);
+		    hero.body.SetAwake(true);
 		    hero.jumps += 1;
 		}
 

@@ -52,7 +52,7 @@ var TerrainSliceController = (function () {
 	var buildTerrainSlice_00 = function(slice,seed){
 	
 	    //set variables
-	    console.log(seed);
+	    //console.log(seed);
 	    var seed = seed;
 		var rows = slice.grid_rows;
 		var columns = slice.grid_columns;

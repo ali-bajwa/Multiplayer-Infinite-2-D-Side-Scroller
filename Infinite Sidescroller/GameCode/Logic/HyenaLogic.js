@@ -24,7 +24,7 @@ var HyenaLogic = (function(){
 		this.speed = 7;
 		this.jump_force = 125;
 		this.damage = 5;
-		this.point_value = 50;
+		this.point_value = 200;
 		this.sight_range = 16; //distance at which hyena detects heroes
 		this.attack_range = 8; //distance at which hyena leaps at the hero
 		

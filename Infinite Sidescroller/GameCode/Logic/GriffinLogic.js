@@ -1,5 +1,5 @@
 var GriffinLogic = (function(){
-
+   
 	var Griffin = function(){
 		/* Will be instantiated for every created entity to hold all the information 
 			about the physical (not graphical) state of the entity in question. 
@@ -14,17 +14,20 @@ var GriffinLogic = (function(){
 
 		//set your game logic parameters here
 		//this.object_id = 1; //hardcode a unique identifier for each new enemy class
-		this.hp = 2;
+		this.hp = 3;
 		this.speed = 6;
 		this.damage = 10;
 		this.point_value = 100;
 		//this.attack_cooldown = 4; //use this for enemies who need
 		this.can_attack = true;//use this for enemies who alternate between 
 		//this.cooldown_timer=-1;
-		this.AI_state = "walk";//use this to keep track of the enemy's AI state
+		this.AI_state = "fly";//use this to keep track of the enemy's AI state
 		this.aliveflag = true;
 		this.unhurtflag = true;
 		this.needs_graphics_update = false;
+
+		this.direction = false;
+		this.fly_force = 100;
 	};
 
 	var init = function(){
@@ -58,11 +61,7 @@ var GriffinLogic = (function(){
 			entity of this type. I given entity_instance
 		*/
 
-		//if enemy is dead, die
-		//if (Griffin.body.GetWorldCenter().y > 22 || Griffin.body.GetWorldCenter().x < Config.Player.movement_edge - 1) {
-				//EntityController.delete_entity(Griffin);
-				//console.log("drop of death");
-			//}
+
 		if (Griffin.hp == 1) {
 			
 			if (Griffin.hero_hurt_me){
@@ -80,10 +79,10 @@ var GriffinLogic = (function(){
 			Griffin.hit_taken = false;
 
 			
-			if(Griffin.death_tick == 30){
+			if(Griffin.death_tick == 15){
 				EntityController.delete_entity(Griffin);
 				return 
-			}else if(Griffin.death_tick > 30){
+			}else if(Griffin.death_tick > 15){
 			}
 
 		}else { // Griffin.hp >= 1
@@ -95,6 +94,12 @@ var GriffinLogic = (function(){
 				Griffinbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
 				Griffinbody.SetAwake(true);
 			}
+
+			if (Griffin.AI_state == "fly") {
+			    var body = Griffin.body;
+			    body.ApplyImpulse(new B2d.b2Vec2((2 * Griffin.fly_force * Griffin.direction) - Griffin.fly_force, 1 * Griffin.fly_force / 2), body.GetWorldCenter());
+			}
+
 			if (Griffin.can_attack && Griffin.me_hurt_hero && Griffin.AI_state == "walk"){
 				// pass
 			}
@@ -103,12 +108,14 @@ var GriffinLogic = (function(){
 				wound_Griffin(Griffin, 1);
 				Griffin.hero_hurt_me = false;
 				Griffin.can_attack = false;
-				change_state(Griffin, "death");
-				
+				//change_state(Griffin, "decay");
+                				
 			}
 		}
-
+		
+		
 	};
+
 
 	var wound_Griffin = function(Griffin, wound){
 		Griffin.hp -= wound;

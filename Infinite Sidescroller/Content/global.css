@@ -246,6 +246,15 @@ nav ul li:hover #b {
     width: 64px; 
 }
 
+#reposition {
+    position: absolute;
+    right: 2px;
+    bottom: 655px;
+    z-index: 300;
+    width: 40px; 
+}
+
+
 #play_btn {
     width:42px;
 }

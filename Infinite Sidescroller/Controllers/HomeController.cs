@@ -8,22 +8,21 @@ namespace Infinite_Sidescroller.Controllers
 {
   public class HomeController : Controller
   {
+    // GET: Homepage
     public ActionResult Index()
     {
       return View();
     }
 
-    public ActionResult About()
+    // GET: /Tutorial
+    public ActionResult Tutorial()
     {
-      ViewBag.Message = "Your application description page.";
-
       return View();
     }
 
-    public ActionResult Contact()
+    // GET: /Leaderboard
+    public ActionResult Leaderboard()
     {
-      ViewBag.Message = "Your contact page.";
-
       return View();
     }
   }

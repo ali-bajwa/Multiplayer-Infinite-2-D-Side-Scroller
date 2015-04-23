@@ -1,109 +1,124 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
-using System.Linq;
+﻿using System.Linq;
 using System.Security.Claims;
-using System.Threading.Tasks;
-using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
-using Infinite_Sidescroller.Models;
+using System;
+using System.Collections.Generic;
+using System.Data.Entity;
+using System.Threading.Tasks;
+using System.Web;
 
-namespace Infinite_Sidescroller
+namespace Infinite_Sidescroller.Models
 {
-    public class EmailService : IIdentityMessageService
+  // Configuration for Application User Manager (based off of default Identity implementation)
+  public class ApplicationUserManager : UserManager<ApplicationUser>
+  {
+    private UserStore<ApplicationUser> Store_;
+    public UserStore<ApplicationUser> Store
     {
-        public Task SendAsync(IdentityMessage message)
-        {
-            // Plug in your email service here to send an email.
-            return Task.FromResult(0);
-        }
+      get { return Store_; }
     }
 
-    public class SmsService : IIdentityMessageService
+    public ApplicationUserManager(UserStore<ApplicationUser> store)
+      : base(store)
     {
-        public Task SendAsync(IdentityMessage message)
-        {
-            // Plug in your SMS service here to send a text message.
-            return Task.FromResult(0);
-        }
+      this.Store_ = store;
     }
 
-    // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
-    public class ApplicationUserManager : UserManager<ApplicationUser>
+    // Creates an application user and defines constraints on username/password
+    public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context)
     {
-        public ApplicationUserManager(IUserStore<ApplicationUser> store)
-            : base(store)
-        {
-        }
+      var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
 
-        public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
-        {
-            var manager = new ApplicationUserManager(new UserStore<ApplicationUser>(context.Get<ApplicationDbContext>()));
-            // Configure validation logic for usernames
-            manager.UserValidator = new UserValidator<ApplicationUser>(manager)
-            {
-                AllowOnlyAlphanumericUserNames = false,
-                RequireUniqueEmail = true
-            };
+      // Set validation logic for usernames
+      manager.UserValidator = new UserValidator<ApplicationUser>(manager)
+      {
+        AllowOnlyAlphanumericUserNames = false,
+        RequireUniqueEmail = false
+      };
 
-            // Configure validation logic for passwords
-            manager.PasswordValidator = new PasswordValidator
-            {
-                RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
-            };
+      // Set validation logic for passwords
+      manager.PasswordValidator = new PasswordValidator
+      {
+        RequiredLength = 6,
+        RequireNonLetterOrDigit = false,
+        RequireDigit = true,
+        RequireLowercase = true,
+        RequireUppercase = true,
+      };
 
-            // Configure user lockout defaults
-            manager.UserLockoutEnabledByDefault = true;
-            manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
-            manager.MaxFailedAccessAttemptsBeforeLockout = 5;
+      // Set user lockout defaults
+      manager.UserLockoutEnabledByDefault = true;
+      manager.DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(30);
+      manager.MaxFailedAccessAttemptsBeforeLockout = 5;
 
-            // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
-            // You can write your own provider and plug it in here.
-            manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<ApplicationUser>
-            {
-                MessageFormat = "Your security code is {0}"
-            });
-            manager.RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<ApplicationUser>
-            {
-                Subject = "Security Code",
-                BodyFormat = "Your security code is {0}"
-            });
-            manager.EmailService = new EmailService();
-            manager.SmsService = new SmsService();
-            var dataProtectionProvider = options.DataProtectionProvider;
-            if (dataProtectionProvider != null)
-            {
-                manager.UserTokenProvider = 
-                    new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
-            }
-            return manager;
-        }
+      // Set hashing method for password protection
+      var dataProtectionProvider = options.DataProtectionProvider;
+      if (dataProtectionProvider != null)
+      {
+        manager.UserTokenProvider = new DataProtectorTokenProvider<ApplicationUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+      }
+      return manager;
     }
 
-    // Configure the application sign-in manager which is used in this application.
-    public class ApplicationSignInManager : SignInManager<ApplicationUser, string>
+    // Prevents teardown of database on application initialization
+    public class ApplicationDbInitializer : DropCreateDatabaseIfModelChanges<ApplicationDbContext>
     {
-        public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)
-            : base(userManager, authenticationManager)
-        {
-        }
-
-        public override Task<ClaimsIdentity> CreateUserIdentityAsync(ApplicationUser user)
-        {
-            return user.GenerateUserIdentityAsync((ApplicationUserManager)UserManager);
-        }
-
-        public static ApplicationSignInManager Create(IdentityFactoryOptions<ApplicationSignInManager> options, IOwinContext context)
-        {
-            return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
-        }
+      protected override void Seed(ApplicationDbContext context)
+      {
+        base.Seed(context);
+      }
     }
+
+    public enum SignInStatus
+    {
+      Success,
+      Failure
+    }
+
+    // Class to help authentication
+    public class SignInHelper
+    {
+      public SignInHelper(ApplicationUserManager userManager, IAuthenticationManager authManager)
+      {
+        UserManager = userManager;
+        AuthenticationManager = authManager;
+      }
+
+      public ApplicationUserManager UserManager { get; private set; }
+      public IAuthenticationManager AuthenticationManager { get; private set; }
+
+      public async Task SignInAsync(ApplicationUser user, bool isPersistent, bool rememberBrowser)
+      {
+        // Clear any partial cookies
+        AuthenticationManager.SignOut(DefaultAuthenticationTypes.ExternalCookie, DefaultAuthenticationTypes.TwoFactorCookie);
+
+        var userIdentity = await user.GenerateUserIdentityAsync(UserManager);
+        if (rememberBrowser)
+        {
+          var rememberBrowserIdentity = AuthenticationManager.CreateTwoFactorRememberBrowserIdentity(user.Id);
+          AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = isPersistent }, userIdentity, rememberBrowserIdentity);
+        }
+        else
+        {
+          AuthenticationManager.SignIn(new AuthenticationProperties { IsPersistent = isPersistent }, userIdentity);
+        }
+      }
+
+      // Password signin since we're only using local accounts
+      public async Task<SignInStatus> PasswordSignIn(string userName, string password, bool isPersistent, bool shouldLockout)
+      {
+        var user = await UserManager.FindByNameAsync(userName);
+        if (user == null)
+        {
+          return SignInStatus.Failure;
+        }
+        await SignInAsync(user, isPersistent, false);
+        return SignInStatus.Success;
+      }
+    }
+  }
 }

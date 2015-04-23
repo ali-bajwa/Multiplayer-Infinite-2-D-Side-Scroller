@@ -333,7 +333,7 @@ var PhysicsController = (function(){
 		
 		//attach bottom fixture
 		var bottom_sensor = top_sensor;
-		bottom_sensor.width += 0.4;
+		//bottom_sensor.width += 0.4;
 		bottom_sensor.offset = {x:0, y: h - SENSOR_THICKNESS/2};
 		attach_fixture(body,bottom_sensor,"bottom");
 		

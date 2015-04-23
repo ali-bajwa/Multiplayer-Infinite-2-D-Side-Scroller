@@ -22,6 +22,7 @@ var HeroLogic = (function(){
 		this.walk_tick=0;
 		this.is_walk = false;
 		this.is_jump = false;
+		this.death = false;
 		/*
 			whenever the up,right,left buttons are pressed the 
 			corosponding value is set to 0 and the other are increased by1
@@ -84,7 +85,7 @@ var HeroLogic = (function(){
 				hero.death = true;
 			}
 			hero.death_tick++;
-			if(hero.death_tick == 100){
+			if (hero.death_tick == 70) {
 				despawn(hero);	
 			}
 			
@@ -162,7 +163,9 @@ var HeroLogic = (function(){
 				info.Me.entity.jumps = 0;
 			}
 			if(info.Them.entity.kind == 3){
-				info.Me.entity.wound = true;
+			    if (info.Me.entity.hp > 0) {
+			        info.Me.entity.wound = true;
+			    }
 				info.Me.entity.damage_taken = info.Them.entity.damage;
 			}
 		}
@@ -174,8 +177,10 @@ var HeroLogic = (function(){
 				var other_extents = info.Them.entity.body.GetFixtureList().GetNext().GetNext().GetNext().GetNext().GetAABB().GetExtents();
 				var other_coordinates = info.Them.entity.body.GetWorldCenter();
 				//prevents taking damage while on top of enemies
-				if (!(my_coordinates.y <= other_coordinates.y - (my_extents.y + other_extents.y - 0.5))){
-					info.Me.entity.wound = true;
+				if (!(my_coordinates.y <= other_coordinates.y - (my_extents.y + other_extents.y - 0.5))) {
+				    if (info.Me.entity.hp > 0) {
+				        info.Me.entity.wound = true;
+				    }
 					info.Me.entity.damage_taken = info.Them.entity.damage;
 				}
 			}else{

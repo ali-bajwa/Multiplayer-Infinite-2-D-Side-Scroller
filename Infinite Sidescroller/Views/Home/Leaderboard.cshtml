@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Infinite_Sidescroller.Models.LeaderboardViewModel
+@{
     ViewBag.Title = "Leaderboard";
 }
 <section id="leaderboard_wrapper">
@@ -12,133 +13,14 @@
                 <th>Score</th>
                 <th>Username</th>
             </tr>
-            <!--Data from here on down follows the format listed above-->
-            <tr>
-                <td>1</td>
-                <td>993549</td>
-                <td>shrewdaltruistic</td>
+          @for (int i = 1; i <= Model.Highscores.Count; i++)
+          {
+            <tr @Html.Raw(i % 2 == 0 ? "class='alt_color'" : "")>
+              <td>@i</td>
+              <td>@Model.Highscores[i].Score</td>
+              <td>@Model.Highscores[i].UserID</td>
             </tr>
-            <tr class="alt_color">
-                <td>2</td>
-                <td>980170</td>
-                <td>breakableglands</td>
-            </tr>
-            <tr>
-                <td>3</td>
-                <td>922720</td>
-                <td>floweryrelate</td>
-            </tr>
-            <tr class="alt_color">
-                <td>4</td>
-                <td>889053</td>
-                <td>spuriousequipment</td>
-            </tr>
-            <tr>
-                <td>5</td>
-                <td>834025</td>
-                <td>whiningrock</td>
-            </tr>
-            <tr class="alt_color">
-                <td>6</td>
-                <td>815708</td>
-                <td>creakhope</td>
-            </tr>
-            <tr>
-                <td>7</td>
-                <td>700971</td>
-                <td>chickenpoxdotterel</td>
-            </tr>
-            <tr class="alt_color">
-                <td>8</td>
-                <td>666051</td>
-                <td>cohortclawed</td>
-            </tr>
-            <tr>
-                <td>9</td>
-                <td>648349</td>
-                <td>pumpionstarry</td>
-            </tr>
-            <tr class="alt_color">
-                <td>10</td>
-                <td>624450</td>
-                <td>meatyslippers</td>
-            </tr>
-            <tr>
-                <td>11</td>
-                <td>564043</td>
-                <td>bullweary</td>
-            </tr>
-            <tr class="alt_color">
-                <td>12</td>
-                <td>551244</td>
-                <td>porkwildebeest</td>
-            </tr>
-            <tr>
-                <td>13</td>
-                <td>544980</td>
-                <td>bluenicked</td>
-            </tr>
-            <tr class="alt_color">
-                <td>14</td>
-                <td>515784</td>
-                <td>drymosh</td>
-            </tr>
-            <tr>
-                <td>15</td>
-                <td>507131</td>
-                <td>bittenbags</td>
-            </tr>
-            <tr class="alt_color">
-                <td>16</td>
-                <td>474893</td>
-                <td>crochetcullionly</td>
-            </tr>
-            <tr>
-                <td>17</td>
-                <td>380724</td>
-                <td>arriveexcellent</td>
-            </tr>
-            <tr class="alt_color">
-                <td>18</td>
-                <td>379624</td>
-                <td>nocturnallizard</td>
-            </tr>
-            <tr>
-                <td>19</td>
-                <td>364859</td>
-                <td>grandioserwandan</td>
-            </tr>
-            <tr class="alt_color">
-                <td>20</td>
-                <td>293988</td>
-                <td>worthywellmade</td>
-            </tr>
-            <tr>
-                <td>21</td>
-                <td>251038</td>
-                <td>bustardspeculate</td>
-            </tr>
-            <tr class="alt_color">
-                <td>22</td>
-                <td>214314</td>
-                <td>breezyboard</td>
-            </tr>
-            <tr>
-                <td>23</td>
-                <td>109491</td>
-                <td>artistbrownies</td>
-            </tr>
-            <tr class="alt_color">
-                <td>24</td>
-                <td>42583</td>
-                <td>blastritzy</td>
-            </tr>
-            <tr>
-                <td>25</td>
-                <td>8232</td>
-                <td>equivocateknuckle</td>
-            </tr>
-    </table>
+          }
     </tbody>
     </table>
 </section>

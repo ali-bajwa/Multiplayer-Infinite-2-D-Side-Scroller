@@ -12,7 +12,7 @@
 <body @Html.Raw(ViewBag.isHomepage != null ? "class='Homepage'" : "")>
   <div style="position:absolute" id="login">
     <div id="triangle"></div>
-    <div id="logindiv">
+    @*<div id="logindiv">
       <h1>WELCOME</h1>
       @model Infinite_Sidescroller.Models.LoginViewModel
       @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
@@ -25,7 +25,7 @@
         <input type="submit" value="ENTER" />
         <h1>@Html.ActionLink("Haven't Registered?", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</h1>
       }
-    </div>
+    </div>*@
   </div>
 
   <div id="PageOuterWrapper">

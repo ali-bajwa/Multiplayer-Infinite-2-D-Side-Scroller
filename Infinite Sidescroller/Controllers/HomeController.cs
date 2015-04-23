@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using Infinite_Sidescroller.Models;
 
 namespace Infinite_Sidescroller.Controllers
 {
   public class HomeController : Controller
   {
+    GameDB GameDB = new GameDB();
+
     // GET: Homepage
     public ActionResult Index()
     {
@@ -23,7 +26,11 @@ namespace Infinite_Sidescroller.Controllers
     // GET: /Leaderboard
     public ActionResult Leaderboard()
     {
-      return View();
+      List<GameScore> Highscores = GameDB.GameScore.OrderByDescending(entry => entry.Score).Take(10).ToList();
+      LeaderboardViewModel model = new LeaderboardViewModel();
+      model.Highscores = Highscores;
+
+      return View(model);
     }
   }
 }

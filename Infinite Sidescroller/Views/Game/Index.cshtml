@@ -1,0 +1,35 @@
+﻿@{
+  ViewBag.Title = "Game";
+}
+@section HeadContent{
+  @Scripts.Render("~/bundles/jquery")
+  @Scripts.Render("~/bundles/gamescripts")
+}
+<html>
+<head>
+  <title></title>
+  <script src="~/Scripts/jquery-2.1.3.js"></script>
+  <script language="javascript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+  <script>
+    function start() {
+      sidescroller_game.run();
+    }
+    window.onload = start;
+
+  </script>
+</head>
+
+<body>
+  <audio id="music" src="~/GameCode/assets/art/TheTimes.mp3" preload="auto" autoplay="autoplay"></audio>
+  <div id="screenPosition" style="margin-top:180px; position:absolute;"></div>
+  <div class="game_canvas">
+    <div id="canvas_container">
+      <div class="playPause_button">
+        <a href="javascript:void(0);" onclick="document.getElementById('music').muted = !document.getElementById('music').muted; return false"><img src="~/Content/Images/sound.png" id="mute_btn" /></a>
+      </div>
+      <a href="#screenPosition"><img src="~/Content/Images/reposition.png" id="reposition" /></a>
+      <canvas id="display_canvas" style="border:2px solid #d4af37;"></canvas>
+    </div>
+  </div>
+</body>
+</html>

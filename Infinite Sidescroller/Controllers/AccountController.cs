@@ -41,6 +41,11 @@ namespace Infinite_Sidescroller.Controllers
       }
     }
 
+    public ActionResult Index()
+    {
+      return View();
+    }
+
     //
     // GET: /Account/Login
     [AllowAnonymous]
@@ -71,7 +76,7 @@ namespace Infinite_Sidescroller.Controllers
         }
       }
       // Redisplay form with ModelState error
-      return View(model);
+      return View("Index", model);
     }
 
     //

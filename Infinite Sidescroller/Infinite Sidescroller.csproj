@@ -845,9 +845,13 @@
   </Target>
   <Import Project="..\packages\MSBuild.Node.0.4.4\build\MSBuild.Node.targets" Condition="Exists('..\packages\MSBuild.Node.0.4.4\build\MSBuild.Node.targets')" />
   <Import Project="..\packages\MSBuild.Npm.0.4.4\build\MSBuild.Npm.targets" Condition="Exists('..\packages\MSBuild.Npm.0.4.4\build\MSBuild.Npm.targets')" />
+  <Target Name="EnsureNpmUserFolderExists" BeforeTargets="RunNpm">
+    <MakeDir Directories="$(AppData)\npm"></MakeDir>
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
+    
   </Target>-->
   <Target Name="AfterBuild">
     <Exec Command="node_modules\.bin\browserify -d GameCode\main.js -o GameCode\bundle.js"/>

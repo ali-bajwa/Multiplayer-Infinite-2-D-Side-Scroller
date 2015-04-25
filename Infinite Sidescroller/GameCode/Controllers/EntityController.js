@@ -197,15 +197,49 @@ var EntityController = (function () {
             body.GetWorldCenter().y > Config.World.maxy);
 
     };
+		
+		
+		var create_abstract_entity = function(){
+			return new EntityModel.AbstractEntity();
+		};
+		
+		
+	var get_all_heroes = function(){
+		return {0:EntityModel.hero};
+	};
+	
+	var get_my_hero = function(){
+		return EntityModel.hero;
+	};
+	
+	var load_hero = function(id){
+		EntityModel.hero = IdentificationController.get_by_id(id);
+	}
+	
+	var handle_hero_sync = function(){};
+	
+	var handle_delete = function(){};
+	
+	var handle_spawn = function(){};
+	
+	var reg_for_logic_update = function(){};
 
-
-
-    return {
-        // declare public
-        init: init,
-        update: update,
-        delete_entity: delete_entity,
-        spawn: spawn,
+	return {
+		// declare public
+		init: init, 
+		update: update,
+		//get_operation: get_operation,
+		reg_for_logic_update: reg_for_logic_update,
+		spawn: spawn,
+		delete_entity: delete_entity,
+		//fulfill_delete_request: fulfill_delete_request,
+		handle_spawn: handle_spawn,
+		handle_delete: handle_delete,
+		handle_hero_sync: handle_hero_sync,
+		get_all_heroes: get_all_heroes,
+		get_my_hero: get_my_hero,
+		create_abstract_entity: create_abstract_entity,
+		load_hero: load_hero,
     };
 })();
 

@@ -69,7 +69,7 @@ var AntLogic = (function(){
 			
 			if (ant.hero_hurt_me){
 				wound_ant(ant, 1);
-				IdentificationController.get_hero().score += ant.point_value;
+				WorldController.increase_score(ant.point_value)
 				ant.hero_hurt_me = false;
 				ant.can_attack = false;
 			}

@@ -66,7 +66,7 @@ var GriffinLogic = (function(){
 			
 			if (Griffin.hero_hurt_me){
 				wound_Griffin(Griffin, 1);
-				IdentificationController.get_hero().score += Griffin.point_value;
+				WorldController.increase_score();
 				Griffin.hero_hurt_me = false;
 				Griffin.can_attack = false;
 			}

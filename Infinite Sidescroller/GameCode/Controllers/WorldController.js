@@ -5,9 +5,11 @@ var WorldController = (function(){
     var movement_edge;
     var spawn_enemy;
     var difficulty;
-	var season;
-	var movement_edge_buffer;
-	var body_test;
+		var season;
+		var movement_edge_buffer;
+		var body_test;
+		var score;
+		var progress;
 	//var temp = 0;
 
 	var init = function(){
@@ -17,6 +19,8 @@ var WorldController = (function(){
 		movement_edge_buffer = 20;
 		movement_edge = 0;
 		season = 0;
+		score = 0;
+		progress = 0;
 		//body_test = new platform();
 		//var id = IdentificationController.assign_id(body_test);
 		//var body_test = PhysicsController.get_rectangular({}, body_test);
@@ -26,7 +30,8 @@ var WorldController = (function(){
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
 		PhysicsController.step(delta);
-		update_movement_edge();
+		update_progress();
+		movement_edge = (progress - movement_edge_buffer);
 		get_spawn();
 		//if(temp++ == 0){
 			//TerrainController.NewTerrainSlice();
@@ -34,10 +39,20 @@ var WorldController = (function(){
 
 	};
 	
-	var update_movement_edge = function(){
-		var hero_x = IdentificationController.get_hero().body.GetWorldCenter().x;
-		if(movement_edge < hero_x - movement_edge_buffer){
-			movement_edge = hero_x - movement_edge_buffer;
+	var update_progress = function(){
+		var heroes = EntityController.get_all_heroes();
+		var min_x = Infinity;
+		for(var net_id in heroes){
+			// iterate through all connected heroes
+			// and choose minimum of their x positions
+			var hero_x = heroes[net_id].body.GetWorldCenter().x;
+			if(hero_x < min_x){
+				min_x = hero_x;
+			}
+		}
+
+		if(progress < hero_x ){
+			progress = hero_x;
 		}
 	};
 	
@@ -89,6 +104,22 @@ var WorldController = (function(){
 	var MarkAsNewTerrainSlice = function(slice){
 		
 	};
+	
+	var get_progress = function(){
+		return progress;
+	};
+	
+	var increase_progress = function(amount){
+		progress += amount;
+	};
+	
+	var get_score = function(){
+		return score;
+	};
+	
+	var increase_score = function(amount){
+		score += amount;
+	};
 
 	return {
 		// declare public
@@ -99,6 +130,10 @@ var WorldController = (function(){
 		set_season: set_season,
 		get_spawn: get_spawn,
 		set_spawn: set_spawn,
+		increase_score: increase_score,
+		increase_progress: increase_progress,
+		get_score: get_score,
+		get_progress: get_progress,
 	};
 })();
 

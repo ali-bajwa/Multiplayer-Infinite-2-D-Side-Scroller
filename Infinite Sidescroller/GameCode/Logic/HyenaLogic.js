@@ -19,7 +19,14 @@ var HyenaLogic = (function(){
 	//call constructor through wrapper function spawn()
 	var Hyena = function(){
 
+		var entity = EntityController.create_abstract_entity();
+		entity.my_property = "dsfjsdl";
+		
+		
+		
+		return entity;
 		//Declare initial variables for the Hyena
+		/*
 		this.hp = 2;
 		this.speed = 7;
 		this.jump_force = 125;
@@ -65,10 +72,10 @@ var HyenaLogic = (function(){
 		this.path_blocked = false;//is this deprecated? set during collision
 		this.obstruction_tolerance = 4;//how many times the hyena can be blocked before he takes action
 		this.blocked_count = 0;//tracks number of times blocked between maintenance checks
-		this.vulnerability_radius = (1.125 + 0.45 - 0.3);// hyena_width/2 + hero_width/2 - buffer, in meters
 		
 		this.needs_graphics_update = false; //accessed by renderer for animation purposes
 		this.animation = "stand"; //accessed by renderer for animation purposes
+		*/
 	};
 
 	//Initialize class variables, called once in EntityController.init() during game load
@@ -81,6 +88,7 @@ var HyenaLogic = (function(){
 	//Wrapper for constructor, assigns unique ID
 	var spawn = function(x, y){
 		var new_hyena = new Hyena();
+		new_hyena.type = "Hyena";
 		var id = IdentificationController.assign_id(new_hyena);
 
 		new_hyena.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, new_hyena);	
@@ -104,7 +112,7 @@ var HyenaLogic = (function(){
 			if (Hyena.is_alive){//if alive, kill it
 				Hyena.death_timer = Hyena.death_duration;
 				Hyena.is_alive = false;
-				IdentificationController.get_hero().score += Hyena.point_value;
+				WorldController.increase_score(Hyena.point_value);
 				Hyena.hit_taken = false;
 				Hyena.can_attack = false;
 				change_animation(Hyena,"death");
@@ -297,7 +305,7 @@ var HyenaLogic = (function(){
 		}
 		return output;
 		*/
-		var hero_x = IdentificationController.get_hero().body.GetWorldCenter().x;
+		var hero_x = EntityController.get_my_hero().body.GetWorldCenter().x;
 		return (Math.abs(hero_x - hyena.body.GetWorldCenter().x) < range);
 	};
 	
@@ -313,7 +321,7 @@ var HyenaLogic = (function(){
 			}
 		}*/
 		var nearest;
-		var hero_x = IdentificationController.get_hero().body.GetWorldCenter().x;
+		var hero_x = EntityController.get_my_hero().body.GetWorldCenter().x;
 		var distance = (hero_x - hyena.body.GetWorldCenter().x);
 		return (distance > 0);//return true/right of distance is positive, return false/left if distance is negative
 	};
@@ -378,6 +386,10 @@ var HyenaLogic = (function(){
 	var begin_contact = function(contact, info){
 		var type = info.Me.type;
 		var hyena = info.Me.entity;
+		var hyena_x = hyena.body.GetWorldCenter().x;
+		var hyena_y = hyena.body.GetWorldCenter().x;
+		
+		var vulnerability_radius = (1.125 + 0.45 - 0.3);// hyena_width/2 + hero_width/2 - buffer, in meters
 		//if bottom colliding with the ground or top of another object, enable leap
 		if (info.Me.fixture_name == "bottom" && (info.Them.fixture_name == "top" || info.Them.entity.kind == 1 || info.Them.entity.kind == 2)){
 			hyena.can_leap = true;
@@ -395,7 +407,7 @@ var HyenaLogic = (function(){
 				if(hyena.can_attack){
 					hyena.attack_cooldown_timer = hyena.attack_cooldown;//set cooldown timer
 				}
-			}else if(Math.abs(info.Them.entity.body.GetWorldCenter().x - hyena.body.GetWorldCenter().x) < hyena.vulnerability_radius && !hyena.blinking){
+			}else if(Math.abs(info.Them.entity.body.GetWorldCenter().x - hyena.body.GetWorldCenter().x) < vulnerability_radius && !hyena.blinking){
 				hyena.hit_taken = true;//take damage if enemy collides from above and distance < vulnerability radius
 				hyena.damage_taken = info.Them.entity.damage;
 			}
@@ -408,7 +420,7 @@ var HyenaLogic = (function(){
 	};
 
 
-//...............DECLARE PUBLIC FUNCTIONS.....................
+//.................DECLARE PUBLIC FUNCTIONS.....................
 	return {
 		init: init, 
 		spawn: spawn,

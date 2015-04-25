@@ -200,7 +200,7 @@ var EntityController = (function () {
 		
 		
 		var create_abstract_entity = function(){
-			return new EntityModel.AbstractEntity();
+			return new AbstractEntity();
 		};
 		
 		
@@ -223,6 +223,194 @@ var EntityController = (function () {
 	var handle_spawn = function(){};
 	
 	var reg_for_logic_update = function(){};
+	
+	/**
+	Documentation will be here, someday
+	*/
+	this.AbstractEntity = function(){
+		this.hp = 2;
+		this.speed = 7;
+		this.jump_force = 125;
+		this.damage = 5;
+		this.point_value = 200;
+		this.sight_range = 16; //distance at which entity detects heroes
+		this.attack_range = 8; //distance at which entity leaps at the hero
+		
+		this.hit_taken = false; //whether a hit has been taken since the last tick
+		this.damage_taken = 0; //the amount of damage inflicted by hits since the last tick
+		
+		this.direction = false;	//false=left, true=right;
+		this.direction_previous = false;//store direction from end of previous tick
+		this.x_previous = 0;		//store x value from end of previous tick
+		
+		this.is_idle = true; //determines whether entity is aggressive or idle
+		this.idle_duration = 40; // time buffer between changing idle states
+		this.idle_timer = this.idle_duration;
+		this.idle_counter = 0; //used to manage the number of times the entity has changed state while idle
+		this.is_alive = true; //disables attacking and plays death animation while false
+		this.death_duration = 30;//time between death and deletion
+		this.decay_duration = 20;//time between decay animation and deletion
+		this.death_timer = -1;
+		this.running_away = false; //whether the entity is running away
+		this.run_away_duration = 30; //set cowardice level
+		this.run_away_timer = -1;
+		this.can_attack = true;	//whether attacking is enabled
+		this.attack_cooldown = 10; //attack cooldown
+		this.attack_cooldown_timer = -1;
+		this.can_leap = true;		//leaping enabled
+		this.leap_cooldown = 40;//minimum time between leaps
+		this.leap_cooldown_timer = -1; 
+		this.charge_duration = 80;//maximum length of a charge
+		this.charge_timer = this.charge_duration;
+		this.charge_cooldown = 20;//minimum time between charges
+		this.charge_cooldown_timer = -1;
+		this.blinking = false;	//whether entity is blinking
+		this.blink_duration = 20;//how long the entity blinks after taking damage
+		this.blink_timer = -1;
+		this.maintenance_frequency = 20;//ticks between routine maintenance checks
+		this.maintenance_timer = this.maintenance_frequency;
+		
+		this.path_blocked = false;//is this deprecated? set during collision
+		this.obstruction_tolerance = 4;//how many times the entity can be blocked before he takes action
+		this.blocked_count = 0;//tracks number of times blocked between maintenance checks
+		
+		this.needs_graphics_update = false; //accessed by renderer for animation purposes
+		this.animation = "stand"; //accessed by renderer for animation purposes
+		
+		this.jump = function(entity){
+			ApplyImpulse(new B2d.b2Vec2((2*entity.jump_force*entity.direction) - entity.jump_force, -1*entity.jump_force/2), body.GetWorldCenter());
+		};
+		
+		this.move = function(entity){
+			var dir = (entity.direction*2-1);
+			var velocity = entity.body.GetLinearVelocity();
+			velocity.x = entity.speed*dir; //move speed in current direction
+			entity.body.SetLinearVelocity(velocity);
+		};
+			
+		//check for enemies in range (vision or jump)
+		this.enemy_in_range = function(entity,range){
+			var output = false;
+			/*
+			//multiplayer implementation
+			var hero_list = [];
+			
+			for (i=0;i<hero_list.length;i++){
+				if(in range){
+				output = true;
+				break;
+				}
+			}
+			return output;
+			*/
+			var hero_x = EntityController.get_my_hero().body.GetWorldCenter().x;
+			output = (Math.abs(hero_x - entity.body.GetWorldCenter().x) < range);
+			return output;
+		};
+		
+			//returns the direction of nearest enemy
+		this.direction_nearest_enemy = function(entity){
+			/*//in multiplayer, first find nearest enemy
+			var nearest = hero[0];
+			for(i < 8){
+				if(typeof hero[i] !== 'undefined'){
+					if(distance_formula(hero[i],entity) < distance_formula(nearest,entity)){
+						nearest = hero[i];
+					}
+				}
+			}*/
+			var nearest;
+			var hero_x = EntityController.get_my_hero().body.GetWorldCenter().x;
+			var distance = (hero_x - entity.body.GetWorldCenter().x);
+			return (distance > 0);//return true/right of distance is positive, return false/left if distance is negative
+		};
+		
+		//decrease health
+		this.take_damage = function(entity){
+			entity.hp -= entity.damage_taken;
+			entity.damage_taken = 0;
+			entity.hit_taken = false;
+			entity.blinking = true;
+			entity.blink_timer = entity.blink_duration;
+			//knockback here
+		};
+		
+			//die
+		this.die = function(entity){
+			if (entity.is_alive){//if alive, kill it
+				entity.death_timer = entity.death_duration;
+				entity.is_alive = false;
+				WorldController.increase_score(entity.point_value);
+				entity.hit_taken = false;
+				entity.can_attack = false;
+				entity.change_animation(entity,"death");
+				return ;
+			}else{//else decay
+				entity.death_timer--;
+				if (entity.death_timer <= entity.death_duration && entity.death_timer > entity.decay_duration){
+					entity.change_animation(entity,"death");
+				} else if (entity.death_timer <= entity.decay_duration && entity.death_timer > 0){
+					entity.change_animation(entity,"decay");
+				} else {
+					EntityController.delete_entity(entity);//remove instance from memory
+				}
+				return;
+			}
+		}
+		
+		//checks if movement is voluntary or forced
+		this.movement_voluntary = function(entity){
+			//if direction being faced is different from the direction moving, return false
+			var output = true;
+			var velocity = entity.body.GetLinearVelocity().x;
+			if(velocity != 0){
+				output = (velocity/Math.abs(velocity) == (entity.direction)*2-1);
+			}
+			return output;
+		};
+
+		//checks if in the air
+		this.in_air = function(entity){
+			var body = entity.body;
+			var objects_beneath;
+			if (body.GetFixtureList() != null){//prevent bugs on destruction
+				var AABB = body.GetFixtureList().GetNext().GetNext().GetAABB();
+				objects_beneath = PhysicsController.query_aabb(AABB);
+			}else{
+				objects_beneath = 0;
+			}
+			return (objects_beneath < 5);//for some mysterious reason, it counts 4 collisions even in mid air
+		};
+
+		//checks if there is a collision in current direction
+		this.path_free = function(entity){
+			var body = entity.body;
+			var objects_before;
+			var AABB;
+			if (body.GetFixtureList() != null){//prevent bugs on destruction
+				if (entity.direction){
+					AABB = body.GetFixtureList().GetAABB();
+					objects_before = PhysicsController.query_aabb(AABB);
+				}else{
+					AABB = body.GetFixtureList().GetNext().GetAABB();
+					objects_before = PhysicsController.query_aabb(AABB);
+				}
+			}else{
+				objects_before = 0;
+			}
+			return (objects_before < 4);//assumes contact with bottom sensor, top sensor, and main shape 
+		};
+
+		//setter for animation variable, ensures the animation is only reset on actual change
+		this.change_animation = function(entity,new_animation){
+			if(entity.animation != new_animation){
+				entity.animation = new_animation;
+				entity.needs_graphics_update = true;
+			}else{ 
+				entity.needs_graphics_update = false;
+			}
+		};
+	};
 
 	return {
 		// declare public

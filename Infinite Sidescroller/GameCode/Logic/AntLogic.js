@@ -91,12 +91,9 @@ var AntLogic = (function(){
 			//console.log("drop of death");
 		//}
 		if (ant.hp == 1) {
-			
 			if (ant.hero_hurt_me){
-				take_damage(ant);
-				WorldController.increase_score(ant.point_value)
-				ant.hero_hurt_me = false;
-				ant.can_attack = false;
+				ant.take_damage(ant);
+				ant.die(ant);
 			}
 		ant.popup++;
 			if(ant.pop == ant.popup && ant.animation == "upside_down")
@@ -114,18 +111,7 @@ var AntLogic = (function(){
 			
 			
 		}else if (ant.hp <= 0) {
-			ant.change_animation(ant, "death");
-			ant.can_attack = false;
-			ant.death_tick++;
 			ant.die(ant);
-			console.log("made it");
-			if(ant.death_tick == 30){
-				EntityController.delete_entity(ant);
-				return 
-			}else if(ant.death_tick > 30){
-			}
-				
-				
 		}else { // ant.hp >= 1
 
 			if (ant.animation == "walk") {
@@ -160,9 +146,6 @@ var AntLogic = (function(){
 				
 			}
 		}
-		console.log(ant.death_tick);
-
-
 	};
 
 
@@ -197,7 +180,8 @@ var AntLogic = (function(){
 			}	
 			else
 			{
-
+				info.Me.entity.hit_taken = true;//take damage if enemy collides from above and distance < vulnerability radius
+				info.Me.entity.damage_taken = info.Them.entity.damage;
 				info.Me.entity.hero_hurt_me = true;
 			}
 		}

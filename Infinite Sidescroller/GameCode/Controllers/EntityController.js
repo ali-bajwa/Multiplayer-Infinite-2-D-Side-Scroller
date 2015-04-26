@@ -347,7 +347,7 @@ var EntityController = (function () {
 				return ;
 			}else{//else decay
 				entity.death_timer--;
-				if (entity.death_timer <= entity.death_duration && entity.death_timer > entity.decay_duration){
+				if (entity.death_timer <= entity.death_duration && entity.death_timer > entity.decay_duration && entity.death_timer > 0){
 					entity.change_animation(entity,"death");
 				} else if (entity.death_timer <= entity.decay_duration && entity.death_timer > 0){
 					entity.change_animation(entity,"decay");

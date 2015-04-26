@@ -228,7 +228,7 @@ var HeroLogic = (function(){
 	    var w = hero.body.GetUserData().def.width / 2;
 	    var pos = new B2d.b2Vec2(WorldController.get_movement_edge() + w, body.GetWorldCenter().y)
 	    var vel = body.GetLinearVelocity();
-	    console.log(hero.jumps);
+		//console.log(hero.jumps);
 		if (hero.jumps == 0){
 		    change_state(hero, "jump");
 			var vel = new B2d.b2Vec2(vel.x, -18);

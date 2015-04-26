@@ -90,6 +90,7 @@ var AntLogic = (function(){
 			//EntityController.delete_entity(ant);
 			//console.log("drop of death");
 		//}
+		//
 		if (ant.hp == 1) {
 			if (ant.hero_hurt_me){
 				ant.take_damage(ant);

@@ -8,6 +8,29 @@ var AntLogic = (function(){
 			instantiate (most likely in the spawn function) like that:
 			var new_entity_instance = new Ant();
 		*/
+	
+
+		var entity = EntityController.create_abstract_entity();
+		
+		entity.hero_hurt_me = false;
+		entity.me_hurt_hero = false;
+		entity.death_tick = 0;
+		entity.hp = 3;
+		entity.speed = 3;
+		entity.damage = 1;
+		entity.point_value = 50;
+		entity.can_attack = true;
+		entity.aliveflag = true;
+		entity.unhurtflag = true;
+		entity.start_walking = true;
+		entity.pop = 40;
+		entity.popup = 0;
+		entity.animation = "walk";
+		entity.decay_duration = 0;
+		
+		return entity;
+		
+		/*
 		this.hero_hurt_me = false;
 		this.me_hurt_hero = false;
 		this.death_tick = 0;
@@ -27,6 +50,7 @@ var AntLogic = (function(){
 		this.start_walking = true;
 		this.pop = 40;
 		this.popup = 0;
+		*/
 	};
 
 	var init = function(){
@@ -47,6 +71,7 @@ var AntLogic = (function(){
 		*/
 
 		var new_ant = new Ant();
+		new_ant.type = "ant";
 		var id = IdentificationController.assign_id(new_ant);
 
 		new_ant.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, new_ant);	
@@ -68,75 +93,85 @@ var AntLogic = (function(){
 		if (ant.hp == 1) {
 			
 			if (ant.hero_hurt_me){
-				wound_ant(ant, 1);
+				take_damage(ant);
 				WorldController.increase_score(ant.point_value)
 				ant.hero_hurt_me = false;
 				ant.can_attack = false;
 			}
 		ant.popup++;
-			if(ant.pop == ant.popup && ant.AI_state == "upside_down")
+			if(ant.pop == ant.popup && ant.animation == "upside_down")
 			{
-				var Antbody = ant.body;
-				Antbody.ApplyImpulse(new B2d.b2Vec2(10, -20), Antbody.GetWorldCenter());
+				//var Antbody = ant.body;
+				//Antbody.ApplyImpulse(new B2d.b2Vec2(10, -20), Antbody.GetWorldCenter());
+				ant.jump(ant);
 				ant.popup = 0;
 				ant.can_attack = true;
 				ant.unhurtflag = true;
 				ant.start_walking = true;
-				change_state(ant, "walk");
+				ant.change_animation(ant, "walk");
 				ant.hp++ 
 			}	
 			
 			
 		}else if (ant.hp <= 0) {
-			change_state(ant, "death");
+			ant.change_animation(ant, "death");
 			ant.can_attack = false;
 			ant.death_tick++;
-			
+			ant.die(ant);
+			console.log("made it");
 			if(ant.death_tick == 30){
 				EntityController.delete_entity(ant);
 				return 
 			}else if(ant.death_tick > 30){
 			}
-
+				
+				
 		}else { // ant.hp >= 1
 
-			if (ant.AI_state == "walk") {
-				var Antbody = ant.body;
+			if (ant.animation == "walk") {
+				//var Antbody = ant.body;
 				//Antbody.ApplyImpulse(new B2d.b2Vec2(-5,0), Antbody.GetWorldCenter());
-				var velocity = Antbody.GetLinearVelocity();
-				velocity.x = -ant.speed;
-				Antbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-				Antbody.SetAwake(true);
+				
+				/*
+				if(ant.path_free(ant))
+				{ ant.direction = false;}
+				else
+				{ ant.direction = true;}
+				*/
+				ant.move(ant);
+				//var velocity = Antbody.GetLinearVelocity();
+				//velocity.x = -ant.speed;
+				//Antbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+				//Antbody.SetAwake(true);
 				ant.start_walking = false;
 				ant.popup = 0;
 			}
 			
 			
-			if (ant.can_attack && ant.me_hurt_hero && ant.AI_state == "walk"){
+			if (ant.can_attack && ant.me_hurt_hero && ant.animation == "walk"){
 				// pass
 			}
 			if (ant.hero_hurt_me)
 			{
-				wound_ant(ant, 1);
+				ant.take_damage(ant);
 				ant.hero_hurt_me = false;
 				ant.can_attack = false;
-				change_state(ant, "upside_down");
+				ant.change_animation(ant, "upside_down");
 				
 			}
 		}
+		console.log(ant.death_tick);
+
 
 	};
 
-	var wound_ant = function(ant, wound){
-		ant.hp -= wound;
-		ant.hero_hurt_me = false;
-	};
 
-	var change_state = function(ant, progress_state) {
-		ant.AI_state = progress_state;
+	/*
+	var ant.change_animation = function(ant, progress_state) {
+		ant.animation = progress_state;
 
 	};
-
+	*/
 	// // //Set up Collision handler
 	
 	

@@ -56,7 +56,7 @@ var HeroLogic = (function(){
 		hero.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, hero);
 
 		var id = IdentificationController.assign_id(hero);
-		IdentificationController.load_hero(hero.id);
+		EntityController.load_hero(hero.id);
 		
 		hero.hp = 100;
 		hero.wound = false;
@@ -116,8 +116,8 @@ var HeroLogic = (function(){
 				move_left(hero);
 			}
 			if(cmds("down")){
-				slam(hero);
-				
+			    slam(hero);
+			    stop_hero(hero);
 			}
 			if(cmds("up")){
 				hero.is_walk=false;
@@ -211,7 +211,7 @@ var HeroLogic = (function(){
 		var w = hero.body.GetUserData().def.width/2;
 		var pos = new B2d.b2Vec2(WorldController.get_movement_edge() + w, body.GetWorldCenter().y)
 		var vel = body.GetLinearVelocity();
-		if(vel.x < 0){
+		if(vel.x < 0 || body.GetWorldCenter().x > pos.x){
 			var vel = new B2d.b2Vec2(0, vel.y);
 			body.SetLinearVelocity(vel);
 		}

@@ -35,9 +35,9 @@ var HUDController = (function(){
 	
 	var update = function(){
 		var camera = GraphicsController.get_camera();
-		var hero = IdentificationController.get_hero();
+		var hero = EntityController.get_my_hero();
 		
-		update_score(hero.score);
+		update_score(WorldController.get_score());
 		update_health(hero.hp);
 		
 	};

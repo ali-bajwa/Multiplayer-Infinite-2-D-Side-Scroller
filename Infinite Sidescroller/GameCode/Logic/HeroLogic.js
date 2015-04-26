@@ -75,8 +75,6 @@ var HeroLogic = (function(){
 		var cmds = KeyboardController.movement_commands();
 
        
-        //End Score Tracking
-
 		if(hero.hp <= 0)
 		{
 			hero.hp=0;

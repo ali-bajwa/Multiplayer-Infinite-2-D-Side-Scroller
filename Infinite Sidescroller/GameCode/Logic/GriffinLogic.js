@@ -69,6 +69,7 @@ var GriffinLogic = (function(){
 				IdentificationController.get_hero().score += Griffin.point_value;
 				Griffin.hero_hurt_me = false;
 				Griffin.can_attack = false;
+				
 			}
 
 		}else if (Griffin.hp <= 0) {
@@ -108,7 +109,7 @@ var GriffinLogic = (function(){
 				wound_Griffin(Griffin, 1);
 				Griffin.hero_hurt_me = false;
 				Griffin.can_attack = false;
-				//change_state(Griffin, "decay");
+				change_animation(Griffin, "injury");
                 				
 			}
 		}

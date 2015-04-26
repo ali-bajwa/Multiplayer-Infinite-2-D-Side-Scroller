@@ -18,7 +18,9 @@ var GriffinRenderer = (function(){
 				"frames": { "regX": 5, "regY": 14, "height": 207, "width": 210, "count": 6},
 				"animations": {
 				"walk": [0, 2, "walk", 0.2],
-				"decay": [2, 3, "decay", .25],
+				"injury": {
+				    frames: [2, 4, .25]
+				},
 				"death": [3, 4, "death", 0.6],
                 "fly": [1, 2, "fly", .4],
 			}

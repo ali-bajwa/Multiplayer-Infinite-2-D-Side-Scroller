@@ -53,21 +53,26 @@ var GriffinRenderer = (function(){
 	var Griffin_special_render_temp = function(Griffin){
 		/* how to handle special render? TEMPORARY */
 
+		//set graphical representation based on the animation variable determined by the AI
+		//set animation
+		if(Griffin.physical_instance.needs_graphics_update){
+			var animation = Griffin.physical_instance.animation;
+			Griffin.gotoAndPlay(animation)
+		}
 		
-		if(Griffin.physical_instance.AI_state == "death"&& Griffin.physical_instance.aliveflag){
- 			Griffin.gotoAndPlay("death");
-			console.log("I've been squashed!");
- 			Griffin.physical_instance.aliveflag = false;
+		//set direction
+		if (Griffin.physical_instance.direction){ //if direction == right, flip right
+			Griffin.scaleX = -1;
+		}else{ //else flip left
+			Griffin.scaleX = 1;
 		}
 
-		//if(Griffin.physical_instance.AI_state == "upside_down" && Griffin.physical_instance.unhurtflag)
-		//{
-		//	Griffin.gotoAndPlay("upside_down");
-		//	Griffin.physical_instance.unhurtflag = false;
-			
-			
-		//}
-
+		//set alpha if blinking
+		if(Griffin.physical_instance.blinking && Griffin.physical_instance.blink_timer%2 == 1){
+			Griffin.alpha = 0;
+		}else{
+			Griffin.alpha = 1;
+		}
 	};
 
 	return {

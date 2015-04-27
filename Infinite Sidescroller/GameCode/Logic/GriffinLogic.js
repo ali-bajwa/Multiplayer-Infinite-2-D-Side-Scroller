@@ -3,31 +3,35 @@ var GriffinLogic = (function(){
 	var Griffin = function(){
 		/* Will be instantiated for every created entity to hold all the information 
 			about the physical (not graphical) state of the entity in question. 
-			declare the properties like this:
-			this.some_state_variable_initial_value = 0;
+			declare the properties like entity:
+			entity.some_state_variable_initial_value = 0;
 			instantiate (most likely in the spawn function) like that:
 			var new_entity_instance = new Griffin();
 		*/
-		this.hero_hurt_me = false;
-		this.me_hurt_hero = false;
-		this.death_tick = 0;
+		var entity = EntityController.create_abstract_entity();
+		
+		entity.hero_hurt_me = false;
+		entity.me_hurt_hero = false;
+		entity.death_tick = 0;
 
 		//set your game logic parameters here
-		//this.object_id = 1; //hardcode a unique identifier for each new enemy class
-		this.hp = 3;
-		this.speed = 6;
-		this.damage = 10;
-		this.point_value = 100;
-		//this.attack_cooldown = 4; //use this for enemies who need
-		this.can_attack = true;//use this for enemies who alternate between 
-		//this.cooldown_timer=-1;
-		this.AI_state = "fly";//use this to keep track of the enemy's AI state
-		this.aliveflag = true;
-		this.unhurtflag = true;
-		this.needs_graphics_update = false;
+		//entity.object_id = 1; //hardcode a unique identifier for each new enemy class
+		entity.hp = 3;
+		entity.speed = 6;
+		entity.damage = 10;
+		entity.point_value = 100;
+		//entity.attack_cooldown = 4; //use entity for enemies who need
+		entity.can_attack = true;//use entity for enemies who alternate between 
+		//entity.cooldown_timer=-1;
+		entity.AI_state = "fly";//use entity to keep track of the enemy's AI state
+		entity.aliveflag = true;
+		entity.unhurtflag = true;
+		entity.needs_graphics_update = false;
 
-		this.direction = false;
-		this.fly_force = 100;
+		entity.direction = false;
+		entity.fly_force = 100;
+		
+		return entity;
 	};
 
 	var init = function(){
@@ -48,6 +52,7 @@ var GriffinLogic = (function(){
 		*/
 
 		var new_Griffin = new Griffin();
+		new_Griffin.type = "Griffin";
 		var id = IdentificationController.assign_id(new_Griffin);
 
 		new_Griffin.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, new_Griffin);	
@@ -61,71 +66,26 @@ var GriffinLogic = (function(){
 			entity of this type. I given entity_instance
 		*/
 
-
-		if (Griffin.hp == 1) {
-			
-			if (Griffin.hero_hurt_me){
-				wound_Griffin(Griffin, 1);
-				WorldController.increase_score(Griffin.point_value);
-				Griffin.hero_hurt_me = false;
-				Griffin.can_attack = false;
-				
+		//if dead, die
+		if (Griffin.hp <= 0) {
+			Griffin.die();
+		}else{ // Griffin.hp >= 1
+			if (Griffin.in_air()){
+				Griffin.change_animation("fly");
+			}else{
+				Griffin.change_animation("walk");
 			}
-
-		}else if (Griffin.hp <= 0) {
-			change_state(Griffin, "death");
-			Griffin.can_attack = false;
-			Griffin.death_tick++;
-			Griffin.is_alive = false;
-			Griffin.hit_taken = false;
-
-			
-			if(Griffin.death_tick == 15){
-				EntityController.delete_entity(Griffin);
-				return 
-			}else if(Griffin.death_tick > 15){
+			if (Griffin.animation == "walk"){
+				Griffin.move(Griffin.speed);
 			}
-
-		}else { // Griffin.hp >= 1
-
-			if (Griffin.AI_state == "walk") {
-				var Griffinbody = Griffin.body;
-				var velocity = Griffinbody.GetLinearVelocity();
-				velocity.x = -Griffin.speed;
-				Griffinbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-				Griffinbody.SetAwake(true);
+			if (Griffin.animation == "fly"){
+			    Griffin.jump((2 * Griffin.fly_force * Griffin.direction) - Griffin.fly_force, Griffin.fly_force/2);
 			}
-
-			if (Griffin.AI_state == "fly") {
-			    var body = Griffin.body;
-			    body.ApplyImpulse(new B2d.b2Vec2((2 * Griffin.fly_force * Griffin.direction) - Griffin.fly_force, 1 * Griffin.fly_force / 2), body.GetWorldCenter());
-			}
-
-			if (Griffin.can_attack && Griffin.me_hurt_hero && Griffin.AI_state == "walk"){
-				// pass
-			}
-			if (Griffin.hero_hurt_me)
-			{
-				wound_Griffin(Griffin, 1);
-				Griffin.hero_hurt_me = false;
-				Griffin.can_attack = false;
-				change_animation(Griffin, "injury");
-                				
+			if (Griffin.hit_taken){
+				Griffin.take_damage();
+				Griffin.change_animation("injury");
 			}
 		}
-		
-		
-	};
-
-
-	var wound_Griffin = function(Griffin, wound){
-		Griffin.hp -= wound;
-		Griffin.hero_hurt_me = false;
-	};
-
-	var change_state = function(Griffin, progress_state) {
-		Griffin.AI_state = progress_state;
-
 	};
 
 	// // //Set up Collision handler
@@ -134,42 +94,17 @@ var GriffinLogic = (function(){
 	var begin_contact = function(contact, info){
 		//handle collisions here
 		
-		//console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
-			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
-		
-		var type = info.Me.type;
-
-		if(type !== "Griffin")
-			console.log("Error", type, "instead of Griffin with other being", info.Them.type);
-		
-		
-		if(info.Them.type == "hero")
-		{
-			
-			if(info.Them.fixture_name != "bottom" && info.Me.entity.can_attack)
-			{
+		if(info.Them.type == "hero"){
+			if(info.Them.fixture_name != "bottom" && info.Me.entity.can_attack){
 				info.Me.entity.me_hurt_hero = true;
-				
-			}	
-			else
-			{
-
-				info.Me.entity.hero_hurt_me = true;
+			}else{
+				info.Me.entity.hit_taken = true;//take damage if enemy collides from above and distance < vulnerability radius
+				info.Me.entity.damage_taken = info.Them.entity.damage;
 			}
 		}
-
-	};
-	
-	var change_animation = function (Griffin, new_animation) {
-			if (Griffin.animation != new_animation) {
-				Griffin.animation = new_animation;
-				Griffin.needs_graphics_update = true;
-		} else {
-			Griffin.needs_graphics_update = false;
-		}
 	};
 
-	var end_contact = function(contact, info) {
+	var end_contact = function(contact, info){
 	
 	};
 

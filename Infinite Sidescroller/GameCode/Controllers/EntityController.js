@@ -99,7 +99,7 @@ var EntityController = (function () {
         * from the world, it'll also free the id of this entity. The physical body will be deleted
         * too; 
         * This function is supposed to be called by the individual logic modules, when the are finished
-        * animating deat/destruction of something and want to get rid of it
+        * animating death/destruction of something and want to get rid of it
         */
 
         // TODO: finish this function and then update it regularly;
@@ -225,7 +225,33 @@ var EntityController = (function () {
 	var reg_for_logic_update = function(){};
 	
 	/**
-	Documentation will be here, someday
+	class AbstractEntity
+	member functions:
+		//numbers are given in meters rather than pixels except where noted (1 meter = 30 pixels)
+		VOID jump(double x, double y)
+					applies an impulse with x_component x and y_component y
+		VOID jump_direction(double angle, double force)
+					where angle is in degrees. calls jump internally
+		VOID move(double speed)
+					causes the entity to move horizontally at speed/tick. 
+		BOOL enemy_in_range
+					returns true if any hero is within range (x axis only)
+		BOOL direction_nearest_enemy()
+					returns true (right) if the nearest enemy is to the right, else returns false (left)
+		VOID take_damage()
+					checks if damage has been dealt this tick and resolves it 
+		VOID die()
+					should be called each tick that hp <= 0. handles death and decay
+		b2dFixture get_fixture(string name)
+					given a name, returns the first fixture in entity.body with matching name. default names are "top", "bottom", "left", "right", and "main".
+		BOOL movement_voluntary()
+					returns true if the object is moving in the same direction it is facing, else false
+		BOOL in_air()
+					returns true if there are no objects immediately below the entity, else false
+		BOOL path_free()
+					returns true if their is an object immediately adjacent to the entity in the currently faced direction
+		VOID change_animation(string animation_id)
+					sets the animation for the entity, and ensures that the animation will not be continuously reset.
 	*/
 	this.AbstractEntity = function(){
 		this.hp = 2;
@@ -277,52 +303,82 @@ var EntityController = (function () {
 		this.needs_graphics_update = false; //accessed by renderer for animation purposes
 		this.animation = "stand"; //accessed by renderer for animation purposes
 		
-		this.jump = function(entity){
-			var body = entity.body;
-			var x = (2 * entity.jump_force * entity.direction) - entity.jump_force;
-			var y = -1*entity.jump_force/2;
+		//boost entity
+		this.jump = function(x,y){
+			var body = this.body;
 			var direction = new B2d.b2Vec2(x, y);
 			body.ApplyImpulse(direction, body.GetWorldCenter());
 		};
 		
-		this.move = function(){
+		//converts angle and force into x and y, then calls jump
+		this.jump_direction = function(angle,force){
+			var x,y;
+			angle = ((angle%360)*Math.PI)/180;
+			x = force*Math.cos(angle);
+			y = force*Math.sin(angle);
+			this.jump(x,y);
+		};
+		
+		
+		//move speed in current direction
+		this.move = function(speed){
 			var dir = (this.direction*2-1);
 			var velocity = this.body.GetLinearVelocity();
-			velocity.x = this.speed*dir; //move speed in current direction
+			velocity.x = speed*dir; 
 			this.body.SetLinearVelocity(velocity);
+			this.body.SetAwake(true);
 		};
 			
 		//check for enemies in range (vision or jump)
 		this.enemy_in_range = function(range){
+			var hero_x;
 			var output = false;
 			/*
-			//multiplayer implementation
-			var hero_list = [];
-			
-			for (i=0;i<hero_list.length;i++){
-				if(in range){
-				output = true;
-				break;
+			//Multiplayer
+			var hero_list = EntityController.get_all_heroes();
+			if(hero_list.length != null){
+				for (i=0; i<hero_list.length; i++){
+					if(hero_list[i] != null){
+						hero_x = hero_list[i].body.GetWorldCenter().x
+						if(Math.abs(hero_x - this.body.GetWorldCenter().x) < range){
+							output = true;
+							break;
+						}
+					}
 				}
-			}
-			return output;
+			}else if(EntityController.get_my_hero() != null){
 			*/
-			var hero_x = EntityController.get_my_hero().body.GetWorldCenter().x;
-			output = (Math.abs(hero_x - this.body.GetWorldCenter().x) < range);
+				hero_x = EntityController.get_my_hero().body.GetWorldCenter().x;
+				output = (Math.abs(hero_x - this.body.GetWorldCenter().x) < range);
+			/*
+			}
+			*/
 			return output;
 		};
 		
 		//returns the direction of nearest enemy
 		this.direction_nearest_enemy = function(){
-			/*//in multiplayer, first find nearest enemy
-			var nearest = hero[0];
-			for(i < 8){
-				if(typeof hero[i] !== 'undefined'){
-					if(distance_formula(hero[i],this) < distance_formula(nearest,this)){
-						nearest = hero[i];
+			/*
+			//in multiplayer, first find nearest enemy
+			var nearest, hero_x; 
+			var distance = 0;
+			var x = this.body.GetWorldCenter().x;
+			var hero_list = EntityController.get_all_heroes();
+			if(hero_list.length != null){
+				for(i=0;i<8;i++){
+					if(hero_list.i != null){
+						if(Math.abs(hero_list.i.body.GetWorldCenter().x - x) < Math.abs(nearest.body.GetWorldCenter().x - x) || nearest == null){
+							nearest = hero_list.i;
+						}
 					}
 				}
-			}*/
+				hero_x = nearest.body.GetWorldCenter().x;
+				distance = (hero_x - x);
+			}else if(EntityController.get_my_hero() != null){
+				distance = EntityController.get_my_hero().body.GetWorldCenter().x - x;
+			}
+			return (distance > 0);//return true/right of distance is positive, return false/left if distance is negative
+			*/
 			var nearest;
 			var hero_x = EntityController.get_my_hero().body.GetWorldCenter().x;
 			var distance = (hero_x - this.body.GetWorldCenter().x);
@@ -363,8 +419,8 @@ var EntityController = (function () {
 		}
 		
 		//takes a string as parameters. returns the fixture with fixture_name == name, or null if it does not exist
-		this.get_fixture = function(name){
-			var current_fixture = this.body.GetFixtureList();
+		this.get_fixture = function(entity,name){
+			var current_fixture = entity.body.GetFixtureList();
 			while (current_fixture != null){
 				if (current_fixture.GetUserData() != null){
 					if (current_fixture.GetUserData().name == name){

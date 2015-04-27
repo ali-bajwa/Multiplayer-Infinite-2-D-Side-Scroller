@@ -104,9 +104,9 @@ var HyenaLogic = (function(){
 	// Is run each tick from the EntityController.update for every registered instance
 	var tick_AI = function(Hyena){
 		//Check if Dead........
-		//If Hyena is off the screen, delete
+		//If Hyena is close to the movement edge, leap away
 		if (Hyena.body.GetWorldCenter().x <= WorldController.get_movement_edge() + 1.125){
-			Hyena.body.ApplyImpulse(new B2d.b2Vec2(Hyena.jump_force, 0), Hyena.body.GetWorldCenter());
+			Hyena.jump(Hyena.jump_force, 0);
 		}
 		if (Hyena.hp <= 0){//if mortally wounded
 			Hyena.die(); //die
@@ -161,25 +161,25 @@ var HyenaLogic = (function(){
 			}
 			//Run Main AI Script.....
 			if(!Hyena.in_air() || Hyena.body.GetLinearVelocity().y == 0){ //if on ground OR if we suspect he's stuck on a corner
-				if (Hyena.enemy_in_range(Hyena,Hyena.sight_range)){ //if enemy nearby
+				if (Hyena.enemy_in_range(Hyena.sight_range)){ //if enemy nearby
 					Hyena.idle = false;
 					if (Hyena.hit_taken){	//if hyena was attacked,
 						Hyena.running_away = true;	//back off
 						Hyena.run_away_timer = Hyena.run_away_duration;
 						Hyena.direction = !(Hyena.direction);
-					}else if ((Hyena.enemy_in_range(Hyena,Hyena.attack_range) || Hyena.path_blocked) && Hyena.can_leap && Hyena.leap_cooldown_timer <= 0){ //if enemy in range or path is blocked, and leaping is enabled, leap
+					}else if ((Hyena.enemy_in_range(Hyena.attack_range) || Hyena.path_blocked) && Hyena.can_leap && Hyena.leap_cooldown_timer <= 0){ //if enemy in range or path is blocked, and leaping is enabled, leap
 						Hyena.direction = Hyena.direction_nearest_enemy();
 						leap(Hyena);
 						Hyena.can_leap = false;
 						Hyena.leap_cooldown_timer = Hyena.leap_cooldown;
-						Hyena.change_animation(Hyena,"leap");
+						Hyena.change_animation("leap");
 					}else{
 						if(!Hyena.running_away && !Hyena.in_air()){ //if hyena isn't cowering or in the air, face the enemy
 							Hyena.direction = Hyena.direction_nearest_enemy();
 						}
 						if (Hyena.charge_timer > 0){ //if charge duration > 0
 							run(Hyena);
-							Hyena.change_animation(Hyena,"run"); //charge the enemy
+							Hyena.change_animation("run"); //charge the enemy
 							Hyena.charge_timer--;
 							if(Hyena.charge_timer == 0){
 								Hyena.charge_cooldown_timer = Hyena.charge_cooldown;
@@ -188,7 +188,7 @@ var HyenaLogic = (function(){
 								Hyena.blocked_count++;
 							}
 						}else{//else stand aggressively
-							Hyena.change_animation(Hyena,"stand");
+							Hyena.change_animation("stand");
 						}
 					}
 				}else{
@@ -203,19 +203,19 @@ var HyenaLogic = (function(){
 					}
 					if (Hyena.idle_counter%2 == 0 || Hyena.idle_counter%3 == 0){ //use weird modulos to get random looking idle behavior
 						walk(Hyena);
-						Hyena.change_animation(Hyena,"walk");//pace
+						Hyena.change_animation("walk");//pace
 						if(Hyena.x_previous == Hyena.body.GetWorldCenter().x){ //check if hyena has wandered successfully
 							Hyena.blocked_count++; //else check for being stuck
 						}
 					}else{
-						Hyena.change_animation(Hyena,"stand");//loiter
+						Hyena.change_animation("stand");//loiter
 					}
 				}
 			}else{//if in the air
 				if(Hyena.movement_voluntary()){
-					Hyena.change_animation(Hyena,"leap");//if voluntary, leap
+					Hyena.change_animation("leap");//if voluntary, leap
 				}else{
-					Hyena.change_animation(Hyena,"fall");//else, fall
+					Hyena.change_animation("fall");//else, fall
 				}
 			}
 			if (Hyena.hit_taken){
@@ -233,33 +233,21 @@ var HyenaLogic = (function(){
 	
 	//run
 	var run = function(hyena){
-		var body = hyena.body;
-		var velocity = body.GetLinearVelocity();
-		velocity.x = hyena.speed*(2*hyena.direction-1); //move speed in current direction
-		body.SetLinearVelocity(velocity);
-		body.SetAwake(true);
+		hyena.move(hyena.speed);
 	};
 	
 	//walk
 	var walk = function(hyena){
-		var body = hyena.body;
-		var velocity = body.GetLinearVelocity();
-		velocity.x = hyena.speed*(2*hyena.direction-1)/3;
-		body.SetLinearVelocity(velocity);
-		body.SetAwake(true);
+		hyena.move(hyena.speed/3);
 	};
 	
 	//leap
 	var leap = function(hyena){
-		var body = hyena.body;
 		if (hyena.path_blocked){//jump out of a hole or over a wall
-			body.ApplyImpulse(new B2d.b2Vec2(-10+(20*hyena.direction), -1*hyena.jump_force), body.GetWorldCenter());
-			//var a = (100 - (hyena.direction*20))*Math.PI/180;
+			hyena.jump(-10+(20*hyena.direction), -1*hyena.jump_force);
 		}else{ //leap viciously at hero
-			body.ApplyImpulse(new B2d.b2Vec2((2*hyena.jump_force*hyena.direction) - hyena.jump_force, -1*hyena.jump_force/2), body.GetWorldCenter());
-			//var a = Math.atan(body.GetWorldCenter().y - pconf.hero_y, body.GetWorldCenter().x - pconf.hero_x);
+			hyena.jump((2*hyena.jump_force*hyena.direction) - hyena.jump_force, -1*hyena.jump_force/2);
 		}
-		//body.ApplyImpulse(new B2d.b2Vec2(hyena.jump_force*Math.sin(a), hyena.jump_force*Math.cos(a)), body.GetWorldCenter());
 		hyena.can_leap = false;
 	};
 	

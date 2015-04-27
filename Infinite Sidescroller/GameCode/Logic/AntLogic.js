@@ -8,8 +8,6 @@ var AntLogic = (function(){
 			instantiate (most likely in the spawn function) like that:
 			var new_entity_instance = new Ant();
 		*/
-	
-
 		var entity = EntityController.create_abstract_entity();
 		
 		entity.hero_hurt_me = false;
@@ -29,32 +27,10 @@ var AntLogic = (function(){
 		entity.decay_duration = 0;
 		
 		return entity;
-		
-		/*
-		this.hero_hurt_me = false;
-		this.me_hurt_hero = false;
-		this.death_tick = 0;
-
-		//set your game logic parameters here
-		//this.object_id = 1; //hardcode a unique identifier for each new enemy class
-		this.hp = 3;
-		this.speed = 3;
-		this.damage = 1;
-		this.point_value = 50;
-		//this.attack_cooldown = 4; //use this for enemies who need
-		this.can_attack = true;//use this for enemies who alternate between 
-		//this.cooldown_timer=-1;
-		this.AI_state = "walk";//use this to keep track of the enemy's AI state
-		this.aliveflag = true;
-		this.unhurtflag = true;
-		this.start_walking = true;
-		this.pop = 40;
-		this.popup = 0;
-		*/
 	};
 
 	var init = function(){
-		/* Is ran from the EntityController.init once during game loading 
+		/* Is run from the EntityController.init once during game loading 
 		 	you should assign type to your model here using the identification controller
 		 */
 		include(); // satisfy requirements, GOES FIRST
@@ -91,101 +67,52 @@ var AntLogic = (function(){
 			//console.log("drop of death");
 		//}
 		//
-		if (ant.hp == 1) {
-			if (ant.hero_hurt_me){
-				ant.take_damage();
-				ant.die();
-			}else{
+		if (ant.hp <= 0){
+			ant.die();
+		}else{
+			if(ant.hp == 1){
 				ant.popup++;
-				if(ant.pop == ant.popup && ant.animation == "upside_down")
-				{
-					//var Antbody = ant.body;
-					//Antbody.ApplyImpulse(new B2d.b2Vec2(10, -20), Antbody.GetWorldCenter());
-					ant.jump();
+				if(ant.popup == ant.pop){
+					ant.jump(10, -20);
+					ant.hp++;
 					ant.popup = 0;
 					ant.can_attack = true;
 					ant.unhurtflag = true;
-					ant.start_walking = true;
-					ant.change_animation(ant, "walk");
-					ant.hp++;
+					ant.change_animation("walk");
 				}
-			}
-			
-		}else if (ant.hp <= 0) {
-			ant.die();
-		}else { // ant.hp >= 1
-			//do maintenance
-			ant.direction_previous = ant.direction;				//remember what hyena's direction was at start of tick
-			ant.x_previous = ant.body.GetWorldCenter().x
-			if (ant.animation == "walk") {
-				//var Antbody = ant.body;
-				//Antbody.ApplyImpulse(new B2d.b2Vec2(-5,0), Antbody.GetWorldCenter());
-				
-				if(!ant.path_free() || ant.xprevious == ant.body.GetWorldCenter().x){
+			}else{ // hp > 1
+				//do maintenance
+				ant.direction_previous = ant.direction;
+				ant.x_previous = ant.body.GetWorldCenter().x
+				//if blocked, turn around
+				if((!ant.path_free() || ant.xprevious == ant.body.GetWorldCenter().x) && !ant.in_air()){
 					ant.direction = !ant.direction;
 				}
-				ant.move();
-				//var velocity = Antbody.GetLinearVelocity();
-				//velocity.x = -ant.speed;
-				//Antbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-				//Antbody.SetAwake(true);
-				ant.start_walking = false;
-				ant.popup = 0;
+				//move forward
+				ant.move(ant.speed);
+				ant.change_animation("walk");
 			}
-			
-			
-			if (ant.can_attack && ant.me_hurt_hero && ant.animation == "walk"){
-				// pass
-			}
-			if (ant.hero_hurt_me)
-			{
+			if (ant.damage_taken){
+				ant.change_animation("upside_down");
 				ant.take_damage();
-				ant.hero_hurt_me = false;
-				ant.can_attack = false;
-				ant.change_animation(ant, "upside_down");
-				
 			}
 		}
 	};
 
-
-	/*
-	var ant.change_animation = function(ant, progress_state) {
-		ant.animation = progress_state;
-
-	};
-	*/
 	// // //Set up Collision handler
 	
 	
 	var begin_contact = function(contact, info){
 		//handle collisions here
 		
-		//console.log(info.Me.id, ":", "My fixture", "'" + info.Me.fixture_name + "'", "came into contact with fixture", 
-			//"'" + info.Them.fixture_name + "'", "of", info.Them.id);
-		
-		var type = info.Me.type;
-
-		if(type !== "ant")
-			console.log("Error", type, "instead of ant with other being", info.Them.type);
-		
-		
-		if(info.Them.type == "hero")
-		{
-			
-			if(info.Them.fixture_name != "bottom" && info.Me.entity.can_attack)
-			{
+		if(info.Them.type == "hero"){
+			if(info.Them.fixture_name != "bottom" && info.Me.entity.can_attack){
 				info.Me.entity.me_hurt_hero = true;
-				
-			}	
-			else
-			{
+			}else{
 				info.Me.entity.hit_taken = true;//take damage if enemy collides from above and distance < vulnerability radius
 				info.Me.entity.damage_taken = info.Them.entity.damage;
-				info.Me.entity.hero_hurt_me = true;
 			}
 		}
-
 	};
 
 	var end_contact = function(contact, info) {

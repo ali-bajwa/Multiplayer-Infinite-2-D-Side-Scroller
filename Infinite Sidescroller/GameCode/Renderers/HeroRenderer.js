@@ -93,9 +93,9 @@ var HeroRenderer = (function(){
 		if(hero.physical_instance.state=="stand"){
 			hero.gotoAndPlay("stand");
 		}
-		console.log(hero.physical_instance.state);
+		//console.log(hero.physical_instance.state);
 		if (hero.physical_instance.state == "death") {
-		    console.log(hero.physical_instance.death_tick);
+			//console.log(hero.physical_instance.death_tick);
 			if(hero.physical_instance.death_tick ==1){
 			    hero.gotoAndPlay("death");
 			}

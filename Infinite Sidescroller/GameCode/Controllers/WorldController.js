@@ -30,16 +30,29 @@ var WorldController = (function(){
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
 		PhysicsController.step(delta);
+
+		update_movement_edge();
 		update_progress();
-		movement_edge = (progress - movement_edge_buffer);
+
 		get_spawn();
 		//if(temp++ == 0){
 			//TerrainController.NewTerrainSlice();
 		//}
 
 	};
+
+	var update_progress = function(arguments){
+		/**
+		* 
+		*/
+
+		progress = get_movement_edge();
+		
+	};
 	
-	var update_progress = function(){
+	
+	
+	var update_movement_edge = function(){
 		var heroes = EntityController.get_all_heroes();
 		var min_x = Infinity;
 		for(var net_id in heroes){
@@ -51,8 +64,8 @@ var WorldController = (function(){
 			}
 		}
 
-		if(progress < hero_x ){
-			progress = hero_x;
+		if(movement_edge < min_x - movement_edge_buffer){
+			movement_edge = min_x - movement_edge_buffer;
 		}
 	};
 	
@@ -61,7 +74,7 @@ var WorldController = (function(){
 	}
 
 	var get_spawn = function () {
-	    difficulty = Math.floor(get_movement_edge() / 100);
+	    difficulty = Math.floor(progress / 100);
 
 	    var spawn_num;
 	    if (spawn_enemy) {
@@ -118,7 +131,11 @@ var WorldController = (function(){
 	};
 	
 	var increase_score = function(amount){
-		score += amount;
+		if(amount != null){
+			score += amount;
+		}else{
+			throw "Error: >amount< is not defined";
+		}
 	};
 
 	return {

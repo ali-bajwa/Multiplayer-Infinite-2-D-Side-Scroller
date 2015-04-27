@@ -278,7 +278,11 @@ var EntityController = (function () {
 		this.animation = "stand"; //accessed by renderer for animation purposes
 		
 		this.jump = function(entity){
-			ApplyImpulse(new B2d.b2Vec2((2*entity.jump_force*entity.direction) - entity.jump_force, -1*entity.jump_force/2), body.GetWorldCenter());
+			var body = entity.body;
+			var x = (2 * entity.jump_force * entity.direction) - entity.jump_force;
+			var y = -1*entity.jump_force/2;
+			var direction = new B2d.b2Vec2(x, y);
+			body.ApplyImpulse(direction, body.GetWorldCenter());
 		};
 		
 		this.move = function(){
@@ -429,7 +433,7 @@ var EntityController = (function () {
 				this.needs_graphics_update = false;
 			}
 		};
-	};
+	}; // end AbstractEntity
 
 	return {
 		// declare public

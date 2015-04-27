@@ -87,44 +87,43 @@ var AntLogic = (function(){
 
 	    //if enemy is dead, die
 		//if (ant.body.GetWorldCenter().y > 22 || ant.body.GetWorldCenter().x < Config.Player.movement_edge - 1) {
-			//EntityController.delete_entity(ant);
+			//EntityController.delete_entity();
 			//console.log("drop of death");
 		//}
 		if (ant.hp == 1) {
 			if (ant.hero_hurt_me){
-				ant.take_damage(ant);
-				ant.die(ant);
+				ant.take_damage();
+				ant.die();
+			}else{
+				ant.popup++;
+				if(ant.pop == ant.popup && ant.animation == "upside_down")
+				{
+					//var Antbody = ant.body;
+					//Antbody.ApplyImpulse(new B2d.b2Vec2(10, -20), Antbody.GetWorldCenter());
+					ant.jump();
+					ant.popup = 0;
+					ant.can_attack = true;
+					ant.unhurtflag = true;
+					ant.start_walking = true;
+					ant.change_animation(ant, "walk");
+					ant.hp++;
+				}
 			}
-		ant.popup++;
-			if(ant.pop == ant.popup && ant.animation == "upside_down")
-			{
-				//var Antbody = ant.body;
-				//Antbody.ApplyImpulse(new B2d.b2Vec2(10, -20), Antbody.GetWorldCenter());
-				ant.jump(ant);
-				ant.popup = 0;
-				ant.can_attack = true;
-				ant.unhurtflag = true;
-				ant.start_walking = true;
-				ant.change_animation(ant, "walk");
-				ant.hp++ 
-			}	
-			
 			
 		}else if (ant.hp <= 0) {
-			ant.die(ant);
+			ant.die();
 		}else { // ant.hp >= 1
-
+			//do maintenance
+			ant.direction_previous = ant.direction;				//remember what hyena's direction was at start of tick
+			ant.x_previous = ant.body.GetWorldCenter().x
 			if (ant.animation == "walk") {
 				//var Antbody = ant.body;
 				//Antbody.ApplyImpulse(new B2d.b2Vec2(-5,0), Antbody.GetWorldCenter());
 				
-				/*
-				if(ant.path_free(ant))
-				{ ant.direction = false;}
-				else
-				{ ant.direction = true;}
-				*/
-				ant.move(ant);
+				if(!ant.path_free() || ant.xprevious == ant.body.GetWorldCenter().x){
+					ant.direction = !ant.direction;
+				}
+				ant.move();
 				//var velocity = Antbody.GetLinearVelocity();
 				//velocity.x = -ant.speed;
 				//Antbody.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
@@ -139,7 +138,7 @@ var AntLogic = (function(){
 			}
 			if (ant.hero_hurt_me)
 			{
-				ant.take_damage(ant);
+				ant.take_damage();
 				ant.hero_hurt_me = false;
 				ant.can_attack = false;
 				ant.change_animation(ant, "upside_down");

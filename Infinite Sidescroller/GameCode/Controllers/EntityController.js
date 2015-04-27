@@ -281,15 +281,15 @@ var EntityController = (function () {
 			ApplyImpulse(new B2d.b2Vec2((2*entity.jump_force*entity.direction) - entity.jump_force, -1*entity.jump_force/2), body.GetWorldCenter());
 		};
 		
-		this.move = function(entity){
-			var dir = (entity.direction*2-1);
-			var velocity = entity.body.GetLinearVelocity();
-			velocity.x = entity.speed*dir; //move speed in current direction
-			entity.body.SetLinearVelocity(velocity);
+		this.move = function(){
+			var dir = (this.direction*2-1);
+			var velocity = this.body.GetLinearVelocity();
+			velocity.x = this.speed*dir; //move speed in current direction
+			this.body.SetLinearVelocity(velocity);
 		};
 			
 		//check for enemies in range (vision or jump)
-		this.enemy_in_range = function(entity,range){
+		this.enemy_in_range = function(range){
 			var output = false;
 			/*
 			//multiplayer implementation
@@ -304,74 +304,93 @@ var EntityController = (function () {
 			return output;
 			*/
 			var hero_x = EntityController.get_my_hero().body.GetWorldCenter().x;
-			output = (Math.abs(hero_x - entity.body.GetWorldCenter().x) < range);
+			output = (Math.abs(hero_x - this.body.GetWorldCenter().x) < range);
 			return output;
 		};
 		
-			//returns the direction of nearest enemy
-		this.direction_nearest_enemy = function(entity){
+		//returns the direction of nearest enemy
+		this.direction_nearest_enemy = function(){
 			/*//in multiplayer, first find nearest enemy
 			var nearest = hero[0];
 			for(i < 8){
 				if(typeof hero[i] !== 'undefined'){
-					if(distance_formula(hero[i],entity) < distance_formula(nearest,entity)){
+					if(distance_formula(hero[i],this) < distance_formula(nearest,this)){
 						nearest = hero[i];
 					}
 				}
 			}*/
 			var nearest;
 			var hero_x = EntityController.get_my_hero().body.GetWorldCenter().x;
-			var distance = (hero_x - entity.body.GetWorldCenter().x);
+			var distance = (hero_x - this.body.GetWorldCenter().x);
 			return (distance > 0);//return true/right of distance is positive, return false/left if distance is negative
 		};
 		
 		//decrease health
-		this.take_damage = function(entity){
-			entity.hp -= entity.damage_taken;
-			entity.damage_taken = 0;
-			entity.hit_taken = false;
-			entity.blinking = true;
-			entity.blink_timer = entity.blink_duration;
+		this.take_damage = function(){
+			this.hp -= this.damage_taken;
+			this.damage_taken = 0;
+			this.hit_taken = false;
+			this.blinking = true;
+			this.blink_timer = this.blink_duration;
 			//knockback here
 		};
 		
-			//die
-		this.die = function(entity){
-			if (entity.is_alive){//if alive, kill it
-				entity.death_timer = entity.death_duration;
-				entity.is_alive = false;
-				WorldController.increase_score(entity.point_value);
-				entity.hit_taken = false;
-				entity.can_attack = false;
-				entity.change_animation(entity,"death");
+		//die
+		this.die = function(){
+			if (this.is_alive){//if alive, kill it
+				this.death_timer = this.death_duration;
+				this.is_alive = false;
+				WorldController.increase_score(this.point_value);
+				this.hit_taken = false;
+				this.can_attack = false;
+				this.change_animation(this,"death");
 				return ;
 			}else{//else decay
-				entity.death_timer--;
-				if (entity.death_timer <= entity.death_duration && entity.death_timer > entity.decay_duration && entity.death_timer > 0){
-					entity.change_animation(entity,"death");
-				} else if (entity.death_timer <= entity.decay_duration && entity.death_timer > 0){
-					entity.change_animation(entity,"decay");
+				this.death_timer--;
+				if (this.death_timer <= this.death_duration && this.death_timer > this.decay_duration && this.death_timer > 0){
+					this.change_animation("death");
+				} else if (this.death_timer <= this.decay_duration && this.death_timer > 0){
+					this.change_animation("decay");
 				} else {
-					EntityController.delete_entity(entity);//remove instance from memory
+					EntityController.delete_entity(this);//remove instance from memory
 				}
 				return;
 			}
 		}
 		
+		//takes a string as parameters. returns the fixture with fixture_name == name, or null if it does not exist
+		this.get_fixture = function(name){
+			var current_fixture = this.body.GetFixtureList();
+			while (current_fixture != null){
+				if (current_fixture.GetUserData() != null){
+					if (current_fixture.GetUserData().name == name){
+						break;
+					}
+				}
+				current_fixture = current_fixture.GetNext();
+			}
+			if (current_fixture.GetUserData() == null){
+				current_fixture = null;
+			}else if (current_fixture.GetUserData().name != name){
+				current_fixture = null;
+			}
+			return current_fixture;
+		};
+		
 		//checks if movement is voluntary or forced
-		this.movement_voluntary = function(entity){
+		this.movement_voluntary = function(){
 			//if direction being faced is different from the direction moving, return false
 			var output = true;
-			var velocity = entity.body.GetLinearVelocity().x;
+			var velocity = this.body.GetLinearVelocity().x;
 			if(velocity != 0){
-				output = (velocity/Math.abs(velocity) == (entity.direction)*2-1);
+				output = (velocity/Math.abs(velocity) == (this.direction)*2-1);
 			}
 			return output;
 		};
 
 		//checks if in the air
-		this.in_air = function(entity){
-			var body = entity.body;
+		this.in_air = function(){
+			var body = this.body;
 			var objects_beneath;
 			if (body.GetFixtureList() != null){//prevent bugs on destruction
 				var AABB = body.GetFixtureList().GetNext().GetNext().GetAABB();
@@ -383,12 +402,12 @@ var EntityController = (function () {
 		};
 
 		//checks if there is a collision in current direction
-		this.path_free = function(entity){
-			var body = entity.body;
+		this.path_free = function(){
+			var body = this.body;
 			var objects_before;
 			var AABB;
 			if (body.GetFixtureList() != null){//prevent bugs on destruction
-				if (entity.direction){
+				if (this.direction){
 					AABB = body.GetFixtureList().GetAABB();
 					objects_before = PhysicsController.query_aabb(AABB);
 				}else{
@@ -402,12 +421,12 @@ var EntityController = (function () {
 		};
 
 		//setter for animation variable, ensures the animation is only reset on actual change
-		this.change_animation = function(entity,new_animation){
-			if(entity.animation != new_animation){
-				entity.animation = new_animation;
-				entity.needs_graphics_update = true;
+		this.change_animation = function(new_animation){
+			if(this.animation != new_animation){
+				this.animation = new_animation;
+				this.needs_graphics_update = true;
 			}else{ 
-				entity.needs_graphics_update = false;
+				this.needs_graphics_update = false;
 			}
 		};
 	};

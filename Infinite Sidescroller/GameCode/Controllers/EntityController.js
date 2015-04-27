@@ -268,6 +268,7 @@ var EntityController = (function () {
 		this.direction = false;	//false=left, true=right;
 		this.direction_previous = false;//store direction from end of previous tick
 		this.x_previous = 0;		//store x value from end of previous tick
+		this.y_previous = 0;		//store x value from end of previous tick
 		
 		this.is_idle = true; //determines whether entity is aggressive or idle
 		this.idle_duration = 40; // time buffer between changing idle states

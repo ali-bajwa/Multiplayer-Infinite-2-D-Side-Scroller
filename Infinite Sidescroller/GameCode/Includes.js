@@ -32,7 +32,6 @@ var Include = function(){
 			"WorldController",
 			"IdentificationController",
 			"RegisterAsController",
-			"HUDController",
 		],
 
 		Models: [
@@ -48,7 +47,6 @@ var Include = function(){
 			"WorldModel",
 			"EntityModel",
 			"RegisterAsModel",
-			"HUDModel",
 		],
 
 		Other: [
@@ -67,6 +65,7 @@ var Include = function(){
 			"HyenaRenderer",
 			"TerrainSliceRenderer",
 			"BackgroundRenderer",
+			"HUDRenderer",
 
 		],
 
@@ -96,7 +95,6 @@ var Include = function(){
 			EntityController: require("./Controllers/EntityController.js"),
 			IdentificationController: require("./Controllers/IdentificationController.js"),
 			RegisterAsController: require("./Controllers/RegisterAsController.js"),
-			HUDController: require("./Controllers/HUDController.js"),
 			
 			
 			// Models
@@ -113,7 +111,6 @@ var Include = function(){
 			IdentificationModel: require("./Models/IdentificationModel.js"),
 			EntityModel: require("./Models/EntityModel.js"),
 			RegisterAsModel: require("./Models/RegisterAsModel.js"),
-			HUDModel: require("./Models/HUDModel.js"),
 			
 				
 			// Other stuff
@@ -132,6 +129,7 @@ var Include = function(){
 			TerrainCellRenderer: require("./Renderers/TerrainCellRenderer.js"),
 			TerrainSliceRenderer: require("./Renderers/TerrainSliceRenderer.js"),
 			BackgroundRenderer: require("./Renderers/BackgroundRenderer.js"),
+			HUDRenderer: require("./Renderers/HUDRenderer.js"),
 			
 			
 			

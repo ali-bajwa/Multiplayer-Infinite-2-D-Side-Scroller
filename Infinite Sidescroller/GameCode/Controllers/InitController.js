@@ -129,7 +129,7 @@ var InitController = (function(){
 		
 		EntityController.init();
 		GraphicsController.init();
-		HUDController.init();
+		//HUDController.init();
 		//BackgroundController.init();
 
 

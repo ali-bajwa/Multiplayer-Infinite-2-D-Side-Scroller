@@ -84,7 +84,7 @@ var EntityController = (function () {
 			// spawn hero
 			
 			EntityModel.hero_spawned = true;
-			spawn(20,10, "hero");
+			spawn(WorldController.get_movement_edge() + 10,10, "hero");
 		}
 
 		if (debug_commands("spawn_griffin") && Count > 5) {

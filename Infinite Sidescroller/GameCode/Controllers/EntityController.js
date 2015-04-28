@@ -252,7 +252,6 @@ var EntityController = (function () {
 		* too; 
 		*/
 
-
 		var entity_instance = EntityModel.for_logic_update[packet.type][packet.id];
 
 		if(entity_instance == null){
@@ -261,6 +260,19 @@ var EntityController = (function () {
 			// thus abort
 			return;
 		}
+	
+		var type = entity_instance.type;
+		if(type == null){
+			console.log(entity_instance);
+			throw "type is undefined for this entity";
+		}
+
+		var id = entity_instance.id;
+		if(id == null){
+			console.log(entity_instance);
+			throw "id is undefined for this entity";
+		}
+		
 
 		// TODO: finish this function and then update it regularly;
 		// This one is very sensitive, as even one reference left may prevent 
@@ -272,7 +284,7 @@ var EntityController = (function () {
 			throw "Body of the instance is undefined"
 		}
 		// remove graphics
-			GraphicsController.destroy_graphics_for(id);
+			RegisterAsController.register_as("removed_entity", entity_instance);
 		// remove physics
 			PhysicsController.remove_body(body);
 		// remove stored references within EntityController/Model
@@ -310,51 +322,6 @@ var EntityController = (function () {
 
     };
 
-
-
-    var delete_entity = function (entity) {
-        /**
-        * This function will remove this entity along with some other info about this entity
-        * from the world, it'll also free the id of this entity. The physical body will be deleted
-        * too; 
-        * This function is supposed to be called by the individual logic modules, when the are finished
-        * animating death/destruction of something and want to get rid of it
-        */
-
-        // TODO: finish this function and then update it regularly;
-        // This one is very sensitive, as even one reference left may prevent 
-        // object from being deleted and cause memory leaks. Testing is required
-        if (entity.body != null) {
-            var body = entity.body;
-        } else {
-            // body is required. if place where body is stored changed, you should update this function
-            throw "Body of the instance is undefined"
-        }
-
-        if (entity.id != null) {
-            var id = entity.id;
-        } else {
-            // id is needed, if id system changed, and you are here, update this function
-            throw "There is no id associated with this instance"
-        }
-
-        if (entity.type != null) {
-            var type = entity.type;
-        } else {
-            // id is needed, if id system changed, and you are here, update this function
-            throw "There is no type associated with this instance"
-        }
-
-        // remove graphics
-        //GraphicsController.destroy_graphics_for(id);
-        RegisterAsController.register_as("removed_entity", entity);
-        // remove physics
-        PhysicsController.remove_body(body);
-        // remove stored references within EntityController/Model
-        delete EntityModel.for_logic_update[type][id];
-        // free the id
-        IdentificationController.remove_id(id);
-    };
 
     var beyond_world_boundary = function (entity) {
         /**

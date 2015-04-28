@@ -496,8 +496,11 @@ var EntityController = (function () {
 				}
 			}else if(EntityController.get_my_hero() != null){
 			*/
-				hero_x = EntityController.get_my_hero().body.GetWorldCenter().x;
+			var hero = EntityController.get_my_hero();
+			if(hero != null){
+				hero_x = hero.body.GetWorldCenter().x;
 				output = (Math.abs(hero_x - this.body.GetWorldCenter().x) < range);
+			}
 			/*
 			}
 			*/

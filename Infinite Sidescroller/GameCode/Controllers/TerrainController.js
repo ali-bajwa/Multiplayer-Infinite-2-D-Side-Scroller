@@ -42,11 +42,11 @@ var TerrainController = (function(){
 	};
 
 	var get_seed = function(){
-		return seed;
+		return TerrainModel.seed;
 	};
 	
 	var set_seed = function(new_seed){
-		seed = new_seed;
+		TerrainModel.seed = new_seed;
 	};
 
 	var NewTerrainSlice = function(seed){

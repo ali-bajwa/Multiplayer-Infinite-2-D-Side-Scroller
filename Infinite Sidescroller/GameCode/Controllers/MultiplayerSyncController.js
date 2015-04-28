@@ -369,6 +369,23 @@ var MultiplayerSyncController = (function(){
 		
 	};
 	
+	var network_event_handler = function(event_type){
+		/**
+		* called from the network controller when certain events occur
+		*/
+		
+		switch (event_type) {
+			case 'case':
+				
+				break;
+			
+			default:
+				console.log("event_type", event_type, "doesn't have an action associated");
+				
+				
+		}
+	};
+	
 	
 	
 	return {

@@ -168,6 +168,8 @@ var TerrainController = (function(){
 		init: init,
 		NewTerrainSlice: NewTerrainSlice,
 		MarkAsNewTerrainSlice: MarkAsNewTerrainSlice,
+		get_seed: get_seed,
+		set_seed: set_seed,
 		//NewSlicesAvailable: NewSlicesAvailable,
 		//GetNewTerrainSlices: GetNewTerrainSlices,
 	}

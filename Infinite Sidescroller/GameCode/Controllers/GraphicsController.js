@@ -53,6 +53,7 @@ var GraphicsController = (function(){
 			"Hyena": HyenaRenderer,
 			"terrain_cell": TerrainCellRenderer,
 			"terrain_slice": TerrainSliceRenderer,
+			"companion": EsteemedCompanionRenderer,
 		};
 
 		get_asset = AssetController.get_asset; // for quicker access

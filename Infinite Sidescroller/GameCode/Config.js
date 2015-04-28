@@ -35,6 +35,11 @@ var Config = function(){
 		maxy: 22,
 
 	};
+	this.Remote = {
+		master: false, // am I the one with whome other players sync? 
+		connected: false, // am I in multiplayer mode
+	};
+	
 	// <<<
 };
 

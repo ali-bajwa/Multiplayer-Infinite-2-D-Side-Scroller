@@ -51,7 +51,9 @@ var HeroRenderer = (function(){
 		hero_animation.graphics_id = "hero";
 		GraphicsController.set_reg_position(hero_animation, -25, -25);
 		GraphicsController.reg_for_render(hero_animation, entity_hero);
-		GraphicsController.follow(entity_hero.id);
+		if(entity_hero.player_id == NetworkController.get_network_id()){
+			GraphicsController.follow(entity_hero.id);
+		}
 
 	};
 	/*

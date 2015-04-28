@@ -43,7 +43,9 @@ var HUDRenderer = (function(){
 		var hero = EntityController.get_my_hero();
 		
 		update_score(WorldController.get_score());
-		update_health(hero.hp);
+		if(hero){
+			update_health(hero.hp);
+		}
 		
 	};
 	

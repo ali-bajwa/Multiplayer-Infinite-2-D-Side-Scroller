@@ -47,12 +47,15 @@ var HeroLogic = (function(){
 			and finally you HAVE TO(!!!) return the instance you just created from this function
 		*/
 
+
 		var hero = new Hero();
 		hero.type = "hero";
 		hero.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, hero);
 
-		var id = IdentificationController.assign_id(hero);
-		EntityController.load_hero(hero.id);//temporary thing, delete when multiplayer comes along
+		hero.hp = 100;
+		hero.wound = false;
+		hero.jumps = 0;
+		hero.score = 0;
 
 		return hero;
 	
@@ -62,7 +65,12 @@ var HeroLogic = (function(){
 		/* Is ran each tick from the EntityController.update for every registered
 			entity of this type. I given entity_instance
 		*/
-		var cmds = KeyboardController.movement_commands();
+		if(hero.player_id == NetworkController.get_network_id()){
+			var cmds = KeyboardController.movement_commands();
+		}else{
+			var cmds = KeyboardController.get_remote_movement(hero.player_id);
+		}
+
 		hero.direction_previous = hero.direction;
 		hero.x_previous = hero.body.GetWorldCenter().x;
 		hero.y_previous = hero.body.GetWorldCenter().y;
@@ -190,6 +198,16 @@ var HeroLogic = (function(){
 	    var body = hero.body;
 	    body.ApplyImpulse(new B2d.b2Vec2(0, 20), body.GetWorldCenter());
 	};
+	var move_left = function(hero){
+		var body = hero.body;
+		var velocity = body.GetLinearVelocity();
+		velocity.x = -5;
+		body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		body.SetAwake(true);
+		//hero.x += 10; // old
+		//hero.x = (body.GetPosition().x + 1.5/2) * 30 ; 
+	};
+
 	var jump = function(hero){
 	    var body = hero.body;
 	    var w = hero.body.GetUserData().def.width / 2;
@@ -215,6 +233,28 @@ var HeroLogic = (function(){
 			hero.jumps += 1;
 		}
 	};
+
+	
+	var b2b_get_coordinates = function(hero){
+		return hero.body.GetWorldCenter();
+	};
+
+	//var move_left = function(hero){
+		//var velocity = hero.body.GetLinearVelocity();
+		//move(hero, velocity.x - 5, velocity.y)
+
+	//};
+
+	//var move_right = function(hero){
+		//var velocity = hero.body.GetLinearVelocity();
+		//move(hero, velocity.x + 5, velocity.y)
+	//};
+
+	//var move = function(hero, x, y){
+		//var velocity = new B2d.b2Vec2(x, y);
+		//hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		//hero.body.SetAwake(true);
+	//};
 
 	return {
 		// declare public

@@ -5,8 +5,68 @@ var KeyboardController = (function()
 		
 		include();
 	};
+
+	var update = function(delta){
+		/**
+		* update called from GameController.update_all
+		*/
+		
+		if(KeyboardModel.state_changed){
+			// if keyboard state changed since the last time,
+			// send the keyboard state over.
+			// TODO: optimize?
+			// You could send only those specific keys that changed, not whole table
+			// You could send only relevant keys that might be needed there
+			// Is it worth the time spent? Keep in minds, those tables are usually small,
+			// unless players decide to smash their faces into the keybord repeatedly
+			// (our game isn't that bad, right?)
+			MultiplayerSyncController.route_outcoming_packet({
+				op: "keyboard_state",
+				key_table: KeyboardModel.keys,
+			});
+
+			KeyboardModel.state_changed = false;
+		}
+		
+	};
+
+	var handle_keyboard_change = function(packet){
+		/**
+		* accepts the network packet. changes the respective
+		* keybord state for the given packet.player_id
+		* is called from the MultiplayerSyncController
+		*/
+		var player_id = packet.player_id;
+		
+		if(player_id == null){
+			throw "Error: (network) player_id is not defined";
+		}
+
+		KeyboardModel.all_keyboard_states[player_id] = packet.key_table;
+	};
 	
-	var get_active_commands_function = function(table){
+	
+	var copy_object = function(obj){
+		/**
+		* returns (shallow) copy of the object
+		*
+		* @Stack Overflow:
+		* With jQuery, you can shallow copy with:
+		* var copiedObject = jQuery.extend({}, originalObject)
+		* subsequent changes to the copiedObject will not affect the originalObject, and vice versa.
+		* Or to make a deep copy:
+		* var copiedObject = jQuery.extend(true, {}, originalObject)
+		*/
+		
+		return jQuery.extend({}, obj);
+	};
+	
+	
+	
+	var get_active_commands_function = function(table, player_id){
+		// >player_id< is optional, and part of a dirty-ish quick implementation
+		// Things should be rewritten at some point
+		//
 		// get all commands associated with keys that are defined in the >table<,
 		// and are currently pressed
 		//
@@ -17,9 +77,14 @@ var KeyboardController = (function()
 		// and stay updated on the active commands
 		
 		var commands = [];
+		if(player_id != null){
+			var key_table = KeyboardModel.all_keyboard_states[player_id];
+		}else{
+			var key_table = KeyboardModel.keys;
+		}
 		
 		$.each(KeyboardModel.translation_tables.code_to_name, function(key, cmd){
-			if(KeyboardModel.keys[key] && table[cmd]){
+			if(key_table[key] && table[cmd]){
 				commands.push(table[cmd]);
 			}
 		});
@@ -39,10 +104,12 @@ var KeyboardController = (function()
 	
 	var keydown = function(event){
 		KeyboardModel.keys[event.keyCode] = true;
+		KeyboardModel.state_changed = true;
 	};
 
 	var keyup = function(event){
 		delete KeyboardModel.keys[event.keyCode];
+		KeyboardModel.state_changed = true;
 	};
 
 
@@ -61,6 +128,23 @@ var KeyboardController = (function()
 		return get_active_commands_function(KeyboardModel.translation_tables.debug);
 	};
 	
+	var get_remote_movement = function(player_id){
+		/**
+		* this it TEMPORARY function 
+		* I throw it together so I do not have to change how keyboard controller works for now
+		* if we find that we should send more keyboard stuff over the network, we should rewrite
+		* the KeyboardController appropriately
+		*/
+
+		if(player_id == null){
+			throw "Error: player_id undefined";
+		}
+
+		var key_fun = get_active_commands_function(KeyboardModel.translation_tables.movement, player_id);
+		return key_fun;
+	};
+	
+	
 
 	return {
 		keydown: keydown,
@@ -69,6 +153,9 @@ var KeyboardController = (function()
 		movement_commands: movement_commands,
 		debug_commands: debug_commands,
 		init: init,
+		update: update,
+		handle_keyboard_change: handle_keyboard_change,
+		get_remote_movement: get_remote_movement,
 	};
 
 })();

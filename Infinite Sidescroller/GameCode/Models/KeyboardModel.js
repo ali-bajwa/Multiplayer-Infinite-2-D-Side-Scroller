@@ -1,5 +1,28 @@
 var KeyboardModel = function(){
-	this.keys = {};
+
+	// own keys that are currently active
+	this.keys = {
+	};
+
+	this.state_changed = false;
+
+	// table of all keys that have
+	// changed since the last tick
+	// key is keycode, value is boolean
+	// indicating whether key was pressed or released
+	// TODO: implement;
+	// idea is that only commands for relevant tables will be sent
+	// overseas
+	this.changed_keys = {};
+
+	// own keys that were active previous tick
+	//this.old_keys = {
+	//};
+
+	// table of network player ids associated
+	// with the last registered state of their keyborads
+	this.all_keyboard_states = {
+	}
 
 	this.translation_tables = {
 		code_to_name: {
@@ -120,6 +143,9 @@ var KeyboardModel = function(){
 			"g": "spawn_griffin",
 			"s": "new_slice",
 			"h": "spawn_hyena",
+			"c": "connect",
+			"v": "request_hero",
+			"i": "show_ids",
 		},
 
 	}

@@ -32,6 +32,8 @@ var Include = function(){
 			"WorldController",
 			"IdentificationController",
 			"RegisterAsController",
+			"NetworkController",
+			"MultiplayerSyncController",
 		],
 
 		Models: [
@@ -47,6 +49,8 @@ var Include = function(){
 			"WorldModel",
 			"EntityModel",
 			"RegisterAsModel",
+			"NetworkModel",
+			"MultiplayerSyncModel",
 		],
 
 		Other: [
@@ -67,6 +71,7 @@ var Include = function(){
 			"BackgroundRenderer",
 			"HUDRenderer",
 
+			"EsteemedCompanionRenderer",
 		],
 
 		Logic: [
@@ -74,6 +79,7 @@ var Include = function(){
 			"HeroLogic",
 			"GriffinLogic",
 			"HyenaLogic",
+			"EsteemedCompanionLogic",
 		],
 
 	};//end module_names
@@ -96,6 +102,8 @@ var Include = function(){
 			IdentificationController: require("./Controllers/IdentificationController.js"),
 			RegisterAsController: require("./Controllers/RegisterAsController.js"),
 			
+			NetworkController: require("./Controllers/NetworkController.js"),
+			MultiplayerSyncController: require("./Controllers/MultiplayerSyncController.js"),
 			
 			// Models
 
@@ -111,8 +119,9 @@ var Include = function(){
 			IdentificationModel: require("./Models/IdentificationModel.js"),
 			EntityModel: require("./Models/EntityModel.js"),
 			RegisterAsModel: require("./Models/RegisterAsModel.js"),
-			
-				
+			NetworkModel: require("./Models/NetworkModel.js"),
+			MultiplayerSyncModel: require("./Models/MultiplayerSyncModel.js"),
+						
 			// Other stuff
 			
 			Config: require("./Config.js"),
@@ -134,13 +143,14 @@ var Include = function(){
 			
 			
 			
+			EsteemedCompanionRenderer: require("./Renderers/EsteemedCompanionRenderer.js"),
 			
 			// Logic
 			AntLogic: require("./Logic/AntLogic.js"),
 			GriffinLogic: require("./Logic/GriffinLogic.js"),
 			HyenaLogic: require("./Logic/HyenaLogic.js"),
 			HeroLogic: require("./Logic/HeroLogic.js"),
-			
+			EsteemedCompanionLogic: require("./Logic/EsteemedCompanionLogic.js"),
 			
 
 		};

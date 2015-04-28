@@ -26,7 +26,7 @@ var InitController = (function(){
 		// animation - let me know.
 		// Look into the setup_asset_dependent function
 			AssetModel.loader = new createjs.LoadQueue(false); // loading resourses using preload.js
-			AssetModel.loader.addEventListener("complete", setup_asset_dependant);
+			AssetModel.loader.addEventListener("complete", setup_asset_dependent);
 
 		// if more stuff needs to be done for the test mode, 
 		// or more types of it needs to be added
@@ -34,6 +34,8 @@ var InitController = (function(){
 			var asset_path = (mode == "test") ? "./assets/art/" : "../GameCode/assets/art/";
 
 		AssetController.init(asset_path);
+		
+		//setup_asset_dependent();
 
 	};
 
@@ -61,6 +63,9 @@ var InitController = (function(){
 		TerrainController.init();
 		TerrainSliceController.init();
 		WorldController.init();
+		
+
+
 
 		// WARNING!!! GraphicsController.init is called from the
 		// setup_asset_dependent function as it, well, depends on assets being loaded
@@ -124,15 +129,18 @@ var InitController = (function(){
 
 	};
 
-	var setup_asset_dependant = function(){
+	var setup_asset_dependent = function(){
 		// this may need to move to either load_game or some sort of resizing function
+		MultiplayerSyncController.init();
 		
+		
+		NetworkController.init();
 		EntityController.init();
 		GraphicsController.init();
 		//HUDController.init();
 		//BackgroundController.init();
 
-
+		
 		setup_ticker();
 
 		//TerrainController.generate_terrain(); // Initial terrain generation // deprecated, generation will be called from update each tick

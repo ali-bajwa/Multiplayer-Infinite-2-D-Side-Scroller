@@ -31,7 +31,9 @@ var WorldController = (function(){
 		/* is ran each tick from the GameController.update_all */
 		PhysicsController.step(delta);
 
-		update_movement_edge();
+		if(EntityController.get_my_hero() != null){
+			update_movement_edge();
+		}
 		update_progress();
 
 		get_spawn();

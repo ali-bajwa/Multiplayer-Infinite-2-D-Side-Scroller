@@ -45,7 +45,7 @@ var TerrainController = (function(){
 		seed = Math.floor(Math.random()*2000) + 1000;
 	};
 	
-	var set_set = function(new_seed){
+	var set_seed = function(new_seed){
 		seed = new_seed;
 	};
 

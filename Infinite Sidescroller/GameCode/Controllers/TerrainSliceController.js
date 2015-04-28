@@ -71,8 +71,8 @@ var TerrainSliceController = (function () {
 		var platform_len = 0; 		//len of currently generated platform
 		var platform_count_max = 2; //maximum number of platforms per column
 		var platform_count = []; 		//keeps track of platforms per column
-		var platform_frequency = 10;//base percentage chance of a platform to be generated
-		var spike_frequency = 5;//base percentage chance of a platform to have spikes
+		var platform_frequency = 15;//base percentage chance of a platform to be generated
+		var spike_frequency = 50;//base percentage chance of a platform to have spikes
 		/*
 		var spike frequency
 		var column frequency
@@ -89,8 +89,11 @@ var TerrainSliceController = (function () {
 		load blocks and gaps into slice.grid[i][j]
 		
 		*/
-		for(i=rows - 1;i>=0;i--){ //outer loop: generate rows bottom to top
+		for(i=rows-1;i>=0;i--){
 			slice.grid[i] = [];
+		}
+		
+		for(i=rows - 1;i>=0;i--){ //outer loop: generate rows bottom to top
 			if (vgap_len < vgap_min){
 				vgap_len++;
 			}
@@ -111,9 +114,13 @@ var TerrainSliceController = (function () {
 					else{
 						slice.grid[i][j] = spawnBlock(x,y,1);//create a ground block (1 means ground)
 						pit_len = 0; //any pits being spawned have been interrupted
-						if (i == ground_lvl)
+						if (i == ground_lvl){
 							slice.grid[i][j].position = "surface";
-						else{
+							if(getRandomNumber(seed)%100 < spike_frequency){//check for random spike
+								slice.grid[i - 1][j] = spawnSpike(x, y - slice.cell_w); //create a spike above the current block
+								seed = getRandomNumber(seed) + 21;
+							}
+						}else{
 						slice.grid[i][j].position = "underground";
 						}
 					}
@@ -126,11 +133,6 @@ var TerrainSliceController = (function () {
 						if (getRandomNumber(seed)%100 < platform_frequency || (platform_len > 0 && platform_len <= platform_len_min)){
 						
 							slice.grid[i][j] = spawnBlock(x,y,2);//create platform (2 means platform)
-							
-							if(getRandomNumber(seed)%200 < spike_frequency){
-							    slice.grid[i + 1][j] = spawnSpike(x, y - slice.cell_w);
-							    seed = getRandomNumber(seed) + 21;
-							}
 							
 							//check aesthetic stuff, like platform edges
 							if (platform_len == 0){
@@ -163,7 +165,6 @@ var TerrainSliceController = (function () {
 							hgap_len++; //the gap gets wider
 						}
 					}
-
 					seed = getRandomNumber(seed);
 				}
 			}

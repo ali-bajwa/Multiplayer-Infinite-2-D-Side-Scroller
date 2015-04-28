@@ -43,11 +43,11 @@ var TerrainController = (function(){
 
 	var get_seed = function(){
 		seed = Math.floor(Math.random()*2000) + 1000;
-	}
+	};
 	
 	var set_set = function(new_seed){
 		seed = new_seed;
-	}
+	};
 
 	var NewTerrainSlice = function(seed){
 		/* this takes care of appending new terrain slice to the generated terrain

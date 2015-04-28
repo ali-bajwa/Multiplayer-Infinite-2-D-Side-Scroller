@@ -7,7 +7,7 @@ var TerrainController = (function(){
 
 	var init = function(){
 	    include();
-	    TerrainModel.seed = 123456;//Math.floor(Math.random()*2000) + 1000;//placeholder for seed
+	    TerrainModel.seed = Math.floor(Math.random()*2000) + 1000;//placeholder for seed
 
 	};
 	
@@ -42,7 +42,7 @@ var TerrainController = (function(){
 	};
 
 	var get_seed = function(){
-		seed = Math.floor(Math.random()*2000) + 1000;
+		return seed;
 	};
 	
 	var set_seed = function(new_seed){

@@ -660,7 +660,7 @@ var EntityController = (function () {
 		var hero = EntityModel.heroes[player_id];
 
 		if(hero == null){
-			throw "hero is not defined for the player_id " + String(player_id);
+			console.warn("hero is not defined for the player_id", String(player_id));
 		}
 
 		var vel = new B2d.b2Vec2(packet.velocity.x, packet.velocity.y);

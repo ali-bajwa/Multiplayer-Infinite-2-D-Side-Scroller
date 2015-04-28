@@ -661,13 +661,14 @@ var EntityController = (function () {
 
 		if(hero == null){
 			console.warn("hero is not defined for the player_id", String(player_id));
-		}
+		}else{
 
-		var vel = new B2d.b2Vec2(packet.velocity.x, packet.velocity.y);
-		var pos = new B2d.b2Vec2(packet.position.x, packet.position.y);
-		
-		hero.body.SetLinearVelocity(vel);
-		hero.body.SetPosition(pos);
+			var vel = new B2d.b2Vec2(packet.velocity.x, packet.velocity.y);
+			var pos = new B2d.b2Vec2(packet.position.x, packet.position.y);
+			
+			hero.body.SetLinearVelocity(vel);
+			hero.body.SetPosition(pos);
+		}
 		
 	};
 

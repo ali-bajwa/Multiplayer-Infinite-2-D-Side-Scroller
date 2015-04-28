@@ -31,9 +31,7 @@ var WorldController = (function(){
 		/* is ran each tick from the GameController.update_all */
 		PhysicsController.step(delta);
 
-		if(EntityController.get_my_hero() != null){
-			update_movement_edge();
-		}
+		update_movement_edge();
 		update_progress();
 
 		get_spawn();
@@ -57,6 +55,7 @@ var WorldController = (function(){
 	var update_movement_edge = function(){
 		var heroes = EntityController.get_all_heroes();
 		var min_x = Infinity;
+
 		for(var net_id in heroes){
 			// iterate through all connected heroes
 			// and choose minimum of their x positions
@@ -66,7 +65,7 @@ var WorldController = (function(){
 			}
 		}
 
-		if(movement_edge < min_x - movement_edge_buffer){
+		if((movement_edge < min_x - movement_edge_buffer) && min_x != Infinity){
 			movement_edge = min_x - movement_edge_buffer;
 		}
 	};

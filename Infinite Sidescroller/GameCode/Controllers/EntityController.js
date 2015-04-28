@@ -279,6 +279,7 @@ var EntityController = (function () {
 			delete EntityModel.for_logic_update[type][id];
 			if(type == "hero"){
 				delete EntityModel.heroes[entity_instance.player_id];
+				EntityModel.hero_spawned = false;
 			}
 		// free the id
 			IdentificationController.remove_id(id);

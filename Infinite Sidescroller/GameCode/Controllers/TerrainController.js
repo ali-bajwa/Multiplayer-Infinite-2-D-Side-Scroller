@@ -7,7 +7,7 @@ var TerrainController = (function(){
 
 	var init = function(){
 	    include();
-	    TerrainModel.seed = Math.floor(Math.random()*2000) + 1000;//placeholder for seed
+	    TerrainModel.seed = 123456;//Math.floor(Math.random()*2000) + 1000;//placeholder for seed
 
 	};
 	
@@ -29,6 +29,7 @@ var TerrainController = (function(){
 			var slice = NewTerrainSlice();
 			TerrainModel.terrain_slices_queue.push(slice);
 		}
+		
 
 		if(WorldController.get_movement_edge() > (TerrainModel.terrain_slices_queue.length-3)*(20)){
 			var slice = NewTerrainSlice(TerrainModel.seed);
@@ -40,6 +41,13 @@ var TerrainController = (function(){
 		check_for_old_slices();
 	};
 
+	var get_seed = function(){
+		seed = Math.floor(Math.random()*2000) + 1000;
+	};
+	
+	var set_seed = function(new_seed){
+		seed = new_seed;
+	};
 
 	var NewTerrainSlice = function(seed){
 		/* this takes care of appending new terrain slice to the generated terrain
@@ -160,6 +168,8 @@ var TerrainController = (function(){
 		init: init,
 		NewTerrainSlice: NewTerrainSlice,
 		MarkAsNewTerrainSlice: MarkAsNewTerrainSlice,
+		get_seed: get_seed,
+		set_seed: set_seed,
 		//NewSlicesAvailable: NewSlicesAvailable,
 		//GetNewTerrainSlices: GetNewTerrainSlices,
 	}

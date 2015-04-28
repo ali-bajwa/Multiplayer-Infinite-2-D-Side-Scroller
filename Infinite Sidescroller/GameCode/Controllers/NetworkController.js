@@ -220,6 +220,11 @@ var NetworkController = (function(){
 
 		conn.on('data', on_data_arrival);
 
+		MultiplayerSyncController.network_event_handler({
+			type: "new_connection",
+			network_id: id,
+		});
+
 	};
 
 	var connection_unsuccessful = function(error){
@@ -464,6 +469,7 @@ var NetworkController = (function(){
 		get_data: get_data,
 		clean_data: clean_data,
 		get_network_id: get_network_id,
+		send_to: send_to,
 	};
 })();
 

@@ -17,6 +17,7 @@ var MultiplayerSyncController = (function(){
 			delete_entity: EntityController.handle_delete,
 			keyboard_state: KeyboardController.handle_keyboard_change,
 			hero_sync: EntityController.handle_hero_sync,
+			terrain_seed: sync_seed,
 		}
 	};
 
@@ -369,25 +370,43 @@ var MultiplayerSyncController = (function(){
 		
 	};
 	
-	var network_event_handler = function(event_type){
+	var network_event_handler = function(network_event){
 		/**
 		* called from the network controller when certain events occur
 		*/
 		
-		switch (event_type) {
-			case 'case':
+		var type = network_event.type;
+		var id = network_event.network_id;
+		switch (type) {
+			case 'new_connection':
+				if(Config.Remote.master){
+					// if master, send the seed for terrain sync
+					NetworkController.send_to(id, {
+						op: "terrain_seed",
+						seed: TerrainController.get_seed(),
+					});
+				}
 				
 				break;
 			
 			default:
 				console.log("event_type", event_type, "doesn't have an action associated");
-				
-				
 		}
 	};
-	
-	
-	
+
+	var sync_seed = function(packet){
+		/**
+		* description
+		*/
+		
+		var seed = packet.seed;
+		if(seed != null){
+			TerrainController.set_seed(seed);
+		}else{
+			throw "seed is not defined";
+		}
+	};
+
 	return {
 		// declare public
 		init: init, 
@@ -401,6 +420,7 @@ var MultiplayerSyncController = (function(){
 		//send_delete_notifications: send_delete_notifications,
 		route_outcoming_packet: route_outcoming_packet,
 		route_incoming_packet: route_incoming_packet,
+		network_event_handler: network_event_handler,
 	};
 })();
 

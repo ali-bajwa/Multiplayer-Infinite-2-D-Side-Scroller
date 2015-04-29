@@ -4,10 +4,12 @@ var TerrainController = (function(){
 	/* this will be the physical representation of the terrain
 	 * currently it contains graphical bits, but that will change
 	 */
+	
 
 	var init = function(){
 	    include();
-	    TerrainModel.seed = Math.floor(Math.random()*2000) + 1000;//placeholder for seed
+			 TerrainModel.seed = 12345;
+	    //TerrainModel.seed = Math.floor(Math.random()*2000) + 1000;//placeholder for seed
 
 	};
 	
@@ -25,7 +27,7 @@ var TerrainController = (function(){
 		var cmds = KeyboardController.debug_commands();
 
 		if(cmds("new_slice")){
-			
+			console.log(TerrainModel.seed);
 			var slice = NewTerrainSlice();
 			TerrainModel.terrain_slices_queue.push(slice);
 		}

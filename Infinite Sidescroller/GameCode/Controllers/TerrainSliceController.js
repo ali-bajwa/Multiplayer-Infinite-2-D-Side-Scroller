@@ -116,9 +116,11 @@ var TerrainSliceController = (function () {
 						pit_len = 0; //any pits being spawned have been interrupted
 						if (i == ground_lvl){
 							slice.grid[i][j].position = "surface";
-							if(getRandomNumber(seed)%100 < spike_frequency){//check for random spike
-								slice.grid[i - 1][j] = spawnSpike(x, y - slice.cell_w); //create a spike above the current block
-								seed = getRandomNumber(seed) + 21;
+							if(getRandomNumber(seed)%100 < spike_frequency && j > 0){//check for random spike
+								if(slice.grid[i-1][j-1] == null && slice.grid[i][j-1].kind != 0){
+									slice.grid[i - 1][j] = spawnSpike(x, y - slice.cell_w); //create a spike above the current block
+									seed = getRandomNumber(seed) + 21;
+								}
 							}
 						}else{
 						slice.grid[i][j].position = "underground";

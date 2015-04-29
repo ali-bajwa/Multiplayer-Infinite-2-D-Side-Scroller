@@ -2,7 +2,7 @@ var AssetModel = new function(){
 	// As always, almost anything is initialized in the InitController
 	
 	this.loader;
-
+//mackerel
 	this.manifest = [ // defining resources to be loaded in bulk with preload.js
 			{src: "greek_warrior.png", id: "greek_warrior"},
 			//{src:, id:},

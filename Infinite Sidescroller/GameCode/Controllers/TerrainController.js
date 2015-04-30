@@ -8,8 +8,7 @@ var TerrainController = (function(){
 
 	var init = function(){
 	    include();
-			 TerrainModel.seed = 12345;
-	    //TerrainModel.seed = Math.floor(Math.random()*2000) + 1000;//placeholder for seed
+	    TerrainModel.seed = Math.floor(Math.random()*2000) + 1000;//placeholder for seed
 
 	};
 	

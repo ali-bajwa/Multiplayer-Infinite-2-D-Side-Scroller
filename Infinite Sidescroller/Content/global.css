@@ -3,6 +3,15 @@
 
 *{margin:0;padding:0;}
 
+hr {
+    border: 0;
+    height: 1px;
+    background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgb(167, 163, 131), rgba(0,0,0,0));
+    background-image:    -moz-linear-gradient(left, rgba(0,0,0,0), rgb(167, 163, 131), rgba(0,0,0,0));
+    background-image:     -ms-linear-gradient(left, rgba(0,0,0,0), rgb(167, 163, 131), rgba(0,0,0,0));
+    background-image:      -o-linear-gradient(left, rgba(0,0,0,0), rgb(167, 163, 131), rgba(0,0,0,0));
+}
+
 html {
     position: relative;
     min-height: 100%;
@@ -82,6 +91,7 @@ body {
 }
 
 .plaque p, .plaque h1, .plaque h2 {
+    margin: 10px 0px 10px 0px;
     color: rgba(191, 187, 151, 0.8);
     text-shadow: 1px 4px 6px #e7e2b6, 0 0 0 #000, 1px 4px 6px #e7e2b6;
 }

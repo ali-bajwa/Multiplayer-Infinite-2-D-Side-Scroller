@@ -60,7 +60,7 @@ body {
     margin-bottom: 50px;   
 }
 
-.front_page_news {
+.plaque {
     overflow: hidden;
     width: 960px;
     margin: 0 auto;
@@ -81,7 +81,7 @@ body {
     width: 100%;
 }
 
-.front_page_news p, .front_page_news h1, .front_page_news h2 {
+.plaque p, .plaque h1, .plaque h2 {
     color: rgba(191, 187, 151, 0.8);
     text-shadow: 1px 4px 6px #e7e2b6, 0 0 0 #000, 1px 4px 6px #e7e2b6;
 }

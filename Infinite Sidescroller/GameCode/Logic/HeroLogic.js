@@ -8,30 +8,26 @@ var HeroLogic = (function(){
 			instantiate (most likely in the spawn function) like that:
 			var new_entity_instance = new Hero();
 		*/
-		this.hp = 100;
-		this.wound = false;
-		this.damage_taken = 1;
-		this.damage = 1;
-		this.jumps = 0;
+		entity = new EntityController.create_abstract_entity();
 		
-		this.score = 0;
-		this.state = "walk";
-		this.an_frame =0;
-		this.death_tick=0;
-		this.jump_tick=0;
-		this.walk_tick=0;
-		this.is_walk = false;
-		this.is_jump = false;
-		this.death = false;
-		/*
-			whenever the up,right,left buttons are pressed the 
-			corosponding value is set to 0 and the other are increased by1
-			the value of the boolean corospoding to the button pressed is set to true
-		*/
-		this.up =false;
-		this.right=false;
-		this.left=false;
-		this.facing = "right"; //or will be left
+		entity.hp = 100;
+		entity.speed = 8;
+		entity.hit_taken = false;
+		entity.damage_taken = 0;
+		entity.damage = 1;
+		entity.is_walking = false;
+		
+		entity.jumps = 0;
+		entity.decay_duration = 35;//time between decay animation and deletion
+		entity.death_duration = 60;//time between death and deletion
+		entity.jump_tick=0;
+
+		entity.direction = 1; //default direction = left
+		
+		entity.needs_graphics_update = false; //accessed by renderer for animation purposes
+		entity.animation = "stand"; //accessed by renderer for animation purposes
+		
+		return entity;
 	};
 
 	var init = function(){
@@ -51,13 +47,11 @@ var HeroLogic = (function(){
 			and finally you HAVE TO(!!!) return the instance you just created from this function
 		*/
 
-		var hero = new Hero();
 
+		var hero = new Hero();
+		hero.type = "hero";
 		hero.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, hero);
 
-		var id = IdentificationController.assign_id(hero);
-		IdentificationController.load_hero(hero.id);
-		
 		hero.hp = 100;
 		hero.wound = false;
 		hero.jumps = 0;
@@ -71,133 +65,114 @@ var HeroLogic = (function(){
 		/* Is ran each tick from the EntityController.update for every registered
 			entity of this type. I given entity_instance
 		*/
+		if(hero.player_id == NetworkController.get_network_id()){
+			var cmds = KeyboardController.movement_commands();
+		}else{
+			var cmds = KeyboardController.get_remote_movement(hero.player_id);
+		}
 
-		var cmds = KeyboardController.movement_commands();
-
+		hero.direction_previous = hero.direction;
+		hero.x_previous = hero.body.GetWorldCenter().x;
+		hero.y_previous = hero.body.GetWorldCenter().y;
        
-        //End Score Tracking
-
-		if(hero.hp <= 0)
-		{
-			hero.hp=0;
-			if(hero.death == false){
-				change_state(hero,"death");
-				hero.death = true;
-			}
-			hero.death_tick++;
-			if (hero.death_tick == 70) {
-				despawn(hero);	
+		if(hero.hp <= 0){
+			hero.die();
+		}else{
+			hero.is_walking = false;	
+			
+			if(cmds("right")){
+				 if(hero.jumps==0){
+					hero.change_animation("walk");
+					hero.is_walking = true;
+				}
+				hero.direction = true;//direction = right
+				hero.move(hero.speed);
 			}
 			
-		}
-		else{
-			if(cmds("right")){
-				 if(hero.jumps==0&&hero.is_walk == false){
-					change_state(hero,"walk");
-					hero.is_walk = true;
-				}
-				if(hero.right == false){
-					hero.right = true;
-					hero.left = false;
-				}
-				
-				move_right(hero);
-			}
 			if(cmds("left")){
-				if(hero.jumps==0&&hero.is_walk == false){
-					change_state(hero,"walk");
-					hero.is_walk = true;
+				if(hero.jumps==0){
+					hero.change_animation("walk");
+					hero.is_walking = true;
 				}
-				
-				if(hero.left == false){
-					hero.left = true;
-					hero.right = false;
-				}
-				move_left(hero);
+				hero.direction = false;//direction = left
+				hero.move(hero.speed);
 			}
+			
 			if(cmds("down")){
 				slam(hero);
-				
+				stop_hero(hero);
 			}
+			
 			if(cmds("up")){
-				hero.is_walk=false;
 				jump(hero);
-				
 			}
-		}
-		if(hero.wound)
-		{
-			hero.hp -= hero.damage_taken;
-			console.log("Taking damage");
-		}
+			
+			if(!hero.is_walking && hero.animation != "jump" && hero.body.GetLinearVelocity().y == 0){
+				hero.change_animation("stand");
+				hero.jump_tick = 0;
+			}
+			
+			if(hero.animation=="jump"){
+				if(hero.jump_tick == 1){
+					hero.change_animation("jump");
+				}
+				hero.jump_tick++;
+				if(hero.jump_tick >= 20){
+					hero.change_animation("finish");
+					if(hero.jumps == 0){
+						hero.animation = "finish";
+					}
+				}
+			}
 		
-		if (hero.body.GetWorldCenter().x < WorldController.get_movement_edge() + hero.body.GetUserData().def.width/2) {
-			stop_hero(hero);
-			console.log("working");
+			if(hero.hit_taken){
+				hero.take_damage();
+			}
+		
+			if (hero.body.GetWorldCenter().x < WorldController.get_movement_edge() + hero.body.GetUserData().def.width/2){
+				stop_hero(hero);
+			}
 		}
-		//if (hero.body.GetWorldCenter().y > 22) {
-			//hero.hp = 0;
-			//console.log("drop of death");
-		//}
 	};
 
-	var despawn = function(hero){
-		/**
-		* called when hero should despawn (die);
-		*/
 
-		EntityController.delete_entity(hero);
-		console.log("Player Is Dead");
-	};
-	
-	
-	var change_state = function(hero, new_state){
-		hero.state = new_state;
-		hero.walk_tick = 0;
-		hero.death_tick = 0;
-		hero.jump_tick = 0;
-	};
 	var begin_contact = function(contact, info){
+		var hero = info.Me.entity;
+		var other = info.Them.entity;
 		if (info.Me.fixture_name == "bottom"){
-			if(info.Them.fixture_name == "top" || info.Them.entity.kind == 1 || info.Them.entity.kind == 2){
-				info.Me.entity.jumps = 0;
+			if(info.Them.fixture_name == "top" || other.kind == 1 || other.kind == 2){
+				hero.jumps = 0;//if colliding with surface, reset jumps
 			}
-			if(info.Them.entity.kind == 3){
-			    if (info.Me.entity.hp > 0) {
-			        info.Me.entity.wound = true;
-			    }
-				info.Me.entity.damage_taken = info.Them.entity.damage;
+			if(other.kind == 3){
+				if (hero.hp > 0){
+					hero.hit_taken = true;
+					hero.damage_taken = other.damage;
+				}
 			}
 		}
-		if(info.Me.fixture_name != "bottom" && info.Them.entity.can_attack){
-			if(typeof info.Them.entity.kind === 'undefined'){
-				//stupid chain of box2d functions returns {x:half_height,y:half_width}
-				var my_extents = info.Me.entity.body.GetFixtureList().GetNext().GetNext().GetNext().GetNext().GetAABB().GetExtents();
-				var my_coordinates = info.Me.entity.body.GetWorldCenter();
-				var other_extents = info.Them.entity.body.GetFixtureList().GetNext().GetNext().GetNext().GetNext().GetAABB().GetExtents();
-				var other_coordinates = info.Them.entity.body.GetWorldCenter();
+		if(info.Me.fixture_name != "bottom" && other.can_attack){
+			if(other.kind == null){
+				var my_extents = hero.get_fixture(hero,"main").GetAABB().GetExtents();
+				var my_coordinates = hero.body.GetWorldCenter();
+				var other_extents = hero.get_fixture(other,"main").GetAABB().GetExtents();
+				var other_coordinates = other.body.GetWorldCenter();
 				//prevents taking damage while on top of enemies
 				if (!(my_coordinates.y <= other_coordinates.y - (my_extents.y + other_extents.y - 0.5))) {
-				    if (info.Me.entity.hp > 0) {
-				        info.Me.entity.wound = true;
-				    }
-					info.Me.entity.damage_taken = info.Them.entity.damage;
+					if (hero.hp > 0) {
+						hero.hit_taken = true;
+						hero.damage_taken = other.damage;
+					}
 				}
-			}else{
-				info.Me.entity.wound = true;
-				info.Me.entity.damage_taken = info.Them.entity.damage;
+			}else{//if they're spikes, take damage no matter what
+				hero.hit_taken = true;
+				hero.damage_taken = other.damage;
 			}
 		}
-				
 	};
-
-	var take_hit = function(hero, amount){
-	    hero.hp -= amount;
-	}
 
 	var end_contact = function(contact, info){
 			
-		info.Me.entity.wound = false;
+		info.Me.entity.hit_taken = false;
 	};
 
 	var stop_hero = function (hero) {
@@ -211,7 +186,7 @@ var HeroLogic = (function(){
 		var w = hero.body.GetUserData().def.width/2;
 		var pos = new B2d.b2Vec2(WorldController.get_movement_edge() + w, body.GetWorldCenter().y)
 		var vel = body.GetLinearVelocity();
-		if(vel.x < 0){
+		if(vel.x < 0 || body.GetWorldCenter().x > pos.x){
 			var vel = new B2d.b2Vec2(0, vel.y);
 			body.SetLinearVelocity(vel);
 		}
@@ -223,80 +198,71 @@ var HeroLogic = (function(){
 	    var body = hero.body;
 	    body.ApplyImpulse(new B2d.b2Vec2(0, 20), body.GetWorldCenter());
 	};
+	var move_left = function(hero){
+		var body = hero.body;
+		var velocity = body.GetLinearVelocity();
+		velocity.x = -5;
+		body.SetLinearVelocity(velocity); // body.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		body.SetAwake(true);
+		//hero.x += 10; // old
+		//hero.x = (body.GetPosition().x + 1.5/2) * 30 ; 
+	};
+
 	var jump = function(hero){
 	    var body = hero.body;
 	    var w = hero.body.GetUserData().def.width / 2;
 	    var pos = new B2d.b2Vec2(WorldController.get_movement_edge() + w, body.GetWorldCenter().y)
 	    var vel = body.GetLinearVelocity();
-	    console.log(hero.jumps);
+		//console.log(hero.jumps);
 		if (hero.jumps == 0){
-		    change_state(hero, "jump");
+			hero.change_animation("jump");
 			var vel = new B2d.b2Vec2(vel.x, -18);
 			body.SetLinearVelocity(vel);
 			hero.body.SetAwake(true);
 		    hero.jumps += 1;
 		}
-		else if (hero.jumps == 1 && body.GetLinearVelocity().y > -1) {
-		    change_state(hero, "jump");
-		    var min_check = vel.y - 18;
-		    if (min_check > -9) {
-		        min_check = -9;
-		    }
-		    var vel = new B2d.b2Vec2(vel.x, min_check);
-		    body.SetLinearVelocity(vel);
-		    hero.body.SetAwake(true);
-		    hero.jumps += 1;
+		else if (hero.jumps == 1 && body.GetLinearVelocity().y > -1){
+			hero.change_animation("jump");
+			var min_check = vel.y - 18;
+			if (min_check > -9){
+				min_check = -9;
+			}
+			var vel = new B2d.b2Vec2(vel.x, min_check);
+			body.SetLinearVelocity(vel);
+			hero.body.SetAwake(true);
+			hero.jumps += 1;
 		}
+	};
 
-		//hero.y = body.GetPosition().y * 30;
 	
-	};
-
-	var set_coordinates = function(position_vector, hero){
-		// TODO: remove;
-		// temporary/testing
-		hero.x = (position_vector.x - 1.5/2) * 30 ;
-		hero.y = (position_vector.y + 2.5/2) * 30 ;
-
-	};
-
 	var b2b_get_coordinates = function(hero){
 		return hero.body.GetWorldCenter();
 	};
 
-	var move_left = function(hero){
-		var velocity = hero.body.GetLinearVelocity();
-		velocity.x = -8;
-		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-		hero.body.SetAwake(true);
-	};
+	//var move_left = function(hero){
+		//var velocity = hero.body.GetLinearVelocity();
+		//move(hero, velocity.x - 5, velocity.y)
 
-	var move_right = function(hero){
-		var velocity = hero.body.GetLinearVelocity();
-		velocity.x = +8;
-		hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
-		hero.body.SetAwake(true);
-	};
+	//};
 
-	var move = function(offset_x, offset_y, hero){
-		// unimplemented
-		// should it hard-set position (not safe!)
-		// or just allow to set any velocity/impulse vector?
-	};
-	var get_hero_x = function(){
-			return hero.body.GetWorldCenter().x;
-	
-	};
+	//var move_right = function(hero){
+		//var velocity = hero.body.GetLinearVelocity();
+		//move(hero, velocity.x + 5, velocity.y)
+	//};
+
+	//var move = function(hero, x, y){
+		//var velocity = new B2d.b2Vec2(x, y);
+		//hero.body.SetLinearVelocity(velocity); // hero.SetLinearVelocity(new b2Vec2(5, 0)); would work too
+		//hero.body.SetAwake(true);
+	//};
 
 	return {
 		// declare public
 		init: init, 
 		spawn: spawn,
-		despawn: despawn,
 		tick_AI: tick_AI,
 		begin_contact: begin_contact,
 		end_contact: end_contact,
-		get_hero_x: get_hero_x,
 	};
 })();
 

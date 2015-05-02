@@ -53,6 +53,7 @@ var GraphicsController = (function(){
 			"Hyena": HyenaRenderer,
 			"terrain_cell": TerrainCellRenderer,
 			"terrain_slice": TerrainSliceRenderer,
+			"companion": EsteemedCompanionRenderer,
 		};
 
 		get_asset = AssetController.get_asset; // for quicker access
@@ -80,6 +81,7 @@ var GraphicsController = (function(){
 		};
 
 		BackgroundRenderer.init();
+		HUDRenderer.init();
 
 	};
 
@@ -98,6 +100,8 @@ var GraphicsController = (function(){
 		synchronize_to_physical_bodies();
 
 		BackgroundRenderer.render();
+		
+		HUDRenderer.render();
 		
 		GraphicsModel.stage.update();
 	};
@@ -176,10 +180,33 @@ var GraphicsController = (function(){
 			var renderer = type_renderer_table[type];
 
 			for(var id in table){
-				renderer.render(table[id], PrivateGraphics);
+				sprite_animate(table[id], PrivateGraphics);
 			}
 		}
 		
+	};
+	
+	var sprite_animate = function(sprite){
+		//set graphical representation based on the animation variable determined by the AI
+		//set animation
+		if(sprite.physical_instance.needs_graphics_update){
+			var animation = sprite.physical_instance.animation;
+			sprite.gotoAndPlay(animation)
+		}
+		
+		//set direction
+		if (sprite.physical_instance.direction){ //if direction == right, flip right
+			sprite.scaleX = -1;
+		}else{ //else flip left
+			sprite.scaleX = 1;
+		}
+
+		//set alpha if blinking
+		if(sprite.physical_instance.blinking && sprite.physical_instance.blink_timer%2 == 1){
+			sprite.alpha = 0;
+		}else{
+			sprite.alpha = 1;
+		}
 	};
 
 	//called from update(), maintains camera position

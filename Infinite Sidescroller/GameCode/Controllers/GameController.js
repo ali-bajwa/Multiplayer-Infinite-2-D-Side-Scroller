@@ -12,6 +12,8 @@ var GameController = (function(){
 		 * main function pretty much
 		 * everyghing else is called from here every tick
 		 */
+		KeyboardController.update(delta);
+
 	    var cmds = KeyboardController.pause_commands();
 	    if (cmds("pause") && GameModel.pauseCounter > 10 && GraphicsController.get_health() > 0) {
 	        createjs.Ticker.paused = !createjs.Ticker.paused;
@@ -29,15 +31,20 @@ var GameController = (function(){
 			//TerrainController.generate_terrain(); 
 			//PlayerController.update();
 		
+			IdentificationController.update(delta);
 			WorldController.update(delta);
 
-			TerrainController.update();
-			EntityController.update();
+			TerrainController.update(delta);
+			EntityController.update(delta);
 
 			// Should be called after all movement of objects is done:
-			HUDController.update();
+			//HUDController.update();
 			//BackgroundController.update();
 			GraphicsController.update();
+			GraphicsController.update(delta);
+
+			MultiplayerSyncController.update(delta);
+			NetworkController.update(delta);
 		}
 	};
 

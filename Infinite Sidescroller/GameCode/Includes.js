@@ -32,7 +32,8 @@ var Include = function(){
 			"WorldController",
 			"IdentificationController",
 			"RegisterAsController",
-			"HUDController",
+			"NetworkController",
+			"MultiplayerSyncController",
 		],
 
 		Models: [
@@ -48,7 +49,8 @@ var Include = function(){
 			"WorldModel",
 			"EntityModel",
 			"RegisterAsModel",
-			"HUDModel",
+			"NetworkModel",
+			"MultiplayerSyncModel",
 		],
 
 		Other: [
@@ -67,7 +69,9 @@ var Include = function(){
 			"HyenaRenderer",
 			"TerrainSliceRenderer",
 			"BackgroundRenderer",
+			"HUDRenderer",
 
+			"EsteemedCompanionRenderer",
 		],
 
 		Logic: [
@@ -75,6 +79,7 @@ var Include = function(){
 			"HeroLogic",
 			"GriffinLogic",
 			"HyenaLogic",
+			"EsteemedCompanionLogic",
 		],
 
 	};//end module_names
@@ -96,8 +101,9 @@ var Include = function(){
 			EntityController: require("./Controllers/EntityController.js"),
 			IdentificationController: require("./Controllers/IdentificationController.js"),
 			RegisterAsController: require("./Controllers/RegisterAsController.js"),
-			HUDController: require("./Controllers/HUDController.js"),
 			
+			NetworkController: require("./Controllers/NetworkController.js"),
+			MultiplayerSyncController: require("./Controllers/MultiplayerSyncController.js"),
 			
 			// Models
 
@@ -113,9 +119,9 @@ var Include = function(){
 			IdentificationModel: require("./Models/IdentificationModel.js"),
 			EntityModel: require("./Models/EntityModel.js"),
 			RegisterAsModel: require("./Models/RegisterAsModel.js"),
-			HUDModel: require("./Models/HUDModel.js"),
-			
-				
+			NetworkModel: require("./Models/NetworkModel.js"),
+			MultiplayerSyncModel: require("./Models/MultiplayerSyncModel.js"),
+						
 			// Other stuff
 			
 			Config: require("./Config.js"),
@@ -132,17 +138,19 @@ var Include = function(){
 			TerrainCellRenderer: require("./Renderers/TerrainCellRenderer.js"),
 			TerrainSliceRenderer: require("./Renderers/TerrainSliceRenderer.js"),
 			BackgroundRenderer: require("./Renderers/BackgroundRenderer.js"),
+			HUDRenderer: require("./Renderers/HUDRenderer.js"),
 			
 			
 			
 			
+			EsteemedCompanionRenderer: require("./Renderers/EsteemedCompanionRenderer.js"),
 			
 			// Logic
 			AntLogic: require("./Logic/AntLogic.js"),
 			GriffinLogic: require("./Logic/GriffinLogic.js"),
 			HyenaLogic: require("./Logic/HyenaLogic.js"),
 			HeroLogic: require("./Logic/HeroLogic.js"),
-			
+			EsteemedCompanionLogic: require("./Logic/EsteemedCompanionLogic.js"),
 			
 
 		};

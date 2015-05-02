@@ -83,6 +83,7 @@
 			request_hero(player_id)
 		}
 
+
 -receive_hero_request(requester's_id){
 		spawn_immediate_companion(requester's_id)
 		spawn_hero_notification(requester's_id)
@@ -140,3 +141,8 @@ universal_spawn(type){
 	var logic = Entity_Model.logic_tables.type.spawn
 	return logic;
 }
+=======
+
+	}
+*/
+>>>>>>> p2p_experiment

@@ -4,6 +4,7 @@ var TerrainController = (function(){
 	/* this will be the physical representation of the terrain
 	 * currently it contains graphical bits, but that will change
 	 */
+	
 
 	var init = function(){
 	    include();
@@ -25,10 +26,11 @@ var TerrainController = (function(){
 		var cmds = KeyboardController.debug_commands();
 
 		if(cmds("new_slice")){
-			
+			console.log(TerrainModel.seed);
 			var slice = NewTerrainSlice();
 			TerrainModel.terrain_slices_queue.push(slice);
 		}
+		
 
 		if(WorldController.get_movement_edge() > (TerrainModel.terrain_slices_queue.length-3)*(20)){
 			var slice = NewTerrainSlice(TerrainModel.seed);
@@ -40,6 +42,13 @@ var TerrainController = (function(){
 		check_for_old_slices();
 	};
 
+	var get_seed = function(){
+		return TerrainModel.seed;
+	};
+	
+	var set_seed = function(new_seed){
+		TerrainModel.seed = new_seed;
+	};
 
 	var NewTerrainSlice = function(seed){
 		/* this takes care of appending new terrain slice to the generated terrain
@@ -160,6 +169,8 @@ var TerrainController = (function(){
 		init: init,
 		NewTerrainSlice: NewTerrainSlice,
 		MarkAsNewTerrainSlice: MarkAsNewTerrainSlice,
+		get_seed: get_seed,
+		set_seed: set_seed,
 		//NewSlicesAvailable: NewSlicesAvailable,
 		//GetNewTerrainSlices: GetNewTerrainSlices,
 	}

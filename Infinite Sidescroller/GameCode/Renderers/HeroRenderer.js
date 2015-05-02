@@ -14,25 +14,26 @@ var HeroRenderer = (function(){
 			"images": [get_asset("Hero")], //get_asset("HeroR"), get_asset("HeroW")
 			"frames": { "regX": 25, "regY": 25, "height": 50, "width": 50, "count": 16},
 			"animations": {
-				stand: {
+				"stand": {
 				frames: [0]
 				},
-				finish: {
+				"finish": {
 					frames: [8]
 				},				
-				walk: {
+				"walk": {
 					 frames: [0,1, 2],
 					 speed: 0.4
 				 },
-                jump: {
+				"jump": {
 					frames: [3, 4, 5, 6, 7, 8],
 					speed: 0.3
 				},
-                death: {
+				"death": {
 					frames: [9, 10, 11, 12, 13, 14, 15],
-					speed: 0.3
+					speed: 0.3,
+					next: "death"
 				},
-				deathFinal: {
+				"decay": {
 					frames: [15]
 				},
 			}
@@ -50,15 +51,14 @@ var HeroRenderer = (function(){
 		hero_animation.graphics_id = "hero";
 		GraphicsController.set_reg_position(hero_animation, -25, -25);
 		GraphicsController.reg_for_render(hero_animation, entity_hero);
-		GraphicsController.follow(entity_hero.id);
+		if(entity_hero.player_id == NetworkController.get_network_id()){
+			GraphicsController.follow(entity_hero.id);
+		}
 
 	};
-
+	/*
 	var render = function(hero){
-		/* 	is ran each tick from GraphicsController, for every registered object of this type
-			is given >graphics_instance< parameter, which is also supposed to contain
-			physical_instance property containing entity_instance, if it was attched correctly
-		*/
+
 		if(hero.physical_instance.state=="walk"&&hero.physical_instance.is_walk == true){
 			if(hero.physical_instance.walk_tick ==1){
 				hero.gotoAndPlay("walk");
@@ -93,9 +93,9 @@ var HeroRenderer = (function(){
 		if(hero.physical_instance.state=="stand"){
 			hero.gotoAndPlay("stand");
 		}
-		console.log(hero.physical_instance.state);
+		//console.log(hero.physical_instance.state);
 		if (hero.physical_instance.state == "death") {
-		    console.log(hero.physical_instance.death_tick);
+			//console.log(hero.physical_instance.death_tick);
 			if(hero.physical_instance.death_tick ==1){
 			    hero.gotoAndPlay("death");
 			}
@@ -111,12 +111,13 @@ var HeroRenderer = (function(){
 			hero.scaleX = 1;
 		}
 	};
+	*/
 
 	return {
 		// declare public
 		init: init, 
 		register: register,
-		render: render,
+		//render: render,
 	};
 })();
 

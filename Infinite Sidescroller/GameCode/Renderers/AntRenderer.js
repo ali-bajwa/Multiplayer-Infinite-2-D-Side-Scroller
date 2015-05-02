@@ -44,11 +44,33 @@ var AntRenderer = (function(){
 			physical_instance property containing entity_instance, if it was attched correctly
 		*/
 
-		ant_special_render_temp(ant); 
+		ant_animate(ant); 
 	};
+	var ant_animate = function(ant){
+		//set graphical representation based on the animation variable determined by the AI
+		//set animation
+		if(ant.physical_instance.needs_graphics_update){
+			var animation = ant.physical_instance.animation;
+			ant.gotoAndPlay(animation)
+		}
+		
+		//set direction
+		if (ant.physical_instance.direction){ //if direction == right, flip right
+			ant.scaleX = -1;
+		}else{ //else flip left
+			ant.scaleX = 1;
+		}
 
+		//set alpha if blinking
+		if(ant.physical_instance.blinking && ant.physical_instance.blink_timer%2 == 1){
+			ant.alpha = 0;
+		}else{
+			ant.alpha = 1;
+		}
+	};
+	/*
 	var ant_special_render_temp = function(ant){
-		/* how to handle special render? TEMPORARY */
+		
 
 		
 		if(ant.physical_instance.AI_state == "death"&& ant.physical_instance.aliveflag){
@@ -75,6 +97,7 @@ var AntRenderer = (function(){
 		}
 
 	};
+	*/
 
 	return {
 		// declare public

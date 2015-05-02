@@ -4,8 +4,8 @@ var BackgroundRenderer = (function(){
 	var season_image;
 	var season_threshold;
 	
-	var hero_progress;
-	var hero_progress_to_level;
+	var season_progress;
+	var season_progress_to_level;
 	var hero_current_level;
 		
 	var init = function(){
@@ -15,29 +15,26 @@ var BackgroundRenderer = (function(){
 		season_image = ["Winter", "Spring", "Summer", "Fall"];
 		season_threshold = 2; //So seasons only update once
 		
-		hero_progress = 0;
-		hero_progress_to_level = 199;//season_image[cycle].width*2 + Config.SCREEN_W/2;
-		hero_current_level = hero_progress_to_level;
+		season_progress = 0;
+		season_progress_to_level = 199;//season_image[cycle].width*2 + Config.SCREEN_W/2;
+		hero_current_level = season_progress_to_level;
 		
 		generate_season("Winter", GraphicsController.get_stage().canvas.width, 0);
 	};
 	
 	var render = function(){
 
-		var hero = IdentificationController.get_hero();
-		var hero_x = hero.body.GetWorldCenter().x;
-
-		if(Math.round(hero_x) > hero_current_level){
-			hero_progress++;
-			hero_current_level += hero_progress_to_level;
-			hero.score += (hero_progress*500);
+		if(Math.round(WorldController.get_progress()) > hero_current_level){
+			season_progress++;
+			hero_current_level += season_progress_to_level;
+			WorldController.increase_score(season_progress*500);
 		}
 		
 		//Potentially change seasons based on hero progress
-		change_seasons(hero_progress);
+		change_seasons(season_progress);
 		
 		//perform parallax effect with background
-		background_loop(hero_x,hero_progress);
+		background_loop(WorldController.get_progress(),season_progress);
 	};
 	
 	//Generates tiled background for season

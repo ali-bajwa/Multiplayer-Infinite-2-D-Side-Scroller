@@ -173,6 +173,8 @@
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\GameDB.cs" />
+    <Compile Include="Models\GameDBEntities.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\PlayerSessionDBContext.cs" />
     <Compile Include="Models\ScoreModels.cs" />
@@ -531,6 +533,8 @@
     <Content Include="GameCode\Controllers\IdentificationController.js" />
     <Content Include="GameCode\Controllers\InitController.js" />
     <Content Include="GameCode\Controllers\KeyboardController.js" />
+    <Content Include="GameCode\Controllers\MultiplayerSyncController.js" />
+    <Content Include="GameCode\Controllers\NetworkController.js" />
     <Content Include="GameCode\Controllers\PhysicsController.js" />
     <Content Include="GameCode\Controllers\RegisterAsController.js" />
     <Content Include="GameCode\Controllers\TerrainController.js" />
@@ -538,6 +542,9 @@
     <Content Include="GameCode\Controllers\TestController.js" />
     <Content Include="GameCode\Controllers\WorldController.js" />
     <Content Include="GameCode\Documentation\DON%27T_README.txt" />
+    <Content Include="GameCode\Documentation\Enemy Documentation.txt" />
+    <Content Include="GameCode\Documentation\pseudocode for networking stuff.txt" />
+    <Content Include="GameCode\Documentation\table_of_contents.txt" />
     <Content Include="GameCode\GameUtility.js" />
     <Content Include="GameCode\Includes.js" />
     <Content Include="GameCode\index.html" />
@@ -545,17 +552,20 @@
     <Content Include="GameCode\lib\jquery-1.11.2.min.js" />
     <Content Include="GameCode\lib\qunit-1.17.1.js" />
     <Content Include="GameCode\Logic\AntLogic.js" />
+    <Content Include="GameCode\Logic\EsteemedCompanionLogic.js" />
     <Content Include="GameCode\Logic\GriffinLogic.js" />
     <Content Include="GameCode\Logic\HeroLogic.js" />
+    <Content Include="GameCode\Logic\HyenaLogic.js" />
     <Content Include="GameCode\main.js" />
     <Content Include="GameCode\Models\AntModel.js" />
     <Content Include="GameCode\Models\AssetModel.js" />
     <Content Include="GameCode\Models\EntityModel.js" />
     <Content Include="GameCode\Models\GameModel.js" />
     <Content Include="GameCode\Models\GraphicsModel.js" />
-    <Content Include="GameCode\Models\GriffinModel.js" />
     <Content Include="GameCode\Models\IdentificationModel.js" />
     <Content Include="GameCode\Models\KeyboardModel.js" />
+    <Content Include="GameCode\Models\MultiplayerSyncModel.js" />
+    <Content Include="GameCode\Models\NetworkModel.js" />
     <Content Include="GameCode\Models\PhysicsModel.js" />
     <Content Include="GameCode\Models\RegisterAsModel.js" />
     <Content Include="GameCode\Models\TerrainModel.js" />
@@ -567,9 +577,13 @@
     <Content Include="GameCode\qunit-1.17.1.css" />
     <Content Include="GameCode\Renderers\AntRenderer.js" />
     <Content Include="GameCode\Renderers\BackgroundRenderer.js" />
+    <Content Include="GameCode\Renderers\EsteemedCompanionRenderer.js" />
     <Content Include="GameCode\Renderers\GriffinRenderer.js" />
     <Content Include="GameCode\Renderers\HeroRenderer.js" />
+    <Content Include="GameCode\Renderers\HUDRenderer.js" />
+    <Content Include="GameCode\Renderers\HyenaRenderer.js" />
     <Content Include="GameCode\Renderers\TerrainCellRenderer.js" />
+    <Content Include="GameCode\Renderers\TerrainSliceRenderer.js" />
     <Content Include="Global.asax" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -765,6 +779,10 @@
     <Content Include="GameCode\Controllers\GraphicsController.js.rej" />
     <Content Include="GameCode\Documentation\javascript.custom.snippets" />
     <Content Include="GameCode\Logic\HeroLogic.js.rej" />
+    <Content Include="package.json" />
+    <Content Include="GameCode\Documentation\Click Me.doc" />
+    <Content Include="GameCode\Controllers\EntityController.js.rej" />
+    <Content Include="GameCode\Controllers\Last Section OS" />
     <None Include="Properties\PublishProfiles\Sidescroller.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
@@ -801,7 +819,10 @@
     <Content Include="Views\Home\Tutorial.cshtml" />
     <Content Include="Views\Game\Index.cshtml" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="bin\" />
+    <Folder Include="obj\Release\TempPE\" />
+  </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
     <None Include="Project_Readme.html" />
@@ -850,6 +871,6 @@
   <Target Name="BeforeBuild">
   </Target>-->
   <Target Name="AfterBuild">
-    <Exec Command="node_modules\.bin\browserify -d GameCode\main.js -o GameCode\bundle.js"/>
+    <Exec Command="node_modules\.bin\browserify -d GameCode\main.js -o GameCode\bundle.js" />
   </Target>
 </Project>

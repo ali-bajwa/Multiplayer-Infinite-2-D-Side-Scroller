@@ -4,6 +4,7 @@
 *{margin:0;padding:0;}
 
 hr {
+    clear: both;
     border: 0;
     height: 1px;
     background-image: -webkit-linear-gradient(left, rgba(0,0,0,0), rgb(167, 163, 131), rgba(0,0,0,0));
@@ -90,8 +91,7 @@ body {
     width: 100%;
 }
 
-.plaque p, .plaque h1, .plaque h2 {
-    margin: 10px 0px 10px 0px;
+.plaque p, .plaque h1, .plaque h2, .plaque h3 {
     color: rgba(191, 187, 151, 0.8);
     text-shadow: 1px 4px 6px #e7e2b6, 0 0 0 #000, 1px 4px 6px #e7e2b6;
 }
@@ -216,6 +216,28 @@ nav ul li:hover #b {
     display: inline;
 }
 /*END NAV BAR*/
+
+/*LORE/BESTIARY PAGE*/
+.beast {
+    margin: 10px 0px 10px 0px;
+}
+
+.beast h3 {
+    text-align: center;
+}
+
+.beast img {
+    height: 200px;
+    width: auto;
+    float: left;
+    margin: 10px;
+}
+
+.beast p {
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+/*END LORE/BESTIARY PAGE*/
 
 /*GAME PAGE*/
 .game_canvas {

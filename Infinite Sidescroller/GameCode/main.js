@@ -38,12 +38,7 @@ window.sidescroller_game = (function namespace(){
 		
 	var load_game = function(mode, session_id, player_id)
 	{
-
-
-		Config.Init.mode = mode;
-		Config.Init.session_id = session_id;
-		Config.Init.player_id = player_id;
-
+	
 		Includes.init(); // first
 		include(); // second
 

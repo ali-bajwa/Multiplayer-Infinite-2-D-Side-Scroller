@@ -13,6 +13,10 @@ var InitController = (function(){
 	var init = function(mode, session_id, player_id){
 		include();
 
+		Config.Init.mode = mode;
+		Config.Init.session_id = session_id;
+		Config.Init.player_id = player_id;
+
 		enable_arrowkey_scroll(false);
 		setup_screen();
 		setup_events();

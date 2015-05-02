@@ -17,8 +17,8 @@ namespace Infinite_Sidescroller.Controllers
       return View();
     }
 
-    // GET: /Tutorial
-    public ActionResult Tutorial()
+    // GET: /Bestiary
+    public ActionResult Bestiary()
     {
       return View();
     }

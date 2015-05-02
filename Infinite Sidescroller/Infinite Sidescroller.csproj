@@ -238,7 +238,7 @@
     <Content Include="Views\Account\_ChangePasswordPartial.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Leaderboard.cshtml" />
-    <Content Include="Views\Home\Tutorial.cshtml" />
+    <Content Include="Views\Home\Bestiary.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_GlobalFooter.cshtml" />
     <Content Include="Views\Shared\_GlobalHeader.cshtml" />

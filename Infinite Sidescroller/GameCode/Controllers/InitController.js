@@ -10,7 +10,7 @@ var InitController = (function(){
 	// using html (<body onload=...); maybe using JS would be better? Idk;
 		
 
-	var init = function(mode){
+	var init = function(mode, session_id, player_id){
 		include();
 
 		enable_arrowkey_scroll(false);

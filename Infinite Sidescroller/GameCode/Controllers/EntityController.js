@@ -334,9 +334,9 @@ var EntityController = (function () {
     };
 		
 		
-		var create_abstract_entity = function(){
-			return new AbstractEntity();
-		};
+	var create_abstract_entity = function(){
+		return new AbstractEntity();
+	};
 		
 		
 	/**

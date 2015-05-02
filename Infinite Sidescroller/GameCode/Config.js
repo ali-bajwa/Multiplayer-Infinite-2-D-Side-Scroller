@@ -40,7 +40,11 @@ var Config = function(){
 		connected: false, // am I in multiplayer mode
 	};
 	
-	// <<<
+	this.Init = {
+		session_id: null,
+		player_id: null,
+		mode: null,
+	}
 };
 
 module.exports = new Config;

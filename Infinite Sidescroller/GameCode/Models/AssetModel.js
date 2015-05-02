@@ -33,6 +33,14 @@ var AssetModel = new function(){
 			{src: "Hero.png", id: "Hero"},
 			{src: "HeroHitRed.png", id: "HeroR"},
 			{src: "HeroHitWhite.png", id: "HeroW"},
+			{src: "HeroRed.png", id: "HeroRed"},
+			{src: "HeroPink.png", id: "HeroPink"},
+			{src: "HeroBlue.png", id: "HeroBlue"},
+			{src: "HeroLPurple.png", id: "HeroLPurple"},
+			{src: "HeroOrange.png", id: "HeroOrange"},
+			{src: "HeroLB.png", id: "HeroLightBlue"},
+			{src: "HeroLG.png", id: "HeroLightGreen"},
+			{src: "HeroGreen.png", id: "HeroGreen"},
 
 
 			

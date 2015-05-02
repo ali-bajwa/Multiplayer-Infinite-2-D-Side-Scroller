@@ -32,5 +32,11 @@ namespace Infinite_Sidescroller.Controllers
 
       return View(model);
     }
+
+    // GET: /Developers
+    public ActionResult Developers()
+    {
+        return View();
+    }
   }
 }

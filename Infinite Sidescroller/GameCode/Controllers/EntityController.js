@@ -21,6 +21,7 @@ var EntityController = (function () {
             "hero": HeroLogic,
             "Griffin": GriffinLogic,
             "Hyena": HyenaLogic,
+            "pizza": PizzaLogic,
         };
 
         for (type in type_logic_table) {
@@ -76,7 +77,11 @@ var EntityController = (function () {
 
 		// demonstration purposes
 		if(debug_commands("spawn_ant")){
-			spawn((Math.random()*50 + 10),10, "ant");
+		    spawn((Math.random() * 50 + 10 + WorldController.get_movement_edge()), 10, "ant");
+		}
+
+		if (debug_commands("spawn_pizza")) {
+		    spawn((Math.random() * 50 + 10 + WorldController.get_movement_edge()), 16, "pizza");
 		}
 
 		if(debug_commands("request_hero") && !EntityModel.hero_spawned){

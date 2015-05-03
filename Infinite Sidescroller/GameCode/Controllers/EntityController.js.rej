@@ -1,9 +1,0 @@
-diff a/Infinite Sidescroller/GameCode/Controllers/EntityController.js b/Infinite Sidescroller/GameCode/Controllers/EntityController.js	(rejected hunks)
-@@ -136,7 +136,6 @@
- 
- 	var update = function(delta){
- 		/* is ran each tick from the GameController.update_all */
--		// demonstration purposes for ant
- 	    var debug_commands = KeyboardController.debug_commands();
-         
- 		for(var type in EntityModel.for_logic_update){

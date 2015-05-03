@@ -150,10 +150,7 @@ var NetworkController = (function(){
 			if(id != NetworkModel.my_id){
 				var connection = NetworkModel.my_peer.connect(id);
 
-				connection.on('data', on_data_arrival);
-				connection.on('close', on_connection_closed);
-				connection.on('open', on_connection_open);
-				connection.on('error', on_connection_error);
+				setup_connection_listeners(connection);
 			}
 		}
 
@@ -236,6 +233,8 @@ var NetworkController = (function(){
 			pick_the_master();
 		}
 
+		MultiplayerSyncController.purge_all_data_for(id);
+
 		console.log("Connection with peer", id, "was successfully closed");
 	};
 
@@ -290,9 +289,6 @@ var NetworkController = (function(){
 		*/
 
 		NetworkModel.master_id = id;
-
-		console.log("here");
-		
 		
 		if(NetworkModel.master_id == NetworkModel.my_id){
 			// if master
@@ -343,6 +339,7 @@ var NetworkController = (function(){
 			send_to(id, {op: "special_communication", special_communication: true, message: "I am the law!", master_id: NetworkModel.my_id});
 			send_to(id, data);
 		}
+
 	};
 	
 	
@@ -381,13 +378,26 @@ var NetworkController = (function(){
 		
 		nfree_ids.push(id);
 
-		conn.on('data', on_data_arrival);
+		setup_connection_listeners(conn);
+
 		setTimeout(function(){
 				send_initialization_data_to(id)
 			}
 			, Config.Remote.connection_timeout);
 
 	};
+
+	var setup_connection_listeners = function(connection){
+		/**
+		* description
+		*/
+		connection.on('data', on_data_arrival);
+		connection.on('close', on_connection_closed);
+		connection.on('open', on_connection_open);
+		connection.on('error', on_connection_error);
+	};
+	
+	
 
 	var connection_unsuccessful = function(error){
 		/**
@@ -400,26 +410,6 @@ var NetworkController = (function(){
 		
 	};
 
-	var update_player_list = function(){
-		/**
-		* searches for new players using standart player id's
-		* this function will be called only once, when this client decides
-		* to join multiplayer session, at least theoretically.
-		* If you need to call it regularly, it probably should be rewritten
-		*/
-
-		var free_ids = NetworkModel.free_ids;
-
-		var peer = NetworkModel.my_peer;
-		
-		for(var i = 0; i < free_ids.length; i++){
-			var conn = peer.connect(free_ids[i]);
-			conn.on('error', connection_unsuccessful);
-		}
-		
-	};
-	
-	
 	var send_to = function(peer_id, data){
 		/**
 		* send data to the peer with the peer_id

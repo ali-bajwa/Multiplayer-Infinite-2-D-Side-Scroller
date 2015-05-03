@@ -49,28 +49,6 @@ var EntityController = (function () {
 
     };
 
-    //var spawn = function (x, y, type) {
-        /**
-        * spawn entity of the given type at the given coordinates
-        * also registeres thing as awaiting graphics initialization
-        */
-        //var logic = type_logic_table[type];
-
-        //if (logic) {
-            //var new_entity = logic.spawn(x, y);
-            //RegisterAsController.register_as("awaiting_graphics_initialization", new_entity)
-
-            //if (!EntityModel.for_logic_update[type]) {
-                //EntityModel.for_logic_update[type] = {};
-            //}
-            //var logic_upd_table = EntityModel.for_logic_update[type];
-            //logic_upd_table[new_entity.id] = new_entity;
-        //} else {
-            //throw "Logic for the type " + type + " is not defined";
-        //}
-
-	//};
-
 
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
@@ -206,14 +184,6 @@ var EntityController = (function () {
 		RegisterAsController.register_as("awaiting_graphics_initialization", entity)
 	};
 	
-	
-
-	//takes a string type index as parameter 
-	//and returns the spawn() function associated with it
-	//var get_operation = function(type){
-		//var spawn = type_logic_table[type].spawn;
-		//return spawn;
-	//};
 	
 	//registers a new instance
 	//so that renderers and updaters know to update it on tick
@@ -702,10 +672,7 @@ var EntityController = (function () {
 		
 	};
 	
-	
-	
-	
-	
+
 	
 	return {
 		// declare public
@@ -715,6 +682,7 @@ var EntityController = (function () {
 		reg_for_logic_update: reg_for_logic_update,
 		spawn: spawn,
 		delete_entity: delete_entity,
+		despawn: despawn,
 		//fulfill_delete_request: fulfill_delete_request,
 		handle_spawn: handle_spawn,
 		handle_delete: handle_delete,

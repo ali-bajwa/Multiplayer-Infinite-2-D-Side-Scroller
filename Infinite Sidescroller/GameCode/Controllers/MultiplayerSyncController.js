@@ -109,8 +109,12 @@ var MultiplayerSyncController = (function(){
 			return -1;
 		}
 
-		if(Config.Remote.master){
-			// if master
+		if(packet.personal_communication != null){
+			console.warn(packet.personal_communication);
+		}
+
+		if(Config.Remote.master && packet.personal_communication != true){
+			// if master and packet isn't meant personally for me
 			// route to specific handler
 			// echo to the clients
 			handler(packet);
@@ -182,28 +186,56 @@ var MultiplayerSyncController = (function(){
 		* get array packets that should be sent from master to all other people after the connection
 		* with them is established
 		*/
-		
-		return [{op: "terrain_seed", seed: TerrainController.get_seed(),}];
-	};
-	
 
-	var network_event_handler = function(network_event){
+		var data = [];
+		data.push({op: "terrain_seed", seed: TerrainController.get_seed(),});
+
+
+		return data;
+	};
+
+	var get_initialization_data_common = function(){
 		/**
-		* called from the network controller when certain events occur
+		* get the array of packets that should be sent when to newly connected player
+		* regardless whether this player is a master or not
+		*/
+
+		var data = [];
+
+		var my_hero = EntityController.get_my_hero();
+
+		if(my_hero != null){
+			var pos = my_hero.body.GetWorldCenter();
+			data.push({
+				op: "spawn",
+				personal_communication: true,
+				type: "hero",
+				x: pos.x,
+				y: pos.y,
+				// TODO: synchronize the state ??? or will it be handled automatically w/ herosync?
+			});
+		}
+		
+		return data;
+	};
+
+	var purge_all_data_for = function(network_id){
+		/**
+		* despawn hero and remove all traces of presence for the player
+		* with this network id
+		* called when player disconnects from the game
 		*/
 		
-		var type = network_event.type;
-		var id = network_event.network_id;
-		switch (type) {
-			case 'new_connection':
-				
-				break;
-			
-			default:
-				console.log("event_type", event_type, "doesn't have an action associated");
+		var heroes = EntityController.get_all_heroes(); 
+		var hero = heroes[network_id];
+		
+
+		if(hero != null){
+			EntityController.delete_entity(hero);
 		}
 	};
-
+	
+	
 	var sync_seed = function(packet){
 		/**
 		* description
@@ -225,8 +257,9 @@ var MultiplayerSyncController = (function(){
 		update: update,
 		route_outcoming_packet: route_outcoming_packet,
 		route_incoming_packet: route_incoming_packet,
-		network_event_handler: network_event_handler,
 		get_initialization_data_master: get_initialization_data_master,
+		get_initialization_data_common: get_initialization_data_common,
+		purge_all_data_for: purge_all_data_for,
 	};
 })();
 

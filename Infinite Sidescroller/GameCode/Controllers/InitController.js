@@ -148,6 +148,22 @@ var InitController = (function(){
 		setup_ticker();
 
 		if(Config.Init.mode == "multiplayer" && Config.Init.player_id_array != null){
+			// if multiplayer mode
+			NetworkController.start_multiplayer_session(Config.Init.player_id_array);
+		}else if(Config.Init.mode == "test" && GameUtility.read_query_string().player_id_array != null){
+			var query_object = GameUtility.read_query_string();
+
+			var player_id_array = JSON.parse(decodeURI(query_object.player_id_array));
+
+
+			Config.Init.session_id = query_object.session_id;
+			Config.Init.player_id = query_object.player_id;
+			Config.Init.player_id_array = player_id_array;
+
+			console.log("Detected id array passed in test mode. Switching to the multiplayer mode",
+					"player_id_array is", player_id_array, "my id is", query_object.player_id);
+			Config.Init.mode = "multiplayer";
+
 			NetworkController.start_multiplayer_session(Config.Init.player_id_array);
 		}
 

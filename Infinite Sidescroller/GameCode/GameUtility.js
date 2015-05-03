@@ -64,10 +64,28 @@ var GameUtility = (function()
 	};
 
 	
+	var read_query_string = function(){
+		/**
+		* read the query string and put it into the object
+		*/
+	  var queries = {};
+	  $.each(document.location.search.substr(1).split('&'),function(c,q){
+		if(!(c == 0 && q == "")){
+			var i = q.split('=');
+			queries[i[0].toString()] = i[1].toString();
+		}
+	  });	
+
+	  return queries;
+	};
+	
+	
 
 	return {
 		lg: lg,
-		random_choice: random_choice
+		random_choice: random_choice,
+		read_query_string: read_query_string,
+		
 	};
 
 })();

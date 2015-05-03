@@ -10,18 +10,20 @@ var EntityController = (function () {
         /* is ran from the InitController once when the game is loaded */
 
         include(); // satisfy requirements
-		type_logic_table = {
-			"ant": AntLogic,
-			"hero": HeroLogic,
-			"companion": EsteemedCompanionLogic,
-		};
-
+		//type_logic_table = {
+		//	"ant": AntLogic,
+		//	"hero": HeroLogic,
+		//	"companion": EsteemedCompanionLogic,
+		//};
+        console.log(MedusaLogic);
         type_logic_table = {
             "ant": AntLogic,
             "hero": HeroLogic,
             "Griffin": GriffinLogic,
             "Hyena": HyenaLogic,
+			"Medusa": MedusaLogic,
         };
+        
 
         for (type in type_logic_table) {
             var logic = type_logic_table[type];
@@ -102,6 +104,12 @@ var EntityController = (function () {
         if (debug_commands("spawn_hyena")) {
             var new_hyena = spawn(Math.random() * 50 + WorldController.get_movement_edge(), 10, "Hyena");
         }
+		
+		// demonstration purposes for hyena
+        if (debug_commands("spawn_medusa")) {
+            var new_Medusa = spawn(Math.random() * 50 + WorldController.get_movement_edge(), 10, "Medusa");
+        }
+		
 
 		/*
 		//This should be handled in the update of MultiplayerSync

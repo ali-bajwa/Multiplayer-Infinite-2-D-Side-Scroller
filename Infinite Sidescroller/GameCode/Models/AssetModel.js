@@ -25,6 +25,7 @@ var AssetModel = new function(){
 			{ src: "griffinDeathSmall.png", id: "GriffinDeath" },
             { src: "griffinDeathSmall2.png", id: "GriffinDeath2" },
             { src: "griffinDeathSmall3.png", id: "GriffinDeath3" },
+			{ src: "MedusaSheet.png", id: "Medusa1" },
 			{src: "platform_left.png", id: "left_platform" },
 			{src: "platform_middle.png", id: "middle_platform" },
 			{src: "platform_right.png", id: "right_platform" },

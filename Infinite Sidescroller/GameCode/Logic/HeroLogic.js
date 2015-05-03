@@ -126,7 +126,8 @@ var HeroLogic = (function(){
 			}
 		
 			if(hero.hit_taken){
-				hero.take_damage();
+			    hero.take_damage();
+			    console.log("hold on");
 			}
 		
 			if (hero.body.GetWorldCenter().x < WorldController.get_movement_edge() + hero.body.GetUserData().def.width/2){
@@ -139,6 +140,16 @@ var HeroLogic = (function(){
 	var begin_contact = function(contact, info){
 		var hero = info.Me.entity;
 		var other = info.Them.entity;
+		if (other.type == "pizza") {
+		    if (hero.hp <= 90) {
+		        hero.damage_taken = other.regen;
+		        hero.hit_taken = true;
+		    }
+		    else if (hero.hp != 100) {
+		        hero.damage_taken = hero.hp - 100;
+		        hero.hit_taken = true;
+		    }
+		}
 		if (info.Me.fixture_name == "bottom"){
 			if(info.Them.fixture_name == "top" || other.kind == 1 || other.kind == 2){
 				hero.jumps = 0;//if colliding with surface, reset jumps
@@ -172,7 +183,7 @@ var HeroLogic = (function(){
 
 	var end_contact = function(contact, info){
 			
-		info.Me.entity.hit_taken = false;
+		//info.Me.entity.hit_taken = false;
 	};
 
 	var stop_hero = function (hero) {

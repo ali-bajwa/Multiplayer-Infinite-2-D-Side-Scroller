@@ -22,6 +22,7 @@ var EntityController = (function () {
             "Griffin": GriffinLogic,
             "Hyena": HyenaLogic,
 			"Medusa": MedusaLogic,
+            "pizza": PizzaLogic,
         };
         
 
@@ -78,7 +79,11 @@ var EntityController = (function () {
 
 		// demonstration purposes
 		if(debug_commands("spawn_ant")){
-			spawn((Math.random()*50 + 10),10, "ant");
+		    spawn((Math.random() * 50 + 10 + WorldController.get_movement_edge()), 10, "ant");
+		}
+
+		if (debug_commands("spawn_pizza")) {
+		    spawn((Math.random() * 50 + 10 + WorldController.get_movement_edge()), 16, "pizza");
 		}
 
 		if(debug_commands("request_hero") && !EntityModel.hero_spawned){
@@ -128,6 +133,7 @@ var EntityController = (function () {
 
                 if (beyond_world_boundary(entity)) {
                     // if outside boundaries of the world, despawn
+                    entity.point_value = 0;
                     despawn(entity);
                     if (entity.type == "hero") {
                         entity.hp = 0;
@@ -342,9 +348,9 @@ var EntityController = (function () {
     };
 		
 		
-		var create_abstract_entity = function(){
-			return new AbstractEntity();
-		};
+	var create_abstract_entity = function(){
+		return new AbstractEntity();
+	};
 		
 		
 	/**

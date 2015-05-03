@@ -168,4 +168,13 @@ r_templates.platform = {
     type: "static",
 }
 
+r_templates.pizza = {
+    isSensor: true,
+    type: "static",
+    height: .5,
+    width: .5,
+    x: 10,
+    y: 11,
+}
+
 module.exports = new PhysicsModel;

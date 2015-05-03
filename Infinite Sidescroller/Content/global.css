@@ -70,17 +70,6 @@ body {
     margin-bottom: 50px;   
 }
 
-.plaque {
-    overflow: hidden;
-    width: 960px;
-    margin: 0 auto;
-    padding: 10px;
-    color: black;
-    background-color: #e7e2b6;
-    border: 30px solid transparent;
-    opacity: 0.9;
-    border-image: url("../Content/images/greek_borderC.png") 60 60 round;
-}
 
 .front_page_border {
     height: 40px;
@@ -91,153 +80,70 @@ body {
     width: 100%;
 }
 
+
+/*END FRONT PAGE*/
+
+/*PLAQUE STYLE*/
+
+.plaque {
+    overflow: hidden;
+    width: 960px;
+    margin: 0 auto;
+    padding: 10px;
+    background-color: #e7e2b6;
+    border: 30px solid transparent;
+    opacity: 0.9;
+    border-image: url("../Content/images/greek_borderC.png") 60 60 round;
+}
+
 .plaque p, .plaque h1, .plaque h2, .plaque h3 {
     color: rgba(191, 187, 151, 0.8);
     text-shadow: 1px 4px 6px #e7e2b6, 0 0 0 #000, 1px 4px 6px #e7e2b6;
 }
-/*END FRONT PAGE*/
 
-/*NAV BAR*/
-
-nav {
-  background: rgb(34, 34, 34);
-  text-align: center;
-}
-
-nav ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  line-height: 1;
-  display: inline-block;
-  zoom: 1;
-  text-align: center;
-}
-
-nav ul li {
-  display: inline-block;
-  padding: 0;
-  margin: 0;
-  transition: .25s;
-}
-
-nav ul li a {
-  color: #d4af37;
-  text-decoration: none;
-  display: block;
-  padding: 15px 25px;
-  font-weight: 400;
-  font-size: 19px;
-  -webkit-transition: color .25s;
-  -moz-transition: color .25s;
-  -ms-transition: color .25s;
-  -o-transition: color .25s;
-  transition: color .25s;
-}
-
-nav ul li a:hover {
-  background-color: #d4af37;
-  color: #880000;
-  transition: .25s;
-}
-
-nav ul li #a {
-    display: inline;
-}
-
-nav ul li #b {
-    display: none;
-}
-
-nav ul li:hover #a {
-    display: none;
-}
-
-nav ul li:hover #b {
-    display: inline;
-}
-
-nav ul li a:hover:before {
-  width: 100%;
-}
-
-nav ul li a:after {
-  display: block;
-  position: absolute;
-  right: -3px;
-  top: 19px;
-  height: 6px;
-  width: 6px;
-  background: #ffffff;
-  opacity: .5;
-}
-
-nav ul li a:before {
-  content: "";
-  display: block;
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  height: 3px;
-  width: 0;
-  -webkit-transition: width .25s;
-  -moz-transition: width .25s;
-  -ms-transition: width .25s;
-  -o-transition: width .25s;
-  transition: width .25s;
-}
-
-nav ul li.last > a:after,
-nav ul li:last-child > a:after {
-  display: none;
-}
-
-nav ul li.active a {
-  background-color: #5082B3;
-}
-
-nav ul li.active a:before {
-  width: 100%;
-}
-
-nav ul li #a {
-    display: inline;
-}
-
-nav ul li #b {
-    display: none;
-}
-
-nav ul li:hover #a {
-    display: none;
-}
-
-nav ul li:hover #b {
-    display: inline;
-}
-/*END NAV BAR*/
-
-/*LORE/BESTIARY PAGE*/
-.beast {
+.plaque_section {
     margin: 10px 0px 10px 0px;
 }
 
-.beast h3 {
+.plaque_section h3 {
     text-align: center;
 }
 
-.beast img {
+.plaque_section img {
     height: 200px;
     width: auto;
     float: left;
     margin: 10px;
 }
 
-.beast p {
+.plaque_section p {
     padding-top: 5%;
     padding-bottom: 5%;
 }
+
+/*END PLAQUE STYLE*/
+
+/*LORE/BESTIARY PAGE*/
+
+#horae {
+    display: block;
+    margin: 0 auto;
+    width: 80%;
+    height: auto;
+    float: none;
+}
+
+#first {
+    text-align: center;
+}
+
 /*END LORE/BESTIARY PAGE*/
+
+/*DEVELOPERS PAGE*/
+.name {
+    float: left;
+}
+/*END DEVELOPERS PAGE*/
 
 /*GAME PAGE*/
 .game_canvas {
@@ -310,23 +216,6 @@ canvas {
         background-position:1024px;
     }
 }
-
-/*
-@media screen and (min-width: 1400px) and (max-width: 1410px) {#play_btn{left:1019px;}}
-@media screen and (min-width: 1400px) and (max-width: 1410px) {#pause_btn{left:1058px;}}
-
-@media screen and (min-width: 1430px) and (max-width: 1550px) {#play_btn{left:1039px;}}
-@media screen and (min-width: 1430px) and (max-width: 1550px) {#pause_btn{left:1078px;}}
-
-@media screen and (min-width: 1550px) and (max-width: 1650px) {#play_btn{left:999px;}}
-@media screen and (min-width: 1550px) and (max-width: 1650px) {#pause_btn{left:1038px;}}
-
-@media screen and (min-width: 1650px) and (max-width: 1850px) {#play_btn{left:999px;}}
-@media screen and (min-width: 1650px) and (max-width: 1850px) {#pause_btn{left:1038px;}}
-
-@media screen and (min-width: 1750px) and (max-width: 1850px) {#play_btn{left:999px;}}
-@media screen and (min-width: 1750px) and (max-width: 1850px) {#pause_btn{left:1038px;}}
-*/
 
 /*END GAME PAGE*/
 
@@ -707,4 +596,125 @@ footer p.no_right_border {
 ::-webkit-selection {
     background: #880000;
     color: #e7e2b6;
+}
+/*END SELECTION*/
 
+/*NAV BAR*/
+
+nav {
+  background: rgb(34, 34, 34);
+  text-align: center;
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  line-height: 1;
+  display: inline-block;
+  zoom: 1;
+  text-align: center;
+}
+
+nav ul li {
+  display: inline-block;
+  padding: 0;
+  margin: 0;
+  transition: .25s;
+}
+
+nav ul li a {
+  color: #d4af37;
+  text-decoration: none;
+  display: block;
+  padding: 15px 25px;
+  font-weight: 400;
+  font-size: 19px;
+  -webkit-transition: color .25s;
+  -moz-transition: color .25s;
+  -ms-transition: color .25s;
+  -o-transition: color .25s;
+  transition: color .25s;
+}
+
+nav ul li a:hover {
+  background-color: #d4af37;
+  color: #880000;
+  transition: .25s;
+}
+
+nav ul li #a {
+    display: inline;
+}
+
+nav ul li #b {
+    display: none;
+}
+
+nav ul li:hover #a {
+    display: none;
+}
+
+nav ul li:hover #b {
+    display: inline;
+}
+
+nav ul li a:hover:before {
+  width: 100%;
+}
+
+nav ul li a:after {
+  display: block;
+  position: absolute;
+  right: -3px;
+  top: 19px;
+  height: 6px;
+  width: 6px;
+  background: #ffffff;
+  opacity: .5;
+}
+
+nav ul li a:before {
+  content: "";
+  display: block;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 0;
+  -webkit-transition: width .25s;
+  -moz-transition: width .25s;
+  -ms-transition: width .25s;
+  -o-transition: width .25s;
+  transition: width .25s;
+}
+
+nav ul li.last > a:after,
+nav ul li:last-child > a:after {
+  display: none;
+}
+
+nav ul li.active a {
+  background-color: #5082B3;
+}
+
+nav ul li.active a:before {
+  width: 100%;
+}
+
+nav ul li #a {
+    display: inline;
+}
+
+nav ul li #b {
+    display: none;
+}
+
+nav ul li:hover #a {
+    display: none;
+}
+
+nav ul li:hover #b {
+    display: inline;
+}
+/*END NAV BAR*/

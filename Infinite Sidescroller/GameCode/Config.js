@@ -38,6 +38,8 @@ var Config = function(){
 	this.Remote = {
 		master: false, // am I the one with whome other players sync? 
 		connected: false, // am I in multiplayer mode
+		connection_timeout: 1000, // ms
+		notification_wait: 3000, // ms !!! SHOULD BE AT LEAST 1000 bigger THAN THE PREVIOUS ONE
 	};
 	
 	this.Init = {

@@ -48,6 +48,9 @@ var NetworkController = (function(){
 		*/
 		NetworkModel.peers_to_connect = ids;
 
+		// to not interrupt connection process
+		GameController.stop_game();
+
 		if(Config.Init.mode != "test"){	
 			// create peer, assign id
 			var peer = NetworkModel.my_peer = new_peer(Config.Init.player_id); 
@@ -130,7 +133,7 @@ var NetworkController = (function(){
 		connect_to_others();
 
 		// allow time for connections to be established, then pick the master
-		NetworkModel.timeout_id = setTimeout(pick_the_master, 5000);
+		NetworkModel.timeout_id = setTimeout(pick_the_master, Config.Remote.notification_wait);
 	};
 
 	var connect_to_others = function(){
@@ -223,6 +226,7 @@ var NetworkController = (function(){
 
 
 		if(NetworkModel.master_id === id){
+			GameController.stop_game();
 			console.log("Closing connection with the master");
 			NetworkModel.master_id = null;
 			pick_the_master();
@@ -249,29 +253,30 @@ var NetworkController = (function(){
 		if(NetworkModel.master_id != null){
 			// if master was chosen already
 			console.log("master is already chosen");
-			return;
-		}
+		}else{
 
+			var ids = NetworkModel.peers_to_connect;
 
-		var ids = NetworkModel.peers_to_connect;
+			var conns = NetworkModel.connections;
 
-		var conns = NetworkModel.connections;
+			for(var i = 0; i < ids.length; i++){
+				var id = ids[i];
 
-		for(var i = 0; i < ids.length; i++){
-			var id = ids[i];
-
-			if(conns[id] != null && id != NetworkModel.my_id){
-				NetworkModel.master_id = id;
-				console.log("The master is", id);
-				return true;
-			}else if(id == NetworkModel.my_id){
-				// i am the best candidate for master
-				Config.Remote.master = true;
-				console.log("I am the law (was chosen as master)");
-				NetworkModel.master_id = id;
-				return true;
+				if(conns[id] != null && id != NetworkModel.my_id){
+					NetworkModel.master_id = id;
+					console.log("The master is", id);
+					break;
+				}else if(id == NetworkModel.my_id){
+					// i am the best candidate for master
+					Config.Remote.master = true;
+					console.log("I am the law (was chosen as master)");
+					NetworkModel.master_id = id;
+					break;
+				}
 			}
 		}
+
+		GameController.continue_game();
 
 	}; // end pick_the_master
 	
@@ -316,14 +321,20 @@ var NetworkController = (function(){
 			// If I am the master, I want to notify them about it
 			setTimeout(function(){
 					send_to(id, {special_communication: true, message: "I am the law!", master_id: NetworkModel.my_id});
-				}
-				, 2000);
+				},
+				Config.Remote.connection_timeout
+			);
 		}
 
-		MultiplayerSyncController.network_event_handler({
-			type: "new_connection",
-			network_id: id,
-		});
+		setTimeout(function(){
+				MultiplayerSyncController.network_event_handler({
+					type: "new_connection",
+					network_id: id,
+				});
+			},
+			Config.Remote.connection_timeout
+		);
+
 
 	};
 

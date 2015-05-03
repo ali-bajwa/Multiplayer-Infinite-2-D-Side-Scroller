@@ -64,6 +64,7 @@ var Include = function(){
 		Renderers: [
 			"AntRenderer",
 			"HeroRenderer",
+            "MedusaRenderer",
 			"TerrainCellRenderer",
 			"GriffinRenderer",
 			"HyenaRenderer",
@@ -78,6 +79,7 @@ var Include = function(){
 			"AntLogic",
 			"HeroLogic",
 			"GriffinLogic",
+            "MedusaLogic",
 			"HyenaLogic",
 			"EsteemedCompanionLogic",
             "PizzaLogic",
@@ -134,6 +136,7 @@ var Include = function(){
 			
 			AntRenderer: require("./Renderers/AntRenderer.js"),
 			GriffinRenderer: require("./Renderers/GriffinRenderer.js"),
+            MedusaRenderer: require("./Renderers/MedusaRenderer.js"),
 			HyenaRenderer: require("./Renderers/HyenaRenderer.js"),
 			HeroRenderer: require("./Renderers/HeroRenderer.js"),
 			TerrainCellRenderer: require("./Renderers/TerrainCellRenderer.js"),
@@ -149,6 +152,7 @@ var Include = function(){
 			// Logic
 			AntLogic: require("./Logic/AntLogic.js"),
 			GriffinLogic: require("./Logic/GriffinLogic.js"),
+            MedusaLogic: require("./Logic/MedusaLogic.js"),
 			HyenaLogic: require("./Logic/HyenaLogic.js"),
 			HeroLogic: require("./Logic/HeroLogic.js"),
 			EsteemedCompanionLogic: require("./Logic/EsteemedCompanionLogic.js"),

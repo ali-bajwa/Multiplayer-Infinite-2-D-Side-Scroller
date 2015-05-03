@@ -139,6 +139,7 @@ var KeyboardModel = function(){
 		
 		debug: {
 			"a": "spawn_ant",
+			"m": "spawn_medusa",
 			"z": "season",
 			"g": "spawn_griffin",
 			"s": "new_slice",

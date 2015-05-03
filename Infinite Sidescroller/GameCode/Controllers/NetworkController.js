@@ -24,7 +24,7 @@ var NetworkController = (function(){
 
 		var cmds = KeyboardController.debug_commands();
 
-		if(!NetworkModel.block_connections && cmds("connect")){ 
+		if(!NetworkModel.block_connections && cmds("connect") && Config.Init.mode == "test"){ 
 			NetworkModel.block_connections = true;
 			start_multiplayer_session(["player1", "player2", "player3", "player4", "player5", "player6", "player7", "player8"]);
 		}
@@ -597,6 +597,7 @@ var NetworkController = (function(){
 		clean_data: clean_data,
 		get_network_id: get_network_id,
 		send_to: send_to,
+		start_multiplayer_session: start_multiplayer_session,
 	};
 })();
 

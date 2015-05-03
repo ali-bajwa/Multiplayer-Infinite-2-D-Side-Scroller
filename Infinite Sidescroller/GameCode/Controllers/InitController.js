@@ -10,12 +10,13 @@ var InitController = (function(){
 	// using html (<body onload=...); maybe using JS would be better? Idk;
 		
 
-	var init = function(mode, session_id, player_id){
+	var init = function(mode, session_id, player_id, player_id_array){
 		include();
 
 		Config.Init.mode = mode;
 		Config.Init.session_id = session_id;
 		Config.Init.player_id = player_id;
+		Config.Init.player_id_array = player_id_array;
 
 		enable_arrowkey_scroll(false);
 		setup_screen();
@@ -38,8 +39,7 @@ var InitController = (function(){
 			var asset_path = (mode == "test") ? "./assets/art/" : "../GameCode/assets/art/";
 
 		AssetController.init(asset_path);
-		
-		//setup_asset_dependent();
+
 
 	};
 
@@ -146,6 +146,10 @@ var InitController = (function(){
 
 		
 		setup_ticker();
+
+		if(Config.Init.mode == "multiplayer" && Config.Init.player_id_array != null){
+			NetworkController.start_multiplayer_session(Config.Init.player_id_array);
+		}
 
 		//TerrainController.generate_terrain(); // Initial terrain generation // deprecated, generation will be called from update each tick
 	};

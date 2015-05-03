@@ -36,13 +36,13 @@ window.sidescroller_game = (function namespace(){
 
 	// Game initiation section: >>>
 		
-	var load_game = function(mode, session_id, player_id)
+	var load_game = function(mode, session_id, player_id, player_id_array)
 	{
 	
 		Includes.init(); // first
 		include(); // second
 
-		InitController.init(mode, session_id, player_id); // init all the stuff
+		InitController.init(mode, session_id, player_id, player_id_array); // init all the stuff
 
 		if(mode == "test"){
 			TestController.test();
@@ -50,10 +50,10 @@ window.sidescroller_game = (function namespace(){
 	};
 
 
-	var run = function(mode, session_id, player_id)
+	var run = function(mode, session_id, player_id, player_id_array)
 	{
 		// done this way to ensure that load_game's internals aren't accessible to the world:
-		load_game(mode, session_id, player_id);
+		load_game(mode, session_id, player_id, player_id_array);
 	}; 
 	
 	return {

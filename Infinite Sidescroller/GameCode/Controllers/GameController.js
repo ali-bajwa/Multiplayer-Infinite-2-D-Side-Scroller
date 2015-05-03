@@ -48,10 +48,31 @@ var GameController = (function(){
 		}
 	};
 
+	var stop_game = function(){
+		/**
+		* stop the game. 
+		* this one prevents any controller updates except Game and Keyboard
+		* different from the PAUSE for multiplayer purposes
+		*/
+
+		createjs.Ticker.paused = true;
+		
+	};
+
+	var continue_game = function(){
+		/**
+		* continue game
+		*/
+		
+		createjs.Ticker.paused = false;
+
+	};
 
 	return {
 		init: init,
 		update_all: update_all,
+		stop_game: stop_game,
+		continue_game: continue_game,
 	};
 
 })();

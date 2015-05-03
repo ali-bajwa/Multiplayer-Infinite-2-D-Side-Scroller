@@ -24,7 +24,7 @@ var NetworkController = (function(){
 
 		var cmds = KeyboardController.debug_commands();
 
-		if(!NetworkModel.block_connections && cmds("connect")){ 
+		if(!NetworkModel.block_connections && cmds("connect") && Config.Init.mode == "test"){ 
 			NetworkModel.block_connections = true;
 			start_multiplayer_session(["player1", "player2", "player3", "player4", "player5", "player6", "player7", "player8"]);
 		}
@@ -48,11 +48,16 @@ var NetworkController = (function(){
 		*/
 		NetworkModel.peers_to_connect = ids;
 
+		// to not interrupt connection process
+		GameController.stop_game();
+
 		if(Config.Init.mode != "test"){	
 			// create peer, assign id
 			var peer = NetworkModel.my_peer = new_peer(Config.Init.player_id); 
 			peer.on('error', handle_standart_peer_error);
 			peer.on('open', on_obtaining_id_successfully);
+			NetworkModel.my_peer = peer;
+			NetworkModel.my_id = Config.Init.player_id;
 
 		}else{
 
@@ -70,44 +75,28 @@ var NetworkController = (function(){
 
 		NetworkModel.connections = {};
 		NetworkModel.free_ids = [];
-		NetworkModel.master_order = [];
 
 		for(var i = 0; i < ids.length; i++){
 			var id = ids[i];
 			NetworkModel.connections[id] = null;
 			NetworkModel.free_ids.push(id);
-			NetworkModel.master_order.push(id);
 		}
 
 		NetworkModel.non_free_ids = [];
 
-		//NetworkModel.connections = {
-				//"player1": null,
-				//"player2": null,
-				//"player3": null,
-				//"player4": null,
-				//"player5": null,
-				//"player6": null,
-				//"player7": null,
-				//"player8": null,
-
-		//};
-
 	};
 	
 	
-
 	var handle_standart_peer_error = function(error){
 		/**
 		* this function is for connection errors
 		* in non-test mode
 		*/
 
-		console.log(error);
-		throw "Peer error";
+		//console.log(error);
+		//throw "Peer error";
 		
 	};
-	
 	
 
 	var on_obtaining_id_successfully = function(id){
@@ -121,6 +110,10 @@ var NetworkController = (function(){
 		NetworkModel.my_id = id;
 		Config.Remote.connected = true;
 
+		var peer = NetworkModel.my_peer;
+
+		peer.on('error', on_peer_error);
+
 		if(NetworkModel.my_id != NetworkModel.my_peer.id){
 			// not a meaningful check, terrible practices are terrible
 			throw "Id's do not match. Smth went wrong" 
@@ -129,22 +122,51 @@ var NetworkController = (function(){
 		console.log("Obtained id sucessfully, my id is", id);
 
 		if(Config.Init.mode != "test"){
+			console.log("Playing in testing multiplayer mode");
 		}else{
-			for(var i = 0; i < NetworkModel.non_free_ids.length; i++){
-				// establish connections with every other player
-				var id = NetworkModel.non_free_ids[i];
-				if(id != NetworkModel.my_id){
-					var connection = NetworkModel.my_peer.connect(id);
-					NetworkModel.connections[id] =  connection;
-					connection.on('data', on_data_arrival);
-					connection.on('close', on_connection_closed);
-					connection.on('open', on_connection_open);
-					console.log("Successfully initiated new connection with the peer", id);
-				}
+			console.log("Playing in normal multiplayer mode");
+		}
+
+		/* note that if other peers connect in the future, 
+		 * connection with them will be handled at that time
+		 * through accept_connection function
+		 */
+		connect_to_others();
+
+		// allow time for connections to be established, then pick the master
+		NetworkModel.timeout_id = setTimeout(pick_the_master, Config.Remote.notification_wait);
+	};
+
+	var connect_to_others = function(){
+		/**
+		* connect to all other peers that are available at this time
+		*/
+		var ids = NetworkModel.peers_to_connect;
+		for(var i = 0; i < ids.length; i++){
+
+			var id = ids[i];
+
+			if(id != NetworkModel.my_id){
+				var connection = NetworkModel.my_peer.connect(id);
+
+				connection.on('data', on_data_arrival);
+				connection.on('close', on_connection_closed);
+				connection.on('open', on_connection_open);
+				connection.on('error', on_connection_error);
 			}
 		}
 
-		pick_the_master();
+	};
+	
+	var on_peer_error = function(error){
+		/**
+		* called on peer error;
+		* notice that this function doesn't handle
+		* peer errors that arise from inability to create peer because of id conflicts,
+		* as this function is attached as listener only after the peer is sucessfully
+		* created
+		*/
+		//console.warn("Peer error", error);
 	};
 	
 	var setup_my_peer_test = function(error){
@@ -169,9 +191,10 @@ var NetworkController = (function(){
 				Config.Remote.connected = false;
 				NetworkModel.block_connections = false;
 
-
 				setup_network_variables_for_testing_mode();
 			}
+		}else{
+			//console.warn("Peer error", error);
 		}
 		
 	};
@@ -181,11 +204,13 @@ var NetworkController = (function(){
 		* on opening the connection
 		*/
 
+		var id = this.peer;	
+		
+		console.log("Successfully initiated new connection with the peer", id);
 
+		NetworkModel.connections[id] = this;
 		
 	};
-	
-	
 
 	var on_connection_closed = function(){
 		/**
@@ -202,11 +227,22 @@ var NetworkController = (function(){
 
 
 		if(NetworkModel.master_id === id){
+			GameController.stop_game();
 			console.log("Closing connection with the master");
+			NetworkModel.master_id = null;
 			pick_the_master();
 		}
 
 		console.log("Connection with peer", id, "was successfully closed");
+	};
+
+	var on_connection_error = function(error){
+		/**
+		* when error on trying to establish connection occurs;
+		* most often it will be error for peer not existing. that's part of the normal process
+		*/
+		
+		console.log("connection error (likely not a bug)");
 	};
 	
 	var pick_the_master = function(){
@@ -215,27 +251,35 @@ var NetworkController = (function(){
 		* for the current group of peers.
 		*/
 
-		var m_order = NetworkModel.master_order;
-		var conns = NetworkModel.connections;
+		if(NetworkModel.master_id != null){
+			// if master was chosen already
+			console.log("master is already chosen");
+		}else{
 
-		for(var i = m_order.length - 1; i >= 0; i--){
-			id = m_order[i];
-			
-			if(conns[id] != null){
-				NetworkModel.master_id = id;
-				console.log("The master is", id);
-				return true;
-			}else if(id == NetworkModel.my_id){
-				// i am the best candidate for master
-				Config.Remote.master = true;
-				console.log("I am the law (was chosen as master)");
-				NetworkModel.master_id = id;
-				return true;
+			var ids = NetworkModel.peers_to_connect;
+
+			var conns = NetworkModel.connections;
+
+			for(var i = 0; i < ids.length; i++){
+				var id = ids[i];
+
+				if(conns[id] != null && id != NetworkModel.my_id){
+					NetworkModel.master_id = id;
+					console.log("The master is", id);
+					break;
+				}else if(id == NetworkModel.my_id){
+					// i am the best candidate for master
+					Config.Remote.master = true;
+					console.log("I am the law (was chosen as master)");
+					NetworkModel.master_id = id;
+					break;
+				}
 			}
 		}
-		
+
+		GameController.continue_game();
+
 	}; // end pick_the_master
-	
 	
 	var new_peer = function(id){
 		/**
@@ -274,10 +318,24 @@ var NetworkController = (function(){
 
 		conn.on('data', on_data_arrival);
 
-		MultiplayerSyncController.network_event_handler({
-			type: "new_connection",
-			network_id: id,
-		});
+		if(Config.Remote.master){
+			// If I am the master, I want to notify them about it
+			setTimeout(function(){
+					send_to(id, {special_communication: true, message: "I am the law!", master_id: NetworkModel.my_id});
+				},
+				Config.Remote.connection_timeout
+			);
+		}
+
+		setTimeout(function(){
+				MultiplayerSyncController.network_event_handler({
+					type: "new_connection",
+					network_id: id,
+				});
+			},
+			Config.Remote.connection_timeout
+		);
+
 
 	};
 
@@ -291,8 +349,6 @@ var NetworkController = (function(){
 		console.log(error);
 		
 	};
-	
-	
 
 	var update_player_list = function(){
 		/**
@@ -312,7 +368,6 @@ var NetworkController = (function(){
 		}
 		
 	};
-	
 	
 	
 	var send_to = function(peer_id, data){
@@ -336,6 +391,7 @@ var NetworkController = (function(){
 		
 	};
 
+
 	var distribute_data = function(data){
 		/**
 		* First, manipulate the data to properly compress it, or decide what should
@@ -353,6 +409,7 @@ var NetworkController = (function(){
 		
 	};
 
+
 	var on_unload = function(arguments){
 		/**
 		* will be called when the user is about to leave the web page
@@ -364,7 +421,6 @@ var NetworkController = (function(){
 	};
 	
 	
-	
 	var on_event = function(smth){
 		/**
 		* dummy function, delete when isn't called from anywhere
@@ -372,10 +428,24 @@ var NetworkController = (function(){
 		
 	};
 
+
 	var on_data_arrival = function(data){
 		/**
 		* is called whenever new data arrives
 		*/
+
+		if(data.special_communication != null){
+			// if this is network handling data,
+			// not the regular multiplayer data transfer
+
+			if(data.message == "I am the law!"){
+				var m_id = data.master_id;
+
+				NetworkModel.master_id = m_id;
+				console.log("The master is", m_id);
+				clearTimeout(NetworkModel.timeout_id); // will give an error if timeout passed?
+			}
+		}
 
 		if(NetworkModel.recieve_array == null){
 			NetworkModel.recieve_array = data;
@@ -386,11 +456,13 @@ var NetworkController = (function(){
 		}
 	};
 
+
 	var on_error = function(error){
 		/**
 		* called when error occurs with the peer
 		*/
 	};
+
 
 	var connect_to = function(id, peer){
 		/**
@@ -403,6 +475,7 @@ var NetworkController = (function(){
 		return conn;
 	};
 	
+
 	var retrieve_from_backlog = function(){
 		/**
 		* gets packet from the linked list
@@ -424,6 +497,7 @@ var NetworkController = (function(){
 
 	};
 
+
 	var place_to_backlog = function(packet){
 		/**
 		* puts packet into the linked list
@@ -440,6 +514,7 @@ var NetworkController = (function(){
 		}
 	};
 	
+
 	var add_to_next_update = function(data){
 		/**
 		* call this function to schedule the data to be passed to the master/clients.
@@ -486,7 +561,6 @@ var NetworkController = (function(){
 
 	};
 	
-	
 
 	var get_data = function(){
 		/**
@@ -524,6 +598,7 @@ var NetworkController = (function(){
 		clean_data: clean_data,
 		get_network_id: get_network_id,
 		send_to: send_to,
+		start_multiplayer_session: start_multiplayer_session,
 	};
 })();
 

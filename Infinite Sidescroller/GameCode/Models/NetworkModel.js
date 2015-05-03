@@ -16,7 +16,7 @@ var NetworkModel = function(){
 	
 
 	// player_id associated with the connection object
-	this.connections = null;
+	this.connections = {};
 
 	this.send_array = null;
 	this.recieve_array = null;
@@ -30,34 +30,19 @@ var NetworkModel = function(){
 	// linked list to store the backlog of packets for the communication that needs that
 	this.package_backlog = {HEAD: null, TAIL: null} 
 
+	// TIME 
+		this.begin_time = null; // seconds
+		this.timeout_id = null;
+	// END TIME
+	
 	// TESTING MODE STUFF. SHOULD BE MERGED WITH GENERAL STUFF IF POSSIBLE
 	
 	this.non_free_ids = [
 	];
 
 	this.free_ids = [
-		//"player1",
-		//"player2",
-		//"player3",
-		//"player4",
-		//"player5",
-		//"player6",
-		//"player7",
-		//"player8",
 	];
 
-	this.master_order = [
-		// order in which players will be selected for a master position
-		//"player1",
-		//"player2",
-		//"player3",
-		//"player4",
-		//"player5",
-		//"player6",
-		//"player7",
-		//"player8",
-
-	];
 	// END TESTING MODE STUFF
 
 };

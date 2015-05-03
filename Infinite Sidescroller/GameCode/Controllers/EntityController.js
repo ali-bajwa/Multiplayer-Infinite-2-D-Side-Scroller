@@ -125,6 +125,7 @@ var EntityController = (function () {
 
                 if (beyond_world_boundary(entity)) {
                     // if outside boundaries of the world, despawn
+                    entity.point_value = 0;
                     despawn(entity);
                     if (entity.type == "hero") {
                         entity.hp = 0;

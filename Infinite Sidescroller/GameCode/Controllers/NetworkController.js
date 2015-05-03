@@ -93,8 +93,8 @@ var NetworkController = (function(){
 		* in non-test mode
 		*/
 
-		console.log(error);
-		throw "Peer error";
+		//console.log(error);
+		//throw "Peer error";
 		
 	};
 	

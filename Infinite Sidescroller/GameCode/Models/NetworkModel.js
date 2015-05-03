@@ -16,7 +16,7 @@ var NetworkModel = function(){
 	
 
 	// player_id associated with the connection object
-	this.connections = null;
+	this.connections = {};
 
 	this.send_array = null;
 	this.recieve_array = null;

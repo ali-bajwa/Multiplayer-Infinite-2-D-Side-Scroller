@@ -16,6 +16,7 @@ var InitController = (function(){
 		Config.Init.mode = mode;
 		Config.Init.session_id = session_id;
 		Config.Init.player_id = player_id;
+		Config.Init.player_id_array = player_id_array;
 
 		enable_arrowkey_scroll(false);
 		setup_screen();
@@ -40,9 +41,6 @@ var InitController = (function(){
 		AssetController.init(asset_path);
 
 
-		if(mode == "multiplayer" && player_id_array != null){
-			NetworkController.start_multiplayer_session(player_id_array);
-		}
 	};
 
 	var init_all_modules = function(mode){
@@ -148,6 +146,10 @@ var InitController = (function(){
 
 		
 		setup_ticker();
+
+		if(Config.Init.mode == "multiplayer" && Config.Init.player_id_array != null){
+			NetworkController.start_multiplayer_session(Config.Init.player_id_array);
+		}
 
 		//TerrainController.generate_terrain(); // Initial terrain generation // deprecated, generation will be called from update each tick
 	};

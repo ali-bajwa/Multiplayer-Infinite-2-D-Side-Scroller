@@ -135,11 +135,11 @@ r_templates.ant = {
 
 r_templates.Griffin = {
 	parent: r_templates.living,
-	width: 4,
+	width: 2.8,
 	height: 2.5,
 	type: "dynamic",
-	x: 65,
-	y: 10,
+	x: 95,
+	y: 50,
 	//mobexp++
 };
 
@@ -157,6 +157,15 @@ r_templates.Medusa = {
     parent: r_templates.living,
     width: 1.4,
     height: 2.8,
+    type: "dynamic",
+    x: 65,
+    y: 10,
+};
+
+r_templates.Centaur = {
+    parent: r_templates.living,
+    width: 2.2,
+    height: 3.4,
     type: "dynamic",
     x: 65,
     y: 10,

@@ -25,7 +25,7 @@ var NetworkController = (function(){
 		var cmds = KeyboardController.debug_commands();
 
 		if(!NetworkModel.block_connections && cmds("connect")){ NetworkModel.block_connections = true;
-			start_multiplayer_session();
+			start_multiplayer_session(["player1", "player2", "player3", "player4", "player5", "player6", "player7", "player8"]);
 		}
 
 		if(Config.Remote.connected){
@@ -40,12 +40,16 @@ var NetworkController = (function(){
 
 	};
 
-	var start_multiplayer_session = function(){
+	var start_multiplayer_session = function(ids){
 		/**
 		* perform procedures to start playing with all
 		* other connected people
 		*/
-		setup_my_peer(); // setup peer // also picks free idr// calls >on_obtaining_id_successfully
+		if(Config.Init.mode != "test"){	
+			// create peer, assign id
+		}else{
+			setup_my_peer(); // setup peer // also picks free idr// calls >on_obtaining_id_successfully
+		}
 				
 	};
 

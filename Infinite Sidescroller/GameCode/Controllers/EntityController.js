@@ -15,14 +15,15 @@ var EntityController = (function () {
 		//	"hero": HeroLogic,
 		//	"companion": EsteemedCompanionLogic,
 		//};
-        console.log(MedusaLogic);
+       
         type_logic_table = {
             "ant": AntLogic,
             "hero": HeroLogic,
             "Griffin": GriffinLogic,
             "Hyena": HyenaLogic,
 			"Medusa": MedusaLogic,
-            "pizza": PizzaLogic,
+			"pizza": PizzaLogic,
+            "Centaur": CentaurLogic,
         };
         
 
@@ -110,9 +111,14 @@ var EntityController = (function () {
             var new_hyena = spawn(Math.random() * 50 + WorldController.get_movement_edge(), 10, "Hyena");
         }
 		
-		// demonstration purposes for hyena
+		// demonstration purposes for Medusa
         if (debug_commands("spawn_medusa")) {
             var new_Medusa = spawn(Math.random() * 50 + WorldController.get_movement_edge(), 10, "Medusa");
+        }
+
+	    // demonstration purposes for Centaur
+        if (debug_commands("spawn_centaur")) {
+            var new_Centaur = spawn(Math.random() * 50 + WorldController.get_movement_edge(), 10, "Centaur");
         }
 		
 

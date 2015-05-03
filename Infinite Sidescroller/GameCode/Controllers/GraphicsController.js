@@ -49,7 +49,8 @@ var GraphicsController = (function(){
 		// type:	renderer:
 			"ant": AntRenderer,
 			"hero": HeroRenderer,
-			"Griffin":GriffinRenderer,
+			"Griffin": GriffinRenderer,
+            "Medusa": MedusaRenderer,
 			"Hyena": HyenaRenderer,
 			"terrain_cell": TerrainCellRenderer,
 			"terrain_slice": TerrainSliceRenderer,

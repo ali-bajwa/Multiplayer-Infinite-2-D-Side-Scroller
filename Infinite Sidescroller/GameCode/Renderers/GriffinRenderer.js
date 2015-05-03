@@ -17,7 +17,7 @@ var GriffinRenderer = (function(){
 			"images": [get_asset("Griffin1"), get_asset("Griffin2"), get_asset("Griffin3"), get_asset("GriffinDeath")], //, get_asset("GriffinDeath2"), get_asset("GriffinDeath3")
 				"frames": { "regX": 5, "regY": 14, "height": 207, "width": 210, "count": 6},
 				"animations": {
-				"walk": [0, 2, "walk", 0.2],
+				"walk": [0, 2, "walk", 0.1],
 				"injury": {
 				    frames: [2, 4, .25]
 				},

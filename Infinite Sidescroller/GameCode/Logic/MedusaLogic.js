@@ -16,20 +16,20 @@ var MedusaLogic = (function(){
 
 		//set your game logic parameters here
 		//entity.object_id = 1; //hardcode a unique identifier for each new enemy class
-		entity.hp = 3;
-		entity.speed = 6;
-		entity.damage = 10;
+		entity.hp = 4;
+		entity.speed = 4;
+		entity.damage = 12;
 		entity.point_value = 100;
 		//entity.attack_cooldown = 4; //use entity for enemies who need
 		entity.can_attack = true;//use entity for enemies who alternate between 
 		//entity.cooldown_timer=-1;
-		entity.AI_state = "fly";//use entity to keep track of the enemy's AI state
+		entity.AI_state = "walk";//use entity to keep track of the enemy's AI state
 		entity.aliveflag = true;
 		entity.unhurtflag = true;
 		entity.needs_graphics_update = false;
 
 		entity.direction = false;
-		entity.fly_force = 100;
+		entity.jolt_force = 100;
 		
 		return entity;
 	};
@@ -70,16 +70,13 @@ var MedusaLogic = (function(){
 		if (Medusa.hp <= 0) {
 			Medusa.die();
 		}else{ // Medusa.hp >= 1
-			if (Medusa.in_air()){
-				Medusa.change_animation("fly");
-			}else{
 				Medusa.change_animation("walk");
-			}
+			
 			if (Medusa.animation == "walk"){
 				Medusa.move(Medusa.speed);
 			}
-			if (Medusa.animation == "fly"){
-			    Medusa.jump((2 * Medusa.fly_force * Medusa.direction) - Medusa.fly_force, Medusa.fly_force/2);
+			if (Medusa.animation == "jolt"){
+			    Medusa.jump((2 * Medusa.jolt_force * Medusa.direction) - Medusa.jolt_force, Medusa.jolt_force/2);
 			}
 			if (Medusa.hit_taken){
 				Medusa.take_damage();

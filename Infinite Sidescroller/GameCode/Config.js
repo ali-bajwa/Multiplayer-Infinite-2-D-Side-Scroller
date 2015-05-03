@@ -44,6 +44,14 @@ var Config = function(){
 		session_id: null,
 		player_id: null,
 		mode: null,
+
+		// for multiplayer game you have certain time limit
+		// to join the game. In this time limit players shouldn't be able to go past
+		// certain point of the map.
+		movement_blocked: true,
+		time_limit: 15, // seconds
+		// we should begin automatically after everyone is joined
+
 	}
 };
 

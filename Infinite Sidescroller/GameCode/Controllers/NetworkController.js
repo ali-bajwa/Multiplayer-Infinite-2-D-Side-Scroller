@@ -4,7 +4,7 @@ var NetworkController = (function(){
 	*/
 
 	var peer, conn; // TEMPORARY. there will be multiple of those things
-	var MEDIATOR_SERVER_KEY = 'l2f8f8vtbhcfecdi';//'a7vojcpf70ysyvi';
+	var MEDIATOR_SERVER_KEY = 'lvgioxuj3ylm1jor'; //'l2f8f8vtbhcfecdi'; //'a7vojcpf70ysyvi';
 
 	var init = function(){
 		/* is ran from the InitController once when the game is loaded */
@@ -24,7 +24,8 @@ var NetworkController = (function(){
 
 		var cmds = KeyboardController.debug_commands();
 
-		if(!NetworkModel.block_connections && cmds("connect")){ NetworkModel.block_connections = true;
+		if(!NetworkModel.block_connections && cmds("connect")){ 
+			NetworkModel.block_connections = true;
 			start_multiplayer_session(["player1", "player2", "player3", "player4", "player5", "player6", "player7", "player8"]);
 		}
 
@@ -45,18 +46,74 @@ var NetworkController = (function(){
 		* perform procedures to start playing with all
 		* other connected people
 		*/
+		NetworkModel.peers_to_connect = ids;
+
 		if(Config.Init.mode != "test"){	
 			// create peer, assign id
+			var peer = NetworkModel.my_peer = new_peer(Config.Init.player_id); 
+			peer.on('error', handle_standart_peer_error);
+			peer.on('open', on_obtaining_id_successfully);
+
 		}else{
-			setup_my_peer(); // setup peer // also picks free idr// calls >on_obtaining_id_successfully
+
+			setup_network_variables_for_testing_mode();
+			setup_my_peer_test(); // setup peer // also picks free idr// calls >on_obtaining_id_successfully
 		}
 				
 	};
 
+	var setup_network_variables_for_testing_mode = function(){
+		/**
+		* setup various parameters for the testing mode game
+		*/
+		var ids = NetworkModel.peers_to_connect;
+
+		NetworkModel.connections = {};
+		NetworkModel.free_ids = [];
+		NetworkModel.master_order = [];
+
+		for(var i = 0; i < ids.length; i++){
+			var id = ids[i];
+			NetworkModel.connections[id] = null;
+			NetworkModel.free_ids.push(id);
+			NetworkModel.master_order.push(id);
+		}
+
+		NetworkModel.non_free_ids = [];
+
+		//NetworkModel.connections = {
+				//"player1": null,
+				//"player2": null,
+				//"player3": null,
+				//"player4": null,
+				//"player5": null,
+				//"player6": null,
+				//"player7": null,
+				//"player8": null,
+
+		//};
+
+	};
+	
+	
+
+	var handle_standart_peer_error = function(error){
+		/**
+		* this function is for connection errors
+		* in non-test mode
+		*/
+
+		console.log(error);
+		throw "Peer error";
+		
+	};
+	
+	
+
 	var on_obtaining_id_successfully = function(id){
 		/**
 		* when the player id for this client was successfully
-		* found through the process in the setup_my_peer(); function,
+		* found through the process in the setup_my_peer_test(); function,
 		* this function is called, which should setup all necessary things for 
 		* the multiplayer to work, and connect to the other player
 		*/
@@ -71,23 +128,26 @@ var NetworkController = (function(){
 
 		console.log("Obtained id sucessfully, my id is", id);
 
-		for(var i = 0; i < NetworkModel.non_free_ids.length; i++){
-			// establish connections with every other player
-			var id = NetworkModel.non_free_ids[i];
-			if(id != NetworkModel.my_id){
-				var connection = NetworkModel.my_peer.connect(id);
-				NetworkModel.connections[id] =  connection;
-				connection.on('data', on_data_arrival);
-				connection.on('close', on_connection_closed);
-				connection.on('open', on_connection_open);
-				console.log("Successfully initiated new connection with the peer", id);
+		if(Config.Init.mode != "test"){
+		}else{
+			for(var i = 0; i < NetworkModel.non_free_ids.length; i++){
+				// establish connections with every other player
+				var id = NetworkModel.non_free_ids[i];
+				if(id != NetworkModel.my_id){
+					var connection = NetworkModel.my_peer.connect(id);
+					NetworkModel.connections[id] =  connection;
+					connection.on('data', on_data_arrival);
+					connection.on('close', on_connection_closed);
+					connection.on('open', on_connection_open);
+					console.log("Successfully initiated new connection with the peer", id);
+				}
 			}
 		}
 
 		pick_the_master();
 	};
 	
-	var setup_my_peer = function(error){
+	var setup_my_peer_test = function(error){
 		/**
 		* setups your personal peer picking free id, and returning it
 		* looking up for the free id's is a huge pain now, once we run our
@@ -102,25 +162,15 @@ var NetworkController = (function(){
 				var id = NetworkModel.free_ids.pop();
 				NetworkModel.non_free_ids.push(id);
 				var peer = NetworkModel.my_peer = new_peer(id); 
-				peer.on('error', setup_my_peer);
+				peer.on('error', setup_my_peer_test);
 				peer.on('open', on_obtaining_id_successfully);
 			}else{
-				console.warn("Couldn't establish multiplayer session, all 8 available slots taken");
+				console.warn("Couldn't establish multiplayer session, all " + String(NetworkModel.peers_to_connect.length) + " available slots taken");
 				Config.Remote.connected = false;
 				NetworkModel.block_connections = false;
-				NetworkModel.free_ids = [
-					"player1",
-					"player2",
-					"player3",
-					"player4",
-					"player5",
-					"player6",
-					"player7",
-					"player8",
-				];
 
-				NetworkModel.non_free_ids = [];
 
+				setup_network_variables_for_testing_mode();
 			}
 		}
 		

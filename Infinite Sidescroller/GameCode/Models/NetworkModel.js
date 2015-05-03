@@ -10,44 +10,13 @@ var NetworkModel = function(){
 
 	this.master_id = null; // id of the master with whome everyone synces
 
-	this.free_ids = [
-		"player1",
-		"player2",
-		"player3",
-		"player4",
-		"player5",
-		"player6",
-		"player7",
-		"player8",
-	];
+	// this is for standart (non-test) mode
+	// I plan to make test mode use this too, eventually
+	this.peers_to_connect = null;
+	
 
-	this.master_order = [
-		// order in which players will be selected for a master position
-		"player1",
-		"player2",
-		"player3",
-		"player4",
-		"player5",
-		"player6",
-		"player7",
-		"player8",
-
-	];
-
-	this.non_free_ids = [
-	];
-
-	this.connections = {
-		"player1": null,
-		"player2": null,
-		"player3": null,
-		"player4": null,
-		"player5": null,
-		"player6": null,
-		"player7": null,
-		"player8": null,
-
-	};
+	// player_id associated with the connection object
+	this.connections = null;
 
 	this.send_array = null;
 	this.recieve_array = null;
@@ -60,6 +29,36 @@ var NetworkModel = function(){
 
 	// linked list to store the backlog of packets for the communication that needs that
 	this.package_backlog = {HEAD: null, TAIL: null} 
+
+	// TESTING MODE STUFF. SHOULD BE MERGED WITH GENERAL STUFF IF POSSIBLE
+	
+	this.non_free_ids = [
+	];
+
+	this.free_ids = [
+		//"player1",
+		//"player2",
+		//"player3",
+		//"player4",
+		//"player5",
+		//"player6",
+		//"player7",
+		//"player8",
+	];
+
+	this.master_order = [
+		// order in which players will be selected for a master position
+		//"player1",
+		//"player2",
+		//"player3",
+		//"player4",
+		//"player5",
+		//"player6",
+		//"player7",
+		//"player8",
+
+	];
+	// END TESTING MODE STUFF
 
 };
 

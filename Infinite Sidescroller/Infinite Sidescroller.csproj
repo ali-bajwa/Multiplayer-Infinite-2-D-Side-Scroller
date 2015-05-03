@@ -651,7 +651,6 @@
     <Content Include="GameCode\Logic\MedusaLogic.js" />
     <Content Include="GameCode\Logic\PizzaLogic.js" />
     <Content Include="GameCode\main.js" />
-    <Content Include="GameCode\Models\AntModel.js" />
     <Content Include="GameCode\Models\AssetModel.js" />
     <Content Include="GameCode\Models\EntityModel.js" />
     <Content Include="GameCode\Models\GameModel.js" />

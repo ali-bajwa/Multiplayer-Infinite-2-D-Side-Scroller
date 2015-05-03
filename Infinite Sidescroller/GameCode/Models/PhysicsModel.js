@@ -153,6 +153,15 @@ r_templates.Hyena = {
 	//mobexp++
 };
 
+r_templates.Medusa = {
+    parent: r_templates.living,
+    width: 1.4,
+    height: 2.8,
+    type: "dynamic",
+    x: 65,
+    y: 10,
+};
+
 r_templates.test = {
 	width: 1,
 	height: 2,

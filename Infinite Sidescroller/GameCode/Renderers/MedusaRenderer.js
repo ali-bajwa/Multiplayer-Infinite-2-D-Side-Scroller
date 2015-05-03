@@ -15,7 +15,7 @@ var MedusaRenderer = (function(){
 		spritesheets["Medusa"] = new createjs.SpriteSheet({
 			"framerate": 1,
 			"images": [get_asset("Medusa1"),], //MedusaSpriteSheet
-			"frames": { "regX": 5, "regY": 14, "height": 207, "width": 210, "count": 6},
+			"frames": { "regX": 0, "regY": 0, "height": 85, "width": 47.5, "count": 3},
 				"animations": {
 				"walk": [0, 2, "walk", 0.2],
 				"injury": {

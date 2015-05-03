@@ -10,7 +10,7 @@ var InitController = (function(){
 	// using html (<body onload=...); maybe using JS would be better? Idk;
 		
 
-	var init = function(mode, session_id, player_id){
+	var init = function(mode, session_id, player_id, player_id_array){
 		include();
 
 		Config.Init.mode = mode;
@@ -38,9 +38,11 @@ var InitController = (function(){
 			var asset_path = (mode == "test") ? "./assets/art/" : "../GameCode/assets/art/";
 
 		AssetController.init(asset_path);
-		
-		//setup_asset_dependent();
 
+
+		if(mode == "multiplayer" && player_id_array != null){
+			NetworkController.start_multiplayer_session(player_id_array);
+		}
 	};
 
 	var init_all_modules = function(mode){

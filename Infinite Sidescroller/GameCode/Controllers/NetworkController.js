@@ -57,6 +57,7 @@ var NetworkController = (function(){
 			peer.on('error', handle_standart_peer_error);
 			peer.on('open', on_obtaining_id_successfully);
 			NetworkModel.my_peer = peer;
+			NetworkModel.my_id = Config.Init.player_id;
 
 		}else{
 

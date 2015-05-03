@@ -30,6 +30,8 @@ var NetworkModel = function(){
 	// linked list to store the backlog of packets for the communication that needs that
 	this.package_backlog = {HEAD: null, TAIL: null} 
 
+	this.waiting_for_initial_sync = []; // list of players waiting to sync with master
+
 	// TIME 
 		this.begin_time = null; // seconds
 		this.timeout_id = null;

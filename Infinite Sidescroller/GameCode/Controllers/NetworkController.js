@@ -121,7 +121,7 @@ var NetworkController = (function(){
 
 		console.log("Obtained id sucessfully, my id is", id);
 
-		if(Config.Init.mode != "test"){
+		if(Config.Init.mode == "test"){
 			console.log("Playing in testing multiplayer mode");
 		}else{
 			console.log("Playing in normal multiplayer mode");
@@ -136,6 +136,7 @@ var NetworkController = (function(){
 		// allow time for connections to be established, then pick the master
 		NetworkModel.timeout_id = setTimeout(pick_the_master, Config.Remote.notification_wait);
 	};
+
 
 	var connect_to_others = function(){
 		/**
@@ -157,6 +158,7 @@ var NetworkController = (function(){
 		}
 
 	};
+
 	
 	var on_peer_error = function(error){
 		/**
@@ -168,6 +170,7 @@ var NetworkController = (function(){
 		*/
 		//console.warn("Peer error", error);
 	};
+
 	
 	var setup_my_peer_test = function(error){
 		/**
@@ -264,14 +267,13 @@ var NetworkController = (function(){
 				var id = ids[i];
 
 				if(conns[id] != null && id != NetworkModel.my_id){
-					NetworkModel.master_id = id;
+					set_master(id);
 					console.log("The master is", id);
 					break;
 				}else if(id == NetworkModel.my_id){
 					// i am the best candidate for master
-					Config.Remote.master = true;
 					console.log("I am the law (was chosen as master)");
-					NetworkModel.master_id = id;
+					set_master(id);
 					break;
 				}
 			}
@@ -280,6 +282,69 @@ var NetworkController = (function(){
 		GameController.continue_game();
 
 	}; // end pick_the_master
+	
+	var set_master = function(id){
+		/**
+		* set the master to the peer with given id
+		* and perform all associated procedures
+		*/
+
+		NetworkModel.master_id = id;
+
+		console.log("here");
+		
+		
+		if(NetworkModel.master_id == NetworkModel.my_id){
+			// if master
+
+			// set the master flag
+			Config.Remote.master = true;
+			
+			
+		}// fi
+
+		// send out initial sync data
+		send_initialization_data();
+	};
+
+	var send_initialization_data = function(){
+		/**
+		* send the initialization data to the peer with the given id
+		*
+		*/
+
+		var conns = NetworkModel.connections;
+		for(var id in conns){
+			if(id != NetworkModel.my_id && conns[id]){
+				send_initialization_data_to(id);
+			}
+		}
+
+	};
+
+
+	var send_initialization_data_to = function(id){
+		/**
+		* description
+		*/
+
+		console.log("sending initialization data to", id);
+		
+		
+		if(NetworkModel.master_id == NetworkModel.my_id){
+			data = [];
+
+			var arr = MultiplayerSyncController.get_initialization_data_master();
+
+			for(var i = 0; i < arr.length; i++){
+				data.push(arr[i]);
+			}
+
+			send_to(id, {op: "special_communication", special_communication: true, message: "I am the law!", master_id: NetworkModel.my_id});
+			send_to(id, data);
+		}
+	};
+	
 	
 	var new_peer = function(id){
 		/**
@@ -317,25 +382,10 @@ var NetworkController = (function(){
 		nfree_ids.push(id);
 
 		conn.on('data', on_data_arrival);
-
-		if(Config.Remote.master){
-			// If I am the master, I want to notify them about it
-			setTimeout(function(){
-					send_to(id, {special_communication: true, message: "I am the law!", master_id: NetworkModel.my_id});
-				},
-				Config.Remote.connection_timeout
-			);
-		}
-
 		setTimeout(function(){
-				MultiplayerSyncController.network_event_handler({
-					type: "new_connection",
-					network_id: id,
-				});
-			},
-			Config.Remote.connection_timeout
-		);
-
+				send_initialization_data_to(id)
+			}
+			, Config.Remote.connection_timeout);
 
 	};
 
@@ -441,10 +491,13 @@ var NetworkController = (function(){
 			if(data.message == "I am the law!"){
 				var m_id = data.master_id;
 
-				NetworkModel.master_id = m_id;
+				set_master(m_id);
 				console.log("The master is", m_id);
-				clearTimeout(NetworkModel.timeout_id); // will give an error if timeout passed?
+				//clearTimeout(NetworkModel.timeout_id); // will give an error if timeout passed?
 			}
+
+			// stop processing
+			return;
 		}
 
 		if(NetworkModel.recieve_array == null){
@@ -524,12 +577,6 @@ var NetworkController = (function(){
 		* stuff
 		*/
 
-		// TEMPORARYYYYYYYYYYYYYYYYYYYYYYYYYY	
-		//NetworkModel.output_cell = NetworkModel.output_cell || {};
-		//NetworkModel.output_cell[data.purpose] = data.content;
-		
-		
-		
 		NetworkModel.send_array = NetworkModel.send_array || [];
 
 		NetworkModel.send_array.push(data);
@@ -539,7 +586,6 @@ var NetworkController = (function(){
 		/**
 		* temp
 		*/
-		
 		
 		if(NetworkModel.send_array != null){
 			

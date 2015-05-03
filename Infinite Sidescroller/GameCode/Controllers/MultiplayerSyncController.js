@@ -29,24 +29,6 @@ var MultiplayerSyncController = (function(){
 
 		var op_packet = MultiplayerSyncModel.op_packets_table; //op_packet is a list of objects
 
-
-		// the following loop will store packets based on their op
-		/*if(data != null){
-			for(var i = 0; i < data.length; i++){ //for each packet in buffer
-				var packet = data[i];
-				var op = packet.op; //get packet op
-				op_packet[op] = op_packet[op] || [];
-				if(op != null){
-					op_packet[op].push(packet);
-				}else{
-					console.log(packet);
-					throw "Error, this packet has no op property"
-				}
-			}
-		}*/
-		
-		//handle_packets(data); // Seans
-
 		if(data != null){
 			for(var i = 0; i < data.length; i++){
 				// for each packet in incoming packets,
@@ -156,187 +138,12 @@ var MultiplayerSyncController = (function(){
 				throw "op for this packet is undefined";
 				break;
 			case "spawn":
-				//if(packet.type == "companion"){
-					//if(packet.player_id == NetworkController.get_network_id()){
-						//// if I am receiving notification about my own hero spawned
-						//// spawn hero instead of companion
-						//packet.type = "hero";
-					//}
-				//}else if(packet.type == "hero"){
-					//// someone requested hero spawn,
-					//// but I should spawn companion
-					//packet.type = "companion";
-				//}
 				break;
 			//default:
 		}
 
 		return packet;
 	};
-	
-	
-	
-	/*
-	iterates through packets and parses them based on op (operation)
-	*/
-	/*var handle_packets = function(data){
-		if(data != null){
-			for(i = 0;i < data.length; i++){
-				packet = data[i];
-				switch (packet.op){
-					case null:
-						break;
-					case "spawn":
-						if (packet.is_request == Config.Remote.master){
-							handle_spawn(packet);
-						}
-						break;
-					case "delete":
-						if (packet.is_request == Config.Remote.master){
-							handle_delete(packet);
-						}
-						break;
-				}
-			}
-		}
-	};
-	
-	var get_packets_by_op = function(op){
-		[>*
-		* gets all packets with the operation >op<
-		* for you
-		<]
-		return MultiplayerSyncModel.op_packets_table[op];
-	};
-	
-		[>
-		The handle_spawn() function takes an object as a parameter
-		it handles the packet based on whether the caller is a master, slave, or single player
-		and on the contents of the packet
-		the packet holds the following
-			required data fields:
-				-string type
-						string index of class to be instantiated
-				-int x
-						x coordinate of instance
-				-int y
-						y coordinate of instance
-			automatically assigned data fields:
-				-bool is_request
-						true if request from slave
-						false if notification from master
-				-string op
-						marks packet to be parsed as instance spawner
-			additionally, the packet can be assigned any number of extra variables
-			to be parsed by the class' individual spawn() function
-		<]
-	var handle_spawn = function(packet){
-			var type;
-			var object;
-			var operation;
-			if (packet.type == null){
-				console.log(packet);
-				throw "Error, this packet has no type property"
-			}
-			if (!Config.Remote.connected){ //if singleplayer
-				packet.assign = true;
-				fulfill_spawn_request(packet);
-			}else if (Config.Remote.master){ //if master
-				packet.assign = true;
-				packet = fulfill_spawn_request(packet);
-				send_spawn_notifications(packet);
-			}else{ //if slave
-				if (packet.entity_id != null){//if called in response to a notification
-					packet.assign = false;
-					fulfill_spawn_request(packet);
-				}else{//if called directly from slave session
-					send_spawn_request(packet);
-				}
-			}
-	};
-		
-	var fulfill_spawn_request = function(packet){
-			var operation;
-			var object;
-			var type = packet.type;
-			if (type != "hero"){
-				operation = EntityController.get_operation(type); //get relevant spawn() function from EntityController
-			}else{
-				if (typeof packet.controller_id === 'undefined' || packet.controller_id == NetworkController.get_network_id()){
-					packet.controller_id = NetworkController.get_network_id();
-					operation = EntityController.get_operation("hero");
-				}else{
-					operation = EntityController.get_operation("companion");
-				}
-			}
-		object = new operation(packet.x,packet.y);
-		if (packet.assign){
-			IdentificationController.assign_id(object);
-			packet.entity_id = object.id;
-		}else{
-			IdentificationController.force_id(object,packet.entity_id);
-		}
-		EntityController.reg_for_logic_update(object);
-		return packet;
-	}
-		
-	var handle_delete = function(packet){
-		if (packet.id == null){
-			console.log(packet);
-			throw "Error, this packet has no id property"
-			}
-			var id = packet.id;
-			var object;
-			object = IdentificationController.get_by_id(id);
-			if (!Config.Remote.connected){ //if singleplayer
-				EntityController.fulfill_delete_request(object);
-			}else if (Config.Remote.master){ //if master
-				console.log("master issues death sentence");
-				EntityController.fulfill_delete_request(object); 
-				packet.entity_id = object.id;
-				send_delete_notifications(packet);
-			}else{ //if slave
-				if (typeof packet.entity_id !== 'undefined'){//if called in response to a notification
-					EntityController.fulfill_delete_request(object); 
-					console.log("slave got its wish");
-				}else{//if called directly from slave session
-					send_delete_request(packet);
-					console.log("slave requests death sentence");
-				}
-			}
-		};
-	
-	//send spawn request to master
-	var send_spawn_request = function(packet){
-		packet.op = "spawn";
-		packet.is_request = true;
-		NetworkController.add_to_next_update(packet);
-	};
-	
-	//var send_spawn_notifications = function(x, y, type, id, extras){
-	var send_spawn_notifications = function(packet){
-		//sends notifications about entity spawned, so remote people may
-		//spawn their own representations of it
-		packet.op = "spawn";
-		packet.is_request = false;
-		NetworkController.add_to_next_update(packet);
-	};
-	
-	var send_delete_request = function(packet){
-		packet.op = "delete";
-		packet.is_request = true;
-		NetworkController.add_to_next_update(packet);
-	};
-	
-	//var send_spawn_notifications = function(x, y, type, id, extras){
-	var send_delete_notifications = function(packet){
-		//sends notifications about entity spawned, so remote people may
-		//spawn their own representations of it
-		packet.op = "delete";
-		packet.is_request = false;
-		NetworkController.add_to_next_update(packet);
-	};*/
-
 	
 
 	var patch = function(object, func){
@@ -369,7 +176,17 @@ var MultiplayerSyncController = (function(){
 		object.prototype[func.name] = new_function;
 		
 	};
+
+	var get_initialization_data_master = function(){
+		/**
+		* get array packets that should be sent from master to all other people after the connection
+		* with them is established
+		*/
+		
+		return [{op: "terrain_seed", seed: TerrainController.get_seed(),}];
+	};
 	
+
 	var network_event_handler = function(network_event){
 		/**
 		* called from the network controller when certain events occur
@@ -379,13 +196,6 @@ var MultiplayerSyncController = (function(){
 		var id = network_event.network_id;
 		switch (type) {
 			case 'new_connection':
-				if(Config.Remote.master){
-					// if master, send the seed for terrain sync
-					NetworkController.send_to(id, {
-						op: "terrain_seed",
-						seed: TerrainController.get_seed(),
-					});
-				}
 				
 				break;
 			
@@ -399,6 +209,8 @@ var MultiplayerSyncController = (function(){
 		* description
 		*/
 		
+		console.log("syncing my seed with master; the seed is", packet.seed);
+		
 		var seed = packet.seed;
 		if(seed != null){
 			TerrainController.set_seed(seed);
@@ -411,16 +223,10 @@ var MultiplayerSyncController = (function(){
 		// declare public
 		init: init, 
 		update: update,
-		//get_packets_by_op: get_packets_by_op,
-		//handle_spawn: handle_spawn,
-		//handle_delete: handle_delete,
-		//send_spawn_request: send_spawn_request,
-		//send_spawn_notifications: send_spawn_notifications,
-		//send_delete_request: send_delete_request,
-		//send_delete_notifications: send_delete_notifications,
 		route_outcoming_packet: route_outcoming_packet,
 		route_incoming_packet: route_incoming_packet,
 		network_event_handler: network_event_handler,
+		get_initialization_data_master: get_initialization_data_master,
 	};
 })();
 

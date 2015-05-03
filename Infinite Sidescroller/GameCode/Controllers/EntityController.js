@@ -15,7 +15,7 @@ var EntityController = (function () {
 		//	"hero": HeroLogic,
 		//	"companion": EsteemedCompanionLogic,
 		//};
-       
+
         type_logic_table = {
             "ant": AntLogic,
             "hero": HeroLogic,

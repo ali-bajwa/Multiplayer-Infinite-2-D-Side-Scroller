@@ -146,6 +146,7 @@ var KeyboardModel = function(){
 			"c": "connect",
 			"v": "request_hero",
 			"i": "show_ids",
+            "k": "spawn_pizza",
 		},
 
 	}

@@ -54,6 +54,7 @@ var GraphicsController = (function(){
 			"terrain_cell": TerrainCellRenderer,
 			"terrain_slice": TerrainSliceRenderer,
 			"companion": EsteemedCompanionRenderer,
+            "pizza": PizzaRenderer,
 		};
 
 		get_asset = AssetController.get_asset; // for quicker access

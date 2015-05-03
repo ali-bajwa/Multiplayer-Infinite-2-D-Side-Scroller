@@ -601,6 +601,7 @@
     <Content Include="GameCode\Logic\GriffinLogic.js" />
     <Content Include="GameCode\Logic\HeroLogic.js" />
     <Content Include="GameCode\Logic\HyenaLogic.js" />
+    <Content Include="GameCode\Logic\PizzaLogic.js" />
     <Content Include="GameCode\main.js" />
     <Content Include="GameCode\Models\AntModel.js" />
     <Content Include="GameCode\Models\AssetModel.js" />
@@ -627,6 +628,7 @@
     <Content Include="GameCode\Renderers\HeroRenderer.js" />
     <Content Include="GameCode\Renderers\HUDRenderer.js" />
     <Content Include="GameCode\Renderers\HyenaRenderer.js" />
+    <Content Include="GameCode\Renderers\PizzaRenderer.js" />
     <Content Include="GameCode\Renderers\TerrainCellRenderer.js" />
     <Content Include="GameCode\Renderers\TerrainSliceRenderer.js" />
     <Content Include="Global.asax" />

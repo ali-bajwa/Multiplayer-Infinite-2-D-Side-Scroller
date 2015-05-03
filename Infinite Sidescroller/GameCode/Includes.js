@@ -70,7 +70,7 @@ var Include = function(){
 			"TerrainSliceRenderer",
 			"BackgroundRenderer",
 			"HUDRenderer",
-
+            "PizzaRenderer",
 			"EsteemedCompanionRenderer",
 		],
 
@@ -80,6 +80,7 @@ var Include = function(){
 			"GriffinLogic",
 			"HyenaLogic",
 			"EsteemedCompanionLogic",
+            "PizzaLogic",
 		],
 
 	};//end module_names
@@ -139,7 +140,7 @@ var Include = function(){
 			TerrainSliceRenderer: require("./Renderers/TerrainSliceRenderer.js"),
 			BackgroundRenderer: require("./Renderers/BackgroundRenderer.js"),
 			HUDRenderer: require("./Renderers/HUDRenderer.js"),
-			
+			PizzaRenderer: require("./Renderers/PizzaRenderer.js"),
 			
 			
 			
@@ -151,7 +152,7 @@ var Include = function(){
 			HyenaLogic: require("./Logic/HyenaLogic.js"),
 			HeroLogic: require("./Logic/HeroLogic.js"),
 			EsteemedCompanionLogic: require("./Logic/EsteemedCompanionLogic.js"),
-			
+			PizzaLogic: require("./Logic/PizzaLogic.js"),
 
 		};
 

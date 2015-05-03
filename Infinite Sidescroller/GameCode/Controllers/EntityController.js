@@ -15,7 +15,6 @@ var EntityController = (function () {
 		//	"hero": HeroLogic,
 		//	"companion": EsteemedCompanionLogic,
 		//};
-        console.log(MedusaLogic);
         type_logic_table = {
             "ant": AntLogic,
             "hero": HeroLogic,

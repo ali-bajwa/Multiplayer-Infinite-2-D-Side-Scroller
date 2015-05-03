@@ -39,7 +39,7 @@ var TerrainSliceRenderer = (function(){
 						if (kind == 1){ //if tile is part of the ground
 							switch (position){
 									case "surface":
-										console.log(WorldController.get_season());
+										//console.log(WorldController.get_season());
 										var tile_texture = surface_textures[WorldController.get_season()];
 									break;
 								case "underground":

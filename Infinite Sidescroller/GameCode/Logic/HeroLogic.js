@@ -141,8 +141,14 @@ var HeroLogic = (function(){
 		var hero = info.Me.entity;
 		var other = info.Them.entity;
 		if (other.type == "pizza") {
-		    hero.hit_taken = true;
-		    hero.damage_taken = other.regen;
+		    if (hero.hp <= 90) {
+		        hero.damage_taken = other.regen;
+		        hero.hit_taken = true;
+		    }
+		    else if (hero.hp != 100) {
+		        hero.damage_taken = hero.hp - 100;
+		        hero.hit_taken = true;
+		    }
 		}
 		if (info.Me.fixture_name == "bottom"){
 			if(info.Them.fixture_name == "top" || other.kind == 1 || other.kind == 2){

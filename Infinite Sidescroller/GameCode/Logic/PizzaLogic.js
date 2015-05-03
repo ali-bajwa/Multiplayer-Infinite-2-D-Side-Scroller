@@ -68,7 +68,7 @@
 
     var begin_contact = function (contact, info) {
         //handle collisions here
-        if (info.Them.entity.type == "hero") {
+        if (info.Them.entity.type == "hero" && info.Them.entity.hp < 100) {
             info.Me.entity.used = true;
         }
 

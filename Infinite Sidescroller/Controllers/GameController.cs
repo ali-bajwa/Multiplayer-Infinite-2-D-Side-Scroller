@@ -18,42 +18,26 @@ namespace Infinite_Sidescroller.Controllers
 			return View();
 		}
 
-    //[AjaxOnly]
-    //public ActionResult SaveScore(int sessionid, string userid, int score)
-    //{
-    //  GameScore ScoreEntry = new GameScore(sessionid, userid, score);
-    //  GameDB.GameScore.Add(ScoreEntry);
-    //  if (HttpContext.Request.IsAjaxRequest())
-    //  {
-    //    var serializer = new JavaScriptSerializer();
-    //    serializer.MaxJsonLength = Int32.MaxValue;
-    //    var result = new ContentResult
-    //    {
-    //      Content = serializer.Serialize(ScoreEntry),
-    //      ContentType = "application/json"
-    //    };
-
-    //    return (result);
-    //  }
-
-    //  return View(); // this line will never execute
-    //}
-
-    /*
     [AjaxOnly]
-    public ActionResult setJsonInfo(int sessionid, string jsonstring, int packetid)
+    public ActionResult SaveScore(int sessionid, string userid, int score)
     {
-      bool result = false;
-      ServerClient newentry = new ServerClient(sessionid, jsonstring, packetid);
+      Leaderboard ScoreEntry = new Leaderboard();
+      GameDB.Leaderboard.Add(ScoreEntry);
+      GameDB.SaveChanges();
+      if (HttpContext.Request.IsAjaxRequest())
+      {
+        var serializer = new JavaScriptSerializer();
+        serializer.MaxJsonLength = Int32.MaxValue;
+        var result = new ContentResult
+        {
+          Content = serializer.Serialize(ScoreEntry),
+          ContentType = "application/json"
+        };
 
-      GameDB.ServerClient.Add(newentry);
+        return (result);
+      }
 
-      return View(result);
+      return View(); // this line will never execute
     }
-
-    public ActionResult getJsonInfo(int sessionid, int? packetid) 
-    {
-
-    }*/
 	}
 }

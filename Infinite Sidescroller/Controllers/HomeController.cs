@@ -26,9 +26,11 @@ namespace Infinite_Sidescroller.Controllers
     // GET: /Leaderboard
     public ActionResult Leaderboard()
     {
-      List<GameScore> Highscores = GameDB.GameScore.OrderByDescending(entry => entry.Score).Take(10).ToList();
+      List<Leaderboard> Multiplayer = GameDB.Leaderboard.OrderByDescending(entry => entry.Score).Take(10).Where(entry => entry.GameType == true).ToList();
+      List<Leaderboard> Singleplayer = GameDB.Leaderboard.OrderByDescending(entry => entry.Score).Take(10).Where(entry => entry.GameType == false).ToList();
       LeaderboardViewModel model = new LeaderboardViewModel();
-      model.Highscores = Highscores;
+      model.SinglePlayer = Singleplayer;
+      model.Multiplayer = Multiplayer;
 
       return View(model);
     }

@@ -14,6 +14,8 @@ namespace Infinite_Sidescroller.Models
       Database.SetInitializer<GameDB>(null);
     }
 
-    public DbSet<GameScore> GameScore { get; set; }
+    public DbSet<Leaderboard> Leaderboard { get; set; }
+    public DbSet<GameSession> GameSession { get; set; }
+    public DbSet<GameSessionxUser> GameSessionxUser { get; set; }
   }
 }

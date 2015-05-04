@@ -2,25 +2,59 @@
 @{
     ViewBag.Title = "Leaderboard";
 }
-<section id="leaderboard_wrapper">
-    <div id="leaderboard_header">
+
+@section Scripts {
+  <script type="text/javascript">
+    $(".multiplayerbutton").on("Click", function () {
+      $(".leaderboard_table.singleplayer").hide();
+      $(".leaderboard_table.multiplayer").show();
+    }, false);
+
+    $(".singleplayerbutton").on("Click", function () {
+      $(".leaderboard_table.singleplayer").show();
+      $(".leaderboard_table.multiplayer").hide();
+    }, false);
+  </script>
+  
+}
+<section class="leaderboard_wrapper">
+    <div class="leaderboard_header">
         <h1>TOP SCORES LEADERBOARD</h1>
     </div>
-    <table id="leaderboard_table">
+  <button class="singleplayerbutton">Single Player</button>
+  <button class="multiplayerbutton">Multiplayer</button>
+    <table class="leaderboard_table singleplayer">
         <tbody>
             <tr>
                 <th>Rank</th>
                 <th>Score</th>
                 <th>Username</th>
             </tr>
-          @for (int i = 1; i <= Model.Highscores.Count; i++)
+          @for (int i = 0; i < Model.SinglePlayer.Count; i++)
           {
             <tr @Html.Raw(i % 2 == 0 ? "class='alt_color'" : "")>
               <td>@i</td>
-              <td>@Model.Highscores[i].Score</td>
-              <td>@Model.Highscores[i].UserID</td>
+              <td>@Model.SinglePlayer[i].Score</td>
+              <td>@Model.SinglePlayer[i].Usernames</td>
             </tr>
           }
     </tbody>
     </table>
+  <table class="leaderboard_table multiplayer">
+    <tbody>
+      <tr>
+        <th>Rank</th>
+        <th>Score</th>
+        <th>Username</th>
+      </tr>
+      @for (int i = 0; i < Model.Multiplayer.Count; i++)
+      {
+        <tr @Html.Raw(i % 2 == 0 ? "class='alt_color'" : "")>
+          <td>@i</td>
+          <td>@Model.Multiplayer[i].Score</td>
+          <td>@Model.Multiplayer[i].Usernames</td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </section>

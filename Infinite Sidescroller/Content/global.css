@@ -521,7 +521,7 @@ form h4 {
 /*END REGISTER*/
 
 /*LEADERBOARDS PAGE*/
-#leaderboard_wrapper {
+.leaderboard_wrapper {
   margin: 0 auto;
   width: 960px;
   margin-top: 50px;
@@ -531,7 +531,7 @@ form h4 {
   box-shadow: 0px 0px 37px 7px rgba(0,0,0,1);
 }
 
-#leaderboard_header {
+.leaderboard_header {
   background: url("../content/images/harbor.jpg") no-repeat center center;
   background-size: cover;
   width: 100%;
@@ -543,12 +543,12 @@ form h4 {
   box-shadow: inset 4px 0px 126px -8px rgba(0,0,0,1);
 }
 
-  #leaderboard_header h1 {
+  .leaderboard_header h1 {
     font-size: 3.5em;
     text-shadow: 4px 4px rgb(60, 0, 0);
   }
 
-#leaderboard_table {
+.leaderboard_table {
   border-collapse: collapse;
   width: 100%;
   font-family: "Gentium Book Basic", serif;

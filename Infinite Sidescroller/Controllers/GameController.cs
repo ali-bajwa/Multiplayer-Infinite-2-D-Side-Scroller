@@ -18,26 +18,26 @@ namespace Infinite_Sidescroller.Controllers
 			return View();
 		}
 
-    [AjaxOnly]
-    public ActionResult SaveScore(int sessionid, string userid, int score)
-    {
-      GameScore ScoreEntry = new GameScore(sessionid, userid, score);
-      GameDB.GameScore.Add(ScoreEntry);
-      if (HttpContext.Request.IsAjaxRequest())
-      {
-        var serializer = new JavaScriptSerializer();
-        serializer.MaxJsonLength = Int32.MaxValue;
-        var result = new ContentResult
-        {
-          Content = serializer.Serialize(ScoreEntry),
-          ContentType = "application/json"
-        };
+    //[AjaxOnly]
+    //public ActionResult SaveScore(int sessionid, string userid, int score)
+    //{
+    //  GameScore ScoreEntry = new GameScore(sessionid, userid, score);
+    //  GameDB.GameScore.Add(ScoreEntry);
+    //  if (HttpContext.Request.IsAjaxRequest())
+    //  {
+    //    var serializer = new JavaScriptSerializer();
+    //    serializer.MaxJsonLength = Int32.MaxValue;
+    //    var result = new ContentResult
+    //    {
+    //      Content = serializer.Serialize(ScoreEntry),
+    //      ContentType = "application/json"
+    //    };
 
-        return (result);
-      }
+    //    return (result);
+    //  }
 
-      return View(); // this line will never execute
-    }
+    //  return View(); // this line will never execute
+    //}
 
     /*
     [AjaxOnly]

@@ -17,9 +17,9 @@ var AntRenderer = (function(){
 			"images": [get_asset("Ant1"), get_asset("Ant2"), get_asset("Ant3")],
 			"frames": { "regX": 3, "regY": 6, "height": 25, "width": 50, "count": 6},
 			"animations": {
-				"walk": [0, 1, "walk"],
+				"walk": [0, 1, "walk", 0.25],
 				"upside_down": [2, 3, "upside_down"],
-				"death": [4, 5, "death"]
+				"death": [4, 5, "death"],
 			}
 		})
 

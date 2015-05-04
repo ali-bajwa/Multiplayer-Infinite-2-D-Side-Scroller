@@ -13,19 +13,35 @@ var AntLogic = (function(){
 		entity.hero_hurt_me = false;
 		entity.me_hurt_hero = false;
 		entity.death_tick = 0;
+
 		entity.hp = 3;
 		entity.speed = 3;
 		entity.damage = 1;
 		entity.point_value = 50;
+
+		entity.AI_state = "walk";//use entity to keep track of the enemy's AI state
+		
 		entity.can_attack = true;
 		entity.aliveflag = true;
 		entity.unhurtflag = true;
-		entity.start_walking = true;
+		entity.needs_graphics_update = false;
+
+		entity.direction = false;
 		entity.pop = 40;
 		entity.popup = 0;
-		entity.animation = "walk";
-		entity.decay_duration = 0;
 		
+		entity.can_leap = true;		//leaping enabled
+
+		entity.maintenance_frequency = 20;//ticks between routine maintenance checks
+		entity.maintenance_timer = entity.maintenance_frequency;
+
+		entity.barely_obstructed = false;
+		entity.collision_buffer = 0.2	//the region of overlap accounted for during collision checking
+		entity.path_blocked = false;	//is entity deprecated? set during collision
+		entity.obstruction_tolerance = 2;//how many times the hyena can be blocked before he takes action
+		entity.blocked_count = 0;			//tracks number of times blocked between maintenance checks
+
+
 		return entity;
 	};
 
@@ -56,63 +72,122 @@ var AntLogic = (function(){
 
 	};
 
+    //Begin Ant AI --------------------------------------------------------------------------------
 	var tick_AI = function(ant){
-		/* Is ran each tick from the EntityController.update for every registered
+	    /* Is ran each tick from the EntityController.update for every registered
 			entity of this type. I given entity_instance
 		*/
 
 	    //if enemy is dead, die
-		//if (ant.body.GetWorldCenter().y > 22 || ant.body.GetWorldCenter().x < Config.Player.movement_edge - 1) {
-			//EntityController.delete_entity();
-			//console.log("drop of death");
-		//}
-		//
-		if (ant.hp <= 0){
-			ant.die();
-		}else{
-			if(ant.hp == 1){
-				ant.popup++;
-				if(ant.popup == ant.pop){
-					ant.jump(10, -20);
-					ant.hp++;
-					ant.popup = 0;
-					ant.can_attack = true;
-					ant.unhurtflag = true;
-					ant.change_animation("walk");
-				}
-			}else{ // hp > 1
-				//do maintenance
-				ant.direction_previous = ant.direction;
-				ant.x_previous = ant.body.GetWorldCenter().x
-				//if blocked, turn around
-				if((!ant.path_free() || ant.xprevious == ant.body.GetWorldCenter().x) && !ant.in_air()){
-					ant.direction = !ant.direction;
-				}
-				//move forward
-				ant.move(ant.speed);
-				ant.change_animation("walk");
-			}
-			if (ant.damage_taken){
-				ant.change_animation("upside_down");
-				ant.take_damage();
-			}
-		}
+	    //if (ant.body.GetWorldCenter().y > 22 || ant.body.GetWorldCenter().x < Config.Player.movement_edge - 1) {
+	    //EntityController.delete_entity();
+	    //console.log("drop of death");
+	    //}
+	    //
+	    if (ant.hp <= 0) { //If Ant is Dead, Die
+	        ant.die();
+	    } else { // hp > 1
+
+	        ant.change_animation("walk");
+
+	        //Maintenance....
+	        ant.direction_previous = ant.direction;				//remember direction at start of tick
+	        ant.x_previous = ant.body.GetWorldCenter().x; //remember x at start of tick
+
+
+	        //do maintenance
+	        //ant.direction_previous = ant.direction;
+	        //ant.x_previous = ant.body.GetWorldCenter().x
+	        //if blocked, turn around
+	        //if ((!ant.path_free() || ant.xprevious == ant.body.GetWorldCenter().x) && !ant.in_air()) {
+	        //    ant.direction = !ant.direction;
+	        //}
+
+	        if (ant.animation == "walk") { //Move forward
+	            ant.move(ant.speed);
+	        }
+
+	        //Run Main AI Script.....
+	        if (!ant.in_air() || ant.body.GetLinearVelocity().y == 0) { //if on ground OR if we suspect he's stuck on a corner
+	            if (ant.enemy_in_range(ant.sight_range)) { //if enemy nearby
+
+	                if (ant.hit_taken) {
+	                    ant.change_animation("upside_down");
+	                    ant.take_damage();
+	                }
+	                else if ((ant.path_blocked) && ant.can_leap && ant.leap_cooldown_timer <= 0) { //if  path is blocked, and leaping is enabled, leap
+	                    ant.direction = ant.direction_nearest_enemy();
+	                    leap(ant);
+	                    ant.can_leap = false;
+	                    ant.leap_cooldown_timer = ant.leap_cooldown;
+	                } else {
+	                    if (!ant.in_air()) { //if hyena isn't cowering or in the air, face the enemy
+	                        ant.direction = ant.direction_nearest_enemy();
+	                    }
+
+	                }
+
+	            }
+
+	            //check periodically to ensure the ant is not stuck and other routine maintenance
+	            ant.maintenance_timer--;
+	            if (ant.maintenance_timer == 0) {
+	                if (ant.path_free()) {
+	                    ant.path_blocked = false;
+	                }
+	                if (ant.blocked_count > ant.obstruction_tolerance) {	//you know he's stuck now
+	                    if (ant.can_leap) {
+	                        ant.path_blocked = true;
+	                        leap(ant);	//attempt to get out of jam or stuck
+	                        ant.path_blocked = false;
+	                    }
+	                }
+	                ant.blocked_count = 0;
+	                ant.maintenance_timer = ant.maintenance_frequency; //reset check timer
+	            }
+
+	            //if (ant.hp == 1) {
+	            //    ant.popup++;
+	            //    if (ant.popup == ant.pop) {
+	            //        ant.jump(10, -20);
+	            //        ant.hp++;
+	            //        ant.popup = 0;
+	            //        ant.can_attack = true;
+	            //        ant.unhurtflag = true;
+	            //        ant.change_animation("walk");
+	            //    }
+	            //}
+	        }
+	    }
 	};
 
-	// // //Set up Collision handler
-	
-	
-	var begin_contact = function(contact, info){
-		//handle collisions here
-		
-		if(info.Them.type == "hero"){
-			if(info.Them.fixture_name != "bottom" && info.Me.entity.can_attack){
-				info.Me.entity.me_hurt_hero = true;
-			}else{
-				info.Me.entity.hit_taken = true;//take damage if enemy collides from above and distance < vulnerability radius
-				info.Me.entity.damage_taken = info.Them.entity.damage;
-			}
-		}
+    //End Ant AI ---------------------------------------------------------
+
+
+    //Helper Functions -------------------------------------------------
+	var leap = function (ant) {
+	    if (ant.path_blocked) {//jump out of a hole or over a wall
+	        ant.jump(-10 + (20 * ant.direction), -1 * ant.jump_force);
+	    } else { //leap viciously at hero
+	        ant.jump((2 * ant.jump_force * ant.direction) - ant.jump_force, -1 * ant.jump_force / 2);
+	    }
+	    ant.can_leap = false;
+	};
+
+
+
+	//Collision Handlers ----------------------------------------------
+	var begin_contact = function (contact, info) {
+	    //handle collisions here
+
+	    if (info.Them.type == "hero") {
+	        if (info.Them.fixture_name != "bottom" && info.Me.entity.can_attack) {
+	            info.Me.entity.me_hurt_hero = true;
+	        } else {
+	            info.Me.entity.hit_taken = true;//take damage if enemy collides from above and distance < vulnerability radius
+	            info.Me.entity.damage_taken = info.Them.entity.damage;
+	        }
+	    }
 	};
 
 	var end_contact = function(contact, info) {

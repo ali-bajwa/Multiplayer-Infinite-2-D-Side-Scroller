@@ -24,12 +24,18 @@ var CentaurLogic = (function(){
 		entity.can_attack = true;//use entity for enemies who alternate between 
 		//entity.cooldown_timer=-1;
 		entity.AI_state = "walk";//use entity to keep track of the enemy's AI state
+
+		entity.can_attack = true;
 		entity.aliveflag = true;
 		entity.unhurtflag = true;
 		entity.needs_graphics_update = false;
 
 		entity.direction = false;
 		entity.jolt_force = 100;
+
+		entity.blinking = false;
+		entity.blink_timer = -1;
+		entity.blink_duration = 20;//how long the entity blinks after taking damage
 		
 		return entity;
 	};
@@ -72,6 +78,13 @@ var CentaurLogic = (function(){
 		}else{ // Centaur.hp >= 1
 				Centaur.change_animation("walk");
 			
+				if (Centaur.blinking) {
+				    Centaur.blink_timer--;
+				    if (Centaur.blink_timer == 0) {
+				        Centaur.blinking = false;
+				    }
+				}
+
 			if (Centaur.animation == "walk"){
 				Centaur.move(Centaur.speed);
 			}
@@ -80,7 +93,6 @@ var CentaurLogic = (function(){
 			}
 			if (Centaur.hit_taken){
 				Centaur.take_damage();
-				Centaur.change_animation("injury");
 			}
 		}
 	};

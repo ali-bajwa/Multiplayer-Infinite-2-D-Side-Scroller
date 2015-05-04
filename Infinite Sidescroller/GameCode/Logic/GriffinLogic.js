@@ -30,7 +30,9 @@ var GriffinLogic = (function(){
 
 		entity.direction = false;
 		entity.fly_force = 100;
-		
+		entity.blinking = false;
+		entity.blink_timer = -1;
+		entity.blink_duration = 20;//how long the entity blinks after taking damage
 		return entity;
 	};
 
@@ -70,7 +72,15 @@ var GriffinLogic = (function(){
 		if (Griffin.hp <= 0) {
 			Griffin.die();
 		}else{ // Griffin.hp >= 1
-			if (Griffin.in_air()){
+
+		    if (Griffin.blinking) {
+		        Griffin.blink_timer--;
+		        if (Griffin.blink_timer == 0) {
+		            Griffin.blinking = false;
+		        }
+		    }
+
+		    if (Griffin.in_air()) {
 				Griffin.change_animation("fly");
 			}else{
 				Griffin.change_animation("walk");
@@ -82,8 +92,7 @@ var GriffinLogic = (function(){
 			    Griffin.jump((2 * Griffin.fly_force * Griffin.direction) - Griffin.fly_force, Griffin.fly_force/2);
 			}
 			if (Griffin.hit_taken){
-				Griffin.take_damage();
-				Griffin.change_animation("injury");
+			        Griffin.take_damage(); //if hit, take damage
 			}
 		}
 	};

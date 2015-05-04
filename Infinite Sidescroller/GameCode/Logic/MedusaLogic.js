@@ -30,6 +30,10 @@ var MedusaLogic = (function(){
 
 		entity.direction = false;
 		entity.jolt_force = 100;
+
+		entity.blinking = false;
+		entity.blink_timer = -1;
+		entity.blink_duration = 20;//how long the entity blinks after taking damage
 		
 		return entity;
 	};
@@ -72,6 +76,13 @@ var MedusaLogic = (function(){
 		}else{ // Medusa.hp >= 1
 				Medusa.change_animation("walk");
 			
+				if (Medusa.blinking) {
+				    Medusa.blink_timer--;
+				    if (Medusa.blink_timer == 0) {
+				        Medusa.blinking = false;
+				    }
+				}
+
 			if (Medusa.animation == "walk"){
 				Medusa.move(Medusa.speed);
 			}
@@ -80,7 +91,6 @@ var MedusaLogic = (function(){
 			}
 			if (Medusa.hit_taken){
 				Medusa.take_damage();
-				Medusa.change_animation("injury");
 			}
 		}
 	};

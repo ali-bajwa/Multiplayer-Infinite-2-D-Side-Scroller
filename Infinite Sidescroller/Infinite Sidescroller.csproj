@@ -182,9 +182,7 @@
     <Content Include="Content\Images\greek_borderC.png" />
     <Content Include="Content\Images\harbor.jpg" />
     <Content Include="Content\Images\logo1.png" />
-    <Content Include="Content\Images\pause.png" />
     <Content Include="Content\Images\pillar_background.png" />
-    <Content Include="Content\Images\play.png" />
     <Content Include="Content\Images\reposition.png" />
     <Content Include="Content\Images\sound.png" />
     <Content Include="favicon.ico" />
@@ -293,7 +291,6 @@
     <Content Include="GameCode\Models\TerrainSliceModel.js" />
     <Content Include="GameCode\Models\TestModel.js" />
     <Content Include="GameCode\Models\WorldModel.js" />
-    <Content Include="GameCode\node_modules\box2dweb\box2d.js" />
     <Content Include="GameCode\page.css" />
     <Content Include="GameCode\qunit-1.17.1.css" />
     <Content Include="GameCode\Renderers\AntRenderer.js" />
@@ -313,8 +310,6 @@
     <Content Include="GameCode\Documentation\Click Me.doc" />
     <Content Include="GameCode\Documentation\javascript.custom.snippets" />
     <Content Include="GameCode\Logic\HeroLogic.js.rej" />
-    <Content Include="GameCode\node_modules\box2dweb\package.json" />
-    <Content Include="GameCode\node_modules\box2dweb\README.md" />
     <None Include="Properties\PublishProfiles\Butts.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />

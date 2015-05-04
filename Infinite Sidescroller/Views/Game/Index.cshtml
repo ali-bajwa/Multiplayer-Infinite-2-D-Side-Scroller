@@ -8,19 +8,17 @@
 <html>
 <head>
   <title></title>
-  <script src="~/Scripts/jquery-2.1.3.js"></script>
-  <script language="javascript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-  <script>
-    function start() {
-      sidescroller_game.run();
-    }
-    window.onload = start;
-
-  </script>
+ 
 </head>
 
 <body>
-  <audio id="music" src="~/GameCode/assets/art/TheTimes.mp3" preload="auto" autoplay="autoplay"></audio>
+  <audio id="music" src="~/GameCode/assets/art/TheTimes.mp3" loop="loop" preload="auto" autoplay="autoplay"></audio>
+  <div class="controlsShowHide"><a onclick="ToggleControls(this)">CLICK ME!</a></div>
+  <section class="plaque controls">
+      <aside class="plaque_section">
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus ligula vitae orci pellentesque, eleifend sollicitudin quam tempus. Praesent rhoncus nunc nec dolor molestie, a tempor ante lobortis. Maecenas laoreet, libero nec posuere venenatis, ex massa mattis mi, ac cursus lorem felis lobortis felis. Curabitur vel lectus sed tortor rhoncus condimentum sagittis a nunc. Integer id eros pretium, imperdiet augue vel, condimentum ligula. Etiam id sollicitudin tellus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
+      </aside>     
+  </section>
   <div id="screenPosition" style="margin-top:180px; position:absolute;"></div>
   <div class="game_canvas">
     <div id="canvas_container">
@@ -31,5 +29,32 @@
       <canvas id="display_canvas" style="border:2px solid #d4af37;"></canvas>
     </div>
   </div>
+    <script src="~/Scripts/jquery-2.1.3.js"></script>
+    <script language="javascript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+    <script>
+        function start() {
+            sidescroller_game.run();
+        }
+        window.onload = start;
+    </script>
+    <script>
+        (function () {
+            var ControlsSection = document.getElementsByClassName('controls')[0];
+
+            var isShownRegex = /(^|\s)Shown(\s|$)/;
+
+            window.ToggleControls = function (elem) {
+                if (!ControlsSection) return;
+
+                if (isShownRegex.test(ControlsSection.className)) {
+                    ControlsSection.className = ControlsSection.className.replace(isShownRegex, ' ');
+                } else {
+                    ControlsSection.className += ' Shown';
+                }
+                ControlsSection.className = ControlsSection.className.trim();
+            }
+        })()
+
+    </script>
 </body>
 </html>

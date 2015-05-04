@@ -94,34 +94,42 @@ body {
   border-image: url("../Content/images/greek_borderC.png") 60 60 round;
 }
 
-  .plaque p, .plaque h1, .plaque h2, .plaque h3 {
+.plaque p, .plaque h1, .plaque h2, .plaque h3 {
     color: rgba(191, 187, 151, 0.8);
-    text-shadow: 1px 4px 6px #e7e2b6, 0 0 0 #000, 1px 4px 6px #e7e2b6;
-  }
+    text-shadow: 1px 4px 6px #e7e2b6, 0 0 0 #000, 1px 4px 6px #e7e2b6; 
+}
 
 .plaque_section {
   margin: 10px 0px 10px 0px;
 }
 
-  .plaque_section h3 {
-    text-align: center;
-  }
+.plaque_section h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
 
-  .plaque_section img {
+.plaque_section img {
     height: 200px;
     width: auto;
     float: left;
     margin: 10px;
-  }
+}
 
-  .plaque_section p {
-    padding-top: 5%;
+.plaque_section p {
     padding-bottom: 5%;
-  }
+}
 
 /*END PLAQUE STYLE*/
 
 /*LORE/BESTIARY PAGE*/
+
+.monster_name {
+   text-align: center;
+}
+
+#lore p {
+   padding-top: 5%;
+}
 
 #horae {
   display: block;
@@ -135,11 +143,18 @@ body {
   text-align: center;
 }
 
+
+
 /*END LORE/BESTIARY PAGE*/
 
 /*DEVELOPERS PAGE*/
-.name {
-  float: left;
+#devs img {
+    padding-top: 5%;
+    padding-bottom: 5%;
+}
+
+#devs h3 {
+    padding-top: 5%;
 }
 /*END DEVELOPERS PAGE*/
 
@@ -211,6 +226,19 @@ canvas {
   to {
     background-position: 1024px;
   }
+}
+
+/*controls/tutorial dropdown*/
+
+.plaque.controls {
+    height: 0px;
+    overflow: hidden;
+    transition: height 1s;
+}
+
+.plaque.controls.Shown {
+    height: 100px;
+    transition: height 1s;
 }
 
 /*END GAME PAGE*/

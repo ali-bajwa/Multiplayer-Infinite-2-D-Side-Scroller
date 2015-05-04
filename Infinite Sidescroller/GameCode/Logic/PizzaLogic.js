@@ -15,7 +15,7 @@
         entity.used = false;
         entity.point_value = 0;
         entity.is_alive = false;
-        entity.regen = -10;
+        entity.regen = -25;
 
         return entity;
     };

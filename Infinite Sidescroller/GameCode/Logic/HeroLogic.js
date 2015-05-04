@@ -141,7 +141,7 @@ var HeroLogic = (function(){
 		var hero = info.Me.entity;
 		var other = info.Them.entity;
 		if (other.type == "pizza") {
-		    if (hero.hp <= 90) {
+		    if (hero.hp <= 100+other.regen) {
 		        hero.damage_taken = other.regen;
 		        hero.hit_taken = true;
 		    }

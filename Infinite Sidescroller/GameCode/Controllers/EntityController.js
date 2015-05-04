@@ -521,6 +521,11 @@ var EntityController = (function () {
 				} else if (this.death_timer <= this.decay_duration && this.death_timer > 0){
 					this.change_animation("decay");
 				} else {
+					var dif = Math.floor(WorldController.get_movement_edge()/200)+1;
+					var rand = Math.random()*100;
+					if(rand < 50/dif && this.point_value != 0){
+						spawn((this.body.GetWorldCenter().x), (this.body.GetWorldCenter().y), "pizza");
+					}
 					EntityController.delete_entity(this);//remove instance from memory
 				}
 				return;

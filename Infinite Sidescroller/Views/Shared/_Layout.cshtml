@@ -10,24 +10,6 @@
   <script src="~/Scripts/ViewpageScripts/LayoutJS.js"></script>
 </head>
 <body @Html.Raw(ViewBag.isHomepage != null ? "class='Homepage'" : "")>
-  <div style="position:absolute" id="login">
-    <div id="triangle"></div>
-    @*<div id="logindiv">
-      <h1>WELCOME</h1>
-      @model Infinite_Sidescroller.Models.LoginViewModel
-      @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form" }))
-      {
-        @Html.AntiForgeryToken()
-        @Html.TextBoxFor(m => m.UserName, new { placeholder = "USERNAME", type = "text" })
-        @Html.ValidationMessageFor(m => m.UserName)
-        @Html.PasswordFor(m => m.Password, new { type = "password", placeholder = "PASSWORD" })
-        @Html.ValidationMessageFor(m => m.Password)
-        <input type="submit" value="ENTER" />
-        <h1>@Html.ActionLink("Haven't Registered?", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</h1>
-      }
-    </div>*@
-  </div>
-
   <div id="PageOuterWrapper">
     <header id="Masthead">
       <div id="MastheadInner">

@@ -7,7 +7,7 @@
 	@Scripts.Render("~/bundles/jqueryval")
 }
   <div class="register_page_wrapper">
-    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", id = "regform" }))
+    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "regform" }))
     {
         @Html.AntiForgeryToken()
         <h4 style="padding:1%;">Create an account</h4>

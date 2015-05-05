@@ -8,36 +8,40 @@
 <html>
 <head>
   <title></title>
- 
 </head>
 
 <body>
-  <audio id="music" src="~/GameCode/assets/art/TheTimes.mp3" loop="loop" preload="auto" autoplay="autoplay"></audio>
-  <div class="controlsShowHide"><a onclick="ToggleControls(this)">CLICK ME!</a></div>
-  <section class="plaque controls">
-      <aside class="plaque_section">
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer rhoncus ligula vitae orci pellentesque, eleifend sollicitudin quam tempus. Praesent rhoncus nunc nec dolor molestie, a tempor ante lobortis. Maecenas laoreet, libero nec posuere venenatis, ex massa mattis mi, ac cursus lorem felis lobortis felis. Curabitur vel lectus sed tortor rhoncus condimentum sagittis a nunc. Integer id eros pretium, imperdiet augue vel, condimentum ligula. Etiam id sollicitudin tellus. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.</p>
-      </aside>     
-  </section>
-  <div id="screenPosition" style="margin-top:180px; position:absolute;"></div>
-  <div class="game_canvas">
-    <div id="canvas_container">
-      <div class="playPause_button">
-        <a href="javascript:void(0);" onclick="document.getElementById('music').muted = !document.getElementById('music').muted; return false"><img src="~/Content/Images/sound.png" id="mute_btn" /></a>
-      </div>
-      <a href="#screenPosition"><img src="~/Content/Images/reposition.png" id="reposition" /></a>
-      <canvas id="display_canvas" style="border:2px solid #d4af37;"></canvas>
+    <audio id="music" src="~/GameCode/assets/art/adventure.mp3" loop="loop" preload="auto" autoplay="autoplay"></audio>
+    <div class="game_canvas">
+        <div id="screenPosition" style="margin-top:180px; position:absolute;"></div>
+        <div id="canvas_container">
+            <div class="playPause_button">
+                <a href="javascript:void(0);" onclick="document.getElementById('music').muted = !document.getElementById('music').muted; return false"><img src="~/Content/Images/sound.png" id="mute_btn" /></a>
+            </div>
+            <a href="#screenPosition" id="default_position"></a>
+            <canvas id="display_canvas"></canvas>
+        </div>
+        <section class="controls">
+            <aside>
+                <img src="../content/images/arrowKeys.png" alt="Arrow Keys" />
+                <p>UP: Jump. Press twice to double jump!</p>
+                <p>Down: Press mid-air to do a vertical slam!</p>
+                <p>Left/Right: Run left/right.</p>
+            </aside>
+        </section>
+        <div class="controlsShowHide"><a onclick="ToggleControls(this)"><h4>CONTROLS</h4></a></div>
     </div>
-  </div>
     <script src="~/Scripts/jquery-2.1.3.js"></script>
     <script language="javascript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     <script>
+        //Load Game
         function start() {
             sidescroller_game.run();
         }
         window.onload = start;
     </script>
     <script>
+        //Smooth Scroll for controls/tips/tutorial/whateveryouwanttocallit
         (function () {
             var ControlsSection = document.getElementsByClassName('controls')[0];
 

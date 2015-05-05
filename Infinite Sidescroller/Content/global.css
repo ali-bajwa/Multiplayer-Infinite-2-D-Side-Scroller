@@ -159,8 +159,9 @@ body {
 /*END DEVELOPERS PAGE*/
 
 /*GAME PAGE*/
+
 .game_canvas {
-  padding-top: 100px;
+  padding-top: 25px;
   padding-bottom: 100px;
   text-align: center;
   background: url("../Content/images/pillar_background.png") no-repeat center top;
@@ -179,15 +180,14 @@ body {
   position: relative;
   height: 600px;
   width: 800px;
-  padding-top: 100px;
-  padding-bottom: 100px;
   margin: 0 auto;
 }
 
+/*play/pause buttons*/
 .playPause_button {
   position: absolute;
   right: 0;
-  bottom: 100px;
+  bottom: 0px;
   z-index: 300;
   width: 64px;
 }
@@ -218,6 +218,10 @@ canvas {
   -webkit-animation: slide 120s linear infinite;
 }
 
+#display_canvas {
+  border: 5px outset rgba(191, 187, 151, 0.8);
+}
+
 @-webkit-keyframes slide { /*for clouds*/
   from {
     background-position: 0px;
@@ -230,15 +234,51 @@ canvas {
 
 /*controls/tutorial dropdown*/
 
-.plaque.controls {
-    height: 0px;
-    overflow: hidden;
-    transition: height 1s;
+.controlsShowHide {
+    cursor: pointer;
+    background-color: #e7e2b6;
+    display: inline-block;
+    padding: 10px;
+    -webkit-border-bottom-right-radius: 20px;
+    -webkit-border-bottom-left-radius: 20px;
+    -moz-border-radius-bottomright: 20px;
+    -moz-border-radius-bottomleft: 20px;
+    border-bottom-right-radius: 20px;
+    border-bottom-left-radius: 20px;
+    border: 2px groove rgba(191, 187, 151, 0.8)
 }
 
-.plaque.controls.Shown {
-    height: 100px;
+.controlsShowHide h4, .controls p {
+    color: rgba(191, 187, 151, 0.8);
+    text-shadow: 1px 4px 6px #e7e2b6, 0 0 0 #000, 1px 4px 6px #e7e2b6; 
+}
+
+.controls {
+    background: url("../content/images/stone.png") repeat center center, #e7e2b6;
+    height: 0px;
+    max-width: 600px;
+    overflow: hidden;
     transition: height 1s;
+    margin: 0 auto;
+    border: 5px outset rgba(191, 187, 151, 0.8);
+}
+
+.controls.Shown {
+    height: 220px;
+}
+
+.controls img {
+    float: left;
+    height: 155px;
+    width: auto;
+    margin: 3% 10px 3% 10px;
+}
+
+.controls p {
+    text-align: left;
+    margin: 3% 10px 3% 10px;
+    font-weight: bold;
+    font-size: 22px;
 }
 
 /*END GAME PAGE*/

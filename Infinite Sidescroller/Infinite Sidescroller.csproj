@@ -192,11 +192,9 @@
     <Content Include="GameCode\assets\art\AntChompers.png" />
     <Content Include="GameCode\assets\art\AntChompers2.png" />
     <Content Include="GameCode\assets\art\AntChompersDeath.png" />
-    <Content Include="GameCode\assets\art\ao3project.mp3" />
     <Content Include="GameCode\assets\art\bottom_terrain.png" />
     <Content Include="GameCode\assets\art\CentaurSheet.png" />
     <Content Include="GameCode\assets\art\Chompers.png" />
-    <Content Include="GameCode\assets\art\flagship.mp3" />
     <Content Include="GameCode\assets\art\grass_fall.png" />
     <Content Include="GameCode\assets\art\grass_spring.png" />
     <Content Include="GameCode\assets\art\grass_summer.png" />
@@ -236,8 +234,6 @@
     <Content Include="GameCode\assets\art\platform_right.png" />
     <Content Include="GameCode\assets\art\platform_spikes.png" />
     <Content Include="GameCode\assets\art\satyr.png" />
-    <Content Include="GameCode\assets\art\Silverware.mp3" />
-    <Content Include="GameCode\assets\art\TheTimes.mp3" />
     <Content Include="GameCode\assets\art\warrior.png" />
     <Content Include="GameCode\B2d.js" />
     <Content Include="GameCode\bundle.js" />

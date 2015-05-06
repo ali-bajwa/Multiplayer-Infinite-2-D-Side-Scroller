@@ -119,6 +119,7 @@ var HeroLogic = (function(){
 				}
 				hero.jump_tick++;
 				if(hero.jump_tick >= 20){
+				if(hero.jump_tick >= 25){
 					hero.change_animation("finish");
 					if(hero.jumps == 0){
 						hero.animation = "finish";

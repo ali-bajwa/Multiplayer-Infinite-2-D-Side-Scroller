@@ -34,7 +34,7 @@ var AntLogic = (function(){
 
 		entity.maintenance_frequency = 20;//ticks between routine maintenance checks
 		entity.maintenance_timer = entity.maintenance_frequency;
-
+		entity.blinking = false;
 		entity.barely_obstructed = false;
 		entity.collision_buffer = 0.2	//the region of overlap accounted for during collision checking
 		entity.path_blocked = false;	//is entity deprecated? set during collision
@@ -86,6 +86,12 @@ var AntLogic = (function(){
 	    //
 	    if (ant.hp <= 0) { //If Ant is Dead, Die
 	        ant.die();
+				if (ant.blinking) {
+				    ant.blink_timer--;
+				    if (ant.blink_timer == 0) {
+				        ant.blinking = false;
+				    }
+				}
 	    } else { // hp > 1
 
 	        ant.change_animation("walk");
@@ -93,8 +99,9 @@ var AntLogic = (function(){
 	        //Maintenance....
 	        ant.direction_previous = ant.direction;				//remember direction at start of tick
 	        ant.x_previous = ant.body.GetWorldCenter().x; //remember x at start of tick
-
-
+			
+			
+			
 	        //do maintenance
 	        //ant.direction_previous = ant.direction;
 	        //ant.x_previous = ant.body.GetWorldCenter().x
@@ -102,7 +109,7 @@ var AntLogic = (function(){
 	        //if ((!ant.path_free() || ant.xprevious == ant.body.GetWorldCenter().x) && !ant.in_air()) {
 	        //    ant.direction = !ant.direction;
 	        //}
-
+			
 	        if (ant.animation == "walk") { //Move forward
 	            ant.move(ant.speed);
 	        }
@@ -114,6 +121,8 @@ var AntLogic = (function(){
 	                if (ant.hit_taken) {
 	                    ant.change_animation("upside_down");
 	                    ant.take_damage();
+						ant.blinking = true;
+						
 	                }
 	                else if ((ant.path_blocked) && ant.can_leap && ant.leap_cooldown_timer <= 0) { //if  path is blocked, and leaping is enabled, leap
 	                    ant.direction = ant.direction_nearest_enemy();

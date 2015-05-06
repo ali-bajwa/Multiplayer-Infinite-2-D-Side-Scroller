@@ -7743,7 +7743,12 @@ var HUDRenderer = (function(){
 		healthX = parseInt(new_health);
 		health_bar.graphics.clear();
 		health_bar.graphics.beginFill("red");
-		health_bar.graphics.drawRect(30,25,healthX, 20);
+		if(healthX >= 0){
+			health_bar.graphics.drawRect(30,25,healthX, 20);
+		}
+		else{
+			health_bar.graphics.drawRect(30,25,1, 20);
+		} 
 	};
 	
 	return {

@@ -18,6 +18,10 @@ var NetworkModel = function(){
 	// player_id associated with the connection object
 	this.connections = {};
 
+	// array of all peers who are currently connected to you
+	// id for your own peer is excluded, of course
+	this.connected_peers = [];
+
 	this.send_array = null;
 	this.recieve_array = null;
 

@@ -29,6 +29,10 @@ var NetworkController = (function(){
 			start_multiplayer_session(["player1", "player2", "player3", "player4", "player5", "player6", "player7", "player8"]);
 		}
 
+		if(cmds("show_connected")){
+			console.log(get_all_connected());
+		}
+
 		if(Config.Remote.connected){
 			if(Config.Remote.master){
 				// if I am the master, distribute data
@@ -208,6 +212,13 @@ var NetworkController = (function(){
 		
 		console.log("Successfully initiated new connection with the peer", id);
 
+		var connected_peers = NetworkModel.connected_peers;
+		if(connected_peers.indexOf(id) < 0){
+			// if this id isn't registered as connected yet,
+			// add to list of the connected peers
+			NetworkModel.connected_peers.push(id);
+		}
+
 		NetworkModel.connections[id] = this;
 		
 	};
@@ -218,10 +229,16 @@ var NetworkController = (function(){
 		*/
 		var id = this.peer;
 		var nfree = NetworkModel.non_free_ids;
+		var connected_peers = NetworkModel.connected_peers;
 
+		// remove from not free ids [makes sense only in test mode]
 		nfree.splice(nfree.indexOf(id), 1);
-
+		// add back to free ids [makes sense only in test mode]
 		NetworkModel.free_ids.push(id);
+
+		// remove from the list of connected peers
+		connected_peers.splice(connected_peers.indexOf(id), 1);
+		
 
 		delete NetworkModel.connections[id];
 
@@ -624,6 +641,17 @@ var NetworkController = (function(){
 			return "local";
 		}
 	};
+
+	
+	var get_all_connected = function(){
+		/**
+		* gets array of ids for all connected peers
+		* your own id isn't included, naturally
+		*/
+		
+		return NetworkModel.connected_peers;
+		
+	};
 	
 	return {
 		// declare public
@@ -635,6 +663,7 @@ var NetworkController = (function(){
 		get_network_id: get_network_id,
 		send_to: send_to,
 		start_multiplayer_session: start_multiplayer_session,
+		get_all_connected: get_all_connected,
 	};
 })();
 

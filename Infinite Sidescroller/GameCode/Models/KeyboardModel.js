@@ -139,16 +139,17 @@ var KeyboardModel = function(){
 		
 		debug: {
 			"a": "spawn_ant",
-			"m": "spawn_medusa",
-            "t": "spawn_centaur",
-			"z": "season",
-			"g": "spawn_griffin",
-			"s": "new_slice",
-			"h": "spawn_hyena",
 			"c": "connect",
-			"v": "request_hero",
+			"g": "spawn_griffin",
+			"h": "spawn_hyena",
 			"i": "show_ids",
+			"l": "show_connected",
+			"m": "spawn_medusa",
+			"s": "new_slice",
+			"v": "request_hero",
+			"z": "season",
             "k": "spawn_pizza",
+            "t": "spawn_centaur",
 		},
 
 	}

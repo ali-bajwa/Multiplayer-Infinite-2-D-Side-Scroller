@@ -118,7 +118,7 @@ var EntityController = (function () {
 				if (beyond_world_boundary(entity)) {
 					// if outside boundaries of the world, despawn
 					entity.point_value = 0;
-					despawn(entity);
+					entity.die();
 					if (entity.type == "hero") {
 							entity.hp = 0;
 					}
@@ -376,7 +376,7 @@ var EntityController = (function () {
 		this.speed = 7;
 		this.jump_force = 125;
 		this.damage = 5;
-		this.point_value = 200;
+		this.point_value = 0;
 		this.sight_range = 16; //distance at which entity detects heroes
 		this.attack_range = 8; //distance at which entity leaps at the hero
 		
@@ -520,7 +520,9 @@ var EntityController = (function () {
 			if (this.is_alive){//if alive, kill it
 				this.death_timer = this.death_duration;
 				this.is_alive = false;
-				WorldController.increase_score(this.point_value);
+				if (this.hp <= 0){
+					WorldController.increase_score(this.point_value);//if died from damage, grant score
+				}
 				this.hit_taken = false;
 				this.can_attack = false;
 				this.change_animation(this,"death");
@@ -721,21 +723,20 @@ var EntityController = (function () {
 			return;
 		}
 		
-		var player_id = packet.player_id;
 		var entity_id = packet.entity_id;
 		var entity = IdentificationController.get_by_id(entity_id);
+		if (entity.type != "hero"){
+			if(entity == null){
+				console.warn("entity is not defined for the player_id", String(player_id));
+			}else{
 
-		if(entity == null){
-			console.warn("entity is not defined for the player_id", String(player_id));
-		}else{
-
-			var vel = new B2d.b2Vec2(packet.velocity.x, packet.velocity.y);
-			var pos = new B2d.b2Vec2(packet.position.x, packet.position.y);
-			
-			entity.body.SetLinearVelocity(vel);
-			entity.body.SetPosition(pos);
+				var vel = new B2d.b2Vec2(packet.velocity.x, packet.velocity.y);
+				var pos = new B2d.b2Vec2(packet.position.x, packet.position.y);
+				
+				entity.body.SetLinearVelocity(vel);
+				entity.body.SetPosition(pos);
+			}
 		}
-		
 	};
 
 	var get_all_heroes = function(){

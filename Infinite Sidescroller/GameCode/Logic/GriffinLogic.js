@@ -103,6 +103,15 @@ var GriffinLogic = (function(){
 	var begin_contact = function(contact, info){
 		//handle collisions here
 		
+	    if ((info.Me.fixture_name == "right" || info.Me.fixture_name == "left") && info.Them.type != "pizza") {
+	        info.Me.entity.direction = !info.Me.entity.direction;
+	        console.log('hit');
+	        if (info.Them.entity.point_value > 0) {
+	            info.Me.entity.direction = Math.round(Math.random());
+	            info.Them.entity.direction = Math.round(Math.random());
+	        }
+	    }
+
 		if(info.Them.type == "hero"){
 			if(info.Them.fixture_name != "bottom" && info.Me.entity.can_attack){
 				info.Me.entity.me_hurt_hero = true;

@@ -16,6 +16,7 @@ var HeroLogic = (function(){
 		entity.damage_taken = 0;
 		entity.damage = 1;
 		entity.is_walking = false;
+		entity.point_value = 0;
 		
 		entity.jumps = 0;
 		entity.decay_duration = 35;//time between decay animation and deletion

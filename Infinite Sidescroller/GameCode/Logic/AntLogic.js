@@ -142,6 +142,7 @@ var AntLogic = (function(){
                 
 	            ant.maintenance_timer--;
 	            if (ant.maintenance_timer == 0) {
+	                ant.jump(0, -2);
 	                if (ant.path_free()) {
 	                    ant.path_blocked = false;
 	                }

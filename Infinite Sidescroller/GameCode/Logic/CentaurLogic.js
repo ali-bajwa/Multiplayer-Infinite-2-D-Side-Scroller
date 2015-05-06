@@ -30,6 +30,9 @@ var CentaurLogic = (function(){
 		entity.unhurtflag = true;
 		entity.needs_graphics_update = false;
 
+		entity.maintenance_frequency = 20;//ticks between routine maintenance checks
+		entity.maintenance_timer = entity.maintenance_frequency;
+
 		entity.direction = false;
 		entity.jolt_force = 100;
 
@@ -93,6 +96,12 @@ var CentaurLogic = (function(){
 			}
 			if (Centaur.hit_taken){
 				Centaur.take_damage();
+			}
+
+			Centaur.maintenance_timer--;
+			if (Centaur.maintenance_timer == 0) {
+			    Centaur.jump(0, -2);
+			    Centaur.maintenance_timer = Centaur.maintenance_frequency; //reset check timer
 			}
 		}
 	};

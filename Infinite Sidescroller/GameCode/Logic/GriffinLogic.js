@@ -28,6 +28,9 @@ var GriffinLogic = (function(){
 		entity.unhurtflag = true;
 		entity.needs_graphics_update = false;
 
+		entity.maintenance_frequency = 20;//ticks between routine maintenance checks
+		entity.maintenance_timer = entity.maintenance_frequency;
+
 		entity.direction = false;
 		entity.fly_force = 100;
 		entity.blinking = false;
@@ -93,6 +96,12 @@ var GriffinLogic = (function(){
 			}
 			if (Griffin.hit_taken){
 			        Griffin.take_damage(); //if hit, take damage
+			}
+
+			Griffin.maintenance_timer--;
+			if (Griffin.maintenance_timer == 0) {
+			    Griffin.jump(0, -2);
+			    Griffin.maintenance_timer = Griffin.maintenance_frequency; //reset check timer
 			}
 		}
 	};

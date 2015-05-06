@@ -28,6 +28,9 @@ var MedusaLogic = (function(){
 		entity.unhurtflag = true;
 		entity.needs_graphics_update = false;
 
+		entity.maintenance_frequency = 20;//ticks between routine maintenance checks
+		entity.maintenance_timer = entity.maintenance_frequency;
+
 		entity.direction = false;
 		entity.jolt_force = 100;
 
@@ -91,6 +94,12 @@ var MedusaLogic = (function(){
 			}
 			if (Medusa.hit_taken){
 				Medusa.take_damage();
+			}
+
+			Medusa.maintenance_timer--;
+			if (Medusa.maintenance_timer == 0) {
+			    Medusa.jump(0, -2);
+			    Medusa.maintenance_timer = Medusa.maintenance_frequency; //reset check timer
 			}
 		}
 	};

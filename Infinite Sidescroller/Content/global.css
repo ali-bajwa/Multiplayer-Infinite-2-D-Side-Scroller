@@ -1,5 +1,5 @@
-﻿@import url(http://fonts.googleapis.com/css?family=Fontdiner+Swanky|Cinzel:700,400);
-@import url(http://fonts.googleapis.com/css?family=Gentium+Book+Basic);
+﻿@import url(http://fonts.googleapis.com/css?family=Cinzel:700,400);
+@import url(http://fonts.googleapis.com/css?family=Slabo+27px);
 
 * {
   margin: 0;
@@ -30,6 +30,7 @@ body {
   overflow-x: hidden;
 }
 
+
 .text_center {
   text-align: center;
 }
@@ -49,24 +50,23 @@ body {
   text-align: center;
 }
 
-  .front_page_game h1 {
+.front_page_game h1 {
     margin: 0px;
     text-shadow: 4px 4px rgb(60, 0, 0);
-  }
+}
 
 .front_page_main {
   text-align: center;
-  padding: 50px;
-  font-size: 20pt;
-  font-weight: 700;
 }
 
-  .front_page_main h1 {
-    margin: 0px;
-    text-shadow: 3px 3px #000000;
-  }
+.front_page_main h2 {
+  text-shadow: 3px 3px #000000;
+  padding: 50px;
+  font-size: 29pt;
+}
 
-  .front_page_main img {
+
+.front_page_main img {
     margin-bottom: 50px;
   }
 
@@ -100,6 +100,7 @@ body {
 }
 
 .plaque_section {
+  position: relative;
   margin: 10px 0px 10px 0px;
 }
 
@@ -112,11 +113,17 @@ body {
     height: 200px;
     width: auto;
     float: left;
-    margin: 10px;
+    margin: 10px 20px 10px 10px;
 }
 
 .plaque_section p {
+    padding-top: 5%;
     padding-bottom: 5%;
+    text-align: left;
+    font-family: 'Slabo 27px', serif;
+    font-size: 20px;
+    margin: 0px 20px 0px 20px;
+    
 }
 
 /*END PLAQUE STYLE*/
@@ -128,7 +135,9 @@ body {
 }
 
 #lore p {
+   position: absolute;
    padding-top: 5%;
+   left: 282px;
 }
 
 #horae {
@@ -139,8 +148,10 @@ body {
   float: none;
 }
 
-#first {
+#first, #first p{
+  position: relative;
   text-align: center;
+  left: 0px;
 }
 
 
@@ -156,11 +167,15 @@ body {
 #devs h3 {
     padding-top: 5%;
 }
+
+#devs p {
+    padding-top: 0px;
+}
 /*END DEVELOPERS PAGE*/
 
 /*GAME PAGE*/
 
-.game_canvas {
+.game_area {
   padding-top: 25px;
   padding-bottom: 100px;
   text-align: center;
@@ -170,11 +185,152 @@ body {
 
 /*for bigger screens*/
 @media screen and (min-height:1200px) and (max-height:1400px) {
-  .game_canvas {
+  .game_area {
     max-height: 1400px;
     min-height: 1200px;
   }
 }
+
+/*Game Lobby Begin*/
+.lobby_section {
+    box-sizing: border-box;
+	width: 800px;
+	height: 600px;
+	margin: 0 auto;
+	margin-top: 10%;
+	margin-bottom: 10%;
+	background: url("../content/images/stone.png") repeat center center, #e7e2b6;
+	color: rgba(191, 187, 151, 0.8);
+	border: 30px solid transparent;
+    border-image: url("../Content/images/greek_borderC.png") 60 60 round;
+	padding: 10px;
+    font-family: "Slabo 27px", serif;
+}
+		
+.lobby_wrapper {
+	background-color: rgb(191, 187, 151);
+	color: #222222;
+	width: 70%;
+	height: 80%;
+	float: left;
+	-webkit-box-shadow: inset 0px 0px 39px 0px rgba(0,0,0,0.75);
+	-moz-box-shadow: inset 0px 0px 39px 0px rgba(0,0,0,0.75);
+	box-shadow: inset 0px 0px 39px 0px rgba(0,0,0,0.75);
+	overflow-y: auto;
+	box-sizing: border-box;
+}
+		
+
+.lobby {
+	width: 90%;
+	margin: 0 auto;
+	margin-top: 22px;
+	margin-bottom: 22px;
+			
+}
+
+.lobby table {
+	border-collapse: collapse;
+}
+				
+
+.lobby tr {
+	color: black;
+    font-size: 1.2em;
+}
+		
+.lobby .alt_row {
+	background-color: #e7e2b6;
+}
+		
+.lobby td {
+	text-align: center;
+}
+		
+.players {
+	box-sizing: border-box;
+	width: 30%;
+	overflow-y: auto;
+    overflow-x: auto; /*This sucks, but It's temporary. For use when names are too long.*/
+	float: left;
+	height: 80%;
+	padding: 10px;
+    text-align: left;
+}
+
+.players tr {
+    color: rgba(191, 187, 151, 0.8);
+	text-shadow: 1px 4px 6px #e7e2b6, 0 0 0 #000, 1px 4px 6px #e7e2b6;
+}
+
+.players th {
+    font-size: 24px;
+}
+
+.players td {
+    font-size: 20px;
+    font-weight: bold;
+}
+		
+.lobby_actions_area {
+	clear: both;
+	height: 20%;
+	text-align: center;
+    padding: 3% 3%;
+}
+/*	
+.lobby_buttons {
+	text-align: center;
+	margin: 4% 3% 3% 3%;
+	padding: 20px;
+	font-size: 20px;
+}*/
+
+.lobby_buttons {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #eae0c2), color-stop(1, #ccc2a6));
+	background:-moz-linear-gradient(top, #eae0c2 5%, #ccc2a6 100%);
+	background:-webkit-linear-gradient(top, #eae0c2 5%, #ccc2a6 100%);
+	background:-o-linear-gradient(top, #eae0c2 5%, #ccc2a6 100%);
+	background:-ms-linear-gradient(top, #eae0c2 5%, #ccc2a6 100%);
+	background:linear-gradient(to bottom, #eae0c2 5%, #ccc2a6 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#eae0c2', endColorstr='#ccc2a6',GradientType=0);
+	background-color:#eae0c2;
+	-moz-border-radius:15px;
+	-webkit-border-radius:15px;
+	border-radius:15px;
+	border:2px solid rgb(167, 163, 131);
+	display:inline-block;
+	cursor:pointer;
+	color:#505739;
+	font-family:"Cinzel", serif;
+	font-size:20px;
+	font-weight:bold;
+	padding:22px 35px;
+	text-decoration:none;
+	text-shadow:0px 1px 0px #ffffff;
+    margin-left: 5px;
+    margin-right: 5px;
+}
+.lobby_buttons:hover {
+	background:-webkit-gradient(linear, left top, left bottom, color-stop(0.05, #ccc2a6), color-stop(1, #eae0c2));
+	background:-moz-linear-gradient(top, #ccc2a6 5%, #eae0c2 100%);
+	background:-webkit-linear-gradient(top, #ccc2a6 5%, #eae0c2 100%);
+	background:-o-linear-gradient(top, #ccc2a6 5%, #eae0c2 100%);
+	background:-ms-linear-gradient(top, #ccc2a6 5%, #eae0c2 100%);
+	background:linear-gradient(to bottom, #ccc2a6 5%, #eae0c2 100%);
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ccc2a6', endColorstr='#eae0c2',GradientType=0);
+	background-color:#ccc2a6;
+}
+.lobby_buttons:active {
+	position:relative;
+	top:1px;
+}
+
+.lobby_buttons:focus {
+    outline: 0;
+}
+
+/*Lobby section end*/
 
 #canvas_container {
   position: relative;
@@ -183,34 +339,12 @@ body {
   margin: 0 auto;
 }
 
-/*play/pause buttons*/
 .playPause_button {
   position: absolute;
   right: 0;
   bottom: 0px;
   z-index: 300;
   width: 64px;
-}
-
-#reposition {
-  position: absolute;
-  right: 2px;
-  bottom: 655px;
-  z-index: 300;
-  width: 40px;
-}
-
-
-#play_btn {
-  width: 42px;
-}
-
-#pause_btn {
-  width: 35px;
-}
-
-#mute_btn {
-  width: 100%;
 }
 
 canvas {
@@ -232,7 +366,7 @@ canvas {
   }
 }
 
-/*controls/tutorial dropdown*/
+/*begin controls/tutorial dropdown*/
 
 .controlsShowHide {
     cursor: pointer;
@@ -279,6 +413,11 @@ canvas {
     margin: 3% 10px 3% 10px;
     font-weight: bold;
     font-size: 22px;
+}
+/*end controls/tutorial dropdown*/
+
+canvas, .controlsShowHide, .controls, .playPause_button { /*Ali: You will need to handle this in some way. Either get rid of it if you're re-routing or change to display: box whilst also changing lobby_section to display: none;*/
+    display: none;
 }
 
 /*END GAME PAGE*/
@@ -402,19 +541,15 @@ canvas {
 
 #registerLink {
   text-decoration: none;
-  color: #d4af37;
+  color: black;
+  
 }
 
   #registerLink:hover {
     text-decoration: none;
-    color: #880000;
+    color: #d4af37;
+    text-shadow: 2px 2px #000000;
   }
-
-
-/*form {
-  background: #e7e2b6;
-  padding: 6% 4%;
-}*/
 
 input[type="text"], input[type="password"] {
   width: 92%;
@@ -423,7 +558,7 @@ input[type="text"], input[type="password"] {
   border-color: #e7e2b6;
   margin-bottom: 4%;
   padding: 4%;
-  font-family: 'Cinzel',sans-serif;
+  font-family: 'Slabo 27px', serif;
   font-size: 95%;
   font-weight: 300;
   color: #222222;
@@ -494,6 +629,12 @@ input[type="submit"] {
     background: #d4af37;
     color: #880000;
   }
+
+form h2 {
+    padding-top: 10px;
+    font-family: "Cinzel", serif;
+    text-align: center;
+}
 
 /*END LOGIN*/
 
@@ -574,7 +715,7 @@ input[type="submit"] {
   padding: 4% 4%;
   width: 300px;
   margin: 0 auto;
-  font-family: 'Gentium Book Basic', serif;
+  font-family: 'Slabo 27px', serif;
   color: rgb(34, 34, 34);
   border-style: solid;
   border-color: #222222;
@@ -586,7 +727,26 @@ form h4 {
   font-family: "Cinzel", serif;
   font-size: 25px;
 }
+
+
 /*END REGISTER*/
+
+/*MANAGE ACCOUNT*/
+.pwd_change_header {
+    width: 300px;
+    margin: 0 auto;
+    background-color: #222222;
+    padding: 4% 4%;
+    -webkit-border-top-left-radius: 50px;
+    -webkit-border-top-right-radius: 50px;
+    -moz-border-radius-topleft: 50px;
+    -moz-border-radius-topright: 50px;
+    border-top-left-radius: 50px;
+    border-top-right-radius: 50px;
+    text-align: center;
+    border: thin solid #222222;
+}
+/*END MANAGE ACCOUNT*/
 
 /*LEADERBOARDS PAGE*/
 .leaderboard_wrapper {
@@ -619,30 +779,30 @@ form h4 {
 .leaderboard_table {
   border-collapse: collapse;
   width: 100%;
-  font-family: "Gentium Book Basic", serif;
+  font-family: "Slabo 27px", serif;
   font-size: 20px;
 }
 
-th {
+leaderboard_table th {
   background-color: rgb(34, 34, 34);
   color: #d4af37;
 }
 
-th, td {
+leaderboard_table th, leaderboard_table td {
   padding: 10px;
 }
 
-td {
+leaderboard_table td {
   padding-left: 20px;
   font-style: italic;
 }
 
-tr {
+leaderboard_table tr {
   background-color: rgb(85, 0, 0);
   color: #d4af37;
 }
 
-  tr.alt_color {
+leaderboard_table tr.alt_color {
     background-color: rgb(60, 0, 0);
     color: #d4af37;
     -moz-box-shadow: inset 0 8px 8px -8px rgb(95, 0, 0), inset 0 -8px 8px -8px rgb(95, 0, 0);

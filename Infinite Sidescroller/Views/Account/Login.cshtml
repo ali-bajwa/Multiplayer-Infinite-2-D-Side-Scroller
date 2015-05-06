@@ -9,15 +9,23 @@
 }
 
 <div class="register_page_wrapper">
-  <h1>WELCOME</h1>
+  
   @using (Html.BeginForm("Login", "Account", new { ReturnUrl = ViewBag.ReturnUrl }, FormMethod.Post, new { role = "form", @class="regform" }))
   {
+    <h4>Log In</h4>
     @Html.AntiForgeryToken()
     @Html.TextBoxFor(m => m.UserName, new { placeholder = "USERNAME", type = "text" })
     @Html.ValidationMessageFor(m => m.UserName)
     @Html.PasswordFor(m => m.Password, new { type = "password", placeholder = "PASSWORD" })
     @Html.ValidationMessageFor(m => m.Password)
     <input type="submit" value="ENTER" />
-    <h1>@Html.ActionLink("Haven't Registered?", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</h1>
+    <h2>@Html.ActionLink("Haven't Registered?", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</h2>
   }
 </div>
+
+<script>
+    function changeBackground() {
+        document.body.style.background = "#222222";
+    }
+    window.onload = changeBackground;
+</script>

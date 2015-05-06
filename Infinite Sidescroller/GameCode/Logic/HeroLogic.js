@@ -127,7 +127,7 @@ var HeroLogic = (function(){
 		
 			if(hero.hit_taken){
 			    hero.take_damage();
-			    console.log("hold on");
+			    //console.log("hold on");
 			}
 		
 			if (hero.body.GetWorldCenter().x < WorldController.get_movement_edge() + hero.body.GetUserData().def.width/2){

@@ -100,8 +100,6 @@ var AntLogic = (function(){
 	        ant.direction_previous = ant.direction;				//remember direction at start of tick
 	        ant.x_previous = ant.body.GetWorldCenter().x; //remember x at start of tick
 			
-			
-			
 	        //do maintenance
 	        //ant.direction_previous = ant.direction;
 	        //ant.x_previous = ant.body.GetWorldCenter().x
@@ -138,7 +136,10 @@ var AntLogic = (function(){
 
 	            }
 
+
+
 	            //check periodically to ensure the ant is not stuck and other routine maintenance
+                
 	            ant.maintenance_timer--;
 	            if (ant.maintenance_timer == 0) {
 	                if (ant.path_free()) {
@@ -188,6 +189,14 @@ var AntLogic = (function(){
 	//Collision Handlers ----------------------------------------------
 	var begin_contact = function (contact, info) {
 	    //handle collisions here
+	    if (info.Me.fixture_name == "right" || info.Me.fixture_name == "left") {
+	        info.Me.entity.direction = !info.Me.entity.direction;
+	        console.log('hit');
+	        if (info.Them.type == "ant") {
+	            info.Me.entity.direction = true;
+	            info.Them.entity.direction = true;
+	        }
+	    }
 
 	    if (info.Them.type == "hero") {
 	        if (info.Them.fixture_name != "bottom" && info.Me.entity.can_attack) {

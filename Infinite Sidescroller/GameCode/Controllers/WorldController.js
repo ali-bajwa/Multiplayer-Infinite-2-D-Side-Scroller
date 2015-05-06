@@ -82,20 +82,26 @@ var WorldController = (function(){
 	        for (i = 0; i < Math.floor(Math.random() * 4) ; i++) {
 	            spawn_num = Math.floor(Math.random() * 1000);
 	            // demonstration purposes for hyena
-	            if (spawn_num <= 5 * difficulty) {
-	                var new_hyena = EntityController.spawn(60 + get_movement_edge(), 10, "Hyena");
+                if (spawn_num <= 3 * difficulty) {
+	                var new_medusa = EntityController.spawn(40 + get_movement_edge() + 20 * Math.random(), 10, "Medusa");
+	            }
+                else if (spawn_num <= 7 * difficulty) {
+	                var new_hyena = EntityController.spawn(40 + get_movement_edge() + 20 * Math.random(), 10, "Hyena");
 	            }
 	            /*    // demonstration purposes for griffin
 	            else if (spawn_num <= 15 * EntityModel.difficulty && Count > 5) {
 	                var new_griffin = spawn(60 + WorldController.get_movement_edge() + i, -20, "Griffin");
 	                Count = 0;
 	            }*/
-	            else if (spawn_num <= 15 * difficulty) {
-	                var new_griffin = EntityController.spawn(60 + get_movement_edge(), 10, "Griffin");
+	            else if (spawn_num <= 14 * difficulty) {
+	                var new_centaur = EntityController.spawn(40 + get_movement_edge() + 20 * Math.random(), 10, "Centaur");
+	            }
+	            else if (spawn_num <= 25 * difficulty) {
+	                var new_griffin = EntityController.spawn(40 + get_movement_edge() + 20 * Math.random(), 10, "Griffin");
 	            }
 	                // demonstration purposes for ant
 	            else {
-	                var new_ant = EntityController.spawn(get_movement_edge() + 60, 10, "ant");
+	                var new_ant = EntityController.spawn(get_movement_edge() + 40 + 20 * Math.random(), 10, "ant");
 	            }
 	        }
 	        spawn_enemy = false;

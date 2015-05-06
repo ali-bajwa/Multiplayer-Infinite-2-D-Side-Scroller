@@ -339,6 +339,10 @@ body {
   margin: 0 auto;
 }
 
+#mute_btn {
+    width: 100%;
+}
+
 .playPause_button {
   position: absolute;
   right: 0;

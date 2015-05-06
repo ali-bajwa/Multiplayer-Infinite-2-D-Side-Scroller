@@ -1,33 +1,37 @@
 var HUDRenderer = (function(){
 	
 	var score;
-	var health;
+	var health_bar;
 	var score_title;
-	var health_title;
+	var health_outline;
+	var healthX;
 
 	var init = function(){
 		
 		include();
-		
+		healthX = 100;
+		get_asset = AssetController.get_asset; // for quicker access
 		score = new createjs.Text();
 		GraphicsController.reg_for_render(score);
-		health = new createjs.Text();
-		GraphicsController.reg_for_render(health);
+		health_bar = new createjs.Shape();
+		GraphicsController.reg_for_render(health_bar);
 		score_title = new createjs.Text();
 		GraphicsController.reg_for_render(score_title);
-		health_title = new createjs.Text();
-		GraphicsController.reg_for_render(health_title);
-
-		health_title.text = "Health: ";
-		health_title.x = 10;
-		health_title.y = 30;
-		health.text = "100";
-		health.x = 80;
-		health.y = 30;
-		health.font = "20px Arial";
-		health_title.font = "20px Arial";
-		health.color = "#ff0000";
-		health_title.color = "#ff0000";
+		health_outline = new createjs.Shape();
+		GraphicsController.reg_for_render(health_outline);
+		player_head = new createjs.Bitmap(get_asset("HeadRed"));
+		GraphicsController.reg_for_render(player_head);
+		
+		health_outline.x = 30;
+		health_outline.y = 25;
+		health_outline.graphics.beginStroke("red").setStrokeStyle(1).drawRect(30,25,100,20);
+		health_bar.x = 30;
+		health_bar.y = 25;
+		health_bar.graphics.beginFill("red");
+		health_bar.graphics.drawRect(30,25,healthX, 20);
+		
+		player_head.x = 10;
+		player_head.y = 35;
 		score_title.text = "Score: ";
 		score_title.x = 10;
 		score_title.y = 10;
@@ -54,7 +58,10 @@ var HUDRenderer = (function(){
 	};
 	
 	var update_health = function(new_health){
-		health.text = parseInt(new_health);
+		healthX = parseInt(new_health);
+		health_bar.graphics.clear();
+		health_bar.graphics.beginFill("red");
+		health_bar.graphics.drawRect(30,25,healthX, 20);
 	};
 	
 	return {

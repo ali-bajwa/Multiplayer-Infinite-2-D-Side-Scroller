@@ -8,6 +8,15 @@ var HeroRenderer = (function(){
 			like spritesheets.first = new createjs.Spritesheet(...);
 		*/
 		include(); // satisfy requirements, GOES FIRST
+		
+		//SpriteSheetUtils.addFlippedFrames(spriteSheets["Hero"], true, false, false);
+	};
+
+	var register = function(entity_hero){
+		/* is ran for every entity of this type that was just created and should
+		get graphics representation. You are given the entity instance and is supposed
+		to crete graphics instance, and GraphicsController.reg_for_render(graphics_instance, entity_instance); it 
+		*/
 		var get_asset = AssetController.get_asset;
 		spritesheets["hero"] = new createjs.SpriteSheet({
 			"framerate": 1,

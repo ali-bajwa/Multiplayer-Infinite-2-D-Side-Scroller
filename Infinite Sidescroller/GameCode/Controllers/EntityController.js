@@ -374,6 +374,7 @@ var EntityController = (function () {
 		this.direction_previous = false;//store direction from end of previous tick
 		this.x_previous = 0;		//store x value from end of previous tick
 		this.y_previous = 0;		//store x value from end of previous tick
+		this.velocity_previous = new B2D.b2Vec2(0,0);
 		
 		this.is_idle = true; //determines whether entity is aggressive or idle
 		this.idle_duration = 40; // time buffer between changing idle states
@@ -439,7 +440,6 @@ var EntityController = (function () {
 		this.enemy_in_range = function(range){
 			var hero_x;
 			var output = false;
-			/*
 			//Multiplayer
 			var hero_list = EntityController.get_all_heroes();
 			if(hero_list.length != null){
@@ -453,21 +453,17 @@ var EntityController = (function () {
 					}
 				}
 			}else if(EntityController.get_my_hero() != null){
-			*/
-			var hero = EntityController.get_my_hero();
-			if(hero != null){
-				hero_x = hero.body.GetWorldCenter().x;
-				output = (Math.abs(hero_x - this.body.GetWorldCenter().x) < range);
+				var hero = EntityController.get_my_hero();
+				if(hero != null){
+					hero_x = hero.body.GetWorldCenter().x;
+					output = (Math.abs(hero_x - this.body.GetWorldCenter().x) < range);
+				}
 			}
-			/*
-			}
-			*/
 			return output;
 		};
 		
 		//returns the direction of nearest enemy
 		this.direction_nearest_enemy = function(){
-			/*
 			//in multiplayer, first find nearest enemy
 			var nearest, hero_x; 
 			var distance = 0;
@@ -487,11 +483,13 @@ var EntityController = (function () {
 				distance = EntityController.get_my_hero().body.GetWorldCenter().x - x;
 			}
 			return (distance > 0);//return true/right of distance is positive, return false/left if distance is negative
-			*/
+			/*
+			//single player implementation
 			var nearest;
 			var hero_x = EntityController.get_my_hero().body.GetWorldCenter().x;
 			var distance = (hero_x - this.body.GetWorldCenter().x);
 			return (distance > 0);//return true/right of distance is positive, return false/left if distance is negative
+			*/
 		};
 		
 		//decrease health
@@ -641,6 +639,37 @@ var EntityController = (function () {
 		
 	};
 	
+	var sync_enemy = function(id){
+		/**
+		* send synchronization information for enemies,
+		* if needed (if something important changed)
+		*/
+
+		var entity = IdentificationController.get_by_id(id);
+
+		if(entity){
+			var position = entity.body.GetWorldCenter();
+			var velocity = entity.body.GetLinearVelocity();
+			var old_velocity = entity.velocity_previous;
+			var old_position = new B2D.b2vec2(entity.x_previous, entity.y_previous);
+
+			var vel_difference = Math.sqrt(Math.pow(velocity.x - old_velocity.x, 2) + Math.pow(velocity.y - old_velocity.y, 2));
+			var pos_difference = Math.sqrt(Math.pow())
+
+			if(vel_difference != 0){
+				// if different, send update packet
+				MultiplayerSyncController.route_outcoming_packet({
+					op: "enemy_sync",
+					velocity: {x: velocity.x, y: velocity.y},
+					position: {x: position.x, y: position.y}
+				});
+			}
+			EntityModel.hero_last_velocity = {x: velocity.x, y: velocity.y};
+		}
+		// check velocity change
+		// send if needed
+	};
+	
 	var handle_hero_sync = function(packet){
 		/**
 		* handle the sync request for the hero
@@ -664,6 +693,33 @@ var EntityController = (function () {
 			
 			hero.body.SetLinearVelocity(vel);
 			hero.body.SetPosition(pos);
+		}
+		
+	};
+	
+	var handle_enemy_sync = function(packet){
+		/**
+		* handle the sync request for the hero
+		* synchronize velocity and the position
+		*/
+		
+		if(packet.player_id == NetworkController.get_network_id()){
+			return;
+		}
+		
+		var player_id = packet.player_id;
+
+		var entity = EntityModel.heroes[player_id];
+
+		if(entity == null){
+			console.warn("entity is not defined for the player_id", String(player_id));
+		}else{
+
+			var vel = new B2d.b2Vec2(packet.velocity.x, packet.velocity.y);
+			var pos = new B2d.b2Vec2(packet.position.x, packet.position.y);
+			
+			entity.body.SetLinearVelocity(vel);
+			entity.body.SetPosition(pos);
 		}
 		
 	};
@@ -700,6 +756,7 @@ var EntityController = (function () {
 		handle_spawn: handle_spawn,
 		handle_delete: handle_delete,
 		handle_hero_sync: handle_hero_sync,
+		handle_enemy_sync: handle_enemy_sync,
 
 		get_all_heroes: get_all_heroes,
 		get_my_hero: get_my_hero,

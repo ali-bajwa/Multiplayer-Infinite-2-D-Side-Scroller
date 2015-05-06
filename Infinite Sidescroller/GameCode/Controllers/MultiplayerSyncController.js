@@ -17,6 +17,7 @@ var MultiplayerSyncController = (function(){
 			delete_entity: EntityController.handle_delete,
 			keyboard_state: KeyboardController.handle_keyboard_change,
 			hero_sync: EntityController.handle_hero_sync,
+			enemy_sync: EntityController.handle_enemy_sync,
 			terrain_seed: sync_seed,
 		}
 	};

@@ -195,6 +195,7 @@ var GraphicsController = (function(){
 		if(sprite.physical_instance.needs_graphics_update){
 			var animation = sprite.physical_instance.animation;
 			sprite.gotoAndPlay(animation)
+			sprite.needs_graphics_update = false;
 		}
 		
 		//set direction

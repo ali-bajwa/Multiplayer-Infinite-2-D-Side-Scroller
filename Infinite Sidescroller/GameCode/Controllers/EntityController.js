@@ -602,6 +602,7 @@ var EntityController = (function () {
 			}else{ 
 				this.needs_graphics_update = false;
 			}
+			this.jump_tick = 1; //for hero jump tick
 		};
 	}; // end AbstractEntity
 	

@@ -771,6 +771,7 @@ var EntityController = (function () {
 			}else{ 
 				this.needs_graphics_update = false;
 			}
+			this.jump_tick = 1; //for hero jump tick
 		};
 	}; // end AbstractEntity
 	
@@ -1168,6 +1169,7 @@ var GraphicsController = (function(){
 		if(sprite.physical_instance.needs_graphics_update){
 			var animation = sprite.physical_instance.animation;
 			sprite.gotoAndPlay(animation)
+			sprite.needs_graphics_update = false;
 		}
 		
 		//set direction
@@ -5577,7 +5579,7 @@ var HeroLogic = (function(){
 		entity.decay_duration = 35;//time between decay animation and deletion
 		entity.death_duration = 60;//time between death and deletion
 		entity.jump_tick=0;
-
+		entity.idle_duration=10;
 		entity.direction = 1; //default direction = left
 		
 		entity.needs_graphics_update = false; //accessed by renderer for animation purposes
@@ -5664,20 +5666,20 @@ var HeroLogic = (function(){
 			}
 			
 			if(!hero.is_walking && hero.animation != "jump" && hero.body.GetLinearVelocity().y == 0){
-				hero.change_animation("stand");
+				hero.idle_counter++;
+				if(hero.idle_counter == hero.idle_duration){
+					hero.change_animation("stand");
+				}
 				hero.jump_tick = 0;
+			}
+			else{
+				hero.idle_counter = 0;
 			}
 			
 			if(hero.animation=="jump"){
-				if(hero.jump_tick == 1){
-					hero.change_animation("jump");
-				}
 				hero.jump_tick++;
-				if(hero.jump_tick >= 20){
+				if(hero.jump_tick >= 25){
 					hero.change_animation("finish");
-					if(hero.jumps == 0){
-						hero.animation = "finish";
-					}
 				}
 			}
 		
@@ -7717,7 +7719,6 @@ var HeroRenderer = (function(){
 		
 		//SpriteSheetUtils.addFlippedFrames(spriteSheets["Hero"], true, false, false);
 	};
-
 	var register = function(entity_hero){
 		/* is ran for every entity of this type that was just created and should
 		get graphics representation. You are given the entity instance and is supposed
@@ -7737,15 +7738,15 @@ var HeroRenderer = (function(){
 				},				
 				"walk": {
 					 frames: [0,1, 2],
-					 speed: 0.4
+					 speed: 0.2
 				 },
 				"jump": {
 					frames: [3, 4, 5, 6, 7, 8],
-					speed: 0.3
+					speed: 0.2
 				},
 				"death": {
 					frames: [9, 10, 11, 12, 13, 14, 15],
-					speed: 0.3,
+					speed: 0.1,
 					next: "death"
 				},
 				"decay": {

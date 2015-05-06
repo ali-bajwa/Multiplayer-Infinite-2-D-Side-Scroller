@@ -31,15 +31,15 @@ var HeroRenderer = (function(){
 				},				
 				"walk": {
 					 frames: [0,1, 2],
-					 speed: 0.4
+					 speed: 0.2
 				 },
 				"jump": {
 					frames: [3, 4, 5, 6, 7, 8],
-					speed: 0.3
+					speed: 0.2
 				},
 				"death": {
 					frames: [9, 10, 11, 12, 13, 14, 15],
-					speed: 0.3,
+					speed: 0.1,
 					next: "death"
 				},
 				"decay": {
@@ -47,15 +47,6 @@ var HeroRenderer = (function(){
 				},
 			}
 		})
-		//SpriteSheetUtils.addFlippedFrames(spriteSheets["Hero"], true, false, false);
-	};
-
-	var register = function(entity_hero){
-		/* is ran for every entity of this type that was just created and should
-		get graphics representation. You are given the entity instance and is supposed
-		to crete graphics instance, and GraphicsController.reg_for_render(graphics_instance, entity_instance); it 
-		*/
-
 		hero_animation = GraphicsController.request_animated(spritesheets["hero"], "stand");
 		hero_animation.graphics_id = "hero";
 		GraphicsController.set_reg_position(hero_animation, -25, -25);

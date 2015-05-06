@@ -17,13 +17,13 @@ var EntityController = (function () {
 		//};
 
         type_logic_table = {
-            "ant": AntLogic,
-            "hero": HeroLogic,
-            "Griffin": GriffinLogic,
-            "Hyena": HyenaLogic,
-			"Medusa": MedusaLogic,
-			"pizza": PizzaLogic,
-            "Centaur": CentaurLogic,
+					"ant": AntLogic,
+					"hero": HeroLogic,
+					"Griffin": GriffinLogic,
+					"Hyena": HyenaLogic,
+					"Medusa": MedusaLogic,
+					"pizza": PizzaLogic,
+					"Centaur": CentaurLogic,
         };
         
 
@@ -109,27 +109,40 @@ var EntityController = (function () {
 		}
 		*/
 		for (var type in EntityModel.for_logic_update) {
-            var table = EntityModel.for_logic_update[type];
+			var table = EntityModel.for_logic_update[type];
 
-            var logic = type_logic_table[type];
-            for (var id in table) {
-                var entity = table[id];
+			var logic = type_logic_table[type];
+			for (var id in table) {
+				var entity = table[id];
 
-                if (beyond_world_boundary(entity)) {
-                    // if outside boundaries of the world, despawn
-                    entity.point_value = 0;
-                    despawn(entity);
-                    if (entity.type == "hero") {
-                        entity.hp = 0;
-                    }
-                    console.log("entity of type", type, "deleted due to the world boundary");
-                } else {
-                    // else tick its AI
-                    logic.tick_AI(entity);
-                }
-            }
+				if (beyond_world_boundary(entity)) {
+					// if outside boundaries of the world, despawn
+					entity.point_value = 0;
+					despawn(entity);
+					if (entity.type == "hero") {
+							entity.hp = 0;
+					}
+					console.log("entity of type", type, "deleted due to the world boundary");
+				} else {
+					// else tick its AI
+					logic.tick_AI(entity);
+				}
+			}
 
-        } // end for in 
+		} // end for in 
+				
+		//Synchronize enemies
+		if(Config.Remote.master){//This check should be moved to MultiplayerSyncController
+			for (id in EntityModel.for_logic_update){
+				for (var type in EntityModel.for_logic_update) {
+					var table = EntityModel.for_logic_update[type];
+					var logic = type_logic_table[type];
+					for (var id in table) {
+						sync_enemy(id);
+					}
+				}
+			}
+		}
 
 		sync_hero();
 
@@ -374,7 +387,7 @@ var EntityController = (function () {
 		this.direction_previous = false;//store direction from end of previous tick
 		this.x_previous = 0;		//store x value from end of previous tick
 		this.y_previous = 0;		//store x value from end of previous tick
-		this.velocity_previous = new B2D.b2Vec2(0,0);
+		this.velocity_previous = new B2d.b2Vec2(0,0);
 		
 		this.is_idle = true; //determines whether entity is aggressive or idle
 		this.idle_duration = 40; // time buffer between changing idle states
@@ -651,7 +664,7 @@ var EntityController = (function () {
 			var position = entity.body.GetWorldCenter();
 			var velocity = entity.body.GetLinearVelocity();
 			var old_velocity = entity.velocity_previous;
-			var old_position = new B2D.b2vec2(entity.x_previous, entity.y_previous);
+			var old_position = new B2d.b2Vec2(entity.x_previous, entity.y_previous);
 
 			var vel_difference = Math.sqrt(Math.pow(velocity.x - old_velocity.x, 2) + Math.pow(velocity.y - old_velocity.y, 2));
 			var pos_difference = Math.sqrt(Math.pow())
@@ -660,6 +673,7 @@ var EntityController = (function () {
 				// if different, send update packet
 				MultiplayerSyncController.route_outcoming_packet({
 					op: "enemy_sync",
+					entity_id: entity.id,
 					velocity: {x: velocity.x, y: velocity.y},
 					position: {x: position.x, y: position.y}
 				});
@@ -708,8 +722,8 @@ var EntityController = (function () {
 		}
 		
 		var player_id = packet.player_id;
-
-		var entity = EntityModel.heroes[player_id];
+		var entity_id = packet.entity_id;
+		var entity = IdentificationController.get_by_id(entity_id);
 
 		if(entity == null){
 			console.warn("entity is not defined for the player_id", String(player_id));

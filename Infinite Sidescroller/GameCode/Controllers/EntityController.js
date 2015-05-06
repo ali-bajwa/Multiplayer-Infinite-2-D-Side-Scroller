@@ -520,9 +520,7 @@ var EntityController = (function () {
 			if (this.is_alive){//if alive, kill it
 				this.death_timer = this.death_duration;
 				this.is_alive = false;
-				if (this.hp <= 0){
-					WorldController.increase_score(this.point_value);//if died from damage, grant score
-				}
+				WorldController.increase_score(this.point_value);//if died from damage, grant score
 				this.hit_taken = false;
 				this.can_attack = false;
 				this.change_animation(this,"death");
@@ -676,6 +674,8 @@ var EntityController = (function () {
 				MultiplayerSyncController.route_outcoming_packet({
 					op: "enemy_sync",
 					entity_id: entity.id,
+					//hp: entity.hp,
+					direction: entity.direction,
 					velocity: {x: velocity.x, y: velocity.y},
 					position: {x: position.x, y: position.y}
 				});
@@ -735,6 +735,8 @@ var EntityController = (function () {
 				
 				entity.body.SetLinearVelocity(vel);
 				entity.body.SetPosition(pos);
+				entity.direction = packet.direction;
+				//entity.hp = packet.hp;
 			}
 		}
 	};

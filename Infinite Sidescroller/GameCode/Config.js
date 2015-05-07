@@ -35,6 +35,7 @@ var Config = function(){
 		maxy: 22,
 
 	};
+
 	this.Remote = {
 		master: false, // am I the one with whome other players sync? 
 		connected: false, // am I in multiplayer mode
@@ -46,6 +47,7 @@ var Config = function(){
 		session_id: null,
 		player_id: null,
 		mode: null,
+		initial_lives: 1,
 
 		// for multiplayer game you have certain time limit
 		// to join the game. In this time limit players shouldn't be able to go past

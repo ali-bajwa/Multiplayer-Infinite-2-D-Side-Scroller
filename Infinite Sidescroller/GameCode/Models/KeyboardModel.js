@@ -150,6 +150,7 @@ var KeyboardModel = function(){
 			"z": "season",
             "k": "spawn_pizza",
             "t": "spawn_centaur",
+			"/": "kill_hero",
 		},
 
 	}

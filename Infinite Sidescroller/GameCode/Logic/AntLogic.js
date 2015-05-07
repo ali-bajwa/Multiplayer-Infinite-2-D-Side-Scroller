@@ -192,7 +192,7 @@ var AntLogic = (function(){
 	    //handle collisions here
 	    if ((info.Me.fixture_name == "right" || info.Me.fixture_name == "left") && info.Them.type != "pizza") {
 	        info.Me.entity.direction = !info.Me.entity.direction;
-	        console.log('hit');
+			//console.log('hit');
 	        if (info.Them.entity.point_value > 0) {
 	            info.Me.entity.direction = Math.round(Math.random());
 	            info.Them.entity.direction = Math.round(Math.random());

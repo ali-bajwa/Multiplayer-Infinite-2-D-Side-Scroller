@@ -4,6 +4,7 @@ var GameController = (function(){
 
 	var init = function(){
 		include();
+		GameModel.team_lives = Config.Init.initial_lives;
 	};
 		
 
@@ -21,7 +22,7 @@ var GameController = (function(){
 	        console.log("pause");
 	    }
 	    GameModel.pauseCounter += 1;
-		
+
 		if (!createjs.Ticker.paused){
 			var delta = event.delta;
 
@@ -68,11 +69,68 @@ var GameController = (function(){
 
 	};
 
+	var use_life = function(){
+		/**
+		* use 1 life from the remaining lives
+		* terminate game if no more lives
+		*/
+
+		GameModel.team_lives--;
+		console.log("used up life.", GameModel.team_lives, "left");
+	};
+
+	var end_game = function(message){
+		/**
+		* end game, print given message
+		*/
+		
+		stop_game();
+		var msg = message || "Game ended";
+		console.log(msg);
+
+		try{// doesn't really catch errors for some reason
+			$.ajax({
+				url: "/game/savescore",
+				type: 'POST',
+				traditional: true,
+				contentType: 'application/json',
+				data: {sessionid: Config.Init.session_id, score: WorldController.get_score()},
+				success: function (result) {}
+			});
+		}catch(err){
+			console.log("Error while attempting to transmit end game data to server", err);
+		}
+
+	};
+
+	var check_game_ending_conditions = function(){
+		/**
+		* check if the game should end. Ideally it will be called
+		* from any places that can affect such condition, such as
+		* EntityController.handle_delete
+		*/
+
+		console.log("checking for game ending condition");
+		
+		var heroes = EntityController.get_all_heroes();
+		var count = Object.keys(heroes).length;
+		console.log("currently spawned", count, "heroes");
+		
+		
+		if(count <= 0 && GameModel.team_lives <= 0){
+			// if no one active and no more lives
+			// end the game
+			end_game()
+		}
+	};
+
 	return {
 		init: init,
 		update_all: update_all,
 		stop_game: stop_game,
 		continue_game: continue_game,
+		use_life: use_life,
+		check_game_ending_conditions: check_game_ending_conditions,
 	};
 
 })();

@@ -48,6 +48,7 @@ var HeroLogic = (function(){
 			and finally you HAVE TO(!!!) return the instance you just created from this function
 		*/
 
+		GameController.use_life();
 
 		var hero = new Hero();
 		hero.type = "hero";

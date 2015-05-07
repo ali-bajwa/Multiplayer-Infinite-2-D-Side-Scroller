@@ -55,7 +55,12 @@ var EntityController = (function () {
 	var update = function(delta){
 		/* is ran each tick from the GameController.update_all */
 		var debug_commands = KeyboardController.debug_commands();
-
+		if(debug_commands("kill_hero")){
+			console.log("killing hero");
+			
+			
+			get_my_hero().die();
+		}
 		// demonstration purposes
 		if(debug_commands("spawn_ant")){
 		    spawn((Math.random() * 50 + 10 + WorldController.get_movement_edge()), 10, "ant");
@@ -122,7 +127,7 @@ var EntityController = (function () {
 					if (entity.type == "hero") {
 							entity.hp = 0;
 					}
-					console.log("entity of type", type, "deleted due to the world boundary");
+					//console.log("entity of type", type, "deleted due to the world boundary");
 				} else {
 					// else tick its AI
 					logic.tick_AI(entity);
@@ -295,6 +300,8 @@ var EntityController = (function () {
 			if(type == "hero"){
 				delete EntityModel.heroes[entity_instance.player_id];
 				EntityModel.hero_spawned = false;
+				// should game end now?
+				GameController.check_game_ending_conditions();
 			}
 		// free the id
 			IdentificationController.remove_id(id);

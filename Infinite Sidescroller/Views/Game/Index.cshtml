@@ -22,7 +22,12 @@
       console.log(data);
       var song = document.getElementById("music");
       song.volume = 0.3;
-      sidescroller_game.run(data["mode"], data["id"], data["hostname"], data["otherplayers"].split(','));
+      if (data["mode"] != "multiplayer") {
+        sidescroller_game.run();
+      }
+      else {
+        sidescroller_game.run(data["mode"], data["id"], data["hostname"], data["otherplayers"].split(','));
+      }
     }
     $(document).ready(start);
   </script>

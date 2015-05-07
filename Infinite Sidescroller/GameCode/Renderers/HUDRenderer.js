@@ -85,9 +85,7 @@ var HUDRenderer = (function(){
 		var heros = EntityController.get_all_heroes();
 		var index;
 		screen_w = Config.SCREEN_W;
-		console.log("screen width", Config.SCREEN_W);
 		//player_id_array.toString();
-		console.log("player_id_array: ", player_id_array);
 		for(var i =0; i < connected_len; i++){
 			connected_player_id = connected_players[i];
 			index = player_id_array.indexOf(connected_player_id);
@@ -97,7 +95,6 @@ var HUDRenderer = (function(){
 		
 		for(var i =0; i < connected_len; i++){
 			connected_player_id = connected_players[i];
-			console.log("connected player: ", connected_player_id);
 			if(player_id_array != null && player_id_array.length > 0){
 				// if player id was populated properly, choose asset id corresponding to the index
 				var connected_asset = get_asset(asset_ids[player_id_array.indexOf(connected_player_id)]);
@@ -119,37 +116,6 @@ var HUDRenderer = (function(){
 		}
 		next_x =0;
 		connected_players.toString();
-		console.log("players connected: " , connected_players);
-		//console.log("hud render player_id", player_id);
-		//switch(player_id){
-			//case "player1":
-				//asset = get_asset("HeadOrange");
-				//break;
-			//case "player2":
-				//asset = get_asset("HeadPink");
-				//break;
-			//case "player3":
-				//asset = get_asset("HeadPurple");
-				//break;
-			//case "player4":
-				//asset = get_asset("HeadGreen");
-				//break;
-			//case "player5":
-				//asset = get_asset("HeadLightBlue");
-				//break;
-			//case "player6":
-				//asset = get_asset("HeadLightGreen");
-				//break;
-			//case "player7":
-				//asset = get_asset("HeadBlue");
-				//break;
-			//case "player8":
-				//asset = get_asset("HeadRed");
-				//break;
-			//default:
-				//asset = get_asset("HeadRed");
-				
-		//}
 
 
 

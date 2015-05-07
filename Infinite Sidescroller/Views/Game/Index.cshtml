@@ -8,6 +8,10 @@
 }
 
 @section Scripts {
+  @if (Model.Type == true)
+  {
+    <script src="http://cdn.peerjs.com/0.3/peer.js"></script>
+  }
   <script>
     //Smooth Scroll for controls/tips/tutorial/whateveryouwanttocallit
     var ToggleControls = function (elem) {
@@ -19,7 +23,6 @@
     function start() {
 
       var data = $(".gamevariables").data();
-      console.log(data);
       var song = document.getElementById("music");
       song.volume = 0.3;
       if (data["mode"] != "multiplayer") {

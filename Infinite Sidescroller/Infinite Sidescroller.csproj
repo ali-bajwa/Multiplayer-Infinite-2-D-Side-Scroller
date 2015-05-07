@@ -205,9 +205,11 @@
     <Content Include="GameCode\assets\art\AntChompers.png" />
     <Content Include="GameCode\assets\art\AntChompers2.png" />
     <Content Include="GameCode\assets\art\AntChompersDeath.png" />
+    <Content Include="GameCode\assets\art\ao3project.mp3" />
     <Content Include="GameCode\assets\art\bottom_terrain.png" />
     <Content Include="GameCode\assets\art\CentaurSheet.png" />
     <Content Include="GameCode\assets\art\Chompers.png" />
+    <Content Include="GameCode\assets\art\flagship.mp3" />
     <Content Include="GameCode\assets\art\grass_fall.png" />
     <Content Include="GameCode\assets\art\grass_spring.png" />
     <Content Include="GameCode\assets\art\grass_summer.png" />
@@ -223,6 +225,14 @@
     <Content Include="GameCode\assets\art\griffinPhase1Small.png" />
     <Content Include="GameCode\assets\art\griffinPhase2Small.png" />
     <Content Include="GameCode\assets\art\griffinPhase3Small.png" />
+    <Content Include="GameCode\assets\art\HeadBlue.png" />
+    <Content Include="GameCode\assets\art\HeadGreen.png" />
+    <Content Include="GameCode\assets\art\HeadLightBlue.png" />
+    <Content Include="GameCode\assets\art\HeadLightGreen.png" />
+    <Content Include="GameCode\assets\art\HeadOrange.png" />
+    <Content Include="GameCode\assets\art\HeadPink.png" />
+    <Content Include="GameCode\assets\art\HeadPurple.png" />
+    <Content Include="GameCode\assets\art\HeadRed.png" />
     <Content Include="GameCode\assets\art\Hero.png" />
     <Content Include="GameCode\assets\art\HeroBlue.png" />
     <Content Include="GameCode\assets\art\HeroGreen.png" />
@@ -247,7 +257,10 @@
     <Content Include="GameCode\assets\art\platform_right.png" />
     <Content Include="GameCode\assets\art\platform_spikes.png" />
     <Content Include="GameCode\assets\art\satyr.png" />
+    <Content Include="GameCode\assets\art\Silverware.mp3" />
+    <Content Include="GameCode\assets\art\TheTimes.mp3" />
     <Content Include="GameCode\assets\art\warrior.png" />
+    <Content Include="GameCode\aws_game.html" />
     <Content Include="GameCode\B2d.js" />
     <Content Include="GameCode\bundle.js" />
     <Content Include="GameCode\Config.js" />
@@ -275,6 +288,10 @@
     <Content Include="GameCode\Documentation\pseudocode for networking stuff.txt" />
     <Content Include="GameCode\Documentation\table_of_contents.txt" />
     <Content Include="GameCode\GameUtility.js" />
+    <Content Include="GameCode\Images\clouds.gif" />
+    <Content Include="GameCode\Images\cracktexture.png" />
+    <Content Include="GameCode\Images\pillar_background.png" />
+    <Content Include="GameCode\Images\sound.png" />
     <Content Include="GameCode\Includes.js" />
     <Content Include="GameCode\index.html" />
     <Content Include="GameCode\lib\createjs-2014.12.12.min.js" />
@@ -304,6 +321,7 @@
     <Content Include="GameCode\Models\TerrainSliceModel.js" />
     <Content Include="GameCode\Models\TestModel.js" />
     <Content Include="GameCode\Models\WorldModel.js" />
+    <Content Include="GameCode\node_modules\box2dweb\box2d.js" />
     <Content Include="GameCode\page.css" />
     <Content Include="GameCode\qunit-1.17.1.css" />
     <Content Include="GameCode\Renderers\AntRenderer.js" />
@@ -319,6 +337,8 @@
     <Content Include="GameCode\Renderers\TerrainCellRenderer.js" />
     <Content Include="GameCode\Renderers\TerrainSliceRenderer.js" />
     <Content Include="Global.asax" />
+    <Content Include="GameCode\node_modules\box2dweb\package.json" />
+    <Content Include="GameCode\node_modules\box2dweb\README.md" />
     <None Include="Properties\PublishProfiles\JoshFriend.pubxml" />
     <None Include="Properties\PublishProfiles\Tracepublish.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />

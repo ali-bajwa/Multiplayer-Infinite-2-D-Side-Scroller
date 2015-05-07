@@ -307,6 +307,7 @@
     <Content Include="GameCode\Documentation\javascript.custom.snippets" />
     <Content Include="GameCode\Logic\HeroLogic.js.rej" />
     <None Include="Properties\PublishProfiles\Butts.pubxml" />
+    <None Include="Properties\PublishProfiles\vulter.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
@@ -342,7 +343,6 @@
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Game\Index.cshtml" />
-    <Content Include="Views\Account\Index.cshtml" />
     <Content Include="Views\Home\Developers.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
   </ItemGroup>

@@ -1,0 +1,32 @@
+
+body {
+	background-color: #4b6695; /* can be removed, I set colors just to be able to easily tell where canvas begins and ends (for debugging purposes) */
+}
+
+#display_canvas {
+	background-color: #2bd777; /* same reason */
+	/*
+	 * Don't do this: 
+		height: 400px;
+		width: 100%;
+		
+		It breaks scaling with easeljs
+		set width and height with js or in the html, width canvas own properties
+	*/
+  float: left;
+	z-index: 1;
+}
+
+#canvas_container { 
+	height: 600px; /* this is negotiable, notify me (AK) if you want smth different */
+	width: 97%; /* this can be whatever. */
+	position: relative;
+}
+
+#debug_canvas { /* this must be exactly what it is */
+	z-index: 2;
+  float:left;
+	position: absolute;
+	left: 0;
+
+}

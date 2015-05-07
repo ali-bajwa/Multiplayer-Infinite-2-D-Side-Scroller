@@ -1,0 +1,93 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+	<title>Example Easel.js page by AK</title>
+	<meta charset="utf-8" />
+	<script src="./lib/jquery-1.11.2.min.js"></script>
+	<script src="./lib/createjs-2014.12.12.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="http://cdn.peerjs.com/0.3/peer.js"></script>
+	<script src="./bundle.js" type="text/javascript" charset="utf-8"></script>
+	<style>
+	* {
+	  margin: 0;
+	  padding: 0;
+	}
+	
+	body {
+	  margin: 0 0 80px;
+	  background: url("Images/cracktexture.png") no-repeat center center, rgb(60, 0, 0);
+	  background-size: cover;
+	  font-family: 'Cinzel', serif;
+	  color: #d4af37;
+	  overflow-x: hidden;
+	}
+	
+	.game_area {
+	  padding-top: 15%;
+	  padding-bottom: 15%;
+	  text-align: center;
+	  background: url("Images/pillar_background.png") no-repeat center top;
+	  background-size: cover;
+	}
+
+	/*for bigger screens*/
+	@media screen and (min-height:1200px) and (max-height:1400px) {
+	  .game_area {
+		max-height: 1400px;
+		min-height: 1200px;
+	  }
+	}
+	
+	#canvas_container {
+	  position: relative;
+	  height: 600px;
+	  width: 800px;
+	  margin: 0 auto;
+	}
+
+	#mute_btn {
+		width: 100%;
+	}
+		
+	.playPause_button {
+	  position: absolute;
+	  right: 0;
+	  bottom: 0px;
+	  z-index: 300;
+	  width: 64px;
+	}
+
+	canvas {
+	  background: url("Images/clouds.gif"), rgb(153, 217, 234);
+	  -webkit-animation: slide 120s linear infinite;
+	}
+
+	#display_canvas {
+	  border: 5px outset rgba(191, 187, 151, 0.8);
+	}
+
+	@-webkit-keyframes slide { /*for clouds*/
+	  from {
+		background-position: 0px;
+	  }
+
+	  to {
+		background-position: 1024px;
+	  }
+	}
+	</style>
+</head>
+
+<body onload="sidescroller_game.run();">
+	<audio id="music" src="assets/art/adventure.mp3" preload="auto" loop autoplay></audio>
+    <section class="game_area">
+        <div id="screenPosition" style="margin-top:180px; position:absolute;"></div>
+        <div id="canvas_container">
+		<div class="playPause_button">
+			<a href="javascript:void(0);" onclick="document.getElementById('music').muted = !document.getElementById('music').muted; return false"><img src="Images/sound.png" id="mute_btn" /></a>
+        </div>
+		<a href="#screenPosition" id="default_position"></a>
+		<canvas id="display_canvas"></canvas>
+        </div>
+    </section>
+</html>

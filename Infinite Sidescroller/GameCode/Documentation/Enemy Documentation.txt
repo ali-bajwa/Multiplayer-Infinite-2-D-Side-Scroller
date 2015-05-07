@@ -1,0 +1,75 @@
+Enemy Documentation
+
+/*
+Enemies consist of three files:
+	MyenemyLogic: handles AI and physics for Myenemy
+	MyenemyRenderer: handles graphics for Myenemy
+	MyenemyModel: stores data and variables for Myenemy
+
+*/
+
+/*
+Registration:
+	-Includes.js
+		register your logic and renderer names in module_names in their respective arrays
+		register your logic and renderer paths in the init() function in the modules object
+	- GraphicsController.js:
+		add your renderer to the type_renderer_table in the init() function
+	- EntityController.js:
+		add your logic to the type_logic_table in the init() function
+	- AssetModel.js
+		link your sprite ids with the image files they correspond to in the manifest object
+	-PhysicsModel.js
+		write your physics template in here. the most important parameters are width, height, density and so forth. 
+		for additional parameters, consult Box2d documentation on the body class.
+*/
+
+	GraphicsController.js:
+		/*
+		1. add your renderer to the type_renderer_table in GraphicsController
+		
+		*/
+	- getAsset(string id)
+		this function should be called in MyenemyRenderer
+		
+Logic File
+		/* Will be instantiated for every created entity to hold all the information 
+			about the physical (not graphical) state of the entity in question. 
+			declare the properties like this:
+			this.some_state_variable_initial_value = 0;
+			instantiate (most likely in the spawn function) like that:
+			var new_entity_instance = new MyEnemy();
+		*/
+	/*
+	should include the following functions
+	
+	- init()
+		sets initial values that will apply to all instances. this function is called once in initController. 
+		for functions that must be called on instance creation, use spawn() (see below)
+	- spawn(int x,int y)
+		standard wrapper used by other modules to create instances of your enemy.
+		spawn creates an instance and retrieves a unique id from IdentificationController
+		using the IdentificationController.assign_id(new my_enemy) function
+	-tick_AI()
+		This is where you put all your enemy behaviour that changes each tick
+		This includes maintenance, such as decrementing timers, 
+		and querying the game state
+		This is also where all your enemy movement is performed.
+		While you do not make any direct graphical changes in your logic file, you may want
+		to store information about the AI state that can be readily parsed by the renderer
+		for instance, if (hp == 0){my_enemy.animation = dead};
+	-begin_contact(contact, info)
+		this is a callback function that is used by box2d's mysterious internal workings while checking collision
+		essentially, this function is called whenever the entity takes part in a collision
+		info stores information about the 2 objects that are colliding (collisions are always handled in pairs)
+		info about the calling entity is stored in info.Me.entity
+		info about the other entity is stored in info.Them.entity
+		the variables info.Me and info.Them are aliases for the sensor fixtures that detected the collision
+		if you set up sensor fixtures in init(), the entity has four sensors by default
+		in this case, info.Me.fixture_name holds one of the following strings: "right","left","bottom","top"
+	-end_contact
+		
+		
+		
+		
+		

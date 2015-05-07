@@ -42,10 +42,6 @@ namespace Infinite_Sidescroller.Models
     [Display(Name = "User name")]
     public string UserName { get; set; }
 
-    [StringLength(20, ErrorMessage = "The display name can not be longer than {0} characters long.")]
-    [Display(Name = "Display name")]
-    public string Alias { get; set; }
-
     [Required]
     [StringLength(100, ErrorMessage = "The password must be at least {2} characters long.", MinimumLength = 6)]
     [DataType(DataType.Password)]

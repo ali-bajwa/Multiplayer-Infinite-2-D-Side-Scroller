@@ -96,7 +96,7 @@ namespace Infinite_Sidescroller.Controllers
     {
       if (ModelState.IsValid)
       {
-        var user = new ApplicationUser() { UserName = model.UserName, Email = DEFAULT_EMAIL, Alias = model.Alias };
+        var user = new ApplicationUser() { UserName = model.UserName, Email = DEFAULT_EMAIL };
         var result = await UserManager.CreateAsync(user, model.Password);
         if (result.Succeeded)
         {

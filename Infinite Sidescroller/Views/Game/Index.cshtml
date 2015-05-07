@@ -19,9 +19,10 @@
     function start() {
 
       var data = $(".gamevariables").data();
+      console.log(data);
       var song = document.getElementById("music");
       song.volume = 0.3;
-      sidescroller_game.run(data["mode"], data["id"], data["hostname"], str.split(data["otherplayers"]));
+      sidescroller_game.run(data["mode"], data["id"], data["hostname"], data["otherplayers"].split(','));
     }
     $(document).ready(start);
   </script>

@@ -29,6 +29,6 @@
     <!--Ali: You'll need to edit these-->
     <input type="button" class="lobby_buttons joingame" value="Join Game" />
     <input type="button" class="lobby_buttons creategame" value="Create Game" />
-    @Html.ActionLink("Singleplayer", "Index", "Game", new { username = @User.Identity.GetUserName() }, new { @class = "lobby_buttons singleplayer" })
+    @Html.ActionLink("Singleplayer", "Index", "Game", new { UserID = @User.Identity.GetUserName(), isMultiplayer = false,  }, new { @class = "lobby_buttons singleplayer" })
   </div>
 </section>

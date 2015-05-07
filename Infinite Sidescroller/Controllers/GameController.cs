@@ -13,12 +13,12 @@ namespace Infinite_Sidescroller.Controllers
     GameDB GameDB = new GameDB();
  
 		// GET: Game
-		public ActionResult Index(string UserID, bool isMultiplayer, string OtherPlayers, int sessionID)
+		public ActionResult Index(string UserID, bool isMultiplayer, string OtherPlayers, int? sessionID)
 		{
       GameSessions model = new GameSessions();
       if (isMultiplayer)
       {
-        model.Id = sessionID;
+        model.Id = (int)sessionID;
       }
       model.HostUsername = UserID;
       model.PlayerNames = OtherPlayers;

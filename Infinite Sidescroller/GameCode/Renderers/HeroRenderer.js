@@ -24,47 +24,59 @@ var HeroRenderer = (function(){
 		var player_id = Config.Init.player_id;
 		var player_id_array = Config.Init.player_id_array;
 		var get_asset = AssetController.get_asset;
-		console.log("Player id", id);
-		console.log("entity id", en_id);
-		switch(en_id){
-			case "player1":
-				hero_index = "HeroOrange";
-				hero_sprite = get_asset("HeroOrange");
-				break;
-			case "player2":
-				hero_index = "HeroPink";
-				hero_sprite = get_asset("HeroPink");
-				break;
-			case "player3":
-				hero_index = "HeroLPurple";
-				hero_sprite = get_asset("HeroLPurple");
-				break;
-			case "player4":
-				hero_index = "HeroGreen";
-				hero_sprite = get_asset("HeroGreen");
-				break;
-			case "player5":
-				hero_index = "HeroLightBlue";
-				hero_sprite = get_asset("HeroLightBlue");
-				break;
-			case "player6":
-				hero_index = "HeroLightGreen";
-				hero_sprite = get_asset("HeroLightGreen");
-				break;
-			case "player7":
-				hero_index = "HeroBlue";
-				hero_sprite = get_asset("HeroBlue");
-				break;
-			case "player8":
-				hero_index = "HeroRed";
-				hero_sprite = get_asset("HeroRed");
-				break;
-			default:
-				hero_index = "HeroRed";
-				hero_sprite = get_asset("HeroRed");
+		//console.log("Player id", id);
+		//console.log("entity id", en_id);
+		//switch(en_id){
+			//case "player1":
+				//hero_index = "HeroOrange";
+				//hero_sprite = get_asset("HeroOrange");
+				//break;
+			//case "player2":
+				//hero_index = "HeroPink";
+				//hero_sprite = get_asset("HeroPink");
+				//break;
+			//case "player3":
+				//hero_index = "HeroLPurple";
+				//hero_sprite = get_asset("HeroLPurple");
+				//break;
+			//case "player4":
+				//hero_index = "HeroGreen";
+				//hero_sprite = get_asset("HeroGreen");
+				//break;
+			//case "player5":
+				//hero_index = "HeroLightBlue";
+				//hero_sprite = get_asset("HeroLightBlue");
+				//break;
+			//case "player6":
+				//hero_index = "HeroLightGreen";
+				//hero_sprite = get_asset("HeroLightGreen");
+				//break;
+			//case "player7":
+				//hero_index = "HeroBlue";
+				//hero_sprite = get_asset("HeroBlue");
+				//break;
+			//case "player8":
+				//hero_index = "HeroRed";
+				//hero_sprite = get_asset("HeroRed");
+				//break;
+			//default:
+				//hero_index = "HeroRed";
+				//hero_sprite = get_asset("HeroRed");
 				
+
+				
+		//}
+		var asset_ids = ["HeroOrange", "HeroPink", "HeroLPurple", "HeroGreen", "HeroLightBlue", "HeroLightGreen", "HeroBlue", "HeroRed", "HeroRed"];
+			
+		if(player_id_array != null && player_id_array.length > 0){
+			// if player id was populated properly, choose asset id corresponding to the index
+			var hero_index = asset_ids[player_id_array.indexOf(en_id)];
+		}else{
+			var hero_index = "HeroRed";
 		}
-		
+		var hero_sprite = get_asset(hero_index);
+
+		// spritesheet is recreated each time hero is spawned. that is completely unnecessary
 		spritesheets[hero_index] = new createjs.SpriteSheet({
 			"framerate": 1,
 			"images": [hero_sprite], //get_asset("HeroR"), get_asset("HeroW")
@@ -94,6 +106,7 @@ var HeroRenderer = (function(){
 				},
 			}
 		})
+
 		hero_animation = GraphicsController.request_animated(spritesheets[hero_index], "stand");
 		hero_animation.graphics_id = hero_index;
 		GraphicsController.set_reg_position(hero_animation, -25, -25);

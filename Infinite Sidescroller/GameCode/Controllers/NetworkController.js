@@ -26,7 +26,9 @@ var NetworkController = (function(){
 
 		if(!NetworkModel.block_connections && cmds("connect") && Config.Init.mode == "test"){ 
 			NetworkModel.block_connections = true;
-			start_multiplayer_session(["player1", "player2", "player3", "player4", "player5", "player6", "player7", "player8"]);
+			var players = ["player1", "player2", "player3", "player4", "player5", "player6", "player7", "player8"];
+			start_multiplayer_session(players);
+			Config.Init.player_id_array = players;
 		}
 
 		if(cmds("show_connected")){
@@ -112,6 +114,10 @@ var NetworkController = (function(){
 		*/
 
 		NetworkModel.my_id = id;
+		if(Config.Init.player_id == null){
+			Config.Init.player_id = id;
+		}
+
 		Config.Remote.connected = true;
 
 		var peer = NetworkModel.my_peer;

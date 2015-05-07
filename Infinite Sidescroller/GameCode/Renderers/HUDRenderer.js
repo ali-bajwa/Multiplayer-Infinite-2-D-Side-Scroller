@@ -49,36 +49,52 @@ var HUDRenderer = (function(){
 		var asset;
 		//var player_id = Config.Init.player_id;
 		var player_id = NetworkController.get_network_id();
-		console.log("hud render player_id", player_id);
-		switch(player_id){
-			case "player1":
-				asset = get_asset("HeadOrange");
-				break;
-			case "player2":
-				asset = get_asset("HeadPink");
-				break;
-			case "player3":
-				asset = get_asset("HeadPurple");
-				break;
-			case "player4":
-				asset = get_asset("HeadGreen");
-				break;
-			case "player5":
-				asset = get_asset("HeadLightBlue");
-				break;
-			case "player6":
-				asset = get_asset("HeadLightGreen");
-				break;
-			case "player7":
-				asset = get_asset("HeadBlue");
-				break;
-			case "player8":
-				asset = get_asset("HeadRed");
-				break;
-			default:
-				asset = get_asset("HeadRed");
+
+		//console.log("hud render player_id", player_id);
+		//switch(player_id){
+			//case "player1":
+				//asset = get_asset("HeadOrange");
+				//break;
+			//case "player2":
+				//asset = get_asset("HeadPink");
+				//break;
+			//case "player3":
+				//asset = get_asset("HeadPurple");
+				//break;
+			//case "player4":
+				//asset = get_asset("HeadGreen");
+				//break;
+			//case "player5":
+				//asset = get_asset("HeadLightBlue");
+				//break;
+			//case "player6":
+				//asset = get_asset("HeadLightGreen");
+				//break;
+			//case "player7":
+				//asset = get_asset("HeadBlue");
+				//break;
+			//case "player8":
+				//asset = get_asset("HeadRed");
+				//break;
+			//default:
+				//asset = get_asset("HeadRed");
 				
+		//}
+
+
+
+		// this stuff should be moved to initialization stage
+
+		var player_id_array = Config.Init.player_id_array;
+		var asset_ids = ["HeadOrange", "HeadPink", "HeadLPurple", "HeadGreen", "HeadLightBlue", "HeadLightGreen", "HeadBlue", "HeadRed", "HeadRed"];
+			
+		if(player_id_array != null && player_id_array.length > 0){
+			// if player id was populated properly, choose asset id corresponding to the index
+			var asset = get_asset(asset_ids[player_id_array.indexOf(player_id)]);
+		}else{
+			var asset = get_asset("HeadRed");
 		}
+
 		player_head.image = asset;
 		update_score(WorldController.get_score());
 		if(hero){

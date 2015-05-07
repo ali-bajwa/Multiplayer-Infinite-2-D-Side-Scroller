@@ -6,7 +6,11 @@ var HUDRenderer = (function(){
 	var health_outline;
 	var healthX;
 	var player_head;
-	
+	var connected_players;
+	var connected_main;
+	var connected_head;
+	var connected_outline;
+	var connected_bar;
 	var init = function(){
 		include();
 		healthX = 100;
@@ -22,6 +26,11 @@ var HUDRenderer = (function(){
 		GraphicsController.reg_for_render(health_outline);
 		player_head = new createjs.Bitmap(get_asset("HeadRed"));
 		GraphicsController.reg_for_render(player_head);
+		connected_main = new createjs.Shape();
+		connected_outline = new createjs.Shape();
+		connected_bar = new createjs.Shape();
+		connected_head = new createjs.Bitmap();
+		
 		
 		health_outline.x = 30;
 		health_outline.y = 25;
@@ -49,7 +58,23 @@ var HUDRenderer = (function(){
 		var asset;
 		//var player_id = Config.Init.player_id;
 		var player_id = NetworkController.get_network_id();
-
+		var connected_players = NetworkController.get_all_connected();
+		var connected_len = connected_players.length;
+		var player_id_array = Config.Init.player_id_array;
+		var asset_ids = ["HeadOrange", "HeadPink", "HeadLPurple", "HeadGreen", "HeadLightBlue", "HeadLightGreen", "HeadBlue", "HeadRed", "HeadRed"];
+		var connected_player_id;
+		for(var i =0; i < connected_len; i++){
+			connected_player_id = player_id_array[i];
+			if(player_id_array != null && player_id_array.length > 0){
+				// if player id was populated properly, choose asset id corresponding to the index
+				var connected_asset = get_asset(asset_ids[player_id_array.indexOf(connected_player_id)]);
+			}else{
+			var connected_asset = get_asset("HeadRed");
+			}
+			//create box and postions of box next
+		}
+		connected_players.toString();
+		console.log("players connected: " , connected_players);
 		//console.log("hud render player_id", player_id);
 		//switch(player_id){
 			//case "player1":
@@ -85,9 +110,7 @@ var HUDRenderer = (function(){
 
 		// this stuff should be moved to initialization stage
 
-		var player_id_array = Config.Init.player_id_array;
-		var asset_ids = ["HeadOrange", "HeadPink", "HeadLPurple", "HeadGreen", "HeadLightBlue", "HeadLightGreen", "HeadBlue", "HeadRed", "HeadRed"];
-			
+		
 		if(player_id_array != null && player_id_array.length > 0){
 			// if player id was populated properly, choose asset id corresponding to the index
 			var asset = get_asset(asset_ids[player_id_array.indexOf(player_id)]);

@@ -200,9 +200,9 @@ var GraphicsController = (function(){
 		
 		//set direction
 		if (sprite.physical_instance.direction){ //if direction == right, flip right
-			sprite.scaleX = 1;
-		}else{ //else flip left
 			sprite.scaleX = -1;
+		}else{ //else flip left
+			sprite.scaleX = 1;
 		}
 
 		//set alpha if blinking

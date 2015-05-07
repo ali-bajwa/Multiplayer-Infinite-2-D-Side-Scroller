@@ -58,7 +58,7 @@ var HeroLogic = (function(){
 		hero.wound = false;
 		hero.jumps = 0;
 		hero.score = 0;
-
+		hero.direction = false;
 		return hero;
 	
 	};
@@ -87,8 +87,8 @@ var HeroLogic = (function(){
 					hero.change_animation("walk");
 					hero.is_walking = true;
 				}
-				hero.direction = true;//direction = right
-				hero.move(hero.speed);
+				hero.direction = false;//direction = right
+				hero.move(-hero.speed);
 			}
 			
 			if(cmds("left")){
@@ -96,8 +96,8 @@ var HeroLogic = (function(){
 					hero.change_animation("walk");
 					hero.is_walking = true;
 				}
-				hero.direction = false;//direction = left
-				hero.move(hero.speed);
+				hero.direction = true;//direction = left
+				hero.move(-hero.speed);
 			}
 			
 			if(cmds("down")){

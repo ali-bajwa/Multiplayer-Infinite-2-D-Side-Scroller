@@ -727,7 +727,7 @@ var EntityController = (function () {
 		
 		
 		var entity = IdentificationController.get_by_id(entity_id);
-		var type = entity.type;
+		//var type = entity.type;
 		//console.log("entity id: ", entity.player_id, " Type: ", type);
 		if(entity == null){
 				console.warn("entity is not defined for the entity_id ", String(player_id));

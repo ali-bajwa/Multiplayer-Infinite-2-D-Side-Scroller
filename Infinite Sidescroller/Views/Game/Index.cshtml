@@ -1,4 +1,5 @@
-﻿@{
+﻿@model Infinite_Sidescroller.Models.GameSessions
+@{
   ViewBag.Title = "Game";
 }
 @section HeadContent{
@@ -16,13 +17,16 @@
   <script>
     //Load Game
     function start() {
+
+      var data = $(".gamevariables").data();
       var song = document.getElementById("music");
       song.volume = 0.3;
-      sidescroller_game.run();
+      sidescroller_game.run(data["mode"], data["id"], data["hostname"], str.split(data["otherplayers"]));
     }
     $(document).ready(start);
   </script>
 }
+<input type="hidden" class="gamevariables" data-mode="@(Model.Type == true ? "multiplayer" : "singleplayer")" data-id="@Model.Id" data-hostname="@Model.HostUsername" data-otherplayers="@Model.PlayerNames" />
 <audio id="music" src="~/GameCode/assets/art/adventure.mp3" preload="auto" loop autoplay></audio>
 <section class="game_area">
   <div id="screenPosition" style="margin-top:180px; position:absolute;"></div>

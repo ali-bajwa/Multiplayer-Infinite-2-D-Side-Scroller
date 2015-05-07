@@ -41,11 +41,6 @@ namespace Infinite_Sidescroller.Controllers
       }
     }
 
-    public ActionResult Index()
-    {
-      return View();
-    }
-
     //
     // GET: /Account/Login
     [AllowAnonymous]
@@ -76,7 +71,7 @@ namespace Infinite_Sidescroller.Controllers
         }
       }
       // Redisplay form with ModelState error
-      return View("Index", model);
+      return View(model);
     }
 
     //
@@ -142,7 +137,7 @@ namespace Infinite_Sidescroller.Controllers
           IdentityResult result = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
           if (result.Succeeded)
           {
-            return RedirectToAction("Manage", new { Message = ManageMessageId.ChangePasswordSuccess });
+            return RedirectToAction("Index", "Home");
           }
           else
           {

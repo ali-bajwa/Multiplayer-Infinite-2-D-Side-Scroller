@@ -1,16 +1,32 @@
 ﻿@using Infinite_Sidescroller.Models;
 @using Microsoft.AspNet.Identity;
+@model Infinite_Sidescroller.Models.ManageUserViewModel
 @{
   ViewBag.Title = "Manage Account";
 }
 
 @section Scripts {
-	@Scripts.Render("~/bundles/jqueryval")
+  @Scripts.Render("~/bundles/jqueryval")
 }
 
-<p class="text-success">@ViewBag.StatusMessage</p>
-<div class="row">
-  <div class="col-md-12">
-      @Html.Partial("_ChangePasswordPartial")
+<div class="register_page_wrapper">
+  <div class="pwd_change_header">
+    <h2>@ViewBag.Title</h2>
+    <p>You're logged in as <strong>@User.Identity.GetUserName()</strong>.</p>
   </div>
+  @using (Html.BeginForm("Manage", "Account", FormMethod.Post, new { @class = "regform", role = "form", }))
+  {
+    @Html.AntiForgeryToken()
+    <h4>Change Password</h4>
+    <hr style="margin-bottom: 10px;" />
+    @Html.PasswordFor(m => m.OldPassword, new { placeholder = "OLD PASSWORD" })
+    @Html.ValidationMessageFor(m => m.OldPassword)
+    @Html.PasswordFor(m => m.NewPassword, new { placeholder = "NEW PASSWORD" })
+    @Html.ValidationMessageFor(m => m.NewPassword)
+    @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "CONFIRM NEW PASSWORD" })
+    @Html.ValidationMessageFor(m => m.ConfirmPassword)
+    @Html.ValidationSummary()
+    <input type="submit" value="Change password" />
+  }
 </div>
+

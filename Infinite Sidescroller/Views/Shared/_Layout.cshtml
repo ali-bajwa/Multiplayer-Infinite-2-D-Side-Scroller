@@ -7,9 +7,8 @@
   @Styles.Render("~/Content/css")
   @Scripts.Render("~/bundles/jquery")
   @RenderSection("HeadContent", required: false)
-  <script src="~/Scripts/ViewpageScripts/LayoutJS.js"></script>
 </head>
-<body @Html.Raw(ViewBag.isHomepage != null ? "class='Homepage'" : "")>
+<body @Html.Raw(ViewBag.isRegPage != null ? "class='changebackgroundLoginReg'" : "")>
   <div id="PageOuterWrapper">
     <header id="Masthead">
       <div id="MastheadInner">

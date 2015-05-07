@@ -6,6 +6,23 @@
   padding: 0;
 }
 
+.field-validation-error {
+    color: red;
+    font-style: italic;
+    margin-bottom: 12px;
+    display: inline-block;
+}
+
+.validation-summary-errors {
+    margin-bottom: 12px;
+    margin-left: 16px;
+}
+
+.changebackgroundLoginReg {
+    background-color: #222222;
+    background-image: none;
+}
+
 hr {
   clear: both;
   border: 0;
@@ -730,6 +747,7 @@ form h4 {
   margin-bottom: 10px;
   font-family: "Cinzel", serif;
   font-size: 25px;
+  text-align: center;
 }
 
 

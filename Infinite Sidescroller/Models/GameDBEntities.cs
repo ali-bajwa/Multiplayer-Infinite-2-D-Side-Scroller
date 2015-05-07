@@ -7,37 +7,18 @@ using System.Web;
 
 namespace Infinite_Sidescroller.Models
 {
-  public class GameSession
+  [Table("dbo.GameSession")]
+  public class GameSessions
   {
     [Key]
     public int Id { get; set; }
-    public string Type { get; set; }
+    // Type = 1 OR TRUE => Multiplayer -- Type = 0 or FALSE => Singleplayer
+    public bool Type { get; set; }
     public bool IsStarted { get; set; }
     public bool IsCompleted { get; set; }
-
-    public GameSession() { }
-  }
-  [Table("dbo.Leaderboard")]
-  public class Leaderboard
-  {
-    [Key]
-    public int Id { get; set; }
-    public int SessionID { get; set; }
+    public string HostUsername { get; set; }
+    public string PlayerNames { get; set; }
     public int Score { get; set; }
-    public string Usernames { get; set; }
-    public bool GameType { get; set; }
-
-    public Leaderboard() { }
-  }
-
-  public class GameSessionxUser
-  {
-    [Key]
-    public int Id { get; set; }
-    public int SessionID { get; set; }
-    public string Username { get; set; }
-    public bool IsHost { get; set; }
-
-    public GameSessionxUser() { }
+    public GameSessions() { }
   }
 }

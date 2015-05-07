@@ -23,6 +23,13 @@ namespace Infinite_Sidescroller.Controllers
       return View();
     }
 
+    // GET: /Lobby
+    [Authorize]
+    public ActionResult Lobby()
+    {
+      return View();
+    }
+
     // GET: /Leaderboard
     public ActionResult Leaderboard()
     {

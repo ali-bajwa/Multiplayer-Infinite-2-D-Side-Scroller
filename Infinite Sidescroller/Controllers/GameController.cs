@@ -13,8 +13,9 @@ namespace Infinite_Sidescroller.Controllers
     GameDB GameDB = new GameDB();
  
 		// GET: Game
-		public ActionResult Index()
+		public ActionResult Index(string UserID, bool isMultiplayer, string OtherPlayers)
 		{
+
 			return View();
 		}
 

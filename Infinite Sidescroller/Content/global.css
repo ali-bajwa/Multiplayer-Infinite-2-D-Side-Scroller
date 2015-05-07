@@ -233,7 +233,7 @@ body {
 .lobby_wrapper {
 	background-color: rgb(191, 187, 151);
 	color: #222222;
-	width: 70%;
+	width: 100%;
 	height: 80%;
 	float: left;
 	-webkit-box-shadow: inset 0px 0px 39px 0px rgba(0,0,0,0.75);

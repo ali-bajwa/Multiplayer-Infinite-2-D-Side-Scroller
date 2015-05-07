@@ -422,7 +422,7 @@ var EntityController = (function () {
 		
 		this.needs_graphics_update = false; //accessed by renderer for animation purposes
 		this.animation = "stand"; //accessed by renderer for animation purposes
-		
+		this.player_id=-1
 		//boost entity
 		this.jump = function(x,y){
 			var body = this.body;
@@ -724,12 +724,16 @@ var EntityController = (function () {
 		}
 		
 		var entity_id = packet.entity_id;
+		
+		
 		var entity = IdentificationController.get_by_id(entity_id);
-		if (entity.type != "hero"){
-			if(entity == null){
-				console.warn("entity is not defined for the player_id", String(player_id));
-			}else{
-
+		var type = entity.type;
+		//console.log("entity id: ", entity.player_id, " Type: ", type);
+		if(entity == null){
+				console.warn("entity is not defined for the entity_id ", String(player_id));
+		}
+		else{
+			if(entity.type != "hero"){
 				var vel = new B2d.b2Vec2(packet.velocity.x, packet.velocity.y);
 				var pos = new B2d.b2Vec2(packet.position.x, packet.position.y);
 				

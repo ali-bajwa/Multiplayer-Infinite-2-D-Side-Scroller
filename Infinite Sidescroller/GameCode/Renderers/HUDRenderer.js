@@ -5,11 +5,12 @@ var HUDRenderer = (function(){
 	var score_title;
 	var health_outline;
 	var healthX;
-
+	var player_head;
+	
 	var init = function(){
-		
 		include();
 		healthX = 100;
+		
 		get_asset = AssetController.get_asset; // for quicker access
 		score = new createjs.Text();
 		GraphicsController.reg_for_render(score);
@@ -45,7 +46,40 @@ var HUDRenderer = (function(){
 	var render = function(){
 		var camera = GraphicsController.get_camera();
 		var hero = EntityController.get_my_hero();
-		
+		var asset;
+		//var player_id = Config.Init.player_id;
+		var player_id = NetworkController.get_network_id();
+		console.log("hud render player_id", player_id);
+		switch(player_id){
+			case "player1":
+				asset = get_asset("HeadOrange");
+				break;
+			case "player2":
+				asset = get_asset("HeadPink");
+				break;
+			case "player3":
+				asset = get_asset("HeadPurple");
+				break;
+			case "player4":
+				asset = get_asset("HeadGreen");
+				break;
+			case "player5":
+				asset = get_asset("HeadLightBlue");
+				break;
+			case "player6":
+				asset = get_asset("HeadLightGreen");
+				break;
+			case "player7":
+				asset = get_asset("HeadBlue");
+				break;
+			case "player8":
+				asset = get_asset("HeadRed");
+				break;
+			default:
+				asset = get_asset("HeadRed");
+				
+		}
+		player_head.image = asset;
 		update_score(WorldController.get_score());
 		if(hero){
 			update_health(hero.hp);

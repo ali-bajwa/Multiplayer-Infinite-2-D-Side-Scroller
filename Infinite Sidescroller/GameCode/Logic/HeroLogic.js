@@ -52,7 +52,8 @@ var HeroLogic = (function(){
 		var hero = new Hero();
 		hero.type = "hero";
 		hero.body = PhysicsController.get_rectangular({x: x, y: y, border_sensors: true}, hero);
-
+		
+		hero.player_id = NetworkController.get_network_id();
 		hero.hp = 100;
 		hero.wound = false;
 		hero.jumps = 0;

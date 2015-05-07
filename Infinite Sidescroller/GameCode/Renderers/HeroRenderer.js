@@ -17,10 +17,57 @@ var HeroRenderer = (function(){
 		get graphics representation. You are given the entity instance and is supposed
 		to crete graphics instance, and GraphicsController.reg_for_render(graphics_instance, entity_instance); it 
 		*/
+		var hero_sprite;
+		var hero_index;
+		var en_id = entity_hero.player_id;
+		var id = NetworkController.get_network_id();
+		var player_id = Config.Init.player_id;
+		var player_id_array = Config.Init.player_id_array;
 		var get_asset = AssetController.get_asset;
-		spritesheets["hero"] = new createjs.SpriteSheet({
+		console.log("Player id", id);
+		console.log("entity id", en_id);
+		switch(en_id){
+			case "player1":
+				hero_index = "HeroOrange";
+				hero_sprite = get_asset("HeroOrange");
+				break;
+			case "player2":
+				hero_index = "HeroPink";
+				hero_sprite = get_asset("HeroPink");
+				break;
+			case "player3":
+				hero_index = "HeroLPurple";
+				hero_sprite = get_asset("HeroLPurple");
+				break;
+			case "player4":
+				hero_index = "HeroGreen";
+				hero_sprite = get_asset("HeroGreen");
+				break;
+			case "player5":
+				hero_index = "HeroLightBlue";
+				hero_sprite = get_asset("HeroLightBlue");
+				break;
+			case "player6":
+				hero_index = "HeroLightGreen";
+				hero_sprite = get_asset("HeroLightGreen");
+				break;
+			case "player7":
+				hero_index = "HeroBlue";
+				hero_sprite = get_asset("HeroBlue");
+				break;
+			case "player8":
+				hero_index = "HeroRed";
+				hero_sprite = get_asset("HeroRed");
+				break;
+			default:
+				hero_index = "HeroRed";
+				hero_sprite = get_asset("HeroRed");
+				
+		}
+		
+		spritesheets[hero_index] = new createjs.SpriteSheet({
 			"framerate": 1,
-			"images": [get_asset("Hero")], //get_asset("HeroR"), get_asset("HeroW")
+			"images": [hero_sprite], //get_asset("HeroR"), get_asset("HeroW")
 			"frames": { "regX": 25, "regY": 25, "height": 50, "width": 50, "count": 16},
 			"animations": {
 				"stand": {
@@ -47,8 +94,8 @@ var HeroRenderer = (function(){
 				},
 			}
 		})
-		hero_animation = GraphicsController.request_animated(spritesheets["hero"], "stand");
-		hero_animation.graphics_id = "hero";
+		hero_animation = GraphicsController.request_animated(spritesheets[hero_index], "stand");
+		hero_animation.graphics_id = hero_index;
 		GraphicsController.set_reg_position(hero_animation, -25, -25);
 		GraphicsController.reg_for_render(hero_animation, entity_hero);
 		if(entity_hero.player_id == NetworkController.get_network_id()){

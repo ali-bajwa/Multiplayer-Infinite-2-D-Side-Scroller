@@ -101,11 +101,15 @@ var HeroLogic = (function(){
 			}
 			
 			if(cmds("down")){
+				if(hero.jumps !=0){
+					hero.change_animation("finish");
+				}
 				slam(hero);
 				stop_hero(hero);
 			}
 			
 			if(cmds("up")){
+				hero.is_walking = false;
 				jump(hero);
 			}
 			
@@ -115,17 +119,9 @@ var HeroLogic = (function(){
 			}
 			
 			if(hero.animation=="jump"){
-				if(hero.jump_tick == 1){
-					hero.change_animation("jump");
-				}
 				hero.jump_tick++;
-				if(hero.jump_tick >= 20){
-					if(hero.jump_tick >= 25){
+				if(hero.jump_tick >= 25){
 						hero.change_animation("finish");
-						if(hero.jumps == 0){
-							hero.animation = "finish";
-						}
-					}
 				}
 			}
 		

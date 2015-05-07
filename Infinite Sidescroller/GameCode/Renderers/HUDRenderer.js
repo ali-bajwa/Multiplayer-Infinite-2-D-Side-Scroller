@@ -8,7 +8,6 @@ var HUDRenderer = (function(){
 	var player_head;
 	var connected_players;
 	var connected_main;
-	var connected_head;
 	var connected_outline;
 	var connected_bar;
 	var next_x = 0;
@@ -16,11 +15,19 @@ var HUDRenderer = (function(){
 	var screen_W;
 	var container;
 	var con_con;
+
+	// remote ids associated w/ easeljs graphic representations
+	var remote_hero_icons = {};
+
+	var asset_ids = ["HeadOrange", "HeadPink", "HeadLPurple", "HeadGreen", "HeadLightBlue", "HeadLightGreen", "HeadBlue", "HeadRed"];
+
 	var init = function(){
 		include();
 		healthX = 100;
 		container = new createjs.Container();
 		con_con = new createjs.Container();
+		
+
 		get_asset = AssetController.get_asset; // for quicker access
 		score = new createjs.Text();
 		container.addChild(score);
@@ -41,15 +48,20 @@ var HUDRenderer = (function(){
 		con_con.addChild(connected_main);
 		//GraphicsController.reg_for_render(connected_main);
 		connected_outline_bar = new createjs.Shape();
+
+
+
+		// make less horrible TODO:
 		con_con.addChild(connected_outline_bar);
+		position_remote_icons_container();
+
 		//GraphicsController.reg_for_render(connected_outline_bar);
 		connected_bar = new createjs.Shape();
 		con_con.addChild(connected_bar);
 		//GraphicsController.reg_for_render(connected_bar);
-		connected_head = new createjs.Bitmap();
 		//container.addChild(score);
 		//GraphicsController.reg_for_render(connected_head);
-		//container.addChild(con_con);
+		container.addChild(con_con);
 		GraphicsController.reg_for_render(container);
 		health_outline.x = 30;
 		health_outline.y = 25;
@@ -81,81 +93,47 @@ var HUDRenderer = (function(){
 		var connected_len = connected_players.length;
 		var player_id_array = Config.Init.player_id_array;
 		var asset_ids = ["HeadOrange", "HeadPink", "HeadLPurple", "HeadGreen", "HeadLightBlue", "HeadLightGreen", "HeadBlue", "HeadRed"];
-		var connected_player_id;
 		var heros = EntityController.get_all_heroes();
 		var index;
 		screen_w = Config.SCREEN_W;
-		console.log("screen width", Config.SCREEN_W);
+		//console.log("screen width", Config.SCREEN_W);
 		//player_id_array.toString();
-		console.log("player_id_array: ", player_id_array);
-		for(var i =0; i < connected_len; i++){
+		//console.log("player_id_array: ", player_id_array);
+		
+		/*for(var i =0; i < connected_len; i++){
 			connected_player_id = connected_players[i];
 			index = player_id_array.indexOf(connected_player_id);
 			container.removeChildAt(index);
-		}
+		}*/
 		
 		
 		for(var i =0; i < connected_len; i++){
-			connected_player_id = connected_players[i];
-			console.log("connected player: ", connected_player_id);
-			if(player_id_array != null && player_id_array.length > 0){
-				// if player id was populated properly, choose asset id corresponding to the index
-				var connected_asset = get_asset(asset_ids[player_id_array.indexOf(connected_player_id)]);
-			}else{
-			var connected_asset = get_asset("HeadRed");
+			var connected_player_id = connected_players[i];
+			//console.log("connected player: ", connected_player_id);
+
+			if(remote_hero_icons[connected_player_id] == null){
+				var icon = get_player_icon(player_id);
+				remote_hero_icons[connected_player_id] = icon;
+				position_player_icon(icon, connected_player_id);
 			}
-			connected_head.image = connected_asset;
 			
-			index = player_id_array.indexOf(connected_player_id);
+			//index = player_id_array.indexOf(connected_player_id);
+
 			//create box and postions of box next
-			connected_main.graphics.beginStroke("white").setStrokeStyle(1).drawRect(0,0,40,55);
+			/*connected_main.graphics.beginStroke("white").setStrokeStyle(1).drawRect(0,0,40,55);
 			connected_outline_bar.graphics.beginStroke("red").setStrokeStyle(1).drawRect(0,42,40,10);
 			connected_head.x=1;  
 			connected_head.y = 1;
 			con_con.x = screen_w - 10 - next_x;
 			con_con.y = Y;
 			container.addChildAt(con_con,index);
-			next_x +=50;
+			next_x +=50;*/
 		}
 		next_x =0;
 		connected_players.toString();
-		console.log("players connected: " , connected_players);
-		//console.log("hud render player_id", player_id);
-		//switch(player_id){
-			//case "player1":
-				//asset = get_asset("HeadOrange");
-				//break;
-			//case "player2":
-				//asset = get_asset("HeadPink");
-				//break;
-			//case "player3":
-				//asset = get_asset("HeadPurple");
-				//break;
-			//case "player4":
-				//asset = get_asset("HeadGreen");
-				//break;
-			//case "player5":
-				//asset = get_asset("HeadLightBlue");
-				//break;
-			//case "player6":
-				//asset = get_asset("HeadLightGreen");
-				//break;
-			//case "player7":
-				//asset = get_asset("HeadBlue");
-				//break;
-			//case "player8":
-				//asset = get_asset("HeadRed");
-				//break;
-			//default:
-				//asset = get_asset("HeadRed");
-				
-		//}
-
-
-
+	
 		// this stuff should be moved to initialization stage
 
-		var asset_ids = ["HeadOrange", "HeadPink", "HeadLPurple", "HeadGreen", "HeadLightBlue", "HeadLightGreen", "HeadBlue", "HeadRed"];
 		if(player_id_array != null && player_id_array.length > 0){
 			// if player id was populated properly, choose asset id corresponding to the index
 			var asset = get_asset(asset_ids[player_id_array.indexOf(player_id)]);
@@ -171,6 +149,71 @@ var HUDRenderer = (function(){
 		
 		
 	};
+
+	var position_remote_icons_container = function(arguments){
+		/**
+		* description
+		*/
+
+		var icon_container = con_con;
+		var cell_size = 50;
+
+
+		if(Config.SCREEN_W >= 600){
+			icon_container.x = Config.SCREEN_W - cell_size * 4; // space for 4 player heads
+		}else{
+			icon_container.x = 400;
+		}
+	
+		
+		var shape = new createjs.Shape();                                       
+		shape.graphics.beginFill("#ff0000").drawRect(0, 0, 10, 10);             
+		//shape.x = Config.SCREEN_W - 10; // screen width minus the width of the shape (registration point is top left corner) 
+		con_con.addChild(shape);
+	};
+	
+	
+
+	var position_player_icon = function(icon, player_id){
+		/**
+		* position icon of the remote player on the HUD
+		*/
+		
+		var cell_size = 50;
+		var icon_container = con_con;
+
+		var player_id_array = Config.Init.player_id_array;
+		var index = player_id_array.indexOf(player_id);
+		var lvl = (index < 4) ? 1 : 2; // icon displayed on the first or second level
+
+		var offset_y = cell_size * lvl;
+		var offset_x = index * cell_size;
+		icon.x = offset_x;
+		icon.y = offset_y;
+		
+	};
+	
+	
+
+	var get_player_icon = function(player_id){
+		/**
+		* description
+		*/
+
+		var player_id_array = Config.Init.player_id_array;
+
+		if(player_id_array != null && player_id_array.length > 0){
+				// if player id was populated properly, choose asset id corresponding to the index
+			var connected_asset = get_asset(asset_ids[player_id_array.indexOf(player_id)]);
+		}else{
+			var connected_asset = get_asset("HeadRed");
+		}
+		var player_icon = new createjs.Bitmap(connected_asset);
+
+		return player_icon;
+	};
+	
+	
 	
 	var update_score = function(new_score){
 		score.text = parseInt(new_score);

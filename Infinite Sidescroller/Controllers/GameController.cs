@@ -8,24 +8,42 @@ using System.Web.Script.Serialization;
 
 namespace Infinite_Sidescroller.Controllers
 {
-	public class GameController : Controller
-	{
+  public class GameController : Controller
+  {
     GameDB GameDB = new GameDB();
- 
-		// GET: Game
-		public ActionResult Index(string UserID, bool isMultiplayer, string OtherPlayers, int? sessionID)
-		{
-      GameSessions model = new GameSessions();
+
+    // GET: Game
+    public ActionResult Index(string UserID, bool isMultiplayer, string OtherPlayers, int? sessionID)
+    {
+      GameSessions game;
       if (isMultiplayer)
       {
-        model.Id = (int)sessionID;
+        game = GameDB.GameSession.Where(entry => entry.Id == sessionID).ToList()[0];
+        game.IsStarted = true;
+        GameDB.Entry(game).State = System.Data.Entity.EntityState.Modified;
+        GameDB.SaveChanges();
       }
-      model.HostUsername = UserID;
-      model.PlayerNames = OtherPlayers;
-      model.IsStarted = true;
+      else
+      {
+        game = new GameSessions();
+        game.HostUsername = UserID;
+        if (!String.IsNullOrEmpty(OtherPlayers))
+        {
+          game.PlayerNames = OtherPlayers;
+        }
+        else
+        {
+          game.PlayerNames = UserID;
+        }
+        game.IsStarted = true;
+        GameDB.GameSession.Add(game);
 
-			return View(model);
-		}
+        GameDB.Entry(game).State = System.Data.Entity.EntityState.Added;
+        GameDB.SaveChanges();
+      }
+
+      return View(game);
+    }
 
     [AjaxOnly]
     public ActionResult SaveScore(int sessionid, int score)
@@ -51,5 +69,5 @@ namespace Infinite_Sidescroller.Controllers
 
       return View(); // this line will never execute
     }
-	}
+  }
 }

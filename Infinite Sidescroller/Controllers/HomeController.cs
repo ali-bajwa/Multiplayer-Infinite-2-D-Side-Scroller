@@ -34,6 +34,21 @@ namespace Infinite_Sidescroller.Controllers
       return View(model);
     }
 
+    [Authorize]
+    public ActionResult CreateGame(string UserID)
+    {
+      GameSessions model = new GameSessions();
+      model.HostUsername = UserID;
+      model.PlayerNames = UserID;
+      model.Type = true;
+
+      GameDB.GameSession.Add(model);
+      GameDB.Entry(model).State = System.Data.Entity.EntityState.Added;
+      GameDB.SaveChanges();
+
+      return RedirectToAction("Lobby");
+    }
+
     // GET: /Leaderboard
     public ActionResult Leaderboard()
     {

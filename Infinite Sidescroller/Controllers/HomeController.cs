@@ -27,7 +27,11 @@ namespace Infinite_Sidescroller.Controllers
     [Authorize]
     public ActionResult Lobby()
     {
-      return View();
+      LobbyViewModel model = new LobbyViewModel();
+      List<GameSessions> Games = GameDB.GameSession.Where(entry => entry.IsStarted == false && entry.IsCompleted == false).ToList();
+      model.LobbyGames = Games;
+      
+      return View(model);
     }
 
     // GET: /Leaderboard

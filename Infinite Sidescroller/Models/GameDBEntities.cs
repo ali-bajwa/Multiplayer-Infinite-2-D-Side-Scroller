@@ -19,6 +19,11 @@ namespace Infinite_Sidescroller.Models
     public string HostUsername { get; set; }
     public string PlayerNames { get; set; }
     public int Score { get; set; }
-    public GameSessions() { }
+    public GameSessions() {
+      this.Type = false;
+      this.IsStarted = false;
+      this.IsCompleted = false;
+      this.Score = 0;
+    }
   }
 }

@@ -9,7 +9,7 @@ namespace Infinite_Sidescroller.Models
   public class GameDB : DbContext
   {
     public GameDB()
-      : base("GameCS")
+      : base("GameCS2")
     {
       Database.SetInitializer<GameDB>(null);
     }

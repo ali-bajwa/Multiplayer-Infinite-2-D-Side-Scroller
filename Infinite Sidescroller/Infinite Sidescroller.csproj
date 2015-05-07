@@ -169,6 +169,7 @@
     <Compile Include="Models\GameDBEntities.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\LeaderboardViewModel.cs" />
+    <Compile Include="Models\LobbyViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>

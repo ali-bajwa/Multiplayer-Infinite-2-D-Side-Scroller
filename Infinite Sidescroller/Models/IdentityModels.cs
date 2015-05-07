@@ -21,7 +21,7 @@ namespace Infinite_Sidescroller.Models
   public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
   {
       public ApplicationDbContext()
-          : base("GameCS", throwIfV1Schema: false)
+      : base("GameCS2", throwIfV1Schema: false)
       {
       }
 

@@ -174,17 +174,29 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\global.css" />
+    <Content Include="Content\Images\ant_beast.png" />
+    <Content Include="Content\Images\arrowKeys.png" />
     <Content Include="Content\Images\blur.jpg" />
     <Content Include="Content\Images\border.gif" />
+    <Content Include="Content\Images\centaur_beast.png" />
     <Content Include="Content\Images\clouds.gif" />
     <Content Include="Content\Images\cracktexture.png" />
+    <Content Include="Content\Images\default-user-image.png" />
+    <Content Include="Content\Images\developers\jake.jpg" />
+    <Content Include="Content\Images\developers\josh.jpg" />
+    <Content Include="Content\Images\developers\klayton.jpg" />
     <Content Include="Content\Images\garden.jpg" />
     <Content Include="Content\Images\greek_borderC.png" />
+    <Content Include="Content\Images\griffin_beast.png" />
     <Content Include="Content\Images\harbor.jpg" />
+    <Content Include="Content\Images\horae2.gif" />
+    <Content Include="Content\Images\hyena_beast.png" />
     <Content Include="Content\Images\logo1.png" />
+    <Content Include="Content\Images\medusa_beast.png" />
     <Content Include="Content\Images\pillar_background.png" />
     <Content Include="Content\Images\reposition.png" />
     <Content Include="Content\Images\sound.png" />
+    <Content Include="Content\Images\stone.png" />
     <Content Include="favicon.ico" />
     <Content Include="GameCode\.gitignore" />
     <Content Include="GameCode\assets\art\adventure.mp3" />
@@ -245,6 +257,7 @@
     <Content Include="GameCode\Controllers\IdentificationController.js" />
     <Content Include="GameCode\Controllers\InitController.js" />
     <Content Include="GameCode\Controllers\KeyboardController.js" />
+    <Content Include="GameCode\Controllers\Last Section OS" />
     <Content Include="GameCode\Controllers\MultiplayerSyncController.js" />
     <Content Include="GameCode\Controllers\NetworkController.js" />
     <Content Include="GameCode\Controllers\PhysicsController.js" />
@@ -253,8 +266,10 @@
     <Content Include="GameCode\Controllers\TerrainSliceController.js" />
     <Content Include="GameCode\Controllers\TestController.js" />
     <Content Include="GameCode\Controllers\WorldController.js" />
+    <Content Include="GameCode\Documentation\Click Me.doc" />
     <Content Include="GameCode\Documentation\DON%27T_README.txt" />
     <Content Include="GameCode\Documentation\Enemy Documentation.txt" />
+    <Content Include="GameCode\Documentation\javascript.custom.snippets" />
     <Content Include="GameCode\Documentation\multiplayer_testing.txt" />
     <Content Include="GameCode\Documentation\pseudocode for networking stuff.txt" />
     <Content Include="GameCode\Documentation\table_of_contents.txt" />
@@ -269,6 +284,7 @@
     <Content Include="GameCode\Logic\EsteemedCompanionLogic.js" />
     <Content Include="GameCode\Logic\GriffinLogic.js" />
     <Content Include="GameCode\Logic\HeroLogic.js" />
+    <Content Include="GameCode\Logic\HeroLogic.js.rej" />
     <Content Include="GameCode\Logic\HyenaLogic.js" />
     <Content Include="GameCode\Logic\MedusaLogic.js" />
     <Content Include="GameCode\Logic\PizzaLogic.js" />
@@ -302,12 +318,8 @@
     <Content Include="GameCode\Renderers\TerrainCellRenderer.js" />
     <Content Include="GameCode\Renderers\TerrainSliceRenderer.js" />
     <Content Include="Global.asax" />
-    <Content Include="GameCode\Controllers\Last Section OS" />
-    <Content Include="GameCode\Documentation\Click Me.doc" />
-    <Content Include="GameCode\Documentation\javascript.custom.snippets" />
-    <Content Include="GameCode\Logic\HeroLogic.js.rej" />
-    <None Include="Properties\PublishProfiles\Butts.pubxml" />
-    <None Include="Properties\PublishProfiles\vulter.pubxml" />
+    <None Include="Properties\PublishProfiles\JoshFriend.pubxml" />
+    <None Include="Properties\PublishProfiles\Tracepublish.pubxml" />
     <None Include="Scripts\jquery-2.1.3.intellisense.js" />
     <Content Include="Scripts\jquery-2.1.3.js" />
     <Content Include="Scripts\jquery-2.1.3.min.js" />
@@ -318,7 +330,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\utility.js" />
-    <Content Include="Scripts\ViewpageScripts\LayoutJS.js" />
+    <Content Include="Scripts\ViewpageScripts\AjaxFunctionExample.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -798,7 +810,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
+          <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>3385</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>

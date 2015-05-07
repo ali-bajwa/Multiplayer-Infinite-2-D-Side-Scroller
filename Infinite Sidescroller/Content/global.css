@@ -6,6 +6,12 @@
   padding: 0;
 }
 
+.linkColor {
+  color: rgba(191, 187, 151, 0.8);
+  font-weight: bold;
+  text-decoration: none;
+}
+
 .field-validation-error {
     color: red;
     font-style: italic;
@@ -436,10 +442,6 @@ canvas {
     font-size: 22px;
 }
 /*end controls/tutorial dropdown*/
-
-canvas, .controlsShowHide, .controls, .playPause_button { /*Ali: You will need to handle this in some way. Either get rid of it if you're re-routing or change to display: box whilst also changing lobby_section to display: none;*/
-    display: none;
-}
 
 /*END GAME PAGE*/
 

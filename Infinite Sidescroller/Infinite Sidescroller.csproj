@@ -349,13 +349,13 @@
     <Content Include="Views\Home\Bestiary.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_GlobalFooter.cshtml" />
-    <Content Include="Views\Shared\_GlobalHeader.cshtml" />
     <Content Include="Views\Shared\_GlobalNav.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Game\Index.cshtml" />
     <Content Include="Views\Home\Developers.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
+    <Content Include="Views\Home\Lobby.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

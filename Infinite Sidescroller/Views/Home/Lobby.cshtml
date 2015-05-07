@@ -1,0 +1,58 @@
+﻿@using Infinite_Sidescroller.Models;
+@using Microsoft.AspNet.Identity;
+@{
+  ViewBag.Title = "Game Lobby";
+}
+
+<!--Lobby-->
+<section class="lobby_section">
+  <div class="lobby_wrapper">
+    <table class="lobby">
+      <tbody>
+        <tr>
+          <!--Ali: You can change the headers to whatever you want the data to be,
+           for instance: If ping is too hard to implement, you can either change it to
+           something else or get rid of it. This is just proof of concept-->
+          <th>Host</th>
+          <th>Players</th>
+          <th>Ping</th>
+        </tr>
+
+        <tr class="alt_row">
+          <!--Filler data entered. You can delete.-->
+          <td>TacoSombrero</td>
+          <td>1&#47;6</td>
+          <td>123</td>
+        </tr>
+        <tr>
+          <!--Filler data entered. You can delete.-->
+          <td>TacoSombrero</td>
+          <td>1&#47;6</td>
+          <td>123</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <aside class="players">
+    <table>
+      <tbody>
+        <tr>
+          <th>Connected Players:<hr /></th>
+        </tr>
+        <!--More Filler data, feel free to remove-->
+        <tr>
+          <td>TacoSombrero</td>
+        </tr>
+        <tr>
+          <td>BurritoCincodeMayo</td>
+        </tr>
+      </tbody>
+    </table>
+  </aside>
+  <div class="lobby_actions_area">
+    <!--Ali: You'll need to edit these-->
+    <input type="button" id="something" class="lobby_buttons" value="Join Game" />
+    <input type="button" id="something" class="lobby_buttons" value="Create Game" />
+    <input type="button" id="something" class="lobby_buttons" value="Singleplayer" />
+  </div>
+</section>

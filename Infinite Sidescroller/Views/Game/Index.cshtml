@@ -5,118 +5,43 @@
   @Scripts.Render("~/bundles/jquery")
   @Scripts.Render("~/bundles/gamescripts")
 }
-<html>
-<head>
-  <title></title>
-</head>
 
-<body>
-    <audio id="music" src="~/GameCode/assets/art/adventure.mp3" preload="auto" loop autoplay></audio>
-    <section class="game_area">
-        <div id="screenPosition" style="margin-top:180px; position:absolute;"></div>
-        <div id="canvas_container">
-            <!--Lobby-->
-            <section class="lobby_section">
-                <div class="lobby_wrapper">
-                    <table class="lobby">
-                        <tbody>
-                            <tr>
-                                <!--Ali: You can change the headers to whatever you want the data to be,
-                                 for instance: If ping is too hard to implement, you can either change it to
-                                 something else or get rid of it. This is just proof of concept-->
-                                <th>Host</th>
-                                <th>Players</th>
-                                <th>Ping</th>
-                            </tr>
+@section Scripts {
+  <script>
+    //Smooth Scroll for controls/tips/tutorial/whateveryouwanttocallit
+    var ToggleControls = function (elem) {
+      $(".controls").toggleClass("Shown");
+    }
+  </script>
+  <script>
+    //Load Game
+    function start() {
+      var song = document.getElementById("music");
+      song.volume = 0.3;
+      sidescroller_game.run();
+    }
+    $(document).ready(start);
+  </script>
+}
+<audio id="music" src="~/GameCode/assets/art/adventure.mp3" preload="auto" loop autoplay></audio>
+<section class="game_area">
+  <div id="screenPosition" style="margin-top:180px; position:absolute;"></div>
+  <div id="canvas_container">
+    <!--Game-->
+    <div class="playPause_button">
+      <a href="javascript:void(0);" onclick="document.getElementById('music').muted = !document.getElementById('music').muted; return false"><img src="~/Content/Images/sound.png" id="mute_btn" /></a>
+    </div>
+    <a href="#screenPosition" id="default_position"></a>
+    <canvas id="display_canvas"></canvas>
 
-                            <tr class="alt_row">
-                                <!--Filler data entered. You can delete.-->
-                                <td>TacoSombrero</td>
-                                <td>1&#47;6</td>
-                                <td>123</td>
-                            </tr>
-                            <tr>
-                                <!--Filler data entered. You can delete.-->
-                                <td>TacoSombrero</td>
-                                <td>1&#47;6</td>
-                                <td>123</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <aside class="players">
-                    <table>
-                        <tbody>
-                            <tr>
-                                <th>Connected Players:<hr /></th>
-                            </tr>
-                            <!--More Filler data, feel free to remove-->
-                            <tr>
-                                <td>TacoSombrero</td>
-                            </tr>
-                            <tr>
-                                <td>BurritoCincodeMayo</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </aside>
-                <div class="lobby_actions_area">
-                    <!--Ali: You'll need to edit these-->
-                    <input type="button" id="something" class="lobby_buttons" value="Join Game" />
-                    <input type="button" id="something" class="lobby_buttons" value="Create Game" />
-                    <input type="button" id="something" class="lobby_buttons" value="Singleplayer" />
-                </div>
-            </section>
-
-            <!--Game-->
-            <div class="playPause_button">
-                <a href="javascript:void(0);" onclick="document.getElementById('music').muted = !document.getElementById('music').muted; return false"><img src="~/Content/Images/sound.png" id="mute_btn" /></a>
-            </div>
-            <a href="#screenPosition" id="default_position"></a>
-            <canvas id="display_canvas"></canvas>
-
-        </div>
-        <section class="controls">
-            <aside>
-                <img src="../content/images/arrowKeys.png" alt="Arrow Keys" />
-                <p>UP: Jump. Press twice to double jump!</p>
-                <p>Down: Press mid-air to do a vertical slam!</p>
-                <p>Left/Right: Run left/right.</p>
-            </aside>
-        </section>
-        <div class="controlsShowHide"><a onclick="ToggleControls(this)"><h4>CONTROLS</h4></a></div>
-    </section>
-    <script src="~/Scripts/jquery-2.1.3.js"></script>
-    <script language="javascript" type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-    <script>
-        //Load Game
-        function start() {
-            var song = document.getElementById("music");
-            song.volume = 0.3;
-            sidescroller_game.run();
-        }
-        window.onload = start;
-        
-    </script>
-    <script>
-        //Smooth Scroll for controls/tips/tutorial/whateveryouwanttocallit
-        (function () {
-            var ControlsSection = document.getElementsByClassName('controls')[0];
-
-            var isShownRegex = /(^|\s)Shown(\s|$)/;
-
-            window.ToggleControls = function (elem) {
-                if (!ControlsSection) return;
-
-                if (isShownRegex.test(ControlsSection.className)) {
-                    ControlsSection.className = ControlsSection.className.replace(isShownRegex, ' ');
-                } else {
-                    ControlsSection.className += ' Shown';
-                }
-                ControlsSection.className = ControlsSection.className.trim();
-            }
-        })()
-
-    </script>
-</body>
-</html>
+  </div>
+  <section class="controls">
+    <aside>
+      <img src="~/content/images/arrowKeys.png" alt="Arrow Keys" />
+      <p>UP: Jump. Press twice to double jump!</p>
+      <p>Down: Press mid-air to do a vertical slam!</p>
+      <p>Left/Right: Run left/right.</p>
+    </aside>
+  </section>
+  <div class="controlsShowHide"><a onclick="ToggleControls()"><h4>CONTROLS</h4></a></div>
+</section>

@@ -1,5 +1,6 @@
 ﻿@{
     ViewBag.Title = "Horae's Hoplites";
+    ViewBag.isHomepage = true;
 }
 <section class=front_page_game_wrapper>
     <!--For play button positioning-->
@@ -10,12 +11,12 @@
 <div class="front_page_border"></div>
 <section class=front_page_main>
     <h2>PRESENTED BY</h2>
-    <img src="../Content/images/logo1.png" alt="Shaded Pixels" />
+    <img src="~/Content/images/logo1.png" alt="Shaded Pixels" />
     <section class=plaque>
         <article class="plaque_section">
             <h3>More Enemies</h3>
             <p>You didn't think the trek would be easy did you? We have implemented a total of five mythological beasts, and they have no intention on making your journey an easy one!
-               You can read more about the beasts and the story of the horae on our @Html.ActionLink("Lore", "Bestiary", "Home") page.</p>
+               You can read more about the beasts and the story of the horae on our @Html.ActionLink("Lore", "Bestiary", "Home", new { @class = "linkColor" }) page.</p>
         </article>
         <hr />
         <article class="plaque_section">

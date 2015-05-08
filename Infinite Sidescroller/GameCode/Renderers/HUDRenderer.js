@@ -153,10 +153,10 @@ var HUDRenderer = (function(){
 		}
 	
 		
-		var shape = new createjs.Shape();                                       
-		shape.graphics.beginFill("#ff0000").drawRect(0, 0, 10, 10);             
-		//shape.x = Config.SCREEN_W - 10; // screen width minus the width of the shape (registration point is top left corner) 
-		con_con.addChild(shape);
+		//var shape = new createjs.Shape();                                       
+		//shape.graphics.beginFill("#ff0000").drawRect(0, 0, 10, 10);             
+		////shape.x = Config.SCREEN_W - 10; // screen width minus the width of the shape (registration point is top left corner) 
+		//con_con.addChild(shape);
 	};
 	
 	

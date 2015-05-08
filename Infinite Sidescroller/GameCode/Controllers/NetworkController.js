@@ -397,7 +397,6 @@ var NetworkController = (function(){
 		// array is relatively small, and operation happends seldomly
 		free_ids.splice(free_ids.indexOf(id), 1); 
 
-		console.log("accepting connection from peer", id);
 		
 		nfree_ids.push(id);
 
@@ -505,7 +504,6 @@ var NetworkController = (function(){
 				var m_id = data.master_id;
 
 				set_master(m_id);
-				console.log("The master is", m_id);
 				//clearTimeout(NetworkModel.timeout_id); // will give an error if timeout passed?
 			}
 

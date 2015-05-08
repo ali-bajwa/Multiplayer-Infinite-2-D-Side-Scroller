@@ -9,13 +9,11 @@ namespace Infinite_Sidescroller.Models
   public class GameDB : DbContext
   {
     public GameDB()
-      : base("DefaultConnection")
+      : base("GameCS2")
     {
-      // Will throw error instead of creating a new table
-      // for model without a matching table in db
       Database.SetInitializer<GameDB>(null);
     }
 
-    public DbSet<ServerClient> ServerClient { get; set; }
+    public DbSet<GameSessions> GameSession { get; set; }
   }
 }

@@ -1,0 +1,48 @@
+﻿@using Infinite_Sidescroller.Models;
+@using Microsoft.AspNet.Identity;
+@model Infinite_Sidescroller.Models.LobbyViewModel
+@{
+  ViewBag.Title = "Game Lobby";
+  bool Userhasgame = false;
+  GameSessions gamesession = new GameSessions();
+}
+
+<!--Lobby-->
+<section class="lobby_section">
+  <div class="lobby_wrapper">
+    <table class="lobby">
+      <tbody>
+        <tr>
+          <th>Host</th>
+          <th>Players</th>
+        </tr>
+
+        @for (int i = 0; i < Model.LobbyGames.Count; i++)
+        {
+          if (User.Identity.GetUserName() == Model.LobbyGames[i].HostUsername)
+          {
+            Userhasgame = true;
+            gamesession = Model.LobbyGames[i];
+          }
+          <tr @Html.Raw(i % 2 == 0 ? "class='alt_row'" : "")>
+            <td>@Model.LobbyGames[i].HostUsername</td>
+            <td>@(Model.LobbyGames[i].PlayerNames.Split(',').Count())/4</td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+  <div class="lobby_actions_area">
+    <!--Ali: You'll need to edit these-->
+    <input type="button" class="lobby_buttons joingame" value="Join Game" />
+    @if (Userhasgame)
+    {
+      @Html.ActionLink("Start Game", "Index", "Game", new { UserID = @User.Identity.GetUserName(), sessionID = gamesession.Id, isMultiplayer = true }, new { @class = "lobby_buttons singleplayer" })
+    }
+    else
+    {
+      @Html.ActionLink("Create Game", "CreateGame", "Home", new { UserID = @User.Identity.GetUserName() }, new { @class = "lobby_buttons singleplayer" })
+    } 
+    @Html.ActionLink("Singleplayer", "Index", "Game", new { UserID = @User.Identity.GetUserName(), isMultiplayer = false,  }, new { @class = "lobby_buttons singleplayer" })
+  </div>
+</section>

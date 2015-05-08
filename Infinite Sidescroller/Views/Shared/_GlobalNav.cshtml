@@ -1,11 +1,14 @@
 ﻿@{
   Layout = null;
 }
-
-<ul>
+<nav class="GlobalNav">
+  <ul>
     <li><a href="/">Horae's Hoplites</a></li>
-    <li>@Html.ActionLink("Tutorial", "Tutorial", "Home")</li>
-    <li class="game_button"><span id="a">@Html.ActionLink("Game", "Index", "Game")</span><span id="b">@Html.ActionLink("PLAY!", "Index", "Game")</span></li>
+    <li>@Html.ActionLink("Lore", "Bestiary", "Home")</li>
+    <li>@Html.ActionLink("Lobby", "Lobby", "Home")</li>
     <li>@Html.ActionLink("Leaderboard", "Leaderboard", "Home")</li>
-</ul>
-@Html.Partial("_LoginPartial")
+    <li>@Html.ActionLink("Developers", "Developers", "Home")</li>
+    @Html.Partial("_LoginPartial")
+  </ul>
+</nav>
+

@@ -1,40 +1,25 @@
 ﻿@model Infinite_Sidescroller.Models.RegisterViewModel
 @{
   ViewBag.Title = "Register";
+  ViewBag.isRegPage = true;
 }
 
 @section Scripts {
-	@Scripts.Render("~/bundles/jqueryval")
+  @Scripts.Render("~/bundles/jqueryval")
 }
-  <div class="register_page_wrapper">
-    @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "form-horizontal", id = "regform" }))
-    {
-        @Html.AntiForgeryToken()
-        <h4 style="padding:1%;">Create an account</h4>
-        <hr /><br />
-        @Html.ValidationSummary()
-        <div class="form-group">
-            @Html.LabelFor(m => m.UserName, "", new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.TextBoxFor(m => m.UserName, "", new { @class = "form-control", placeholder="USERNAME" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(m => m.Password, "", new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.PasswordFor(m => m.Password, new { @class = "form-control", placeholder="PASSWORD" })
-            </div>
-        </div>
-        <div class="form-group">
-            @Html.LabelFor(m => m.ConfirmPassword, "", new { @class = "col-md-2 control-label" })
-            <div class="col-md-10">
-                @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control", placeholder="CONFIRM PASSWORD" })
-            </div>
-        </div>
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" id="regbutton" class="btn btn-default" value="Register" />
-            </div>
-        </div>
-    }
-  </div>
+<div class="register_page_wrapper">
+  @using (Html.BeginForm("Register", "Account", FormMethod.Post, new { @class = "regform" }))
+  {
+    @Html.AntiForgeryToken()
+    <h4 style="padding:1%;">Create an account</h4>
+    <hr /><br />
+    @Html.TextBoxFor(m => m.UserName, "", new { placeholder = "USERNAME" })
+    @Html.ValidationMessageFor(m => m.UserName)
+    @Html.PasswordFor(m => m.Password, new { placeholder = "PASSWORD" })
+    @Html.ValidationMessageFor(m => m.Password)
+    @Html.PasswordFor(m => m.ConfirmPassword, new { placeholder = "CONFIRM PASSWORD" })
+    @Html.ValidationMessageFor(m => m.ConfirmPassword)
+    @Html.ValidationSummary(true);
+    <input type="submit" id="regbutton" value="Register" />
+  }
+</div>

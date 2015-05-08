@@ -1,25 +1,29 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace Infinite_Sidescroller.Models
 {
-  public class ServerClient
+  [Table("dbo.GameSession")]
+  public class GameSessions
   {
-    // Possibly change Id to a double-key with session/packetid as primary keys
     [Key]
-    public int Id {get; set;}
-    public int SessionID {get; set;}
-    public string JsonString {get; set;}
-    public int PacketID { get; set; }
-
-    public ServerClient(int sessionid, string jsonstring, int packetid)
-    {
-      this.SessionID = sessionid;
-      this.JsonString = jsonstring;
-      this.PacketID = packetid;
+    public int Id { get; set; }
+    // Type = 1 OR TRUE => Multiplayer -- Type = 0 or FALSE => Singleplayer
+    public bool Type { get; set; }
+    public bool IsStarted { get; set; }
+    public bool IsCompleted { get; set; }
+    public string HostUsername { get; set; }
+    public string PlayerNames { get; set; }
+    public int Score { get; set; }
+    public GameSessions() {
+      this.Type = false;
+      this.IsStarted = false;
+      this.IsCompleted = false;
+      this.Score = 0;
     }
   }
 }

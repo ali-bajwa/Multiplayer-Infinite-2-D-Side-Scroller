@@ -96,42 +96,7 @@ var HUDRenderer = (function(){
 		var heros = EntityController.get_all_heroes();
 		var index;
 		screen_w = Config.SCREEN_W;
-		//console.log("screen width", Config.SCREEN_W);
-		//player_id_array.toString();
-		//console.log("player_id_array: ", player_id_array);
 		
-		/*for(var i =0; i < connected_len; i++){
-			connected_player_id = connected_players[i];
-			index = player_id_array.indexOf(connected_player_id);
-			container.removeChildAt(index);
-		}*/
-		
-		
-		for(var i =0; i < connected_len; i++){
-			var connected_player_id = connected_players[i];
-			//console.log("connected player: ", connected_player_id);
-
-			if(remote_hero_icons[connected_player_id] == null){
-				var icon = get_player_icon(player_id);
-				remote_hero_icons[connected_player_id] = icon;
-				position_player_icon(icon, connected_player_id);
-			}
-			
-			//index = player_id_array.indexOf(connected_player_id);
-
-			//create box and postions of box next
-			/*connected_main.graphics.beginStroke("white").setStrokeStyle(1).drawRect(0,0,40,55);
-			connected_outline_bar.graphics.beginStroke("red").setStrokeStyle(1).drawRect(0,42,40,10);
-			connected_head.x=1;  
-			connected_head.y = 1;
-			con_con.x = screen_w - 10 - next_x;
-			con_con.y = Y;
-			container.addChildAt(con_con,index);
-			next_x +=50;*/
-		}
-		next_x =0;
-		connected_players.toString();
-	
 		// this stuff should be moved to initialization stage
 
 		if(player_id_array != null && player_id_array.length > 0){

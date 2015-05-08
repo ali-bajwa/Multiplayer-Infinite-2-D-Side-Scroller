@@ -8,8 +8,7 @@ namespace Infinite_Sidescroller.Models
 {
   public class ApplicationUser : IdentityUser
   {
-		// Add more user properties down here - currently we only need Alias
-    public string Alias { get; set; }
+    // Add more user properties down here
 
     public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
     {
@@ -21,20 +20,14 @@ namespace Infinite_Sidescroller.Models
 
   public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
   {
-    public ApplicationDbContext()
-			: base("DefaultConnection")
-    {
-    }
+      public ApplicationDbContext()
+      : base("GameCS2", throwIfV1Schema: false)
+      {
+      }
 
-    static ApplicationDbContext()
-    {
-      // Set the database intializer which is run once during application start
-      Database.SetInitializer<ApplicationDbContext>(new Infinite_Sidescroller.Models.ApplicationUserManager.ApplicationDbInitializer());
-    }
-
-    public static ApplicationDbContext Create()
-    {
-      return new ApplicationDbContext();
-    }
+      public static ApplicationDbContext Create()
+      {
+          return new ApplicationDbContext();
+      }
   }
 }

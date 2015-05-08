@@ -47,7 +47,7 @@ var Config = function(){
 		session_id: null,
 		player_id: null,
 		mode: null,
-		initial_lives: 1,
+		initial_lives: 4,
 
 		// for multiplayer game you have certain time limit
 		// to join the game. In this time limit players shouldn't be able to go past

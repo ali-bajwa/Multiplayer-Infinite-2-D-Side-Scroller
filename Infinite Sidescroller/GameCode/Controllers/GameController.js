@@ -79,6 +79,14 @@ var GameController = (function(){
 		console.log("used up life.", GameModel.team_lives, "left");
 	};
 
+	var get_life_count = function(arguments){
+		/**
+		* get count of remaining lives
+		*/
+		
+		return GameModel.team_lives;
+	};
+
 	var end_game = function(message){
 		/**
 		* end game, print given message
@@ -130,6 +138,7 @@ var GameController = (function(){
 		stop_game: stop_game,
 		continue_game: continue_game,
 		use_life: use_life,
+		get_life_count: get_life_count,
 		check_game_ending_conditions: check_game_ending_conditions,
 	};
 

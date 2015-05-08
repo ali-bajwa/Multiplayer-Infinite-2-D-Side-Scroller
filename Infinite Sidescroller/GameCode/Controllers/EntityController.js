@@ -70,7 +70,7 @@ var EntityController = (function () {
 		    spawn((Math.random() * 50 + 10 + WorldController.get_movement_edge()), 16, "pizza");
 		}
 
-		if(debug_commands("request_hero") && !EntityModel.hero_spawned){
+		if(debug_commands("request_hero") && !EntityModel.hero_spawned && GameController.get_life_count() > 0){
 			// if hero is requested, and not spawned yet,
 			// spawn hero
 			

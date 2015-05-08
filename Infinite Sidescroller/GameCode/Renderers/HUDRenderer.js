@@ -29,14 +29,21 @@ var HUDRenderer = (function(){
 		
 
 		get_asset = AssetController.get_asset; // for quicker access
+
 		score = new createjs.Text();
 		container.addChild(score);
+		lives = new createjs.Text();
+		container.addChild(lives);
+
 		//GraphicsController.reg_for_render(score);
 		health_bar = new createjs.Shape();
 		container.addChild(health_bar);
 		//GraphicsController.reg_for_render(health_bar);
 		score_title = new createjs.Text();
 		container.addChild(score_title);
+		lives_title = new createjs.Text();
+		container.addChild(lives_title);
+
 		//GraphicsController.reg_for_render(score_title);
 		health_outline = new createjs.Shape();
 		container.addChild(health_outline);
@@ -74,13 +81,27 @@ var HUDRenderer = (function(){
 		player_head.x = 10;
 		player_head.y = 35;
 		score_title.text = "Score: ";
+		lives_title.text = "Lives: ";
+
 		score_title.x = 10;
 		score_title.y = 10;
+		lives_title.x = 120;
+		lives_title.y = 10;
+
+
 		score.text = "0";
+		lives.text = "0";
+
 		score.x = 80;
 		score.y = 10;
+		lives.x = 200;
+		lives.y = 10;
+
 		score.font = "20px Arial";
+		lives.font = "20px Arial";
+
 		score_title.font = "20px Arial";
+		lives_title.font = "20px Arial";
 	};
 	
 	var render = function(){
@@ -108,6 +129,7 @@ var HUDRenderer = (function(){
 
 		player_head.image = asset;
 		update_score(WorldController.get_score());
+		update_lives();
 		if(hero){
 			update_health(hero.hp);
 		}
@@ -183,6 +205,10 @@ var HUDRenderer = (function(){
 	var update_score = function(new_score){
 		score.text = parseInt(new_score);
 	};
+
+	var update_lives = function(){
+		lives.text = GameController.get_life_count();
+	}
 	
 	var update_health = function(new_health){
 		healthX = parseInt(new_health);

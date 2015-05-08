@@ -9,20 +9,20 @@ A **2D Infinite Sidescroller Multiplayer Web Browser Game**...  What a mouthful.
 ![Game Shot](https://raw.githubusercontent.com/ali990/Multiplayer-Infinite-2-D-Side-Scroller/master/GithubPagePic.PNG)
 
 ### Development:
-*Scrum/Agile Methodology
-*MVC 
-*Box2D
-*EaselJS
-*Browserify
-*jquery
+- Scrum/Agile Methodology
+- MVC 
+- Box2D
+- EaselJS
+- Browserify
+- jquery
 
 ### Team Tools:
-*Flowdock
-*Pivotal Tracker
-*Git/Github (Duh!)
+- Flowdock
+- Pivotal Tracker
+- Git/Github (Duh!)
 
 ### Features:
-*Procedurally Generated Terrain & Enemies
-*Login & Account Creation
-*Infinite Game... It never ends!
-*Multiplayer with up to 4 people per session
+- Procedurally Generated Terrain & Enemies
+- Login & Account Creation
+- Infinite Game... It never ends!
+- Multiplayer with up to 4 people per session
